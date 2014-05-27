@@ -1,0 +1,12 @@
+.board {
+    font-size: 12px;
+    width: 34em;
+}
+
+.square {
+    border: 0.5em solid #ccc;
+    display: inline-block;
+    width: 10em;
+    height: 10em;
+    background: red;
+}
