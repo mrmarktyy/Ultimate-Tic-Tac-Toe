@@ -7,8 +7,7 @@ define(['vendor/backbone'], function (Backbone) {
         },
 
         initialize: function (options) {
-            // this.set(options);
-            console.log('new cell');
+
         }
 
     });

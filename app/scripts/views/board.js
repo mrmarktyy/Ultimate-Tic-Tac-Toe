@@ -1,21 +1,26 @@
-define(['vendor/lodash', 'vendor/backbone', 'text!templates/board.html'], function (_, Backbone, boardTpl) {
+define(['vendor/lodash', 'vendor/backbone', 'views/square'], function (_, Backbone, SquareView) {
 
     var Board = Backbone.View.extend({
 
-        template: _.template(boardTpl),
+        className: 'board',
 
-        initialize: function () {
-            // this._squares = [];
-
+        initialize: function (options) {
+            this.options = options || {};
+            this.$game = $(this.options.wrapper);
+            this._squares = [];
             this.render();
             return this;
         },
 
         render: function () {
-            // this.collection.each(function (square) {
-            //     this._squares.push(new Square)
-            // });
-            this.$el.html(this.template({message: 'hello'}));
+            this.collection.each(function (Square) {
+                var squareView = new SquareView({
+                    collection: Square
+                });
+                this.$el.append(squareView.render().$el);
+                this._squares.push(squareView);
+            }, this);
+            this.$game.append(this.$el);
             return this;
         }
 

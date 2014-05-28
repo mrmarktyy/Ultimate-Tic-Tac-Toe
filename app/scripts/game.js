@@ -10,19 +10,29 @@ define(['vendor/backbone', 'views/board', 'collections/squares'], function (Back
 
         init: function () {
 
-            // var squares = _.isEmpty(this.options.data) ? new Squares() : new Squares(this.options.data);
-            var squares = new Squares();
+            var state = this.getBoardState();
 
             this.board = new Board({
-                el: this.options.el,
-                collection: squares
+                wrapper: this.options.el,
+                collection: new Squares(state)
             });
 
-            console.log('squares', this.board.collection.models);
-            console.log('cells', this.board.collection.models[0].models);
+        },
 
+        getBoardState: function () {
+            if (!_.isEmpty(this.options.data)) {
+                return this.options.data;
+            }
+            return this.getInitalState();
+        },
+
+        getInitalState: function () {
+            var data = [];
+            for (var i = 0; i < 9; i++) {
+                data.push([{},{},{},{},{},{},{},{},{}]);
+            }
+            return data;
         }
-
 
     }, Backbone.Events);
 

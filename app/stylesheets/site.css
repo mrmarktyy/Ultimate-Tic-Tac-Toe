@@ -2,6 +2,11 @@ body {
     margin: 0;
     font-family: Helvetica, Georgia, Consolas;
 }
+.header__title {
+    text-align: center;
+    text-shadow: 5px 5px 5px rgba(0,0,0,0.5);
+    font-size: 4em;
+}
 .header {
     width: 100%;
     height: 200px;

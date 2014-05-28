@@ -4,19 +4,8 @@ define(['vendor/lodash', 'vendor/backbone', 'collections/square'], function (_, 
 
         model: Square,
 
-        initialize: function (data) {
-            if (_.isEmpty(data)) {
-                this.createNew();
-            }
-            return this;
-        },
+        initialize: function (models, options) {
 
-        createNew: function () {
-            // for (var i = 0; i < 9; i++) {
-                this.push([], {
-                    '_id': 0
-                });
-            // }
         }
 
     });
