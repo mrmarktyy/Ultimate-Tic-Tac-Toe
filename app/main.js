@@ -15,7 +15,7 @@ require(['game'], function (Game) {
         el: '#ultimate',
         mode: 'new',
         data: []
-    }
+    };
 
     var game = new Game(options);
     game.init();

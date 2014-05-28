@@ -1,4 +1,5 @@
 define(['vendor/backbone'], function (Backbone) {
+    'use strict';
 
     var Cell = Backbone.Model.extend({
 

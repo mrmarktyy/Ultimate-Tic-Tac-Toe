@@ -1,4 +1,5 @@
 define(['vendor/backbone', 'views/cell'], function (Backbone, CellView) {
+    'use strict';
 
     var Square = Backbone.View.extend({
 

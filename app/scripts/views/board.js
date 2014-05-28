@@ -1,4 +1,5 @@
 define(['vendor/lodash', 'vendor/backbone', 'views/square'], function (_, Backbone, SquareView) {
+    'use strict';
 
     var Board = Backbone.View.extend({
 

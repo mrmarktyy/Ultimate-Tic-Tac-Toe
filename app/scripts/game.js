@@ -1,4 +1,5 @@
 define(['vendor/backbone', 'views/board', 'collections/squares'], function (Backbone, Board, Squares) {
+    'use strict';
 
     function Game (options) {
         this.options = options || {};
