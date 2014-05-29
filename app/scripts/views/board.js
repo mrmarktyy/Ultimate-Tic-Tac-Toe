@@ -1,4 +1,5 @@
-define(['vendor/lodash', 'vendor/backbone', 'views/square'], function (_, Backbone, SquareView) {
+define(['vendor/lodash', 'vendor/backbone', 'views/square', 'models/status', 'models/player'],
+function (_, Backbone, SquareView, Status, Player) {
     'use strict';
 
     var Board = Backbone.View.extend({
@@ -23,6 +24,13 @@ define(['vendor/lodash', 'vendor/backbone', 'views/square'], function (_, Backbo
             }, this);
             this.$game.html(this.$el);
             return this;
+        },
+
+        start: function () {
+            this.status = new Status();
+            this.player1 = new Player({_id: 1, nickname: 'mark'});
+            this.player2 = new Player({_id: 2, nickname: 'junjun'});
+
         }
 
     });

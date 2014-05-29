@@ -1,10 +1,11 @@
 define(['vendor/backbone'], function (Backbone) {
     'use strict';
 
-    var Cell = Backbone.Model.extend({
+    var Status = Backbone.Model.extend({
 
         defaults: {
-            value: 0
+            round: 0,
+            turn: 1,
         },
 
         initialize: function (options) {
@@ -13,5 +14,5 @@ define(['vendor/backbone'], function (Backbone) {
 
     });
 
-    return Cell;
+    return Status;
 });
