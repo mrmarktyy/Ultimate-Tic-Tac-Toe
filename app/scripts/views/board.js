@@ -21,7 +21,7 @@ define(['vendor/lodash', 'vendor/backbone', 'views/square'], function (_, Backbo
                 this.$el.append(squareView.render().$el);
                 this._squares.push(squareView);
             }, this);
-            this.$game.append(this.$el);
+            this.$game.html(this.$el);
             return this;
         }
 

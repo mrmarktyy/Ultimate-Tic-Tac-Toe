@@ -1,4 +1,5 @@
-define(['vendor/backbone', 'views/board', 'collections/squares'], function (Backbone, Board, Squares) {
+define(['vendor/backbone', 'router', 'views/home', 'views/board', 'collections/squares'],
+function (Backbone, AppRouter, HomeView, Board, Squares) {
     'use strict';
 
     function Game (options) {
@@ -11,13 +12,26 @@ define(['vendor/backbone', 'views/board', 'collections/squares'], function (Back
 
         init: function () {
 
+            var appRouter = new AppRouter(this);
+            this.on('navigate:single', this.singleGame);
+            this.on('navigate:home', this.homeView);
+
+            Backbone.history.start();
+        },
+
+        homeView: function () {
+            this.home = new HomeView({
+                el: this.options.el
+            });
+        },
+
+        singleGame: function () {
             var state = this.getBoardState();
 
             this.board = new Board({
                 wrapper: this.options.el,
                 collection: new Squares(state)
             });
-
         },
 
         getBoardState: function () {

@@ -1,4 +1,33 @@
 /*
+ * Home Menu
+ =================================*/
+.main-menu {
+    text-align: center;
+
+    ul {
+        list-style: none;
+
+        li a {
+            padding: 15px;
+            border: 2px solid #ccc;
+            font-size: 20px;
+            width: 50%;
+            margin: 15px auto;
+            cursor: pointer;
+            transition: background-color 0.5s ease;
+            display: block;
+            text-decoration: none;
+            color: #333;
+
+            &:hover,
+            &:active {
+                background-color: #eee;
+            }
+        }
+    }
+}
+
+/*
  * Board
  =================================*/
 .board {
