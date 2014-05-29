@@ -1,0 +1,65 @@
+/*
+ * Board
+ =================================*/
+.board {
+  width: 47em;
+  height: 100%;
+  font-size: 12px; }
+  .board:after {
+    content: ' ';
+    visibility: hidden;
+    display: block;
+    height: 0;
+    clear: both; }
+
+/*
+ * Square
+ =================================*/
+.square {
+  width: 13em;
+  height: 13em;
+  padding: 1em;
+  border: 0.5em solid #ddd;
+  float: left;
+  position: relative; }
+  .square.valid {
+    z-index: 4;
+    border-color: #f1c40f; }
+  .square:nth-child(3n+2), .square:nth-child(3n) {
+    margin-left: -0.5em; }
+  .square:nth-last-child(-n+6) {
+    margin-top: -0.5em; }
+
+/*
+ * Cell
+ =================================*/
+.cell {
+  width: 3em;
+  height: 3em;
+  padding: 0.5em;
+  float: left;
+  border-right: 0.5em solid #eee;
+  border-bottom: 0.5em solid #eee;
+  opacity: 1;
+  transition: background-color 0.2s ease-in, opacity 0.2s ease-in; }
+  .cell:hover {
+    background-color: yellow;
+    opacity: 0.4; }
+  .cell:nth-child(3n) {
+    border-right: none; }
+  .cell:nth-last-child(-n+3) {
+    border-bottom: none; }
+
+/*
+ * Players
+ =================================*/
+.cell.o:before {
+  width: 100%;
+  height: 100%;
+  content: '';
+  display: block;
+  opacity: 0.7; }
+  .cell.o:before.p1 {
+    background-color: #e74c3c; }
+  .cell.o:before.p2 {
+    background-color: #3498db; }
