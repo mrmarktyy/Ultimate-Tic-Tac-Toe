@@ -1,5 +1,5 @@
-define(['vendor/lodash', 'vendor/backbone', 'views/square', 'models/status', 'models/player'],
-function (_, Backbone, SquareView, Status, Player) {
+define(['vendor/lodash', 'vendor/backbone', 'engine', 'views/square', 'models/status', 'models/player'],
+function (_, Backbone, SquareView, Engine, Status, Player) {
     'use strict';
 
     var Board = Backbone.View.extend({
@@ -27,10 +27,12 @@ function (_, Backbone, SquareView, Status, Player) {
         },
 
         start: function () {
-            this.status = new Status();
-            this.player1 = new Player({_id: 1, nickname: 'mark'});
-            this.player2 = new Player({_id: 2, nickname: 'junjun'});
-
+            this.engine = new Engine({
+                state: this.collection,
+                status: new Status(),
+                player1: new Player({_id: 1, nickname: 'mark'}),
+                player2: new Player({_id: 2, nickname: 'junjun'})
+            });
         }
 
     });
