@@ -78,6 +78,11 @@ $player2RGBA: rgba(52, 152, 219, 0.5);
     &.invalid {
         background-color: $invalid;
     }
+    &.guide {
+        z-index: 4;
+        animation: guide 2s infinite ease-in-out;
+        -webkit-animation: guide 2s infinite ease-in-out;
+    }
     &.moveable {
         .cell.o:hover {
             background: white;
@@ -136,4 +141,37 @@ $player2RGBA: rgba(52, 152, 219, 0.5);
     &.p2:before {
         background-color: $player2;
     }
+}
+
+/*
+ * Mixins
+ =================================*/
+@mixin keyframes($name) {
+  @-webkit-keyframes #{$name} {
+    @content;
+  }
+  @-moz-keyframes #{$name} {
+    @content;
+  }
+  @-ms-keyframes #{$name} {
+    @content;
+  }
+  @keyframes #{$name} {
+    @content;
+  }
+}
+
+/*
+ * Key Frames
+ =================================*/
+@include keyframes(guide) {
+  0% {
+    border-color: #ddd;
+  }
+  50% {
+    border-color: #999;
+  }
+  100% {
+    border-color: #ddd;
+  }
 }

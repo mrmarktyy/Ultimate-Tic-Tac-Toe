@@ -55,6 +55,10 @@
     border-color: #f1c40f; }
   .square.invalid {
     background-color: rgba(204, 204, 204, 0.6); }
+  .square.guide {
+    z-index: 4;
+    animation: guide 2s infinite ease-in-out;
+    -webkit-animation: guide 2s infinite ease-in-out; }
   .square.moveable .cell.o:hover {
     background: white;
     opacity: 1; }
@@ -97,3 +101,46 @@
   background-color: #e74c3c; }
 .cell.o.p2:before {
   background-color: #3498db; }
+
+/*
+ * Mixins
+ =================================*/
+/*
+ * Key Frames
+ =================================*/
+@-webkit-keyframes guide {
+  0% {
+    border-color: #ddd; }
+
+  50% {
+    border-color: #999; }
+
+  100% {
+    border-color: #ddd; } }
+@-moz-keyframes guide {
+  0% {
+    border-color: #ddd; }
+
+  50% {
+    border-color: #999; }
+
+  100% {
+    border-color: #ddd; } }
+@-ms-keyframes guide {
+  0% {
+    border-color: #ddd; }
+
+  50% {
+    border-color: #999; }
+
+  100% {
+    border-color: #ddd; } }
+@keyframes guide {
+  0% {
+    border-color: #ddd; }
+
+  50% {
+    border-color: #999; }
+
+  100% {
+    border-color: #ddd; } }

@@ -25,6 +25,8 @@ define(['vendor/lodash', 'vendor/backbone'], function (_, Backbone) {
         start: function () {
             // TODO initialize
             this.on('cell:move', this.moveListener, this);
+            this.on('show:guide', this.showGuide, this);
+            this.on('hide:guide', this.hideGuide, this);
             this.listenTo(this.status, 'change:winner', this.end);
 
             this.nextMove();
@@ -55,6 +57,14 @@ define(['vendor/lodash', 'vendor/backbone'], function (_, Backbone) {
             this._squareIndex = squareIndex;
             this._cellIndex = cellIndex;
             this.currentPlayer.get('resolver').trigger('cell:move', cellModel);
+        },
+
+        showGuide: function (cellIndex) {
+            this.board._squares[cellIndex].showGuide();
+        },
+
+        hideGuide: function (cellIndex) {
+            this.board._squares[cellIndex].hideGuide();
         },
 
         end: function () {

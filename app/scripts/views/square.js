@@ -38,6 +38,14 @@ define(['vendor/backbone', 'views/cell', 'utils/validate'], function (Backbone, 
             this.$el.addClass('invalid');
         },
 
+        showGuide: function () {
+            this.$el.addClass('guide');
+        },
+
+        hideGuide: function () {
+            this.$el.removeClass('guide');
+        },
+
         checkWin: function () {
             this.value = Validate.checkWin(this.collection.toJSON());
             if (!this.value && !this.checkAvailability()) {

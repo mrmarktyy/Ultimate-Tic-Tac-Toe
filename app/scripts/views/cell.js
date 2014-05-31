@@ -6,7 +6,9 @@ define(['vendor/backbone', 'vendor/lodash', 'engine'], function (Backbone, _, En
         className: 'cell',
 
         events: {
-            'click':    'movehere'
+            'click'             : 'movehere',
+            'mouseenter'        : 'showGuide',
+            'mouseleave'        : 'hideGuide'
         },
 
         initialize: function (options) {
@@ -15,6 +17,7 @@ define(['vendor/backbone', 'vendor/lodash', 'engine'], function (Backbone, _, En
             this._square = this.options._square;
             this._board = this.options._board;
             this._squareIndex = this._square._index;
+            this.guided = false;
             this.listenTo(this.model, 'change:value', this.render);
         },
 
@@ -26,10 +29,28 @@ define(['vendor/backbone', 'vendor/lodash', 'engine'], function (Backbone, _, En
         },
 
         movehere: function (event) {
-            if ($(event.target).parent().hasClass('moveable')) {
+            if (this._square.$el.hasClass('moveable')) {
                 Engine.getInstance().trigger('cell:move', this.model, this._squareIndex, this._index);
             } else {
                 console.log('Invalid move');
+            }
+        },
+
+        showGuide: function () {
+            var self = this;
+            if (this._square.$el.hasClass('moveable')) {
+                this.timer = _.delay(function () {
+                    self.guided = true;
+                    Engine.getInstance().trigger('show:guide', self._index);
+                }, 1000);
+            }
+        },
+
+        hideGuide: function () {
+            clearTimeout(this.timer);
+            if (this.guided) {
+                this.guided = false;
+                Engine.getInstance().trigger('hide:guide', this._index);
             }
         }
 
