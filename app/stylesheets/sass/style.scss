@@ -76,7 +76,7 @@ $player2RGBA: rgba(52, 152, 219, 0.5);
         border-color: $valid;
     }
     &.invalid {
-        border-color: $invalid;
+        background-color: $invalid;
     }
     &.moveable {
         .cell.o:hover {

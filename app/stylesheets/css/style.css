@@ -54,7 +54,7 @@
     z-index: 4;
     border-color: #f1c40f; }
   .square.invalid {
-    border-color: rgba(204, 204, 204, 0.6); }
+    background-color: rgba(204, 204, 204, 0.6); }
   .square.moveable .cell.o:hover {
     background: white;
     opacity: 1; }

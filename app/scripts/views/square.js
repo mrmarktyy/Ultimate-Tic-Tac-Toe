@@ -34,8 +34,15 @@ define(['vendor/backbone', 'views/cell', 'utils/validate'], function (Backbone, 
             }
         },
 
+        setInvalid: function () {
+            this.$el.addClass('invalid');
+        },
+
         checkWin: function () {
             this.value = Validate.checkWin(this.collection.toJSON());
+            if (!this.value && !this.checkAvailability()) {
+                this.setInvalid();
+            }
             this.renderRole();
             return this.value;
         },
