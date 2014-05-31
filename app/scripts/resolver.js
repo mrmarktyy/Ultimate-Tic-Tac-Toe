@@ -1,15 +1,22 @@
-define(['vendor/lodash'], function (_) {
+define(['vendor/lodash', 'vendor/backbone'], function (_, Backbone) {
+    'use strict';
 
-    function Resolver() {
-
+    function Resolver(player) {
+        this.player = player;
     }
 
-    _.extend(Resolver.prototype, {
+    _.extend(Resolver.prototype, Backbone.Events, {
 
+        /**
+         * To be overriden by child instance
+         */
+        getNextMove: function () {
 
+        }
 
     });
 
-    return Resolver;
+    Resolver.extend = Backbone.Model.extend;
 
+    return Resolver;
 });

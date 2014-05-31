@@ -1,5 +1,5 @@
-define(['vendor/backbone', 'router', 'views/home', 'views/board', 'collections/squares'],
-function (Backbone, AppRouter, HomeView, Board, Squares) {
+define(['vendor/lodash', 'vendor/backbone', 'router', 'engine', 'views/home', 'views/board', 'models/status', 'models/player', 'collections/squares'],
+function (_, Backbone, AppRouter, Engine, HomeView, Board, Status, Player, Squares) {
     'use strict';
 
     function Game (options) {
@@ -32,6 +32,14 @@ function (Backbone, AppRouter, HomeView, Board, Squares) {
                 wrapper: this.options.el,
                 collection: new Squares(state)
             });
+
+            Engine.getInstance({
+                board: this.board,
+                status: new Status(),
+                player1: new Player({role: 1, nickname: 'mark'}),
+                player2: new Player({role: 2, nickname: 'junjun'})
+            }).start();
+
         },
 
         getBoardState: function () {

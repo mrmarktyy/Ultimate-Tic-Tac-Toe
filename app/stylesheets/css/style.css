@@ -43,13 +43,19 @@
   border: 0.5em solid #ddd;
   float: left;
   position: relative; }
-  .square.valid {
-    z-index: 4;
-    border-color: #f1c40f; }
   .square:nth-child(3n+2), .square:nth-child(3n) {
     margin-left: -0.5em; }
   .square:nth-last-child(-n+6) {
     margin-top: -0.5em; }
+  .square.valid {
+    z-index: 4;
+    border-color: #f1c40f; }
+  .square.moveable .cell.o:hover {
+    background: white;
+    opacity: 1; }
+  .square.moveable .cell:hover {
+    background-color: yellow;
+    opacity: 0.4; }
 
 /*
  * Cell
@@ -63,9 +69,6 @@
   border-bottom: 0.5em solid #eee;
   opacity: 1;
   transition: background-color 0.2s ease-in, opacity 0.2s ease-in; }
-  .cell:hover {
-    background-color: yellow;
-    opacity: 0.4; }
   .cell:nth-child(3n) {
     border-right: none; }
   .cell:nth-last-child(-n+3) {
@@ -80,7 +83,7 @@
   content: '';
   display: block;
   opacity: 0.7; }
-  .cell.o:before.p1 {
-    background-color: #e74c3c; }
-  .cell.o:before.p2 {
-    background-color: #3498db; }
+.cell.o.p1:before {
+  background-color: #e74c3c; }
+.cell.o.p2:before {
+  background-color: #3498db; }

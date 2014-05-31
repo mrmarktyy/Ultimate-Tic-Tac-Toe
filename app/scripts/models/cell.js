@@ -9,6 +9,10 @@ define(['vendor/backbone'], function (Backbone) {
 
         initialize: function (options) {
 
+        },
+
+        setValue: function (role) {
+            this.set('value', role);
         }
 
     });

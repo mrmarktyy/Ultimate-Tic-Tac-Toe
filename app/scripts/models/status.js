@@ -1,15 +1,38 @@
-define(['vendor/backbone'], function (Backbone) {
+define(['vendor/backbone', 'vendor/lodash'], function (Backbone, _) {
     'use strict';
 
     var Status = Backbone.Model.extend({
 
         defaults: {
-            round: 0,
-            turn: 1,
+            round: 1,
+            role: 1,
+            movement: []
         },
 
         initialize: function (options) {
 
+        },
+
+        getLastMove: function () {
+            return _.last(this.get('movement'));
+        },
+
+        finishRound: function (cellModel, squareIndex, cellIndex) {
+            this.roundInc();
+            this.addMovement([squareIndex, cellIndex, this.get('role')]);
+            this.swapRole();
+        },
+
+        roundInc: function () {
+            this.set('round', this.get('round') + 1);
+        },
+
+        addMovement: function (movement) {
+            this.get('movement').push(movement);
+        },
+
+        swapRole: function () {
+            this.set('role', this.get('role') === 1 ? 2 : 1);
         }
 
     });

@@ -1,5 +1,5 @@
-define(['vendor/lodash', 'vendor/backbone', 'engine', 'views/square', 'models/status', 'models/player'],
-function (_, Backbone, SquareView, Engine, Status, Player) {
+define(['vendor/lodash', 'vendor/backbone', 'views/square'],
+function (_, Backbone, SquareView) {
     'use strict';
 
     var Board = Backbone.View.extend({
@@ -15,9 +15,10 @@ function (_, Backbone, SquareView, Engine, Status, Player) {
         },
 
         render: function () {
-            this.collection.each(function (Square) {
+            this.collection.each(function (Square, index) {
                 var squareView = new SquareView({
-                    collection: Square
+                    collection: Square,
+                    _index: index
                 });
                 this.$el.append(squareView.render().$el);
                 this._squares.push(squareView);
@@ -26,12 +27,19 @@ function (_, Backbone, SquareView, Engine, Status, Player) {
             return this;
         },
 
-        start: function () {
-            this.engine = new Engine({
-                state: this.collection,
-                status: new Status(),
-                player1: new Player({_id: 1, nickname: 'mark'}),
-                player2: new Player({_id: 2, nickname: 'junjun'})
+        setValidSquare: function (lastMove) {
+            if (_.isUndefined(lastMove)) {
+                this._squares.forEach(function (squareView) {
+                    squareView.$el.addClass('moveable');
+                });
+                return;
+            }
+            this._squares.forEach(function (squareView) {
+                if (squareView._index === lastMove[1]) {
+                    squareView.$el.addClass('moveable valid');
+                } else {
+                    squareView.$el.removeClass('moveable valid');
+                }
             });
         }
 

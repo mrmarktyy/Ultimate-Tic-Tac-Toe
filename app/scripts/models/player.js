@@ -3,14 +3,9 @@ define(['vendor/backbone', 'resolverFactory'], function (Backbone, resolverFacto
 
     var Player = Backbone.Model.extend({
 
-        MODE: {
-            HUMAN: 'human',
-            COMPUTER: 'computer'
-        },
-
         defaults: {
-            _id: 1,
-            mode: this.MODE.HUMAN,
+            role: 0,
+            mode: 'human',
             nickname: undefined,
             rank: undefined,
             score: undefined,
@@ -21,7 +16,7 @@ define(['vendor/backbone', 'resolverFactory'], function (Backbone, resolverFacto
         },
 
         initialize: function (options) {
-            this.set('resolver', resolverFactory.getResolver(this.get('mode')));
+            this.set('resolver', resolverFactory.getResolver(this));
         }
 
     });

@@ -1,14 +1,17 @@
 define(['resolvers/human', 'resolvers/computer', 'models/player'], function (HumanResolver, ComputerResolver, Player) {
     'use strict';
 
-    var MODE = Player.MODE;
+    var MODE = {
+        HUMAN: 'human',
+        COMPUTER: 'computer'
+    };
 
-    function getResolver (mode) {
-        switch (mode) {
+    function getResolver (player) {
+        switch (player.get('mode')) {
         case MODE.HUMAN:
-            return new HumanResolver();
+            return new HumanResolver(player);
         case MODE.COMPUTER:
-            return new ComputerResolver();
+            return new ComputerResolver(player);
         }
     }
 
