@@ -6,7 +6,8 @@ define(['vendor/backbone', 'vendor/lodash'], function (Backbone, _) {
         defaults: {
             round: 1,
             role: 1,
-            movement: []
+            winner: 0,
+            movement: []  // [squareIndex, cellIndex, Role]
         },
 
         initialize: function (options) {

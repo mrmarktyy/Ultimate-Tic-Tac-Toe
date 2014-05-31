@@ -25,11 +25,13 @@ define(['vendor/lodash', 'vendor/backbone'], function (_, Backbone) {
         start: function () {
             // TODO initialize
             this.on('cell:move', this.moveListener, this);
+            this.listenTo(this.status, 'change:winner', this.end);
 
             this.nextMove();
         },
 
         nextMove: function () {
+
             var lastMove = this.status.getLastMove();
             this.board.setValidSquare(lastMove);
 
@@ -37,21 +39,26 @@ define(['vendor/lodash', 'vendor/backbone'], function (_, Backbone) {
 
             this.currentPlayer = this.getPlayer(role);
             this.currentPlayer.get('resolver').getNextMove().done(_.bind(this.afterMove, this));
-                // cellModel
-
-                // self.afterMove();
-            // });
         },
 
         afterMove: function (cellModel) {
             this.status.finishRound(cellModel, this._squareIndex, this._cellIndex);
-            this.nextMove();
+            var winner = this.board.checkWin(this._squareIndex);
+            if (winner) {
+                this.status.set('winner', winner);
+            } else {
+                this.nextMove();
+            }
         },
 
         moveListener: function (cellModel, squareIndex, cellIndex) {
             this._squareIndex = squareIndex;
             this._cellIndex = cellIndex;
             this.currentPlayer.get('resolver').trigger('cell:move', cellModel);
+        },
+
+        end: function () {
+            alert('Game end. Winner: ', this.getPlayer(this.status.get('winner')).get('nickname'));
         },
 
         getPlayer: function (role) {

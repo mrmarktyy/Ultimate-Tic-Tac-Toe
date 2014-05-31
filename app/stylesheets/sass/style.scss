@@ -1,4 +1,14 @@
 /*
+ * Variables
+ =================================*/
+$valid: #f1c40f;
+$invalid: rgba(204,204,204,0.6);
+$player1: #e74c3c;
+$player2: #3498db;
+$player1RGBA: rgba(231, 76, 60, 0.5);
+$player2RGBA: rgba(52, 152, 219, 0.5);
+
+/*
  * Home Menu
  =================================*/
 .main-menu {
@@ -63,7 +73,10 @@
     }
     &.valid {
         z-index: 4;
-        border-color: #f1c40f;
+        border-color: $valid;
+    }
+    &.invalid {
+        border-color: $invalid;
     }
     &.moveable {
         .cell.o:hover {
@@ -71,11 +84,19 @@
             opacity: 1;
         }
         .cell:hover {
+            cursor: pointer;
             background-color: yellow;
             opacity: 0.4;
         }
     }
+    &.p1 {
+        background-color: $player1RGBA;
+    }
+    &.p2 {
+        background-color: $player2RGBA;
+    }
 }
+
 /*
  * Cell
  =================================*/
@@ -110,9 +131,9 @@
     }
 
     &.p1:before {
-        background-color: #e74c3c;
+        background-color: $player1;
     }
     &.p2:before {
-        background-color: #3498db;
+        background-color: $player2;
     }
 }

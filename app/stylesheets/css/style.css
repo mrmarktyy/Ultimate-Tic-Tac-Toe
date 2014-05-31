@@ -1,4 +1,7 @@
 /*
+ * Variables
+ =================================*/
+/*
  * Home Menu
  =================================*/
 .main-menu {
@@ -50,12 +53,19 @@
   .square.valid {
     z-index: 4;
     border-color: #f1c40f; }
+  .square.invalid {
+    border-color: rgba(204, 204, 204, 0.6); }
   .square.moveable .cell.o:hover {
     background: white;
     opacity: 1; }
   .square.moveable .cell:hover {
+    cursor: pointer;
     background-color: yellow;
     opacity: 0.4; }
+  .square.p1 {
+    background-color: rgba(231, 76, 60, 0.5); }
+  .square.p2 {
+    background-color: rgba(52, 152, 219, 0.5); }
 
 /*
  * Cell

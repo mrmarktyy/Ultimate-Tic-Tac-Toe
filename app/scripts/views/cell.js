@@ -1,4 +1,4 @@
-define(['vendor/backbone', 'engine'], function (Backbone, Engine) {
+define(['vendor/backbone', 'vendor/lodash', 'engine'], function (Backbone, _, Engine) {
     'use strict';
 
     var Cell = Backbone.View.extend({
@@ -10,8 +10,11 @@ define(['vendor/backbone', 'engine'], function (Backbone, Engine) {
         },
 
         initialize: function (options) {
-            this._index = options._index;
-            this._squareIndex = options._square;
+            this.options = options || {};
+            this._index = this.options._index;
+            this._square = this.options._square;
+            this._board = this.options._board;
+            this._squareIndex = this._square._index;
             this.listenTo(this.model, 'change:value', this.render);
         },
 
