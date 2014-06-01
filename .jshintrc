@@ -5,7 +5,6 @@
         "jasmine": false,
         "spyOn": false,
         "it": false,
-        "console": false,
         "describe": false,
         "expect": false,
         "beforeEach": false,
