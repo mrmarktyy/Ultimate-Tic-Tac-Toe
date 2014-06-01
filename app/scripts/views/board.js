@@ -36,6 +36,11 @@ function (_, Backbone, SquareView, Validate) {
             return this.collection.toJSON();
         },
 
+        clearLastMove: function () {
+            this.$game.find('.tada').removeClass('tada');
+            return this;
+        },
+
         validateSquares: function (lastMove) {
             /*jshint expr:true*/
             // no lastMove available

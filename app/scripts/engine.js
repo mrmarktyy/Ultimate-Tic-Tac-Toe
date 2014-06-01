@@ -51,6 +51,7 @@ define(['vendor/lodash', 'vendor/backbone'], function (_, Backbone) {
 
         afterMove: function (cellModel) {
             this.status.execMove(cellModel, this._squareIndex, this._cellIndex);
+            this.board.clearLastMove().getSquare(this._squareIndex).getCell(this._cellIndex).setLastMove();
             var winner = this.board.checkRole(this._squareIndex);
             if (winner) {
                 this.status.set('winner', winner);

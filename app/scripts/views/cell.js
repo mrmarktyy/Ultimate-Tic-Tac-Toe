@@ -30,6 +30,10 @@ define(['vendor/backbone', 'vendor/lodash', 'engine'], function (Backbone, _, En
             return this;
         },
 
+        setLastMove: function () {
+            this.$el.addClass('tada');
+        },
+
         movehere: function (event) {
             if (this._square.$el.hasClass('moveable')) {
                 Engine.getInstance().trigger('player:move', this.model, this._squareIndex, this._index);
