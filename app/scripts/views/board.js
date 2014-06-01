@@ -32,31 +32,43 @@ function (_, Backbone, SquareView, Validate) {
             return this._squares[index];
         },
 
-        setValidSquare: function (lastMove) {
+        getState: function () {
+            return this.collection.toJSON();
+        },
+
+        validateSquares: function (lastMove) {
             /*jshint expr:true*/
             // no lastMove available
+            var validSquares = [];
             if (_.isUndefined(lastMove)) {
-                this._squares.forEach(function (squareView) {
+                this._squares.forEach(function (squareView, index) {
                     squareView.$el.addClass('moveable');
+                    validSquares.push(index);
                 });
-                return;
+                return validSquares;
             }
             if (_.isNumber(lastMove)) {
                 this._squares.forEach(function (squareView) {
                     squareView._index === lastMove ? squareView.setValid() : squareView.removeValid();
                 });
-                return;
+                return [lastMove];
             }
             // square has value already or no available cell
             if (this.getSquare(lastMove[1]).value || !this.getSquare(lastMove[1]).checkAvailability()) {
-                this._squares.forEach(function (squareView) {
-                    squareView.value ? squareView.removeValid(): squareView.setValid();
+                this._squares.forEach(function (squareView, index) {
+                    if (squareView.value) {
+                        squareView.removeValid();
+                    } else {
+                        squareView.setValid();
+                        validSquares.push(index);
+                    }
                 });
-                return;
+                return validSquares;
             }
             this._squares.forEach(function (squareView) {
                 squareView._index === lastMove[1] ? squareView.setValid() : squareView.removeValid();
             });
+            return [lastMove[1]];
         },
 
         checkRole: function (squareIndex) {

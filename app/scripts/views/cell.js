@@ -32,9 +32,9 @@ define(['vendor/backbone', 'vendor/lodash', 'engine'], function (Backbone, _, En
 
         movehere: function (event) {
             if (this._square.$el.hasClass('moveable')) {
-                Engine.getInstance().trigger('cell:move', this.model, this._squareIndex, this._index);
+                Engine.getInstance().trigger('player:move', this.model, this._squareIndex, this._index);
             } else {
-                console.log('Invalid move');
+                throw 'Invalid move';
             }
         },
 

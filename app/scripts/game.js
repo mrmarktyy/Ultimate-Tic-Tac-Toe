@@ -37,7 +37,7 @@ function (_, Backbone, AppRouter, Engine, HomeView, Board, Status, Player, Squar
                 board: this.board,
                 status: new Status(),
                 player1: new Player({role: 1, nickname: 'mark'}),
-                player2: new Player({role: 2, nickname: 'junjun'})
+                player2: new Player({role: 2, nickname: 'junjun', mode: 'computer'})
             }).start();
 
             if (/\.local/.test(location.hostname)) {

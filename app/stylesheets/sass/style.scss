@@ -1,6 +1,8 @@
 /*
  * Variables
  =================================*/
+$boardFontSize: 10px;
+
 $valid: #f1c40f;
 $invalid: rgba(204,204,204,0.6);
 $player1: #e74c3c;
@@ -43,7 +45,7 @@ $player2RGBA: rgba(52, 152, 219, 0.5);
 .board {
     width: 47em;
     height: 100%;
-    font-size: 12px;
+    font-size: $boardFontSize;
 
     &:after {
         content: ' ';

@@ -28,7 +28,7 @@
 .board {
   width: 47em;
   height: 100%;
-  font-size: 12px; }
+  font-size: 10px; }
   .board:after {
     content: ' ';
     visibility: hidden;
