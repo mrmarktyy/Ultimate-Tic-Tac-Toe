@@ -14,8 +14,7 @@ define(['vendor/lodash', 'vendor/backbone'], function (_, Backbone) {
         getNextMove: function (lastMove, validSquares) {
             this.deferred = new $.Deferred();
             this.once('cell:move', this.cellMoveListener, this);
-            // TODO FIX: every getNextMove will add a listener
-            this.computeMove(lastMove, validSquares);
+            _.defer(_.bind(this.computeMove, this), lastMove, validSquares);
             return this.deferred.promise();
         },
 
