@@ -1,7 +1,7 @@
 define(function () {
     'use strict';
 
-    function checkWin (c) {
+    function checkRole (c) {
 
         if (c.length !== 9) {
             throw 'collection length is not valid:';
@@ -71,7 +71,7 @@ define(function () {
     }
 
     return {
-        checkWin: checkWin
+        checkRole: checkRole
     };
 
 });

@@ -18,18 +18,27 @@ define(['vendor/backbone', 'vendor/lodash'], function (Backbone, _) {
             return _.last(this.get('movement'));
         },
 
-        finishRound: function (cellModel, squareIndex, cellIndex) {
+        execMove: function (cellModel, squareIndex, cellIndex) {
             this.roundInc();
-            this.addMovement([squareIndex, cellIndex, this.get('role')]);
+            this.pushMovement([squareIndex, cellIndex, this.get('role')]);
             this.swapRole();
+        },
+
+        undoMove: function () {
+            this.swapRole();
+            return this.popMovement();
         },
 
         roundInc: function () {
             this.set('round', this.get('round') + 1);
         },
 
-        addMovement: function (movement) {
+        pushMovement: function (movement) {
             this.get('movement').push(movement);
+        },
+
+        popMovement: function () {
+            return this.get('movement').pop();
         },
 
         swapRole: function () {

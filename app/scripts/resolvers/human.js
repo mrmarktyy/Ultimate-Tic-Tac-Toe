@@ -6,6 +6,7 @@ define(['vendor/lodash', 'vendor/jquery', 'resolver'], function (_, $, Resolver)
         getNextMove: function () {
             this.deferred = new $.Deferred();
             this.on('cell:move', this.cellMoveListener, this);
+            this.on('cell:reject', this.rejectMoveListener, this);
 
             return this.deferred.promise();
         },
@@ -14,6 +15,10 @@ define(['vendor/lodash', 'vendor/jquery', 'resolver'], function (_, $, Resolver)
             cellModel.setValue(this.player.get('role'));
             this.deferred.resolve(cellModel);
             this.off('cell:move', this.cellMoveListener);
+        },
+
+        rejectMoveListener: function () {
+            this.deferred.reject();
         }
 
     });

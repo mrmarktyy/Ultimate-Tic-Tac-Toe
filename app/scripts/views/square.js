@@ -31,11 +31,28 @@ define(['vendor/backbone', 'views/cell', 'utils/validate'], function (Backbone, 
         renderRole: function () {
             if (this.value) {
                 this.$el.addClass('p' + this.value);
+            } else {
+                this.$el.removeClass('p1 p2');
+                if (!this.checkAvailability()) {
+                    this.setInvalid();
+                }
             }
+        },
+
+        getCell: function (index) {
+            return this._cells[index];
         },
 
         setInvalid: function () {
             this.$el.addClass('invalid');
+        },
+
+        setValid: function () {
+            this.$el.addClass('moveable valid');
+        },
+
+        removeValid: function () {
+            this.$el.removeClass('moveable valid');
         },
 
         showGuide: function () {
@@ -46,11 +63,8 @@ define(['vendor/backbone', 'views/cell', 'utils/validate'], function (Backbone, 
             this.$el.removeClass('guide');
         },
 
-        checkWin: function () {
-            this.value = Validate.checkWin(this.collection.toJSON());
-            if (!this.value && !this.checkAvailability()) {
-                this.setInvalid();
-            }
+        checkRole: function () {
+            this.value = Validate.checkRole(this.collection.toJSON());
             this.renderRole();
             return this.value;
         },

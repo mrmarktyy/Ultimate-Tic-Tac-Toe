@@ -24,34 +24,52 @@ define(['vendor/lodash', 'vendor/backbone'], function (_, Backbone) {
 
         start: function () {
             // TODO initialize
+
             this.on('cell:move', this.moveListener, this);
             this.on('show:guide', this.showGuide, this);
             this.on('hide:guide', this.hideGuide, this);
             this.listenTo(this.status, 'change:winner', this.end);
 
             this.nextMove();
+
+            // TODO create facade
+            return this;
         },
 
         nextMove: function () {
-
             var lastMove = this.status.getLastMove();
             this.board.setValidSquare(lastMove);
 
             var role = this.status.get('role');
 
             this.currentPlayer = this.getPlayer(role);
-            this.currentPlayer.get('resolver').getNextMove().done(_.bind(this.afterMove, this));
+            this.currentPlayer.get('resolver')
+                .getNextMove()
+                .done(_.bind(this.afterMove, this))
+                .fail(_.bind(this.rejectMove, this));
         },
 
         afterMove: function (cellModel) {
-            this.status.finishRound(cellModel, this._squareIndex, this._cellIndex);
-            var winner = this.board.checkWin(this._squareIndex);
+            this.status.execMove(cellModel, this._squareIndex, this._cellIndex);
+            var winner = this.board.checkRole(this._squareIndex);
             if (winner) {
                 this.status.set('winner', winner);
             } else {
                 this.nextMove();
             }
         },
+
+        rejectMove: function () {
+            // TODO reject
+        },
+
+        undoMove: function () {
+            this.board.undoLastmove(this.status.undoMove());
+            this.currentPlayer.get('resolver').trigger('cell:reject');
+            this.nextMove();
+        },
+
+        /***************** Event handlers *****************/
 
         moveListener: function (cellModel, squareIndex, cellIndex) {
             this._squareIndex = squareIndex;
@@ -60,16 +78,18 @@ define(['vendor/lodash', 'vendor/backbone'], function (_, Backbone) {
         },
 
         showGuide: function (cellIndex) {
-            this.board._squares[cellIndex].showGuide();
+            this.board.getSquare(cellIndex).showGuide();
         },
 
         hideGuide: function (cellIndex) {
-            this.board._squares[cellIndex].hideGuide();
+            this.board.getSquare(cellIndex).hideGuide();
         },
 
         end: function () {
-            alert('Game end. Winner: ', this.getPlayer(this.status.get('winner')).get('nickname'));
+            alert('Game End. Winner is: ' + this.getPlayer(this.status.get('winner')).get('nickname'));
         },
+
+        /***************** Miscellaneous methods *****************/
 
         getPlayer: function (role) {
             if (role === 1) {

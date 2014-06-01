@@ -28,7 +28,12 @@ function (_, Backbone, SquareView, Validate) {
             return this;
         },
 
+        getSquare: function (index) {
+            return this._squares[index];
+        },
+
         setValidSquare: function (lastMove) {
+            /*jshint expr:true*/
             // no lastMove available
             if (_.isUndefined(lastMove)) {
                 this._squares.forEach(function (squareView) {
@@ -36,31 +41,34 @@ function (_, Backbone, SquareView, Validate) {
                 });
                 return;
             }
-            // square has value already or no available cell
-            if (this._squares[lastMove[1]].value || !this._squares[lastMove[1]].checkAvailability()) {
+            if (_.isNumber(lastMove)) {
                 this._squares.forEach(function (squareView) {
-                    if (!squareView.value) {
-                        squareView.$el.addClass('moveable valid');
-                    } else {
-                        squareView.$el.removeClass('moveable valid');
-                    }
+                    squareView._index === lastMove ? squareView.setValid() : squareView.removeValid();
+                });
+                return;
+            }
+            // square has value already or no available cell
+            if (this.getSquare(lastMove[1]).value || !this.getSquare(lastMove[1]).checkAvailability()) {
+                this._squares.forEach(function (squareView) {
+                    squareView.value ? squareView.removeValid(): squareView.setValid();
                 });
                 return;
             }
             this._squares.forEach(function (squareView) {
-                if (squareView._index === lastMove[1]) {
-                    squareView.$el.addClass('moveable valid');
-                } else {
-                    squareView.$el.removeClass('moveable valid');
-                }
+                squareView._index === lastMove[1] ? squareView.setValid() : squareView.removeValid();
             });
         },
 
-        checkWin: function (squareIndex) {
-            if (this._squares[squareIndex].checkWin()) {
-                return Validate.checkWin(this._squares);
+        checkRole: function (squareIndex) {
+            if (this.getSquare(squareIndex).checkRole()) {
+                return Validate.checkRole(this._squares);
             }
             return 0;
+        },
+
+        undoLastmove: function (lastMove) {
+            this.getSquare(lastMove[0]).getCell(lastMove[1]).model.setValue(0);
+            this.checkRole(lastMove[0]);
         }
 
     });

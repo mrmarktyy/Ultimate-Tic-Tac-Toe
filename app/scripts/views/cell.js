@@ -24,6 +24,8 @@ define(['vendor/backbone', 'vendor/lodash', 'engine'], function (Backbone, _, En
         render: function () {
             if (this.model.get('value')) {
                 this.$el.addClass('o p' + this.model.get('value'));
+            } else {
+                this.$el.removeClass('o p1 p2');
             }
             return this;
         },
@@ -42,7 +44,7 @@ define(['vendor/backbone', 'vendor/lodash', 'engine'], function (Backbone, _, En
                 this.timer = _.delay(function () {
                     self.guided = true;
                     Engine.getInstance().trigger('show:guide', self._index);
-                }, 1000);
+                }, 800);
             }
         },
 
