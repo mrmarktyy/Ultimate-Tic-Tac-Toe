@@ -3,6 +3,7 @@ define(['vendor/lodash', 'vendor/backbone'], function (_, Backbone) {
 
     function Resolver(player) {
         this.player = player;
+        this.on('cell:reject', this.rejectMoveListener, this);
     }
 
     _.extend(Resolver.prototype, Backbone.Events, {
@@ -14,7 +15,6 @@ define(['vendor/lodash', 'vendor/backbone'], function (_, Backbone) {
             this.deferred = new $.Deferred();
             this.once('cell:move', this.cellMoveListener, this);
             // TODO FIX: every getNextMove will add a listener
-            this.on('cell:reject', this.rejectMoveListener, this);
             this.computeMove(lastMove, validSquares);
             return this.deferred.promise();
         },
