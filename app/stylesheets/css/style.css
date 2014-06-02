@@ -27,8 +27,10 @@
  =================================*/
 .board {
   width: 47em;
+  min-width: 50%;
   height: 100%;
-  font-size: 10px; }
+  font-size: 10px;
+  float: left; }
   .board:after {
     content: ' ';
     visibility: hidden;
@@ -104,6 +106,56 @@
   background-color: #e74c3c; }
 .cell.o.p2:before {
   background-color: #3498db; }
+
+/*
+ * Status
+ =================================*/
+.status {
+  width: 30%;
+  float: left; }
+
+.status__title {
+  font-size: 1.8em;
+  margin: 0.5em 0;
+  padding-bottom: 0.5em;
+  border-bottom: 1px solid rgba(51, 51, 51, 0.2); }
+
+.status__round {
+  font-size: 1.5em;
+  margin: 0.5em 0 1.5em; }
+  .status__round span {
+    float: right; }
+
+.status__player {
+  list-style: none;
+  padding: 0; }
+  .status__player li {
+    display: table;
+    width: 100%;
+    margin-bottom: 1.5em; }
+    .status__player li .player__image {
+      display: table-cell;
+      padding-right: 1em;
+      width: 2em; }
+      .status__player li .player__image > img {
+        background: #3498db;
+        width: 2em;
+        border-radius: 50%;
+        padding: 0.5em; }
+    .status__player li .player__content {
+      display: table-cell;
+      vertical-align: top; }
+      .status__player li .player__content .player__cell {
+        width: 2em;
+        height: 2em;
+        opacity: 0.7;
+        float: right; }
+        .status__player li .player__content .player__cell.player1 {
+          background-color: #e74c3c; }
+        .status__player li .player__content .player__cell.player2 {
+          background-color: #3498db; }
+    .status__player li .player__name {
+      margin: 0.3em 0; }
 
 /*
  * Mixins

@@ -17,6 +17,12 @@ body {
   padding: 10px;
   width: 980px;
   margin: 0 auto; }
+  .container:after {
+    content: ' ';
+    visibility: hidden;
+    display: block;
+    height: 0;
+    clear: both; }
 
 .fork-me {
   position: absolute;

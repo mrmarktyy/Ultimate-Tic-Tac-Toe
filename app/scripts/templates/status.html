@@ -1,0 +1,24 @@
+<h2 class="status__title">GAME STATUS</h2>
+<div class="status__round">
+    Round: <span><em><strong>#</strong></em><%= round %></span>
+</div>
+<ul class="status__player">
+    <li>
+        <div class="player__image">
+            <img src="images/player1.png" alt="">
+        </div>
+        <div class="player__content">
+            <div class="player__cell player1"></div>
+            <h3 class="player__name"><%= player1.get('nickname') %></h3>
+        </div>
+    </li>
+    <li>
+        <div class="player__image">
+            <img src="images/player2.png" alt="">
+        </div>
+        <div class="player__content player2">
+            <div class="player__cell player2"></div>
+            <h3 class="player__name"><%= player2.get('nickname') %></h3>
+        </div>
+    </li>
+</ul>

@@ -4,11 +4,8 @@ function (_, Backbone, SquareView, Validate) {
 
     var Board = Backbone.View.extend({
 
-        className: 'board',
-
         initialize: function (options) {
             this.options = options || {};
-            this.$game = $(this.options.wrapper);
             this._squares = [];
             this.render();
             return this;
@@ -24,7 +21,6 @@ function (_, Backbone, SquareView, Validate) {
                 this.$el.append(squareView.render().$el);
                 this._squares.push(squareView);
             }, this);
-            this.$game.html(this.$el);
             return this;
         },
 
@@ -37,7 +33,7 @@ function (_, Backbone, SquareView, Validate) {
         },
 
         clearLastMove: function () {
-            this.$game.find('.tada').removeClass('tada');
+            this.$el.find('.tada').removeClass('tada');
             return this;
         },
 
