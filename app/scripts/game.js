@@ -1,5 +1,10 @@
-define(['vendor/lodash', 'vendor/backbone', 'vendor/jquery', 'router', 'engine', 'views/home', 'views/board', 'views/status', 'models/status', 'models/player', 'collections/squares'],
-function (_, Backbone, $, AppRouter, Engine, HomeView, Board, StatusView, StatusModel, Player, Squares) {
+define(['vendor/lodash', 'vendor/backbone', 'vendor/jquery',
+    'router', 'engine',
+    'views/menu', 'views/board', 'views/status',
+    'models/status', 'models/player',
+    'text!templates/main.html',
+    'collections/squares'],
+function (_, Backbone, $, AppRouter, Engine, Menu, Board, StatusView, StatusModel, Player, MainTpl, Squares) {
     'use strict';
 
     function Game (options) {
@@ -12,31 +17,60 @@ function (_, Backbone, $, AppRouter, Engine, HomeView, Board, StatusView, Status
     _.extend(Game.prototype, {
 
         init: function () {
-
-            var appRouter = new AppRouter(this);
-            this.on('navigate:single', this.singleGame);
-            this.on('navigate:home', this.homeView);
+            var appRouter = new AppRouter();
+            appRouter.on('route:home', this.homeView, this);
+            appRouter.on('route:single', this.singleGame, this);
+            appRouter.on('route:human', this.vsHuman, this);
+            appRouter.on('route:easy', this.vsEasy, this);
+            appRouter.on('route:back', this.back, this);
 
             Backbone.history.start();
         },
 
         homeView: function () {
-            this.home = new HomeView({
+            this.home = new Menu.Home({
                 el: this.$el
             });
         },
 
         singleGame: function () {
+            this.single = new Menu.Single({
+                el: this.$el
+            });
+        },
+
+        vsHuman: function () {
+            this.$el.html(MainTpl);
             var state = this.getBoardState(),
                 status = new StatusModel(),
                 player1 = new Player({role: 1, nickname: 'mark'}),
                 player2 = new Player({role: 2, nickname: 'junjun'});
 
+            this.initBoard(state);
+            this.initEngine(status, player1, player2);
+            this.initStatus(status);
+        },
+
+        vsEasy: function () {
+            this.$el.html(MainTpl);
+            var state = this.getBoardState(),
+                status = new StatusModel(),
+                player1 = new Player({role: 1, nickname: 'mark'}),
+                player2 = new Player({role: 2, nickname: 'easy computer', mode: 'computer'});
+
+            this.initBoard(state);
+            this.initEngine(status, player1, player2);
+            this.initStatus(status);
+        },
+
+        initBoard: function (state) {
             this.board = new Board({
                 el: $('.board', this.$el),
                 collection: new Squares(state),
             });
+        },
 
+        initEngine: function (status, player1, player2) {
             this.engine = Engine.getInstance({
                 board: this.board,
                 status: status,
@@ -44,14 +78,16 @@ function (_, Backbone, $, AppRouter, Engine, HomeView, Board, StatusView, Status
                 player2: player2
             }).start();
 
+            if (/\.local/.test(location.hostname)) {
+                window.Engine = this.engine;
+            }
+        },
+
+        initStatus: function (status) {
             this.status = new StatusView({
                 el: $('.status', this.$el),
                 model: status
             });
-
-            if (/\.local/.test(location.hostname)) {
-                window.Engine = this.engine;
-            }
         },
 
         getBoardState: function () {

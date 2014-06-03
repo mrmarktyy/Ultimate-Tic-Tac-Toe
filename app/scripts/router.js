@@ -3,37 +3,20 @@ define(['vendor/backbone'], function (Backbone) {
 
     return Backbone.Router.extend({
         routes: {
-            ''          : 'home',
-            'single'    : 'single',
-            'online'    : 'online',
-            'tutorial'  : 'tutorial',
-            'about'     : 'about'
+            ''              : 'home',
+            'single'        : 'single',
+            'single/human'  : 'human',
+            'single/easy'   : 'easy',
+            'single/medium' : 'medium',
+            'single/hard'   : 'hard',
+            'online'        : 'online',
+            'tutorial'      : 'tutorial',
+            'about'         : 'about'
         },
 
-        initialize: function (Game) {
-            this.game = Game || {};
-        },
+        initialize: function () {
 
-        home: function () {
-            this.game.trigger('navigate:home');
-        },
-
-        single: function () {
-            this.game.trigger('navigate:single');
-        },
-
-        online: function () {
-            this.game.trigger('navigate:online');
-        },
-
-        tutorial: function () {
-            this.game.trigger('navigate:tutorial');
-        },
-
-        about: function () {
-            this.game.trigger('navigate:about');
         }
-
 
     });
 
