@@ -1,7 +1,8 @@
 define(['vendor/lodash', 'vendor/backbone',
     'text!templates/menu/home.html',
-    'text!templates/menu/single.html'
-], function (_, Backbone, HomeTpl, SingleTpl) {
+    'text!templates/menu/single.html',
+    'text!templates/menu/comingsoon.html'
+], function (_, Backbone, HomeTpl, SingleTpl, ComingSoonTpl) {
     'use strict';
 
     var Menu = {};
@@ -19,7 +20,7 @@ define(['vendor/lodash', 'vendor/backbone',
             var hasSlider = this.$('.slider').length;
             if (hasSlider) {
                 this.$('.slider').addClass(this.outAnimation);
-                _.delay(_.bind(this.renderSlider, this), 400);
+                _.delay(_.bind(this.renderSlider, this), 600);
             } else {
                 this.renderSlider();
             }
@@ -36,6 +37,10 @@ define(['vendor/lodash', 'vendor/backbone',
 
     Menu.Single = Menu.Base.extend({
         template: _.template(SingleTpl),
+    });
+
+    Menu.ComingSoon = Menu.Base.extend({
+        template: _.template(ComingSoonTpl),
     });
 
     return Menu;

@@ -15,6 +15,7 @@ $player2RGBA: rgba(52, 152, 219, 0.5);
  =================================*/
 #ultimate {
     overflow: hidden;
+    min-height: 300px;
 }
 
 /*
@@ -27,8 +28,8 @@ $player2RGBA: rgba(52, 152, 219, 0.5);
     }
 
     &.bounceOutRight {
-        animation: bounceOutRight 1s ease both;
-        -webkit-animation: bounceOutRight 1s ease both;
+        animation: bounceOutRight 1s 0.1s ease both;
+        -webkit-animation: bounceOutRight 1s 0.1s ease both;
     }
 }
 .menu {

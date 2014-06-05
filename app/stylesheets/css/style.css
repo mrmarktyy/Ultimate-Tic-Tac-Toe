@@ -5,7 +5,8 @@
  * #Ultimate
  =================================*/
 #ultimate {
-  overflow: hidden; }
+  overflow: hidden;
+  min-height: 300px; }
 
 /*
  * Menus
@@ -14,8 +15,8 @@
   animation: bounceInLeft 1s ease both;
   -webkit-animation: bounceInLeft 1s ease both; }
 .slider.bounceOutRight {
-  animation: bounceOutRight 1s ease both;
-  -webkit-animation: bounceOutRight 1s ease both; }
+  animation: bounceOutRight 1s 0.1s ease both;
+  -webkit-animation: bounceOutRight 1s 0.1s ease both; }
 
 .menu {
   text-align: center; }

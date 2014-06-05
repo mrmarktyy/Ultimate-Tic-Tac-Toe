@@ -10,6 +10,7 @@ function (_, Backbone, $, AppRouter, Engine, Menu, Board, StatusView, StatusMode
     function Game (options) {
         this.options = options || {};
         this.$el = $(this.options.el);
+        this.$el.on('click', '.back', _.bind(this.back, this));
 
         return this;
     }
@@ -17,7 +18,7 @@ function (_, Backbone, $, AppRouter, Engine, Menu, Board, StatusView, StatusMode
     _.extend(Game.prototype, {
 
         init: function () {
-            var appRouter = new AppRouter(this);
+            this.router = new AppRouter(this);
 
             Backbone.history.start();
         },
@@ -59,16 +60,21 @@ function (_, Backbone, $, AppRouter, Engine, Menu, Board, StatusView, StatusMode
         },
 
         vsMedium: function () {
-            this.$el.html('<h2>Coming soon</h2>');
+            new Menu.ComingSoon({
+                el: this.$el
+            });
         },
 
         vsHard: function () {
-            this.$el.html('<h2>Coming soon</h2>');
+            new Menu.ComingSoon({
+                el: this.$el
+            });
         },
 
         back: function () {
-
-            console.log(Backbone.history.fragment);
+            var routes = Backbone.history.fragment.split('/');
+            routes.pop();
+            this.router.navigate('#' + routes.join('/'), {trigger: true});
         },
 
         initBoard: function (state) {
