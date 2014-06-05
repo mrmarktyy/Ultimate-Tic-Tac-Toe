@@ -11,8 +11,26 @@ $player1RGBA: rgba(231, 76, 60, 0.5);
 $player2RGBA: rgba(52, 152, 219, 0.5);
 
 /*
- * Home Menu
+ * #Ultimate
  =================================*/
+#ultimate {
+    overflow: hidden;
+}
+
+/*
+ * Menus
+ =================================*/
+.slider {
+    &.bounceInLeft {
+        animation: bounceInLeft 1s ease both;
+        -webkit-animation: bounceInLeft 1s ease both;
+    }
+
+    &.bounceOutRight {
+        animation: bounceOutRight 1s ease both;
+        -webkit-animation: bounceOutRight 1s ease both;
+    }
+}
 .menu {
     text-align: center;
 
@@ -284,5 +302,34 @@ $player2RGBA: rgba(52, 152, 219, 0.5);
   }
   100% {
     -webkit-transform: scale(1) rotate(0);
+  }
+}
+@include keyframes(bounceInLeft) {
+  0% {
+    opacity: 0;
+    -webkit-transform: translateX(-2000px);
+  }
+  60% {
+    opacity: 1;
+    -webkit-transform: translateX(30px);
+  }
+  80% {
+    -webkit-transform: translateX(-10px);
+  }
+  100% {
+    -webkit-transform: translateX(0);
+  }
+}
+@include keyframes(bounceOutRight) {
+  0% {
+    -webkit-transform: translateX(0);
+  }
+  20% {
+    opacity: 1;
+    -webkit-transform: translateX(-20px);
+  }
+  100% {
+    opacity: 0;
+    -webkit-transform: translateX(2000px);
   }
 }

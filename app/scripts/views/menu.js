@@ -3,38 +3,39 @@ define(['vendor/lodash', 'vendor/backbone',
     'text!templates/menu/single.html'
 ], function (_, Backbone, HomeTpl, SingleTpl) {
     'use strict';
+
     var Menu = {};
 
-    Menu.Home = Backbone.View.extend({
-
-        template: _.template(HomeTpl),
+    Menu.Base = Backbone.View.extend({
+        outAnimation: 'bounceOutRight',
+        inAnimation: 'bounceInLeft',
 
         initialize: function (options) {
             this.options = options || {};
-
             this.render();
             return this;
         },
         render: function () {
-            this.$el.html(this.template());
-
+            var hasSlider = this.$('.slider').length;
+            if (hasSlider) {
+                this.$('.slider').addClass(this.outAnimation);
+                _.delay(_.bind(this.renderSlider, this), 400);
+            } else {
+                this.renderSlider();
+            }
             return this;
+        },
+        renderSlider: function () {
+            this.$el.html(this.template()).find('.slider').addClass(this.inAnimation);
         }
     });
 
-    Menu.Single = Backbone.View.extend({
+    Menu.Home = Menu.Base.extend({
+        template: _.template(HomeTpl),
+    });
 
+    Menu.Single = Menu.Base.extend({
         template: _.template(SingleTpl),
-
-        initialize: function (options) {
-            this.options = options || {};
-            this.render();
-            return this;
-        },
-        render: function () {
-            this.$el.html(this.template());
-            return this;
-        }
     });
 
     return Menu;

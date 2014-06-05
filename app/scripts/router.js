@@ -14,8 +14,13 @@ define(['vendor/backbone'], function (Backbone) {
             'about'         : 'about'
         },
 
-        initialize: function () {
-
+        initialize: function (Game) {
+            this.on('route:single', Game.singleGame, Game);
+            this.on('route:home', Game.homeView, Game);
+            this.on('route:human', Game.vsHuman, Game);
+            this.on('route:easy', Game.vsEasy, Game);
+            this.on('route:medium', Game.vsMedium, Game);
+            this.on('route:hard', Game.vsHard, Game);
         }
 
     });

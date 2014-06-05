@@ -17,12 +17,7 @@ function (_, Backbone, $, AppRouter, Engine, Menu, Board, StatusView, StatusMode
     _.extend(Game.prototype, {
 
         init: function () {
-            var appRouter = new AppRouter();
-            appRouter.on('route:home', this.homeView, this);
-            appRouter.on('route:single', this.singleGame, this);
-            appRouter.on('route:human', this.vsHuman, this);
-            appRouter.on('route:easy', this.vsEasy, this);
-            appRouter.on('route:back', this.back, this);
+            var appRouter = new AppRouter(this);
 
             Backbone.history.start();
         },
@@ -61,6 +56,19 @@ function (_, Backbone, $, AppRouter, Engine, Menu, Board, StatusView, StatusMode
             this.initBoard(state);
             this.initEngine(status, player1, player2);
             this.initStatus(status);
+        },
+
+        vsMedium: function () {
+            this.$el.html('<h2>Coming soon</h2>');
+        },
+
+        vsHard: function () {
+            this.$el.html('<h2>Coming soon</h2>');
+        },
+
+        back: function () {
+
+            console.log(Backbone.history.fragment);
         },
 
         initBoard: function (state) {
