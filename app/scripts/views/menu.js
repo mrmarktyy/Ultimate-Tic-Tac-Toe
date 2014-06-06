@@ -1,8 +1,8 @@
 define(['vendor/lodash', 'vendor/backbone',
     'text!templates/menu/home.html',
     'text!templates/menu/single.html',
-    'text!templates/menu/comingsoon.html'
-], function (_, Backbone, HomeTpl, SingleTpl, ComingSoonTpl) {
+    'text!templates/menu/soon.html'
+], function (_, Backbone, HomeTpl, SingleTpl, SoonTpl) {
     'use strict';
 
     var Menu = {};
@@ -40,7 +40,7 @@ define(['vendor/lodash', 'vendor/backbone',
     });
 
     Menu.ComingSoon = Menu.Base.extend({
-        template: _.template(ComingSoonTpl),
+        template: _.template(SoonTpl),
     });
 
     return Menu;

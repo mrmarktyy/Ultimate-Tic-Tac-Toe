@@ -59,13 +59,7 @@ function (_, Backbone, $, AppRouter, Engine, Menu, Board, StatusView, StatusMode
             this.initStatus(status);
         },
 
-        vsMedium: function () {
-            new Menu.ComingSoon({
-                el: this.$el
-            });
-        },
-
-        vsHard: function () {
+        soon: function () {
             new Menu.ComingSoon({
                 el: this.$el
             });
