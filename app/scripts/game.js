@@ -21,6 +21,7 @@ function (_, Backbone, $, AppRouter, Engine, Menu, Board, StatusView, StatusMode
             this.router = new AppRouter(this);
 
             Backbone.history.start();
+            return this;
         },
 
         homeView: function () {

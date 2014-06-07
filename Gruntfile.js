@@ -16,13 +16,41 @@ module.exports = function (grunt) {
                 jshintrc: true,
                 reporter: require('jshint-stylish')
             },
-            all: ['app/main.js', 'app/*.js', 'app/collections/*.js', 'app/models/*.js', 'app/views/*.js']
+            all: ['app/main.js', 'app/scripts/**/*.js']
+        },
+
+        clean: {
+            beforebuild: {
+                src: ['dist/']
+            }
+        },
+
+        requirejs: {
+            compile: {
+                options: {
+                    buildFile: 'app.build.js',
+                    optimize: 'uglify2',
+                    logLevel: 1
+                }
+            },
         },
 
         sass: {
-            dist: {
+            dev: {
                 options: {
                     style: 'nested'
+                },
+                files: [{
+                    expand: true,
+                    cwd: 'app/stylesheets/sass',
+                    src: ['*.scss'],
+                    dest: 'app/stylesheets/css',
+                    ext: '.css'
+                }]
+            },
+            dist: {
+                options: {
+                    style: 'compressed'
                 },
                 files: [{
                     expand: true,
@@ -37,17 +65,18 @@ module.exports = function (grunt) {
         watch: {
             sass: {
                 files: 'app/stylesheets/**/*.scss',
-                tasks: ['sass']
+                tasks: ['sass:dev']
             }
         }
 
     });
 
-    grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-sass');
     grunt.loadNpmTasks('grunt-contrib-watch');
+    grunt.loadNpmTasks('grunt-contrib-requirejs');
+    grunt.loadNpmTasks('grunt-contrib-clean');
 
     grunt.registerTask('default', ['jshint']);
-    grunt.registerTask('build', ['sass']);
+    grunt.registerTask('build', ['sass:dist', 'clean:beforebuild', 'requirejs']);
 };

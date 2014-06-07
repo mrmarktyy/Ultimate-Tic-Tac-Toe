@@ -1,19 +1,17 @@
-var requireConfig = {
+require.config({
     'baseUrl': 'app/scripts/',
     'paths': {
         'vendor': '../vendor',
         'text': '../vendor/text'
     },
+    'waitSeconds': 30,
     'urlArgs': 'bust=' + (new Date()).getTime()
-};
-
-require.config(requireConfig);
-require(['game'], function (Game) {
+});
+define('main', ['game'], function (Game) {
     'use strict';
 
     var options = {
         el: '#ultimate',
-        mode: 'new',
         data: []
     };
 
