@@ -2,7 +2,7 @@ define(['vendor/lodash', 'vendor/backbone', 'vendor/jquery',
     'router', 'engine',
     'views/menu', 'views/board', 'views/status',
     'models/status', 'models/player',
-    'text!templates/main.html',
+    'text!templates/layout.html',
     'collections/squares'],
 function (_, Backbone, $, AppRouter, Engine, Menu, Board, StatusView, StatusModel, Player, LayoutTpl, Squares) {
     'use strict';
