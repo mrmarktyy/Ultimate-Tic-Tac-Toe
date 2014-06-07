@@ -4,7 +4,7 @@ define(['vendor/lodash', 'vendor/backbone', 'vendor/jquery',
     'models/status', 'models/player',
     'text!templates/main.html',
     'collections/squares'],
-function (_, Backbone, $, AppRouter, Engine, Menu, Board, StatusView, StatusModel, Player, MainTpl, Squares) {
+function (_, Backbone, $, AppRouter, Engine, Menu, Board, StatusView, StatusModel, Player, LayoutTpl, Squares) {
     'use strict';
 
     function Game (options) {
@@ -37,7 +37,7 @@ function (_, Backbone, $, AppRouter, Engine, Menu, Board, StatusView, StatusMode
         },
 
         vsHuman: function () {
-            this.$el.html(MainTpl);
+            this.$el.html(LayoutTpl);
             var state = this.getBoardState(),
                 status = new StatusModel(),
                 player1 = new Player({role: 1, nickname: 'mark'}),
@@ -49,7 +49,7 @@ function (_, Backbone, $, AppRouter, Engine, Menu, Board, StatusView, StatusMode
         },
 
         vsEasy: function () {
-            this.$el.html(MainTpl);
+            this.$el.html(LayoutTpl);
             var state = this.getBoardState(),
                 status = new StatusModel(),
                 player1 = new Player({role: 1, nickname: 'mark'}),
