@@ -1,10 +1,10 @@
-define(['vendor/lodash', 'vendor/jquery', 'resolvers/resolver'], function (_, $, Resolver) {
+define(['vendor/lodash', 'vendor/jquery', 'resolvers/resolver', 'utils/socket'], function (_, $, Resolver, Socket) {
     'use strict';
 
     var OnlineResolver = Resolver.extend({
 
         init: function () {
-            window._socket.on('move', _.bind(this.moveListener, this));
+            Socket.listenTo('move', _.bind(this.moveListener, this));
         },
 
         getNextMove: function (lastMove, validSquares) {

@@ -1,4 +1,4 @@
-define(['vendor/lodash', 'vendor/backbone'], function (_, Backbone) {
+define(['vendor/lodash', 'vendor/backbone', 'utils/socket'], function (_, Backbone, Socket) {
     'use strict';
 
     function Engine (options) {
@@ -79,10 +79,7 @@ define(['vendor/lodash', 'vendor/backbone'], function (_, Backbone) {
         },
 
         notifyServer: function () {
-            window._socket.post('/game/action', {square: this._squareIndex, cell: this._cellIndex},
-                function (response) {
-
-            });
+            Socket.postAction({square: this._squareIndex, cell: this._cellIndex});
         },
 
         /***************** Event handlers *****************/

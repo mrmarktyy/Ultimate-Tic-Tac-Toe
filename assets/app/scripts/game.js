@@ -2,9 +2,10 @@ define(['vendor/lodash', 'vendor/backbone', 'vendor/jquery',
     'router', 'engine',
     'views/menu', 'views/board', 'views/status',
     'models/status', 'models/player',
+    'utils/socket',
     'text!templates/layout.html',
     'collections/squares'],
-function (_, Backbone, $, AppRouter, Engine, Menu, Board, StatusView, StatusModel, Player, LayoutTpl, Squares) {
+function (_, Backbone, $, AppRouter, Engine, Menu, Board, StatusView, StatusModel, Player, Socket, LayoutTpl, Squares) {
     'use strict';
 
     function Game (options) {
@@ -17,12 +18,22 @@ function (_, Backbone, $, AppRouter, Engine, Menu, Board, StatusView, StatusMode
 
     _.extend(Game.prototype, {
 
+        /***************** Initialize *****************/
+
         init: function () {
             this.router = new AppRouter(this);
 
             Backbone.history.start();
             return this;
         },
+
+        establishSocket: function () {
+            var deferred = new $.Deferred();
+            Socket.init(deferred);
+            return deferred.promise();
+        },
+
+        /***************** Menu routers *****************/
 
         homeView: function () {
             this.home = new Menu.Home({
@@ -36,58 +47,10 @@ function (_, Backbone, $, AppRouter, Engine, Menu, Board, StatusView, StatusMode
             });
         },
 
-        vsHuman: function () {
-            this.$el.html(LayoutTpl);
-            var state = this.getBoardState(),
-                status = new StatusModel(),
-                player1 = new Player({role: 1, nickname: 'mark'}),
-                player2 = new Player({role: 2, nickname: 'junjun'});
-
-            this.initBoard(state);
-            this.initEngine(status, player1, player2);
-            this.initStatus(status);
-        },
-
-        vsEasy: function () {
-            this.$el.html(LayoutTpl);
-            var state = this.getBoardState(),
-                status = new StatusModel(),
-                player1 = new Player({role: 1, nickname: 'mark'}),
-                player2 = new Player({role: 2, nickname: 'easy computer', mode: 'computer'});
-
-            this.initBoard(state);
-            this.initEngine(status, player1, player2);
-            this.initStatus(status);
-        },
-
         online: function () {
             this.single = new Menu.Online({
                 el: this.$el
             });
-        },
-
-        player1: function () {
-            this.$el.html(LayoutTpl);
-            var state = this.getBoardState(),
-                status = new StatusModel(),
-                player1 = new Player({role: 1, nickname: 'mark', type: 'local'}),
-                player2 = new Player({role: 2, nickname: 'junjun', type: 'remote'});
-
-            this.initBoard(state);
-            this.initEngine(status, player1, player2);
-            this.initStatus(status);
-        },
-
-        player2: function () {
-            this.$el.html(LayoutTpl);
-            var state = this.getBoardState(),
-                status = new StatusModel(),
-                player1 = new Player({role: 1, nickname: 'mark', type: 'remote'}),
-                player2 = new Player({role: 2, nickname: 'junjun', type: 'local'});
-
-            this.initBoard(state);
-            this.initEngine(status, player1, player2);
-            this.initStatus(status);
         },
 
         soon: function () {
@@ -96,10 +59,64 @@ function (_, Backbone, $, AppRouter, Engine, Menu, Board, StatusView, StatusMode
             });
         },
 
-        back: function () {
-            var routes = Backbone.history.fragment.split('/');
-            routes.pop();
-            this.router.navigate('#' + routes.join('/'), {trigger: true});
+        vsHuman: function () {
+            this.startGame(
+                new StatusModel(),
+                this.getInitalState(),
+                new Player({role: 1, nickname: 'mark'}),
+                new Player({role: 2, nickname: 'junjun'})
+            );
+        },
+
+        vsEasy: function () {
+            this.startGame(
+                new StatusModel(),
+                this.getInitalState(),
+                new Player({role: 1, nickname: 'mark'}),
+                new Player({role: 2, nickname: 'easy computer', mode: 'computer'})
+            );
+        },
+
+
+        player1: function () {
+            this.establishSocket().done(_.bind(function () {
+                var player1 = {role: 1, nickname: 'mark', type: 'local'},
+                    player2 = {role: 2, nickname: 'junjun', type: 'remote'};
+                // var player2 = this.requestInfo();
+                this.startGame(
+                    new StatusModel(),
+                    this.getInitalState(),
+                    new Player(player1),
+                    new Player(player2)
+                );
+            }, this));
+        },
+
+        player2: function () {
+            this.establishSocket().done(_.bind(function () {
+                var player1 = {role: 1, nickname: 'mark', type: 'remote'},
+                    player2 = {role: 2, nickname: 'junjun', type: 'local'};
+                // var player2 = this.requestInfo();
+                this.startGame(
+                    new StatusModel(),
+                    this.getInitalState(),
+                    new Player(player1),
+                    new Player(player2)
+                );
+            }, this));
+        },
+
+        startGame: function (status, state, player1, player2) {
+            this.$el.html(LayoutTpl);
+            this.initBoard(state);
+            this.initEngine(status, player1, player2);
+            this.initStatus(status);
+        },
+
+        requestInfo: function () {
+            // TODO make request for asking game info
+            var player1 = {role: 1, nickname: 'mark', type: 'local'},
+                player2 = {role: 2, nickname: 'junjun', type: 'remote'};
         },
 
         initBoard: function (state) {
@@ -129,12 +146,15 @@ function (_, Backbone, $, AppRouter, Engine, Menu, Board, StatusView, StatusMode
             });
         },
 
-        getBoardState: function () {
-            if (!_.isEmpty(this.options.data)) {
-                return this.options.data;
-            }
-            return this.getInitalState();
+        /***************** Event handlers *****************/
+
+        back: function () {
+            var routes = Backbone.history.fragment.split('/');
+            routes.pop();
+            this.router.navigate('#' + routes.join('/'), {trigger: true});
         },
+
+        /***************** Miscellaneous methods *****************/
 
         getInitalState: function () {
             var data = [];

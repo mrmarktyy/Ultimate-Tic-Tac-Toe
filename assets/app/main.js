@@ -15,16 +15,6 @@ define('main', ['game'], function (Game) {
         data: []
     };
 
-    var _socket = window.io.connect();
-
-    _socket.on('connect', function socketConnected () {
-
-        console.log('Socket is now connected.');
-
-        window._socket = _socket;
-
-        var game = new Game(options);
-        game.init();
-    });
-
+    var game = new Game(options);
+    game.init();
 });
