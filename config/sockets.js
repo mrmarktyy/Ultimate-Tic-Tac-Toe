@@ -7,9 +7,27 @@
  * For more information on using Sails with Sockets, check out:
  * http://sailsjs.org/#documentation
  */
+var GameController = require('../api/controllers/GameController');
 
 module.exports.sockets = {
 
+  // This custom onConnect function will be run each time AFTER a new socket connects
+  // (To control whether a socket is allowed to connect, check out `authorization` config.)
+  // Keep in mind that Sails' RESTful simulation for sockets
+  // mixes in socket.io events for your routes and blueprints automatically.
+  onConnect: function(session, socket) {
+    // By default: do nothing
+    // This is a good    place to subscribe a new socket to a room, inform other users that
+    // someone new has come online, or any other custom socket.io logic
+    GameController.establish(session, socket);
+  },
+
+  // This custom onDisconnect function will be run each time a socket disconnects
+  onDisconnect: function(session, socket) {
+    // By default: do nothing
+    // This is a good place to broadcast a disconnect message, or any other custom socket.io logic
+    GameController.disconnect(session, socket);
+  },
 
   // `transports`
   //
@@ -33,37 +51,37 @@ module.exports.sockets = {
   // At scale, you'll want to be able to copy your app onto multiple Sails.js servers
   // and throw them behind a load balancer.
   //
-  // One of the big challenges of scaling an application is that these sorts of clustered 
+  // One of the big challenges of scaling an application is that these sorts of clustered
   // deployments cannot share memory, since they are on physically different machines.
   // On top of that, there is no guarantee that a user will "stick" with the same server between
-  // requests, since the load balancer will route each request to the server with the 
+  // requests, since the load balancer will route each request to the server with the
   // least impact on load. All pubsub processing and shared memory has to be offloaded
   // to a shared, remote messaging queue (usually Redis)
   //
   // Luckily, Sails provides production MQ support for Redis by default!
   //
-  // The data store where socket.io will store its message queue 
+  // The data store where socket.io will store its message queue
   // and answer pubsub logic
   adapter: 'memory',
   //
-  // To enable a remote redis pubsub server: 
+  // To enable a remote redis pubsub server:
   // adapter: 'redis',
   // host: '127.0.0.1',
   // port: 6379,
   // db: 'sails',
   // pass: '<redis auth password>'
-  // Worth mentioning is that, if `adapter` config is `redis`, 
-  // but host/port is left unset, Sails will try to connect to redis 
-  // running on localhost via port 6379 
+  // Worth mentioning is that, if `adapter` config is `redis`,
+  // but host/port is left unset, Sails will try to connect to redis
+  // running on localhost via port 6379
 
 
 
 
   // `authorization`
   //
-  // Global authorization for Socket.IO access, 
+  // Global authorization for Socket.IO access,
   // this is called when the initial handshake is performed with the server.
-  // 
+  //
   // By default (`authorization: true`), when a socket tries to connect, Sails verifies
   // that a valid cookie was sent with the upgrade request.  If the cookie doesn't match
   // any known user session, a new user session is created for it.
@@ -75,11 +93,11 @@ module.exports.sockets = {
   //
   // If you don't care about keeping track of your socket users between requests,
   // you can bypass this cookie check by setting `authorization: false`
-  // which will disable the session for socket requests (req.session is still accessible 
+  // which will disable the session for socket requests (req.session is still accessible
   // in each request, but it will be empty, and any changes to it will not be persisted)
   //
-  // On the other hand, if you DO need to keep track of user sessions, 
-  // you can pass along a ?cookie query parameter to the upgrade url, 
+  // On the other hand, if you DO need to keep track of user sessions,
+  // you can pass along a ?cookie query parameter to the upgrade url,
   // which Sails will use in the absense of a proper cookie
   // e.g. (when connection from the client):
   // io.connect('http://localhost:1337?cookie=smokeybear')
@@ -87,7 +105,7 @@ module.exports.sockets = {
   // (Un)fortunately, the user's cookie is (should!) not accessible in client-side js.
   // Using HTTP-only cookies is crucial for your app's security.
   // Primarily because of this situation, as well as a handful of other advanced
-  // use cases, Sails allows you to override the authorization behavior 
+  // use cases, Sails allows you to override the authorization behavior
   // with your own custom logic by specifying a function, e.g:
   /*
     authorization: function authorizeAttemptedSocketConnection(reqObj, cb) {
@@ -131,24 +149,24 @@ module.exports.sockets = {
   // Enable the flash policy server if the flashsocket transport is enabled
   // 'flash policy server': true,
 
-  // By default the Socket.IO client will check port 10843 on your server 
+  // By default the Socket.IO client will check port 10843 on your server
   // to see if flashsocket connections are allowed.
-  // The Adobe Flash Player normally uses 843 as default port, 
+  // The Adobe Flash Player normally uses 843 as default port,
   // but Socket.io defaults to a non root port (10843) by default
   //
   // If you are using a hosting provider that doesn't allow you to start servers
-  // other than on port 80 or the provided port, and you still want to support flashsockets 
+  // other than on port 80 or the provided port, and you still want to support flashsockets
   // you can set the `flash policy port` to -1
   'flash policy port': 10843,
 
-  // Used by the HTTP transports. The Socket.IO server buffers HTTP request bodies up to this limit. 
+  // Used by the HTTP transports. The Socket.IO server buffers HTTP request bodies up to this limit.
   // This limit is not applied to websocket or flashsockets.
   'destroy buffer size': '10E7',
 
   // Do we need to destroy non-socket.io upgrade requests?
   'destroy upgrade': true,
 
-  // Should Sails/Socket.io serve the `socket.io.js` client? 
+  // Should Sails/Socket.io serve the `socket.io.js` client?
   // (as well as WebSocketMain.swf for Flash sockets, etc.)
   'browser client': true,
 
@@ -162,23 +180,23 @@ module.exports.sockets = {
   // Does Socket.IO need to send an ETag header for the static requests?
   'browser client etag': false,
 
-  // Adds a Cache-Control: private, x-gzip-ok="", max-age=31536000 header to static requests, 
+  // Adds a Cache-Control: private, x-gzip-ok="", max-age=31536000 header to static requests,
   // but only if the file is requested with a version number like /socket.io/socket.io.v0.9.9.js.
   'browser client expires': 315360000,
 
   // Does Socket.IO need to GZIP the static files?
-  // This process is only done once and the computed output is stored in memory. 
+  // This process is only done once and the computed output is stored in memory.
   // So we don't have to spawn a gzip process for each request.
   'browser client gzip': false,
 
-  // Optional override function to serve all static files, 
+  // Optional override function to serve all static files,
   // including socket.io.js et al.
   // Of the form :: function (req, res) { /* serve files */ }
   'browser client handler': false,
 
-  // Meant to be used when running socket.io behind a proxy. 
-  // Should be set to true when you want the location handshake to match the protocol of the origin. 
-  // This fixes issues with terminating the SSL in front of Node 
+  // Meant to be used when running socket.io behind a proxy.
+  // Should be set to true when you want the location handshake to match the protocol of the origin.
+  // This fixes issues with terminating the SSL in front of Node
   // and forcing location to think it's wss instead of ws.
   'match origin protocol': false,
 
@@ -203,7 +221,7 @@ module.exports.sockets = {
   // (`undefined` indicates use default)
   'static': undefined,
 
-  // The entry point where Socket.IO starts looking for incoming connections. 
+  // The entry point where Socket.IO starts looking for incoming connections.
   // This should be the same between the client and the server.
   resource: '/socket.io'
 

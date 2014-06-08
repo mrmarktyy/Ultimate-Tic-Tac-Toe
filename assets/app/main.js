@@ -19,7 +19,7 @@ define('main', ['game'], function (Game) {
 
     _socket.on('connect', function socketConnected () {
 
-        console.log('Socket is now connected and globally accessible as `_socket`');
+        console.log('Socket is now connected.');
 
         window._socket = _socket;
 

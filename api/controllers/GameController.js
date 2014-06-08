@@ -9,19 +9,26 @@
 var _ = require('lodash-node');
 var sockets = [];
 
-function boardcast (sender, action) {
-    sockets.forEach(function (socket) {
-        if (sender.id !== socket.id) {
-            socket.emit('move', action);
+function boardcast (socket, action) {
+    sockets.forEach(function (_s) {
+        if (_s.id !== socket.id) {
+            _s.emit('move', action);
         }
     });
 }
 
 module.exports = {
 
-    establish: function (req, res) {
-        sockets.push(req.socket);
-        console.log('Socket id: ' + req.socket.id + ' connected.\nThere\'re ' + sockets.length + ' active sockets in the poll');
+    establish: function (session, socket) {
+        sockets.push(socket);
+        console.log('Socket id: ' + socket.id + ' connected.\nThere\'re ' + sockets.length + ' active sockets in the poll');
+    },
+
+    disconnect: function (session, socket) {
+        _.remove(sockets, function (_s) {
+            return _s.id === socket.id;
+        });
+        console.log('Socket id: ' + socket.id + ' disconnected.\n There\'re ' + sockets.length + ' active sockets in the poll');
     },
 
     action: function (req, res) {
