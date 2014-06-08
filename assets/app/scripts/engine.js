@@ -24,8 +24,6 @@ define(['vendor/lodash', 'vendor/backbone'], function (_, Backbone) {
 
         start: function () {
             // TODO initialize
-            window._socket.get('/game/establish');
-
             this.on('player:move', this.playerListener, this);
             this.on('show:guide', this.showGuide, this);
             this.on('hide:guide', this.hideGuide, this);
@@ -81,8 +79,9 @@ define(['vendor/lodash', 'vendor/backbone'], function (_, Backbone) {
         },
 
         notifyServer: function () {
-            window._socket.post('/game/action', {square: this._squareIndex, cell: this._cellIndex}, function (response) {
-                console.log('notifyServer:: ', response);
+            window._socket.post('/game/action', {square: this._squareIndex, cell: this._cellIndex},
+                function (response) {
+
             });
         },
 

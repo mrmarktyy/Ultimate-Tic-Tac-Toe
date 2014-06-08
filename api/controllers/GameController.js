@@ -1,10 +1,9 @@
 /**
  * GameController
  *
- * @module		:: Controller
- * @description	:: Contains logic for handling requests.
+ * @module      :: Controller
+ * @description :: Contains logic for handling requests.
  */
-
 'use strict';
 var _ = require('lodash-node');
 var sockets = [];
@@ -17,18 +16,23 @@ function boardcast (socket, action) {
     });
 }
 
+function log (id, state) {
+    sails.log.info('Socket: ' + id + ' ' + state + 'ed.');
+    sails.log.info('There\'re ' + sockets.length + ' active connections in the poll');
+}
+
 module.exports = {
 
     establish: function (session, socket) {
         sockets.push(socket);
-        console.log('Socket id: ' + socket.id + ' connected.\nThere\'re ' + sockets.length + ' active sockets in the poll');
+        log(socket.id, 'connect');
     },
 
     disconnect: function (session, socket) {
         _.remove(sockets, function (_s) {
             return _s.id === socket.id;
         });
-        console.log('Socket id: ' + socket.id + ' disconnected.\n There\'re ' + sockets.length + ' active sockets in the poll');
+        log(socket.id, 'disconnect');
     },
 
     action: function (req, res) {
