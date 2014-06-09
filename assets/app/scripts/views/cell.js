@@ -6,7 +6,7 @@ define(['vendor/backbone', 'vendor/lodash', 'engine'], function (Backbone, _, En
         className: 'cell',
 
         events: {
-            'click'             : 'movehere',
+            'click'             : 'makeMove',
             'mouseenter'        : 'showGuide',
             'mouseleave'        : 'hideGuide'
         },
@@ -35,7 +35,7 @@ define(['vendor/backbone', 'vendor/lodash', 'engine'], function (Backbone, _, En
             this.$el.addClass('tada');
         },
 
-        movehere: function (event) {
+        makeMove: function (event) {
             if (this._square.$el.hasClass('moveable')) {
                 Engine.getInstance().trigger('player:move', this._squareIndex, this._index);
             } else {

@@ -77,7 +77,6 @@ function (_, Backbone, $, AppRouter, Engine, Menu, Board, StatusView, StatusMode
             );
         },
 
-
         player1: function () {
             this.establishSocket().done(_.bind(function () {
                 var player1 = {role: 1, nickname: 'mark', type: 'local'},

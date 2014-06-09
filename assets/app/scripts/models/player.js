@@ -6,7 +6,7 @@ define(['vendor/backbone', 'resolverFactory'], function (Backbone, resolverFacto
         defaults: {
             role: 0,
             mode: 'human',
-            type: undefined,
+            type: 'local',
             nickname: undefined,
             rank: undefined,
             score: undefined,
