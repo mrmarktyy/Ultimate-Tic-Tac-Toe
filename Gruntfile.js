@@ -15,7 +15,12 @@
  */
 
 module.exports = function (grunt) {
-
+    var bannerContent = '/* \n' +
+        ' * <%= pkg.name %> v<%= pkg.version %> \n' +
+        ' * Author: @<%= pkg.author %> \n' +
+        ' * Url: <%= pkg.repository.url %> \n' +
+        ' * Licensed under the <%= pkg.license %> license\n' +
+        ' */\n';
 
 
   /**
@@ -131,8 +136,7 @@ module.exports = function (grunt) {
   grunt.loadTasks(depsPath + '/grunt-contrib-watch/tasks');
   grunt.loadTasks(depsPath + '/grunt-contrib-uglify/tasks');
   grunt.loadTasks(depsPath + '/grunt-contrib-cssmin/tasks');
-  grunt.loadTasks(depsPath + '/grunt-contrib-less/tasks');
-  grunt.loadTasks(depsPath + '/grunt-contrib-coffee/tasks');
+  grunt.loadNpmTasks('grunt-contrib-sass');
 
   // Project configuration.
   grunt.initConfig({
@@ -176,49 +180,6 @@ module.exports = function (grunt) {
         files: {
           '.tmp/public/jst.js': templateFilesToInject
         }
-      }
-    },
-
-    less: {
-      dev: {
-        files: [
-          {
-          expand: true,
-          cwd: 'assets/styles/',
-          src: ['*.less'],
-          dest: '.tmp/public/styles/',
-          ext: '.css'
-        }, {
-          expand: true,
-          cwd: 'assets/linker/styles/',
-          src: ['*.less'],
-          dest: '.tmp/public/linker/styles/',
-          ext: '.css'
-        }
-        ]
-      }
-    },
-
-    coffee: {
-      dev: {
-        options:{
-          bare:true
-        },
-        files: [
-          {
-            expand: true,
-            cwd: 'assets/js/',
-            src: ['**/*.coffee'],
-            dest: '.tmp/public/js/',
-            ext: '.js'
-          }, {
-            expand: true,
-            cwd: 'assets/linker/js/',
-            src: ['**/*.coffee'],
-            dest: '.tmp/public/linker/js/',
-            ext: '.js'
-          }
-        ]
       }
     },
 
@@ -394,19 +355,36 @@ module.exports = function (grunt) {
 
     watch: {
       api: {
-
         // API files to watch:
         files: ['api/**/*']
       },
       assets: {
-
         // Assets to watch:
         files: ['assets/**/*'],
-
         // When assets are changed:
         tasks: ['compileAssets', 'linkAssets']
+      },
+      sass: {
+        files: 'assets/app/stylesheets/**/*.scss',
+        tasks: ['sass:dist']
       }
+    },
+
+    sass: {
+        dist: {
+            options: {
+                style: 'nested'
+            },
+            files: [{
+                expand: true,
+                cwd: 'assets/app/stylesheets/sass',
+                src: ['*.scss'],
+                dest: 'assets/app/stylesheets/css',
+                ext: '.css'
+            }]
+        }
     }
+
   });
 
   // When Sails is lifted:
@@ -419,9 +397,7 @@ module.exports = function (grunt) {
   grunt.registerTask('compileAssets', [
     'clean:dev',
     'jst:dev',
-    'less:dev',
-    'copy:dev',
-    'coffee:dev'
+    'copy:dev'
   ]);
 
   grunt.registerTask('linkAssets', [
@@ -449,9 +425,7 @@ module.exports = function (grunt) {
   grunt.registerTask('prod', [
     'clean:dev',
     'jst:dev',
-    'less:dev',
     'copy:dev',
-    'coffee:dev',
     'concat',
     'uglify',
     'cssmin',
@@ -478,17 +452,15 @@ module.exports = function (grunt) {
   //     console.error(filepath + ' has ' + action + ', but could not signal the Sails.js server: ' + e.message);
   //   });
   // });
+
+  /**
+   * Custom grunt tasks
+   */
+
 };
 
 // module.exports = function (grunt) {
 //     'use strict';
-
-//     var bannerContent = '/* \n' +
-//         ' * <%= pkg.name %> v<%= pkg.version %> \n' +
-//         ' * Author: @<%= pkg.author %> \n' +
-//         ' * Url: <%= pkg.repository.url %> \n' +
-//         ' * Licensed under the <%= pkg.license %> license\n' +
-//         ' */\n';
 
 //     grunt.initConfig({
 //         pkg: grunt.file.readJSON('package.json'),
@@ -509,32 +481,8 @@ module.exports = function (grunt) {
 //             },
 //         },
 
-//         sass: {
-//             dist: {
-//                 options: {
-//                     style: 'nested'
-//                 },
-//                 files: [{
-//                     expand: true,
-//                     cwd: 'assets/app/stylesheets/sass',
-//                     src: ['*.scss'],
-//                     dest: 'assets/app/stylesheets/css',
-//                     ext: '.css'
-//                 }]
-//             }
-//         },
-
-//         watch: {
-//             sass: {
-//                 files: 'assets/app/stylesheets/**/*.scss',
-//                 tasks: ['sass:dist']
-//             }
-//         }
-
 //     });
 
-//     grunt.loadNpmTasks('grunt-contrib-sass');
-//     grunt.loadNpmTasks('grunt-contrib-watch');
 //     grunt.loadNpmTasks('grunt-contrib-requirejs');
 //     grunt.loadNpmTasks('grunt-contrib-clean');
 
