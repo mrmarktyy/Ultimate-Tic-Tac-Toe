@@ -23,9 +23,9 @@ define(['vendor/backbone', 'vendor/lodash', 'engine'], function (Backbone, _, En
 
         render: function () {
             if (this.model.get('value')) {
-                this.$el.addClass('o p' + this.model.get('value'));
+                this.$el.addClass('p' + this.model.get('value'));
             } else {
-                this.$el.removeClass('o p1 p2');
+                this.$el.removeClass('p1 p2');
             }
             return this;
         },

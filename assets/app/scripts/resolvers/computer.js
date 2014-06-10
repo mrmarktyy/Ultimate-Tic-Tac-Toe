@@ -23,8 +23,9 @@ define(['vendor/lodash', 'vendor/jquery', 'engine', 'resolvers/resolver'], funct
                 Engine.getInstance().trigger(
                     'player:move',
                     _randomSquareIndex,
-                    _randomCellIndex);
-            }, 1000);
+                    _randomCellIndex,
+                    true);
+            }, _.random(1000, 2000));
         }
 
     });

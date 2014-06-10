@@ -70,7 +70,7 @@ function (_, Backbone, $, AppRouter, Engine, Menu, Board, StatusView, StatusMode
 
         vsEasy: function () {
             this.startGame(
-                new StatusModel(),
+                new StatusModel({owner: 1}),
                 this.getInitalState(),
                 new Player({role: 1, nickname: 'mark'}),
                 new Player({role: 2, nickname: 'easy computer', mode: 'computer'})
@@ -83,7 +83,7 @@ function (_, Backbone, $, AppRouter, Engine, Menu, Board, StatusView, StatusMode
                     player2 = {role: 2, nickname: 'junjun', type: 'remote'};
                 // var player2 = this.requestInfo();
                 this.startGame(
-                    new StatusModel(),
+                    new StatusModel({owner: 1, mode: 'remote'}),
                     this.getInitalState(),
                     new Player(player1),
                     new Player(player2)
@@ -97,7 +97,7 @@ function (_, Backbone, $, AppRouter, Engine, Menu, Board, StatusView, StatusMode
                     player2 = {role: 2, nickname: 'junjun', type: 'local'};
                 // var player2 = this.requestInfo();
                 this.startGame(
-                    new StatusModel(),
+                    new StatusModel({owner: 2, mode: 'remote'}),
                     this.getInitalState(),
                     new Player(player1),
                     new Player(player2)

@@ -84,11 +84,18 @@ define(['vendor/lodash', 'vendor/backbone', 'utils/socket'], function (_, Backbo
 
         /***************** Event handlers *****************/
 
-        playerListener: function (squareIndex, cellIndex) {
-            this._squareIndex = squareIndex;
-            this._cellIndex = cellIndex;
-            this.notifyServer();
-            this.currentPlayer.get('resolver').trigger('cell:move');
+        playerListener: function (squareIndex, cellIndex, forced) {
+            if (this.status.get('owner') === 0 ||
+                this.status.get('owner') === this.currentPlayer.get('role') ||
+                forced === true
+            ) {
+                this._squareIndex = squareIndex;
+                this._cellIndex = cellIndex;
+                if (this.status.get('mode') === 'remote') {
+                    this.notifyServer();
+                }
+                this.currentPlayer.get('resolver').trigger('cell:move');
+            }
         },
 
         showGuide: function (cellIndex) {

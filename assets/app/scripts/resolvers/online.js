@@ -4,6 +4,7 @@ define(['vendor/lodash', 'vendor/jquery', 'resolvers/resolver', 'utils/socket'],
     var OnlineResolver = Resolver.extend({
 
         init: function () {
+            this.on('cell:reject', this.rejectListener, this);
             Socket.listenTo('move', _.bind(this.moveListener, this));
         },
 
