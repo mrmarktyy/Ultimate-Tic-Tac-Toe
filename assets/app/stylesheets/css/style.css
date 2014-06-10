@@ -95,9 +95,7 @@
   border-right: 0.5em solid #eee;
   border-bottom: 0.5em solid #eee;
   opacity: 1;
-  transition: background-color 0.2s ease-in, opacity 0.2s ease-in;
-  animation: makemove 0.8s ease;
-  -webkit-animation: makemove 0.8s ease; }
+  transition: background-color 0.2s ease-in, opacity 0.2s ease-in; }
   .cell:nth-child(3n) {
     border-right: none; }
   .cell:nth-last-child(-n+3) {
@@ -114,7 +112,9 @@
   height: 100%;
   content: '';
   display: block;
-  opacity: 0.7; }
+  opacity: 0.7;
+  animation: makemove 1s ease-in-out;
+  -webkit-animation: makemove 1s ease-in-out; }
 .cell.o.p1:before {
   background-color: #e74c3c; }
 .cell.o.p2:before {
@@ -176,6 +176,12 @@
 @-webkit-keyframes makemove {
   0% {
     -webkit-transform: scale(0); }
+
+  40% {
+    -webkit-transform: scale(1); }
+
+  80% {
+    -webkit-transform: scale(0.5); }
 
   100% {
     -webkit-transform: scale(1); } }
