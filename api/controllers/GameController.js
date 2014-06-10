@@ -5,7 +5,8 @@
  * @description :: Contains logic for handling requests.
  */
 'use strict';
-var _ = require('lodash-node');
+var _       = require('lodash-node');
+var utils   = require('../utils');
 var sockets = [];
 
 function boardcast (socket, action) {
@@ -16,23 +17,34 @@ function boardcast (socket, action) {
     });
 }
 
-function log (id, state) {
-    sails.log.info('Socket: ' + id + ' ' + state + 'ed.');
-    sails.log.info('There\'re ' + sockets.length + ' active connections in the poll');
-}
-
 module.exports = {
 
     establish: function (session, socket) {
-        sockets.push(socket);
-        log(socket.id, 'connect');
+        if (socket) {
+            sockets.push(socket);
+            sails.log.info('Socket: ' + socket.id + ' connected.');
+            sails.log.info('There\'re ' + sockets.length + ' active connections in the poll.');
+        }
     },
 
     disconnect: function (session, socket) {
-        _.remove(sockets, function (_s) {
-            return _s.id === socket.id;
-        });
-        log(socket.id, 'disconnect');
+        if (socket) {
+            _.remove(sockets, function (_s) {
+                return _s.id === socket.id;
+            });
+            sails.log.info('Socket: ' + socket.id + ' disconnect.');
+            sails.log.info('There\'re ' + sockets.length + ' active connections in the poll.');
+        }
+    },
+
+    createGame: function () {
+        var uuid = utils.uuid();
+        sails.log.info(uuid);
+        return uuid;
+    },
+
+    findPlayer: function () {
+
     },
 
     action: function (req, res) {
@@ -40,6 +52,7 @@ module.exports = {
             square: req.param('square'),
             cell: req.param('cell')
         };
+
         boardcast(req.socket, action);
 
         res.json({status: true});
