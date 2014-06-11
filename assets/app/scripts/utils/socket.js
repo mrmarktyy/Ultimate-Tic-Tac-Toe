@@ -24,6 +24,14 @@ define(function () {
         });
     }
 
+    function createGame () {
+        var deferred = new $.Deferred();
+        _socket.post('/game/create', function (response) {
+            deferred.resolve(response);
+        });
+        return deferred.promise();
+    }
+
     function listenTo (type, callback) {
         _socket.on(type, callback);
     }
@@ -32,6 +40,7 @@ define(function () {
         init        : init,
         getInstance : getInstance,
         postAction  : postAction,
+        createGame  : createGame,
         listenTo    : listenTo
     };
 });

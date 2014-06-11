@@ -8,6 +8,7 @@
 var _       = require('lodash-node');
 var utils   = require('../utils');
 var sockets = [];
+var games   = {};
 
 function boardcast (socket, action) {
     sockets.forEach(function (_s) {
@@ -37,14 +38,29 @@ module.exports = {
         }
     },
 
-    createGame: function () {
-        var uuid = utils.uuid();
-        sails.log.info(uuid);
-        return uuid;
+    create: function (req, res) {
+        if (req.isSocket) {
+            var uuid = utils.uuid();
+            var game = games[uuid] = {};
+            game.player1 = req.socket;
+
+            res.json(uuid);
+        }
     },
 
-    findPlayer: function () {
+    join: function (req, res) {
 
+    },
+
+    find: function (req, res) {
+
+    },
+
+    status: function (req, res) {
+        res.json({
+            sockets: _.map(sockets, function (s) { return s.id; }),
+            games: _.keys(games)
+        });
     },
 
     action: function (req, res) {

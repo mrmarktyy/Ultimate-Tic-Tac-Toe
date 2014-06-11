@@ -105,6 +105,14 @@ function (_, Backbone, $, AppRouter, Engine, Menu, Board, StatusView, StatusMode
             }, this));
         },
 
+        createGame: function () {
+            this.establishSocket().done(function () {
+                Socket.createGame().done(function (response) {
+                    console.log(response);
+                });
+            });
+        },
+
         startGame: function (status, state, player1, player2) {
             this.$el.html(LayoutTpl);
             this.initBoard(state);
