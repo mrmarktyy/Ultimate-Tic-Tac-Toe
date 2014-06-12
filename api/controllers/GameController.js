@@ -108,7 +108,7 @@ module.exports = {
                 square: req.param('square'),
                 cell: req.param('cell')
             };
-
+            sails.log.info(uuid, action);
             boardcast(uuid, req.socket.id, action);
         }
         return res.json({

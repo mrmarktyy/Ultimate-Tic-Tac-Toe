@@ -27,12 +27,6 @@ function (_, Backbone, $, AppRouter, Engine, Menu, Board, StatusView, StatusMode
             return this;
         },
 
-        establishSocket: function () {
-            var deferred = new $.Deferred();
-            Socket.init(deferred);
-            return deferred.promise();
-        },
-
         /***************** Menu routers *****************/
 
         homeView: function () {
@@ -75,32 +69,6 @@ function (_, Backbone, $, AppRouter, Engine, Menu, Board, StatusView, StatusMode
                 new Player({role: 1, nickname: 'mark'}),
                 new Player({role: 2, nickname: 'easy computer', mode: 'computer'})
             );
-        },
-
-        player1: function () {
-            Socket.init().done(_.bind(function () {
-                var player1 = {role: 1, nickname: 'mark', type: 'local'},
-                    player2 = {role: 2, nickname: 'junjun', type: 'remote'};
-                this.startGame(
-                    new StatusModel({owner: 1, mode: 'remote'}),
-                    this.getInitalState(),
-                    new Player(player1),
-                    new Player(player2)
-                );
-            }, this));
-        },
-
-        player2: function () {
-            Socket.init().done(_.bind(function () {
-                var player1 = {role: 1, nickname: 'mark', type: 'remote'},
-                    player2 = {role: 2, nickname: 'junjun', type: 'local'};
-                this.startGame(
-                    new StatusModel({owner: 2, mode: 'remote'}),
-                    this.getInitalState(),
-                    new Player(player1),
-                    new Player(player2)
-                );
-            }, this));
         },
 
         createGame: function () {

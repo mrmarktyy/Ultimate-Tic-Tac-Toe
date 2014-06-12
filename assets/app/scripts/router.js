@@ -10,8 +10,6 @@ define(['vendor/backbone'], function (Backbone) {
             'single/medium'     : 'medium',
             'single/hard'       : 'hard',
             'online'            : 'online',
-            'online/player1'    : 'player1',
-            'online/player2'    : 'player2',
             'online/create'     : 'create',
             'online/join'       : 'join',
             'tutorial'          : 'tutorial',
@@ -26,8 +24,6 @@ define(['vendor/backbone'], function (Backbone) {
             this.on('route:medium', Game.soon, Game);
             this.on('route:hard', Game.soon, Game);
             this.on('route:online', Game.online, Game);
-            this.on('route:player1', Game.player1, Game);
-            this.on('route:player2', Game.player2, Game);
             this.on('route:create', Game.createGame, Game);
             this.on('route:join', Game.joinGame, Game);
             this.on('route:tutorial', Game.soon, Game);
