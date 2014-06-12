@@ -79,7 +79,7 @@ define(['vendor/lodash', 'vendor/backbone', 'utils/socket'], function (_, Backbo
         },
 
         notifyServer: function () {
-            Socket.postAction({square: this._squareIndex, cell: this._cellIndex});
+            Socket.moveAction({square: this._squareIndex, cell: this._cellIndex, uuid: this.status.get('uuid')});
         },
 
         /***************** Event handlers *****************/

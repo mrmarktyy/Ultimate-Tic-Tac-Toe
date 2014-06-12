@@ -5,7 +5,7 @@ define(['vendor/lodash', 'vendor/jquery', 'resolvers/resolver', 'utils/socket'],
 
         init: function () {
             this.on('cell:reject', this.rejectListener, this);
-            Socket.listenTo('move', _.bind(this.moveListener, this));
+            Socket.listenTo('game:move', _.bind(this.moveListener, this));
         },
 
         getNextMove: function (lastMove, validSquares) {

@@ -2,10 +2,10 @@ define(['vendor/lodash', 'vendor/backbone', 'vendor/jquery',
     'router', 'engine',
     'views/menu', 'views/board', 'views/status',
     'models/status', 'models/player',
-    'utils/socket',
+    'utils/socket', 'utils/validate',
     'text!templates/layout.html',
     'collections/squares'],
-function (_, Backbone, $, AppRouter, Engine, Menu, Board, StatusView, StatusModel, Player, Socket, LayoutTpl, Squares) {
+function (_, Backbone, $, AppRouter, Engine, Menu, Board, StatusView, StatusModel, Player, Socket, Validate, LayoutTpl, Squares) {
     'use strict';
 
     function Game (options) {
@@ -78,10 +78,9 @@ function (_, Backbone, $, AppRouter, Engine, Menu, Board, StatusView, StatusMode
         },
 
         player1: function () {
-            this.establishSocket().done(_.bind(function () {
+            Socket.init().done(_.bind(function () {
                 var player1 = {role: 1, nickname: 'mark', type: 'local'},
                     player2 = {role: 2, nickname: 'junjun', type: 'remote'};
-                // var player2 = this.requestInfo();
                 this.startGame(
                     new StatusModel({owner: 1, mode: 'remote'}),
                     this.getInitalState(),
@@ -92,10 +91,9 @@ function (_, Backbone, $, AppRouter, Engine, Menu, Board, StatusView, StatusMode
         },
 
         player2: function () {
-            this.establishSocket().done(_.bind(function () {
+            Socket.init().done(_.bind(function () {
                 var player1 = {role: 1, nickname: 'mark', type: 'remote'},
                     player2 = {role: 2, nickname: 'junjun', type: 'local'};
-                // var player2 = this.requestInfo();
                 this.startGame(
                     new StatusModel({owner: 2, mode: 'remote'}),
                     this.getInitalState(),
@@ -106,11 +104,44 @@ function (_, Backbone, $, AppRouter, Engine, Menu, Board, StatusView, StatusMode
         },
 
         createGame: function () {
-            this.establishSocket().done(function () {
-                Socket.createGame().done(function (response) {
-                    console.log(response);
-                });
-            });
+            this.player = {role: 1, nickname: 'mark'};
+            Socket.createGame(this.player).done(_.bind(function (response) {
+                this.uuid = response;
+                // TODO update status
+                Socket.listenTo('game:start', _.bind(this.prepareGame, this));
+            }, this));
+        },
+
+        joinGame: function (queryString) {
+            this.player = {role: 2, nickname: 'junjun'};
+            this.uuid = Validate.getQueryParams(queryString).id;
+            if (this.uuid) {
+                Socket.listenTo('game:start', _.bind(this.prepareGame, this));
+                Socket.joinGame(this.uuid, this.player).done(_.bind(function (response) {
+                    // TODO update status
+                }, this));
+            }
+        },
+
+        prepareGame: function (response) {
+            this.player = _.merge(this.player, {mode: 'human', type: 'local'});
+            var player = _.merge(response, {mode: 'human', type: 'remote'});
+
+            var status = new StatusModel({uuid: this.uuid, owner: this.player.role, mode: 'remote'}),
+                player1, player2;
+            if (this.player.role === 1) {
+                player1 = new Player(this.player);
+                player2 = new Player(player);
+            } else {
+                player1 = new Player(player);
+                player2 = new Player(this.player);
+            }
+            this.startGame(
+                status,
+                this.getInitalState(),
+                player1,
+                player2
+            );
         },
 
         startGame: function (status, state, player1, player2) {
@@ -118,12 +149,6 @@ function (_, Backbone, $, AppRouter, Engine, Menu, Board, StatusView, StatusMode
             this.initBoard(state);
             this.initEngine(status, player1, player2);
             this.initStatus(status);
-        },
-
-        requestInfo: function () {
-            // TODO make request for asking game info
-            var player1 = {role: 1, nickname: 'mark', type: 'local'},
-                player2 = {role: 2, nickname: 'junjun', type: 'remote'};
         },
 
         initBoard: function (state) {

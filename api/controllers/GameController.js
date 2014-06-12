@@ -7,49 +7,87 @@
 'use strict';
 var _       = require('lodash-node');
 var utils   = require('../utils');
-var sockets = [];
-var games   = {};
+var _sockets = {};
+var _games   = {};
 
-function boardcast (socket, action) {
-    sockets.forEach(function (_s) {
-        if (_s.id !== socket.id) {
-            _s.emit('move', action);
+function boardcast (uuid, socket_id, action) {
+    if (_games[uuid]) {
+        // TODO cleanup, a bit nasty now
+        // Check which socket to send action
+        if (_games[uuid].creator.socket_id === socket_id) {
+            _sockets[_games[uuid].joiner.socket_id].emit('game:move', action);
+        } else {
+            _sockets[_games[uuid].creator.socket_id].emit('game:move', action);
+        }
+    }
+    _sockets.forEach(function (s) {
+        if (s.id !== socket.id) {
+            s.emit('game:move', action);
         }
     });
+}
+
+function notifyGameStart (uuid) {
+    if (_games[uuid]) {
+        _sockets[_games[uuid].creator.socket_id].emit('game:start', _games[uuid].joiner.player);
+        _sockets[_games[uuid].joiner.socket_id].emit('game:start', _games[uuid].creator.player);
+    }
 }
 
 module.exports = {
 
     establish: function (session, socket) {
         if (socket) {
-            sockets.push(socket);
-            sails.log.info('Socket: ' + socket.id + ' connected.');
-            sails.log.info('There\'re ' + sockets.length + ' active connections in the poll.');
+            _sockets[socket.id] = socket;
         }
     },
 
     disconnect: function (session, socket) {
         if (socket) {
-            _.remove(sockets, function (_s) {
-                return _s.id === socket.id;
-            });
-            sails.log.info('Socket: ' + socket.id + ' disconnect.');
-            sails.log.info('There\'re ' + sockets.length + ' active connections in the poll.');
+            delete _sockets[socket.id];
         }
     },
 
     create: function (req, res) {
         if (req.isSocket) {
             var uuid = utils.uuid();
-            var game = games[uuid] = {};
-            game.player1 = req.socket;
-
-            res.json(uuid);
+            _games[uuid] = {
+                creator: {
+                    socket_id: req.socket.id,
+                    player: req.param('player')
+                }
+            };
+            return res.json({
+                status: true,
+                uuid: uuid
+            });
         }
     },
 
     join: function (req, res) {
-
+        if (req.isSocket) {
+            var uuid = req.param('uuid');
+            if (!_games[uuid]) {
+                return res.json({
+                    status: false,
+                    message: 'Game with game_id: ' + uuid + ' does not exist.'
+                });
+            }
+            if (_games[uuid].joiner) {
+                return res.json({
+                    status: false,
+                    message: 'Game with game_id: ' + uuid + ' has already started.'
+                });
+            }
+            _games[uuid].joiner = {
+                socket_id: req.socket.id,
+                player: req.param('player')
+            };
+            notifyGameStart(uuid);
+            return res.json({
+                status: true
+            });
+        }
     },
 
     find: function (req, res) {
@@ -57,21 +95,26 @@ module.exports = {
     },
 
     status: function (req, res) {
-        res.json({
-            sockets: _.map(sockets, function (s) { return s.id; }),
-            games: _.keys(games)
+        return res.json({
+            _sockets: _.keys(_sockets),
+            _games: _games
         });
     },
 
     action: function (req, res) {
-        var action = {
-            square: req.param('square'),
-            cell: req.param('cell')
-        };
+        var uuid = req.param('uuid');
+        if (uuid && _games[uuid]) {
+            var action = {
+                square: req.param('square'),
+                cell: req.param('cell')
+            };
 
-        boardcast(req.socket, action);
-
-        res.json({status: true});
+            boardcast(uuid, req.socket.id, action);
+        }
+        return res.json({
+            status: false,
+            message: 'game_id: ' + uuid + ' is invalid.'
+        });
     }
 
 };

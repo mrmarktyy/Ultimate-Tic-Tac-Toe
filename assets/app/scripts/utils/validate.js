@@ -1,4 +1,4 @@
-define(function () {
+define(['vendor/lodash'], function (_) {
     'use strict';
 
     function checkRole (c) {
@@ -70,8 +70,19 @@ define(function () {
         return checkHorizontal() || checkVertical() || checkDiagonal();
     }
 
+    function getQueryParams(queryString) {
+        return _.chain(queryString.split('&'))
+            .map(function(params) {
+                var p = params.split('=');
+                return [p[0], decodeURIComponent(p[1])];
+            })
+            .object()
+            .value();
+    }
+
     return {
-        checkRole: checkRole
+        checkRole: checkRole,
+        getQueryParams: getQueryParams
     };
 
 });
