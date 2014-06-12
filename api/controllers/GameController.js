@@ -20,11 +20,6 @@ function boardcast (uuid, socket_id, action) {
             _sockets[_games[uuid].creator.socket_id].emit('game:move', action);
         }
     }
-    _sockets.forEach(function (s) {
-        if (s.id !== socket.id) {
-            s.emit('game:move', action);
-        }
-    });
 }
 
 function notifyGameStart (uuid) {
@@ -108,13 +103,14 @@ module.exports = {
                 square: req.param('square'),
                 cell: req.param('cell')
             };
-            sails.log.info(uuid, action);
+
             boardcast(uuid, req.socket.id, action);
+        } else {
+            return res.json({
+                status: false,
+                message: 'game_id: ' + uuid + ' is invalid.'
+            });
         }
-        return res.json({
-            status: false,
-            message: 'game_id: ' + uuid + ' is invalid.'
-        });
     }
 
 };

@@ -23,8 +23,8 @@ define(function () {
     }
 
     function moveAction (action) {
-        _socket.post('/game/action', action, function (response) {
-
+        init().done(function () {
+            _socket.post('/game/action', action);
         });
     }
 

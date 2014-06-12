@@ -74,7 +74,7 @@ function (_, Backbone, $, AppRouter, Engine, Menu, Board, StatusView, StatusMode
         createGame: function () {
             this.player = {role: 1, nickname: 'mark'};
             Socket.createGame(this.player).done(_.bind(function (response) {
-                this.uuid = response;
+                this.uuid = response.uuid;
                 // TODO update status
                 Socket.listenTo('game:start', _.bind(this.prepareGame, this));
             }, this));
