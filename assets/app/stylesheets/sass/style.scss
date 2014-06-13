@@ -2,7 +2,8 @@
 // Variables
 //
 $boardFontSize: 10px;
-
+// colors
+$primary: #428bca;
 $valid: #f1c40f;
 $invalid: rgba(204,204,204,0.6);
 $player1: #e74c3c;
@@ -154,8 +155,8 @@ $player2RGBA: rgba(52, 152, 219, 0.5);
         border-bottom: none;
     }
     &.tada:before {
-        animation: tada 3s 1s infinite ease both;
-        -webkit-animation: tada 3s 1s infinite ease both;
+        animation: tada 5s infinite ease both;
+        -webkit-animation: tada 5s infinite ease both;
     }
 }
 
@@ -171,8 +172,6 @@ $player2RGBA: rgba(52, 152, 219, 0.5);
             content: '';
             display: block;
             opacity: 0.7;
-            animation: makemove 1s ease-in-out;
-            -webkit-animation: makemove 1s ease-in-out;
         }
     }
 
@@ -187,7 +186,7 @@ $player2RGBA: rgba(52, 152, 219, 0.5);
 /*
  * Status
  =================================*/
-.status {
+.status-wrapper {
     width: 30%;
     float: left;
 }
@@ -248,6 +247,41 @@ $player2RGBA: rgba(52, 152, 219, 0.5);
             margin: 0.3em 0;
         }
     }
+}
+
+/*
+ * Miscellaneous
+ =================================*/
+
+.label {
+    display: inline;
+    padding: .2em .6em .3em;
+    font-size: 75%;
+    font-weight: 700;
+    line-height: 1;
+    color: #fff;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: .25em;
+
+    &.label-primary {
+        background-color: $primary;
+    }
+}
+.link {
+    font-size: 0.8em;
+    color: $primary;
+
+    &:hover,
+    &:active {
+        text-decoration: underline;
+    }
+}
+.status {
+    font-style: italic;
+    margin-left: 10px;
+    line-height: 1.4;
 }
 
 @import 'keyframes';

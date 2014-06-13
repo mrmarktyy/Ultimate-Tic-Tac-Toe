@@ -1,11 +1,11 @@
 define(['vendor/lodash', 'vendor/backbone', 'vendor/jquery',
     'router', 'engine',
-    'views/menu', 'views/board', 'views/status',
+    'views/board', 'views/status', 'views/game/wait',
     'models/status', 'models/player',
     'utils/socket', 'utils/validate',
     'text!templates/layout.html',
     'collections/squares'],
-function (_, Backbone, $, AppRouter, Engine, Menu, Board, StatusView, StatusModel, Player, Socket, Validate, LayoutTpl, Squares) {
+function (_, Backbone, $, AppRouter, Engine, Board, StatusView, Wait, StatusModel, Player, Socket, Validate, LayoutTpl, Squares) {
     'use strict';
 
     function Game (options) {
@@ -29,30 +29,6 @@ function (_, Backbone, $, AppRouter, Engine, Menu, Board, StatusView, StatusMode
 
         /***************** Menu routers *****************/
 
-        homeView: function () {
-            this.home = new Menu.Home({
-                el: this.$el
-            });
-        },
-
-        singleGame: function () {
-            this.single = new Menu.Single({
-                el: this.$el
-            });
-        },
-
-        online: function () {
-            this.single = new Menu.Online({
-                el: this.$el
-            });
-        },
-
-        soon: function () {
-            new Menu.ComingSoon({
-                el: this.$el
-            });
-        },
-
         vsHuman: function () {
             this.startGame(
                 new StatusModel(),
@@ -67,16 +43,22 @@ function (_, Backbone, $, AppRouter, Engine, Menu, Board, StatusView, StatusMode
                 new StatusModel({owner: 1}),
                 this.getInitalState(),
                 new Player({role: 1, nickname: 'mark'}),
-                new Player({role: 2, nickname: 'easy computer', mode: 'computer'})
+                new Player({role: 2, nickname: 'Easy Computer', mode: 'computer'})
             );
         },
 
-        createGame: function () {
+        createFriendGame: function () {
             this.player = {role: 1, nickname: 'mark'};
+            var model = new Backbone.Model();
+            new Wait({
+                el: this.$el,
+                model: model
+            });
+            Socket.listenTo('game:start', _.bind(this.prepareGame, this));
             Socket.createGame(this.player).done(_.bind(function (response) {
+                model.set({url: location.origin + '/#online/join?id=' + response.uuid, status: response.status});
                 this.uuid = response.uuid;
                 // TODO update status
-                Socket.listenTo('game:start', _.bind(this.prepareGame, this));
             }, this));
         },
 
@@ -92,8 +74,8 @@ function (_, Backbone, $, AppRouter, Engine, Menu, Board, StatusView, StatusMode
         },
 
         prepareGame: function (response) {
-            this.player = _.merge(this.player, {mode: 'human', type: 'local'});
-            var player = _.merge(response, {mode: 'human', type: 'remote'});
+            this.player = _.extend(this.player, {mode: 'human', type: 'local'});
+            var player = _.extend(response, {mode: 'human', type: 'remote'});
 
             var status = new StatusModel({uuid: this.uuid, owner: this.player.role, mode: 'remote'}),
                 player1, player2;
@@ -141,7 +123,7 @@ function (_, Backbone, $, AppRouter, Engine, Menu, Board, StatusView, StatusMode
 
         initStatus: function (status) {
             this.status = new StatusView({
-                el: $('.status', this.$el),
+                el: $('.status-wrapper', this.$el),
                 model: status
             });
         },

@@ -1,6 +1,6 @@
-/*global sails*/
 'use strict';
 
+var sails = require('sails');
 var Logger = sails.log;
 
 var LEVELS = {

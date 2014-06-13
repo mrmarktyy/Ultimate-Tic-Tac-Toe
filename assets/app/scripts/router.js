@@ -1,4 +1,5 @@
-define(['vendor/backbone'], function (Backbone) {
+define(['vendor/backbone', 'views/menu'],
+function (Backbone, Menu) {
     'use strict';
 
     return Backbone.Router.extend({
@@ -10,24 +11,51 @@ define(['vendor/backbone'], function (Backbone) {
             'single/medium'     : 'medium',
             'single/hard'       : 'hard',
             'online'            : 'online',
-            'online/create'     : 'create',
+            'online/friend'     : 'friend',
             'online/join'       : 'join',
+            'online/pair'       : 'pair',
             'tutorial'          : 'tutorial',
             'about'             : 'about'
         },
 
         initialize: function (Game) {
-            this.on('route:single', Game.singleGame, Game);
-            this.on('route:home', Game.homeView, Game);
+            this.$el = Game.$el;
+            this.on('route:home', this.homeView);
+            this.on('route:single', this.singleGame);
+            this.on('route:online', this.online);
             this.on('route:human', Game.vsHuman, Game);
             this.on('route:easy', Game.vsEasy, Game);
-            this.on('route:medium', Game.soon, Game);
-            this.on('route:hard', Game.soon, Game);
-            this.on('route:online', Game.online, Game);
-            this.on('route:create', Game.createGame, Game);
+            this.on('route:medium', this.soon);
+            this.on('route:hard', this.soon);
+            this.on('route:friend', Game.createFriendGame, Game);
             this.on('route:join', Game.joinGame, Game);
-            this.on('route:tutorial', Game.soon, Game);
-            this.on('route:about', Game.soon, Game);
+            this.on('route:pair', Game.pairGame, Game);
+            this.on('route:tutorial', this.soon);
+            this.on('route:about', this.soon);
+        },
+
+        homeView: function () {
+            new Menu.Home({
+                el: this.$el
+            });
+        },
+
+        singleGame: function () {
+            new Menu.Single({
+                el: this.$el
+            });
+        },
+
+        online: function () {
+            new Menu.Online({
+                el: this.$el
+            });
+        },
+
+        soon: function () {
+            new Menu.ComingSoon({
+                el: this.$el
+            });
         }
 
     });
