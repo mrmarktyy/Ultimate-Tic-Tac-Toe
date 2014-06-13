@@ -5,15 +5,15 @@
  * @description :: Contains logic for handling requests.
  */
 'use strict';
+
 var _       = require('lodash-node');
 var utils   = require('../utils');
 var Logger   = require('../utils/log');
 var _sockets = {};
 var _games   = {};
 
-function boardcast (uuid, socket_id, action) {
+function notifyGameAction (uuid, socket_id, action) {
     if (_games[uuid]) {
-        // TODO cleanup, a bit nasty now
         // Check which socket to send action
         if (_games[uuid].creator.socket_id === socket_id) {
             _sockets[_games[uuid].joiner.socket_id].emit('game:move', action);
@@ -53,8 +53,9 @@ module.exports = {
                 cell: req.param('cell')
             };
 
-            boardcast(uuid, req.socket.id, action);
+            notifyGameAction(uuid, req.socket.id, action);
         } else {
+            Logger.debug('[ACTION  ] game_id: ' + uuid + ' is invalid');
             return res.json({
                 status: false,
                 message: 'game_id: ' + uuid + ' is invalid.'
@@ -86,7 +87,7 @@ module.exports = {
         if (req.isSocket) {
             var uuid = req.param('uuid');
             if (!_games[uuid] || _games[uuid].joiner) {
-                Logger.debug('game_id: ' + uuid + ' is invalid');
+                Logger.debug('[JOIN  ] game_id: ' + uuid + ' is invalid');
                 return res.json({
                     status: false,
                     message: 'game_id: ' + uuid + ' is invalid'
