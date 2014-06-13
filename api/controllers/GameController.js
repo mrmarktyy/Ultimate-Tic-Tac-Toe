@@ -7,6 +7,7 @@
 'use strict';
 var _       = require('lodash-node');
 var utils   = require('../utils');
+var Logger   = require('../utils/log');
 var _sockets = {};
 var _games   = {};
 
@@ -24,6 +25,7 @@ function boardcast (uuid, socket_id, action) {
 
 function notifyGameStart (uuid) {
     if (_games[uuid]) {
+        _games[uuid].meta.status = 'in_progress';
         _sockets[_games[uuid].creator.socket_id].emit('game:start', _games[uuid].joiner.player);
         _sockets[_games[uuid].joiner.socket_id].emit('game:start', _games[uuid].creator.player);
     }
@@ -43,10 +45,31 @@ module.exports = {
         }
     },
 
+    action: function (req, res) {
+        var uuid = req.param('uuid');
+        if (uuid && _games[uuid]) {
+            var action = {
+                square: req.param('square'),
+                cell: req.param('cell')
+            };
+
+            boardcast(uuid, req.socket.id, action);
+        } else {
+            return res.json({
+                status: false,
+                message: 'game_id: ' + uuid + ' is invalid.'
+            });
+        }
+    },
+
     create: function (req, res) {
         if (req.isSocket) {
             var uuid = utils.uuid();
             _games[uuid] = {
+                meta: {
+                    mode: req.param('mode'),
+                    status: 'waiting'
+                },
                 creator: {
                     socket_id: req.socket.id,
                     player: req.param('player')
@@ -62,16 +85,11 @@ module.exports = {
     join: function (req, res) {
         if (req.isSocket) {
             var uuid = req.param('uuid');
-            if (!_games[uuid]) {
+            if (!_games[uuid] || _games[uuid].joiner) {
+                Logger.debug('game_id: ' + uuid + ' is invalid');
                 return res.json({
                     status: false,
-                    message: 'Game with game_id: ' + uuid + ' does not exist.'
-                });
-            }
-            if (_games[uuid].joiner) {
-                return res.json({
-                    status: false,
-                    message: 'Game with game_id: ' + uuid + ' has already started.'
+                    message: 'game_id: ' + uuid + ' is invalid'
                 });
             }
             _games[uuid].joiner = {
@@ -94,23 +112,6 @@ module.exports = {
             _sockets: _.keys(_sockets),
             _games: _games
         });
-    },
-
-    action: function (req, res) {
-        var uuid = req.param('uuid');
-        if (uuid && _games[uuid]) {
-            var action = {
-                square: req.param('square'),
-                cell: req.param('cell')
-            };
-
-            boardcast(uuid, req.socket.id, action);
-        } else {
-            return res.json({
-                status: false,
-                message: 'game_id: ' + uuid + ' is invalid.'
-            });
-        }
     }
 
 };

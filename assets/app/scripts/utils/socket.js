@@ -31,7 +31,7 @@ define(function () {
     function createGame (player) {
         var deferred = new $.Deferred();
         init().done(function () {
-            _socket.post('/game/create', {player: player}, function (response) {
+            _socket.post('/game/create', {player: player, mode: 'private'}, function (response) {
                 deferred.resolve(response);
             });
         });
