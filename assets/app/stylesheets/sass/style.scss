@@ -5,12 +5,13 @@ $baseFontsize: 16px;
 $boardFontSize: 10px;
 // colors
 $primary: #428bca;
+$ligthGreen: #27ae60;
 $valid: #f1c40f;
 $invalid: rgba(204,204,204,0.6);
-$player1: #e74c3c;
-$player2: #3498db;
-$player1RGBA: rgba(231, 76, 60, 0.5);
-$player2RGBA: rgba(52, 152, 219, 0.5);
+$player1_cell: #e74c3c;
+$player2_cell: #3498db;
+$player1_square: rgba(231, 76, 60, 0.5);
+$player2_square: rgba(52, 152, 219, 0.5);
 
 /*
  * #Ultimate
@@ -130,10 +131,10 @@ $player2RGBA: rgba(52, 152, 219, 0.5);
         }
     }
     &.p1 {
-        background-color: $player1RGBA;
+        background-color: $player1_square;
     }
     &.p2 {
-        background-color: $player2RGBA;
+        background-color: $player2_square;
     }
 }
 
@@ -178,10 +179,10 @@ $player2RGBA: rgba(52, 152, 219, 0.5);
     }
 
     &.p1:before {
-        background-color: $player1;
+        background-color: $player1_cell;
     }
     &.p2:before {
-        background-color: $player2;
+        background-color: $player2_cell;
     }
 }
 
@@ -218,6 +219,14 @@ $player2RGBA: rgba(52, 152, 219, 0.5);
         }
         .player__name {
             margin: 0.3em 0 0 1.5em;
+        }
+        .player__status {
+            width: 1em;
+            height: 1em;
+            border-radius: 50%;
+            background-color: $ligthGreen;
+            margin-top: 0.3em;
+            float: right;
         }
     }
 }

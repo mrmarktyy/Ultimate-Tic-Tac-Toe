@@ -150,6 +150,13 @@
         background-color: #3498db; }
     .status__player li .player__name {
       margin: 0.3em 0 0 1.5em; }
+    .status__player li .player__status {
+      width: 1em;
+      height: 1em;
+      border-radius: 50%;
+      background-color: #27ae60;
+      margin-top: 0.3em;
+      float: right; }
 
 /*
  * Miscellaneous
