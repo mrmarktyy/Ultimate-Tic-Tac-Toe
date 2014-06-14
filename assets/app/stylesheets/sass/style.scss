@@ -1,6 +1,7 @@
 //
 // Variables
 //
+$baseFontsize: 16px;
 $boardFontSize: 10px;
 // colors
 $primary: #428bca;
@@ -17,6 +18,7 @@ $player2RGBA: rgba(52, 152, 219, 0.5);
 #ultimate {
     overflow: hidden;
     min-height: 300px;
+    font-size: $baseFontsize;
 }
 
 /*
@@ -190,61 +192,32 @@ $player2RGBA: rgba(52, 152, 219, 0.5);
     width: 30%;
     float: left;
 }
-.status__title {
-    font-size: 1.8em;
-    margin: 0.5em 0;
-    padding-bottom: 0.5em;
-    border-bottom: 1px solid rgba(51, 51, 51, 0.2);
-}
-.status__round {
-    font-size: 1.5em;
-    margin: 0.5em 0 1.5em;
-
-    span {
-        float: right;
-    }
-}
 .status__player {
     list-style: none;
     padding: 0;
+    margin: 0;
 
     li {
         display: table;
         width: 100%;
         margin-bottom: 1.5em;
 
-        .player__image {
-            display: table-cell;
-            padding-right: 1em;
-            width: 2em;
+        .player__cell {
+            width: 1em;
+            height: 1em;
+            opacity: 0.7;
+            margin-top: 0.4em;
+            float: left;
 
-            & > img {
-                background: #3498db;
-                width: 2em;
-                border-radius: 50%;
-                padding: 0.5em;
+            &.player1 {
+                background-color: $player1;
             }
-        }
-        .player__content {
-            display: table-cell;
-            vertical-align: top;
-
-            .player__cell {
-                width: 2em;
-                height: 2em;
-                opacity: 0.7;
-                float: right;
-
-                &.player1 {
-                    background-color: $player1;
-                }
-                &.player2 {
-                    background-color: $player2;
-                }
+            &.player2 {
+                background-color: $player2;
             }
         }
         .player__name {
-            margin: 0.3em 0;
+            margin: 0.3em 0 0 1.5em;
         }
     }
 }
