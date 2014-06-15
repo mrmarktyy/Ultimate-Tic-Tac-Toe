@@ -26,8 +26,8 @@ function notifyGameAction (uuid, socket_id, action) {
 function notifyGameStart (uuid) {
     if (_games[uuid]) {
         _games[uuid].meta.status = 'in_progress';
-        _sockets[_games[uuid].creator.socket_id].emit('game:start', _games[uuid].joiner.player);
-        _sockets[_games[uuid].joiner.socket_id].emit('game:start', _games[uuid].creator.player);
+        _sockets[_games[uuid].creator.socket_id].emit('game:start', {role: 2, player: _games[uuid].joiner.player});
+        _sockets[_games[uuid].joiner.socket_id].emit('game:start', {role: 1, player: _games[uuid].creator.player});
     }
 }
 
@@ -97,7 +97,9 @@ module.exports = {
                 socket_id: req.socket.id,
                 player: req.param('player')
             };
-            notifyGameStart(uuid);
+            _.defer(function () {
+                notifyGameStart(uuid);
+            });
             return res.json({
                 status: true
             });

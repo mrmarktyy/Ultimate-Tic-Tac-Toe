@@ -1,11 +1,11 @@
 define(['vendor/lodash', 'vendor/backbone', 'vendor/jquery',
     'router', 'engine',
-    'views/board', 'views/status', 'views/game/wait',
+    'views/board', 'views/status',
     'models/status', 'models/player',
     'utils/socket', 'utils/validate',
     'text!templates/layout.html',
     'collections/squares'],
-function (_, Backbone, $, AppRouter, Engine, Board, StatusView, Wait, StatusModel, Player, Socket, Validate, LayoutTpl, Squares) {
+function (_, Backbone, $, AppRouter, Engine, Board, StatusView, StatusModel, Player, Socket, Validate, LayoutTpl, Squares) {
     'use strict';
 
     function Game (options) {
@@ -30,102 +30,101 @@ function (_, Backbone, $, AppRouter, Engine, Board, StatusView, Wait, StatusMode
         /***************** Menu routers *****************/
 
         vsHuman: function () {
-            this.startGame(
+            this.initGame(
                 new StatusModel(),
                 this.getInitalState(),
                 new Player({role: 1, nickname: 'mark'}),
                 new Player({role: 2, nickname: 'junjun'})
             );
+            this.engine.start();
         },
 
         vsEasy: function () {
-            this.startGame(
+            this.initGame(
                 new StatusModel({owner: 1}),
                 this.getInitalState(),
                 new Player({role: 1, nickname: 'mark'}),
                 new Player({role: 2, nickname: 'Easy Computer', mode: 'computer'})
             );
+            this.engine.start();
         },
 
-        createFriendGame: function () {
-            this.player = {role: 1, nickname: 'mark'};
-            var model = new Backbone.Model();
-            new Wait({
-                el: this.$el,
-                model: model
-            });
+        playWithFriend: function () {
+            // model.set({url: location.origin + '/#online/join?id=' + response.uuid, status: response.status});
+            this.player = {role: 1, nickname: 'mark', mode: 'human', type: 'local'};
+            var status = new StatusModel({owner: this.player.role, mode: 'remote'});
+
             Socket.listenTo('game:start', _.bind(this.prepareGame, this));
             Socket.createGame(this.player).done(_.bind(function (response) {
-                model.set({url: location.origin + '/#online/join?id=' + response.uuid, status: response.status});
-                this.uuid = response.uuid;
-                // TODO update status
+                status.set('uuid', response.uuid);
             }, this));
+
+            this.initGame(
+                status,
+                this.getInitalState(),
+                this.player
+            );
         },
 
         joinGame: function (queryString) {
-            this.player = {role: 2, nickname: 'junjun'};
-            this.uuid = Validate.getQueryParams(queryString).id;
-            if (this.uuid) {
+            this.player = {role: 2, nickname: 'junjun', mode: 'human', type: 'local'};
+            var uuid = Validate.getQueryParams(queryString).id;
+            if (uuid) {
+                var status = new StatusModel({uuid: uuid, owner: this.player.role, mode: 'remote'});
                 Socket.listenTo('game:start', _.bind(this.prepareGame, this));
-                Socket.joinGame(this.uuid, this.player).done(_.bind(function (response) {
+                Socket.joinGame(uuid, this.player).done(_.bind(function (response) {
                     // TODO update status
                 }, this));
+
+                this.initGame(
+                    status,
+                    this.getInitalState(),
+                    this.player
+                );
             }
         },
 
         prepareGame: function (response) {
-            this.player = _.extend(this.player, {mode: 'human', type: 'local'});
-            var player = _.extend(response, {mode: 'human', type: 'remote'});
-
-            var status = new StatusModel({uuid: this.uuid, owner: this.player.role, mode: 'remote'}),
-                player1, player2;
-            if (this.player.role === 1) {
-                player1 = new Player(this.player);
-                player2 = new Player(player);
-            } else {
-                player1 = new Player(player);
-                player2 = new Player(this.player);
-            }
-            this.startGame(
-                status,
-                this.getInitalState(),
-                player1,
-                player2
+            this.engine.setPlayer(
+                response.role,
+                new Player(_.extend({}, response.player, {mode: 'human', type: 'remote'}))
             );
+            this.engine.start();
         },
 
-        startGame: function (status, state, player1, player2) {
+        initGame: function (status, state, player1, player2) {
             this.$el.html(LayoutTpl);
-            this.initBoard(state);
-            this.initEngine(status, player1, player2);
-            this.initStatus(status);
+            this.initBoardView(state);
+            this.initStatusView(status);
+            this.initEngine(this.board, status, player1, player2);
         },
 
-        initBoard: function (state) {
+        initBoardView: function (state) {
             this.board = new Board({
                 el: $('.board', this.$el),
                 collection: new Squares(state),
             });
+            return this.board;
         },
 
-        initEngine: function (status, player1, player2) {
-            this.engine = Engine.getInstance({
-                board: this.board,
-                status: status,
-                player1: player1,
-                player2: player2
-            }).start();
-
-            if (/\.local|localhost/.test(location.hostname)) {
-                window.Engine = this.engine;
-            }
-        },
-
-        initStatus: function (status) {
+        initStatusView: function (status) {
             this.status = new StatusView({
                 el: $('.status-wrapper', this.$el),
                 model: status
             });
+        },
+
+        initEngine: function (board, status, player1, player2) {
+            this.engine = Engine.getInstance({
+                board: board,
+                status: status,
+                player1: player1,
+                player2: player2
+            });
+
+            if (/\.local|localhost/.test(location.hostname)) {
+                window.Engine = this.engine;
+            }
         },
 
         /***************** Event handlers *****************/

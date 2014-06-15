@@ -27,7 +27,7 @@ function (Backbone, Menu) {
             this.on('route:easy', Game.vsEasy, Game);
             this.on('route:medium', this.soon);
             this.on('route:hard', this.soon);
-            this.on('route:friend', Game.createFriendGame, Game);
+            this.on('route:friend', Game.playWithFriend, Game);
             this.on('route:join', Game.joinGame, Game);
             this.on('route:pair', Game.pairGame, Game);
             this.on('route:tutorial', this.soon);

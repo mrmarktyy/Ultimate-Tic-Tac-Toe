@@ -1,6 +1,0 @@
-<h2><%= status ? 'Waiting for your friend join the game...' : 'Connecting to server...' %></h2>
-<span class="label label-primary">Status:</span><span class="status"><%= status ? 'Connecting' : 'Waiting' %></span>
-<% if (status) { %>
-    <p>Please copy the link below to your friend. Game will be started soon !</p>
-    <p class="link"><%= url %></p>
-<% } %>

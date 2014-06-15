@@ -22,6 +22,11 @@ define(['vendor/lodash', 'vendor/backbone', 'utils/socket'], function (_, Backbo
 
     _.extend(Engine.prototype, Backbone.Events, {
 
+        setPlayer: function (role, player) {
+            this['player' + role] = player;
+            return this;
+        },
+
         start: function () {
             // TODO initialize
             this.on('player:move', this.playerListener, this);
