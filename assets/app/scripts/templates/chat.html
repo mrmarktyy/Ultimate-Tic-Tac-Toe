@@ -1,10 +1,2 @@
-<ul class="chat__contents">
-    <% _.each(messages, function (message) { %>
-    <li>
-        [<span class="chat__time"><%= message.time_display %></span>]
-        <span class="chat__from"><%= message.from %>: </span>
-        <span class="chat__content"><%= message.content %></span>
-    </li>
-    <% }); %>
-</ul>
+<ul class="chat__contents"></ul>
 <input type="text" class="chat__input" placeholder="Press 'Enter' to send">

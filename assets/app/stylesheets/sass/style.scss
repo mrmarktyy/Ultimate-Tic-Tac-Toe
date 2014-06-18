@@ -245,6 +245,8 @@ $player2_square: rgba(52, 152, 219, 0.5);
     border: 1px solid #ddd;
     margin: 0;
     padding: 0.5em;
+    overflow-x: hidden;
+    overflow-y: scroll;
 
     li {
         font-size: 14px;
@@ -254,6 +256,9 @@ $player2_square: rgba(52, 152, 219, 0.5);
         }
         .chat__from {
             font-weight: bold;
+        }
+        .chat__content {
+            text-align: justify;
         }
     }
 }

@@ -46,17 +46,21 @@ function (_, Backbone, $, AppRouter, Engine, Board, StatusView, ChatView, Status
                 new Player({role: 1, nickname: 'mark'}),
                 new Player({role: 2, nickname: 'Easy Computer', mode: 'computer'})
             );
+
             this.engine.start();
         },
 
         playWithFriend: function () {
-            // model.set({url: location.origin + '/#online/join?id=' + response.uuid, status: response.status});
             this.player = {role: 1, nickname: 'mark', mode: 'human', type: 'local'};
             var status = new StatusModel({owner: this.player.role, mode: 'remote'});
 
             Socket.listenTo('game:start', _.bind(this.prepareGame, this));
             Socket.createGame(this.player).done(_.bind(function (response) {
                 status.set('uuid', response.uuid);
+                this.chat.collection.add({
+                    content: 'Please send below url to your friend for joining the game.' +
+                        window.location.origin + '/#online/join?id=' + response.uuid
+                });
             }, this));
 
             this.initGame(
@@ -127,7 +131,7 @@ function (_, Backbone, $, AppRouter, Engine, Board, StatusView, ChatView, Status
             this.chat = new ChatView({
                 el: $('.chat', this.$el),
                 collection: new Messages([
-                    {from: 'System', content: 'Welcome to join the Utimate Tic Tac Toe, Hope you\'ll enjoy it'}
+                    {content: 'Welcome to join the Utimate Tic Tac Toe, Hope you\'ll enjoy it!'}
                 ])
             });
         },

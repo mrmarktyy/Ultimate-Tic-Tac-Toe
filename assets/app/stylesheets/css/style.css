@@ -171,13 +171,17 @@
   height: 17em;
   border: 1px solid #ddd;
   margin: 0;
-  padding: 0.5em; }
+  padding: 0.5em;
+  overflow-x: hidden;
+  overflow-y: scroll; }
   .chat__contents li {
     font-size: 14px; }
     .chat__contents li .chat__time {
       margin-right: 10px; }
     .chat__contents li .chat__from {
       font-weight: bold; }
+    .chat__contents li .chat__content {
+      text-align: justify; }
 
 .chat__input {
   margin: 1.5em 0 0 0;
