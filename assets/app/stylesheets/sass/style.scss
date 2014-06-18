@@ -188,7 +188,7 @@ $player2_square: rgba(52, 152, 219, 0.5);
 /*
  * Status
  =================================*/
-.status-wrapper {
+.status {
     width: 30%;
     float: left;
     padding: 1em 1em 1em 2em;
@@ -231,6 +231,9 @@ $player2_square: rgba(52, 152, 219, 0.5);
     }
 }
 .status__chat {
+
+}
+.chat__content {
     height: 16em;
     border: 1px solid #ddd;
     margin: 0;

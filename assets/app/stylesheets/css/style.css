@@ -125,7 +125,7 @@
 /*
  * Status
  =================================*/
-.status-wrapper {
+.status {
   width: 30%;
   float: left;
   padding: 1em 1em 1em 2em; }
@@ -158,7 +158,7 @@
       margin-top: 0.3em;
       float: right; }
 
-.status__chat {
+.chat__content {
   height: 16em;
   border: 1px solid #ddd;
   margin: 0; }

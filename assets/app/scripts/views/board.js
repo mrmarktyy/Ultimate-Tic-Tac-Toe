@@ -1,5 +1,5 @@
-define(['vendor/lodash', 'vendor/backbone', 'views/square', 'utils/validate'],
-function (_, Backbone, SquareView, Validate) {
+define(['vendor/lodash', 'vendor/backbone', 'views/square', 'utils/helper'],
+function (_, Backbone, SquareView, Helper) {
     'use strict';
 
     var Board = Backbone.View.extend({
@@ -37,7 +37,7 @@ function (_, Backbone, SquareView, Validate) {
             return this;
         },
 
-        validateSquares: function (lastMove) {
+        HelperSquares: function (lastMove) {
             /*jshint expr:true*/
             // no lastMove available
             var validSquares = [];
@@ -74,7 +74,7 @@ function (_, Backbone, SquareView, Validate) {
 
         winnerScan: function (squareIndex) {
             if (this.getSquare(squareIndex).checkRole()) {
-                return Validate.checkRole(this._squares);
+                return Helper.checkRole(this._squares);
             }
             return 0;
         },

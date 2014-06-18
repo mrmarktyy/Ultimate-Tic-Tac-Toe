@@ -70,7 +70,7 @@ define(['vendor/lodash'], function (_) {
         return checkHorizontal() || checkVertical() || checkDiagonal();
     }
 
-    function getQueryParams(queryString) {
+    function getQueryParams (queryString) {
         return _.chain(queryString.split('&'))
             .map(function(params) {
                 var p = params.split('=');
@@ -80,9 +80,18 @@ define(['vendor/lodash'], function (_) {
             .value();
     }
 
+    function getEmptyState () {
+        var state = [];
+        for (var i = 0; i < 9; i++) {
+            state.push([{},{},{},{},{},{},{},{},{}]);
+        }
+        return state;
+    }
+
     return {
-        checkRole: checkRole,
-        getQueryParams: getQueryParams
+        checkRole       : checkRole,
+        getQueryParams  : getQueryParams,
+        getEmptyState   : getEmptyState
     };
 
 });

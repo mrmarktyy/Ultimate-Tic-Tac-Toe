@@ -1,4 +1,5 @@
-define(['vendor/backbone', 'models/cell', 'views/cell'], function (Backbone, Cell, CellView) {
+define(['vendor/backbone', 'models/cell', 'views/cell'],
+function (Backbone, Cell, CellView) {
     'use strict';
 
     var Square = Backbone.Collection.extend({

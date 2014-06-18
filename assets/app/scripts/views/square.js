@@ -1,4 +1,5 @@
-define(['vendor/backbone', 'views/cell', 'utils/validate'], function (Backbone, CellView, Validate) {
+define(['vendor/backbone', 'views/cell', 'utils/helper'],
+function (Backbone, CellView, Helper) {
     'use strict';
 
     var Square = Backbone.View.extend({
@@ -64,7 +65,7 @@ define(['vendor/backbone', 'views/cell', 'utils/validate'], function (Backbone, 
         },
 
         checkRole: function () {
-            this.value = Validate.checkRole(this.collection.toJSON());
+            this.value = Helper.checkRole(this.collection.toJSON());
             this.renderRole();
             return this.value;
         },
