@@ -77,17 +77,19 @@ function (_, Backbone, $, AppRouter, Engine, Board, StatusView, StatusModel, Pla
                 this.initGame(
                     status,
                     this.getInitalState(),
+                    undefined,
                     new Player(this.player)
                 );
             }
         },
 
         prepareGame: function (response) {
-            this.engine.setPlayer(
-                response.role,
-                new Player(_.extend({}, response.player, {mode: 'human', type: 'remote'}))
-            );
-            this.engine.start();
+            this.engine
+                .setPlayer(
+                    response.role,
+                    new Player(_.extend({}, response.player, {mode: 'human', type: 'remote'}))
+                )
+                .start();
         },
 
         initGame: function (status, state, player1, player2) {
@@ -105,13 +107,6 @@ function (_, Backbone, $, AppRouter, Engine, Board, StatusView, StatusModel, Pla
             return this.board;
         },
 
-        initStatusView: function (status) {
-            this.status = new StatusView({
-                el: $('.status-wrapper', this.$el),
-                model: status
-            });
-        },
-
         initEngine: function (board, status, player1, player2) {
             this.engine = Engine.getInstance({
                 board: board,
@@ -123,6 +118,13 @@ function (_, Backbone, $, AppRouter, Engine, Board, StatusView, StatusModel, Pla
             if (/\.local|localhost/.test(location.hostname)) {
                 window.Engine = this.engine;
             }
+        },
+
+        initStatusView: function (status) {
+            this.status = new StatusView({
+                el: $('.status-wrapper', this.$el),
+                model: status
+            });
         },
 
         /***************** Event handlers *****************/
