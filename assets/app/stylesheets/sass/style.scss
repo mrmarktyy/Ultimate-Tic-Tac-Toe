@@ -67,7 +67,6 @@ $player2_square: rgba(52, 152, 219, 0.5);
  =================================*/
 .board {
     width: 47em;
-    min-width: 50%;
     height: 100%;
     font-size: $boardFontSize;
     user-select: none;
@@ -192,6 +191,7 @@ $player2_square: rgba(52, 152, 219, 0.5);
 .status-wrapper {
     width: 30%;
     float: left;
+    padding: 1em 1em 1em 2em;
 }
 .status__player {
     list-style: none;
@@ -199,22 +199,22 @@ $player2_square: rgba(52, 152, 219, 0.5);
     margin: 0;
 
     li {
-        display: table;
+        display: inline-block;
         width: 100%;
-        margin-bottom: 1.5em;
+        margin-bottom: 1em;
 
         .player__cell {
             width: 1em;
             height: 1em;
             opacity: 0.7;
-            margin-top: 0.4em;
+            margin-top: 0.3em;
             float: left;
 
             &.player1 {
-                background-color: $player1;
+                background-color: $player1_cell;
             }
             &.player2 {
-                background-color: $player2;
+                background-color: $player2_cell;
             }
         }
         .player__name {
@@ -229,6 +229,11 @@ $player2_square: rgba(52, 152, 219, 0.5);
             float: right;
         }
     }
+}
+.status__chat {
+    height: 16em;
+    border: 1px solid #ddd;
+    margin: 0;
 }
 
 /*
@@ -259,11 +264,6 @@ $player2_square: rgba(52, 152, 219, 0.5);
     &:active {
         text-decoration: underline;
     }
-}
-.status {
-    font-style: italic;
-    margin-left: 10px;
-    line-height: 1.4;
 }
 
 @import 'keyframes';

@@ -62,7 +62,7 @@ function (_, Backbone, $, AppRouter, Engine, Board, StatusView, StatusModel, Pla
             this.initGame(
                 status,
                 this.getInitalState(),
-                this.player
+                new Player(this.player)
             );
         },
 
@@ -72,14 +72,12 @@ function (_, Backbone, $, AppRouter, Engine, Board, StatusView, StatusModel, Pla
             if (uuid) {
                 var status = new StatusModel({uuid: uuid, owner: this.player.role, mode: 'remote'});
                 Socket.listenTo('game:start', _.bind(this.prepareGame, this));
-                Socket.joinGame(uuid, this.player).done(_.bind(function (response) {
-                    // TODO update status
-                }, this));
+                Socket.joinGame(uuid, this.player);
 
                 this.initGame(
                     status,
                     this.getInitalState(),
-                    this.player
+                    new Player(this.player)
                 );
             }
         },
@@ -95,8 +93,8 @@ function (_, Backbone, $, AppRouter, Engine, Board, StatusView, StatusModel, Pla
         initGame: function (status, state, player1, player2) {
             this.$el.html(LayoutTpl);
             this.initBoardView(state);
-            this.initStatusView(status);
             this.initEngine(this.board, status, player1, player2);
+            this.initStatusView(status);
         },
 
         initBoardView: function (state) {

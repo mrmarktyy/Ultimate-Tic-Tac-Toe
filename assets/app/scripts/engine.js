@@ -34,6 +34,7 @@ define(['vendor/lodash', 'vendor/backbone', 'utils/socket'], function (_, Backbo
             this.on('hide:guide', this.hideGuide, this);
             this.listenTo(this.status, 'change:winner', this.end);
 
+            this.status.set('role', 1);
             this.nextMove();
 
             // TODO create facade

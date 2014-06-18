@@ -4,7 +4,7 @@ define(['vendor/lodash'], function (_) {
     function checkRole (c) {
 
         if (c.length !== 9) {
-            throw 'collection length is not valid:';
+            throw 'collection length is not valid.';
         }
 
         function checkHorizontal () {

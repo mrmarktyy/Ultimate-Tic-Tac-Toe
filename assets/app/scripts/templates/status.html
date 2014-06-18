@@ -2,15 +2,25 @@
     <li>
         <div class="player__content">
             <div class="player__cell player1"></div>
-            <% if (role === 1) { %><div class="player__status"></div><% } %>
-            <h3 class="player__name"><%= player1.get('nickname') %></h3>
+            <% if (player1) { %>
+                <% if (role === 1) { %>
+                    <div class="player__status"></div>
+                <% } %>
+                <h3 class="player__name"><%= player1.get('nickname') %></h3>
+            <% } %>
         </div>
     </li>
     <li>
         <div class="player__content player2">
             <div class="player__cell player2"></div>
-            <% if (role === 2) { %><div class="player__status"></div><% } %>
-            <h3 class="player__name"><%= player2.get('nickname') %></h3>
+            <% if (player2) { %>
+                <% if (role === 2) { %>
+                    <div class="player__status"></div>
+                <% } %>
+                <h3 class="player__name"><%= player2.get('nickname') %></h3>
+            <% } %>
         </div>
     </li>
+</ul>
+<ul class="status__chat">
 </ul>
