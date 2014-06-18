@@ -230,43 +230,49 @@ $player2_square: rgba(52, 152, 219, 0.5);
         }
     }
 }
-.status__chat {
 
+/*
+ * Chat
+ =================================*/
+.chat {
+    float: left;
+    width: 30%;
+    padding: 0 1em 1em 2em;
 }
-.chat__content {
-    height: 16em;
+.chat__contents {
+    list-style: none;
+    height: 17em;
     border: 1px solid #ddd;
     margin: 0;
+    padding: 0.5em;
+
+    li {
+        font-size: 14px;
+
+        .chat__time {
+            margin-right: 10px;
+        }
+        .chat__from {
+            font-weight: bold;
+        }
+    }
+}
+.chat__input {
+    margin: 1.5em 0 0 0;
+    padding: 0.5em;
+    width: calc(100% - 1em);
+    font-size: 14px;
+    outline: none;
+    border: 1px solid #ddd;
+
+    &:focus,
+    &:active {
+        border-color: $player2_cell;
+    }
 }
 
 /*
  * Miscellaneous
  =================================*/
-
-.label {
-    display: inline;
-    padding: .2em .6em .3em;
-    font-size: 75%;
-    font-weight: 700;
-    line-height: 1;
-    color: #fff;
-    text-align: center;
-    white-space: nowrap;
-    vertical-align: baseline;
-    border-radius: .25em;
-
-    &.label-primary {
-        background-color: $primary;
-    }
-}
-.link {
-    font-size: 0.8em;
-    color: $primary;
-
-    &:hover,
-    &:active {
-        text-decoration: underline;
-    }
-}
 
 @import 'keyframes';

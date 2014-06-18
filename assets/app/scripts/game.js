@@ -125,8 +125,10 @@ function (_, Backbone, $, AppRouter, Engine, Board, StatusView, ChatView, Status
 
         initChatView: function () {
             this.chat = new ChatView({
-                el: $('.status__chat', this.$el),
-                collection: new Messages([])
+                el: $('.chat', this.$el),
+                collection: new Messages([
+                    {from: 'System', content: 'Welcome to join the Utimate Tic Tac Toe, Hope you\'ll enjoy it'}
+                ])
             });
         },
 

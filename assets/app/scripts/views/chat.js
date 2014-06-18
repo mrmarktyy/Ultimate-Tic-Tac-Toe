@@ -8,12 +8,15 @@ function (Backbone, _, Engine, ChatTpl) {
 
         initialize: function (options) {
             this.options = options || {};
-            this.listenTo(this.model, 'change', this.render);
+            // this.listenTo(this.model, 'change', this.render);
             this.render();
         },
 
         render: function () {
-            this.$el.html(this.template());
+            console.log(this.$el);
+            this.$el.html(this.template({
+                messages: this.collection.toJSON()
+            }));
             return this;
         }
 

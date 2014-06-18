@@ -88,10 +88,15 @@ define(['vendor/lodash'], function (_) {
         return state;
     }
 
+    function pad (n) {
+        return n < 10 ? ('0' + n) : n;
+    }
+
     return {
         checkRole       : checkRole,
         getQueryParams  : getQueryParams,
-        getEmptyState   : getEmptyState
+        getEmptyState   : getEmptyState,
+        pad             : pad
     };
 
 });

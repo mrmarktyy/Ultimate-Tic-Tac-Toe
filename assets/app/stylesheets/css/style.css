@@ -158,34 +158,40 @@
       margin-top: 0.3em;
       float: right; }
 
-.chat__content {
-  height: 16em;
+/*
+ * Chat
+ =================================*/
+.chat {
+  float: left;
+  width: 30%;
+  padding: 0 1em 1em 2em; }
+
+.chat__contents {
+  list-style: none;
+  height: 17em;
   border: 1px solid #ddd;
-  margin: 0; }
+  margin: 0;
+  padding: 0.5em; }
+  .chat__contents li {
+    font-size: 14px; }
+    .chat__contents li .chat__time {
+      margin-right: 10px; }
+    .chat__contents li .chat__from {
+      font-weight: bold; }
+
+.chat__input {
+  margin: 1.5em 0 0 0;
+  padding: 0.5em;
+  width: calc(100% - 1em);
+  font-size: 14px;
+  outline: none;
+  border: 1px solid #ddd; }
+  .chat__input:focus, .chat__input:active {
+    border-color: #3498db; }
 
 /*
  * Miscellaneous
  =================================*/
-.label {
-  display: inline;
-  padding: .2em .6em .3em;
-  font-size: 75%;
-  font-weight: 700;
-  line-height: 1;
-  color: #fff;
-  text-align: center;
-  white-space: nowrap;
-  vertical-align: baseline;
-  border-radius: .25em; }
-  .label.label-primary {
-    background-color: #428bca; }
-
-.link {
-  font-size: 0.8em;
-  color: #428bca; }
-  .link:hover, .link:active {
-    text-decoration: underline; }
-
 /*
  * Key Frames
  =================================*/

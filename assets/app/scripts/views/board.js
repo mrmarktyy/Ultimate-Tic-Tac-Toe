@@ -37,7 +37,7 @@ function (_, Backbone, SquareView, Helper) {
             return this;
         },
 
-        HelperSquares: function (lastMove) {
+        validateSquares: function (lastMove) {
             /*jshint expr:true*/
             // no lastMove available
             var validSquares = [];
