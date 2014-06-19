@@ -8,7 +8,7 @@
 
 var _       = require('lodash-node');
 var utils   = require('../utils');
-var Logger   = require('../utils/log');
+var Logger   = require('../utils/logger');
 var _sockets = {};
 var _games   = {};
 
@@ -66,6 +66,10 @@ module.exports = {
     create: function (req, res) {
         if (req.isSocket) {
             var uuid = utils.uuid();
+            var player = req.param('player');
+            if (!player.nickname) {
+                player.nickname = _.uniqueId('Guest_');
+            }
             _games[uuid] = {
                 meta: {
                     mode: req.param('mode'),
@@ -73,12 +77,13 @@ module.exports = {
                 },
                 creator: {
                     socket_id: req.socket.id,
-                    player: req.param('player')
+                    player: player
                 }
             };
             return res.json({
                 status: true,
-                uuid: uuid
+                uuid: uuid,
+                nickname: player.nickname
             });
         }
     },
@@ -86,6 +91,7 @@ module.exports = {
     join: function (req, res) {
         if (req.isSocket) {
             var uuid = req.param('uuid');
+            var player = req.param('player');
             if (!_games[uuid] || _games[uuid].joiner) {
                 Logger.debug('[JOIN  ] game_id: ' + uuid + ' is invalid');
                 return res.json({
@@ -93,15 +99,19 @@ module.exports = {
                     message: 'game_id: ' + uuid + ' is invalid'
                 });
             }
+            if (!player.nickname) {
+                player.nickname = _.uniqueId('Guest_');
+            }
             _games[uuid].joiner = {
                 socket_id: req.socket.id,
-                player: req.param('player')
+                player: player
             };
             _.defer(function () {
                 notifyGameStart(uuid);
             });
             return res.json({
-                status: true
+                status: true,
+                nickname: player.nickname
             });
         }
     },

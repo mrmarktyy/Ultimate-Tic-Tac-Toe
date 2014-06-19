@@ -51,39 +51,47 @@ function (_, Backbone, $, AppRouter, Engine, Board, StatusView, ChatView, Status
         },
 
         playWithFriend: function () {
-            this.player = {role: 1, nickname: 'mark', mode: 'human', type: 'local'};
-            var status = new StatusModel({owner: this.player.role, mode: 'remote'});
-
+            this.player = {role: 1}; // TODO retrieve current player json from other sources
             Socket.listenTo('game:start', _.bind(this.prepareGame, this));
             Socket.createGame(this.player).done(_.bind(function (response) {
-                status.set('uuid', response.uuid);
-                this.chat.collection.add({
+                this.player.nickname = response.nickname;
+
+                this.initGame(
+                    new StatusModel({
+                        uuid: response.uuid,
+                        owner: this.player.role,
+                        mode: 'remote'
+                    }),
+                    Helper.getEmptyState(),
+                    new Player(this.player)
+                );
+
+                this.chatView.collection.add({
                     content: 'Please send below url to your friend for joining the game.' +
                         window.location.origin + '/#online/join?id=' + response.uuid
                 });
             }, this));
-
-            this.initGame(
-                status,
-                Helper.getEmptyState(),
-                new Player(this.player)
-            );
         },
 
         joinGame: function (queryString) {
-            this.player = {role: 2, nickname: 'junjun', mode: 'human', type: 'local'};
             var uuid = Helper.getQueryParams(queryString).id;
             if (uuid) {
-                var status = new StatusModel({uuid: uuid, owner: this.player.role, mode: 'remote'});
+                this.player = {role: 2};
                 Socket.listenTo('game:start', _.bind(this.prepareGame, this));
-                Socket.joinGame(uuid, this.player);
+                Socket.joinGame(uuid, this.player).done(_.bind(function (response) {
+                    this.player.nickname = response.nickname;
 
-                this.initGame(
-                    status,
-                    Helper.getEmptyState(),
-                    undefined,
-                    new Player(this.player)
-                );
+                    this.initGame(
+                        new StatusModel({
+                            uuid: uuid,
+                            owner: this.player.role,
+                            mode: 'remote'
+                        }),
+                        Helper.getEmptyState(),
+                        undefined,
+                        new Player(this.player)
+                    );
+                }, this));
             }
         },
 
@@ -128,7 +136,7 @@ function (_, Backbone, $, AppRouter, Engine, Board, StatusView, ChatView, Status
         },
 
         initChatView: function () {
-            this.chat = new ChatView({
+            this.chatView = new ChatView({
                 el: $('.chat', this.$el),
                 collection: new Messages([
                     {content: 'Welcome to join the Utimate Tic Tac Toe, Hope you\'ll enjoy it!'}
