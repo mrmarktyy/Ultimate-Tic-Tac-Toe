@@ -15,6 +15,7 @@ function (Backbone, _, Engine, StatusTpl) {
         render: function () {
             this.$el.html(this.template({
                 role: this.model.get('role'),
+                owner: this.model.get('owner'),
                 player1: Engine.getInstance().player1,
                 player2: Engine.getInstance().player2
             }));

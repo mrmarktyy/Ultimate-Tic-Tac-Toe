@@ -142,20 +142,22 @@
       width: 1em;
       height: 1em;
       opacity: 0.7;
-      margin-top: 0.3em;
+      margin-top: 0.2em;
       float: left; }
       .status__player li .player__cell.player1 {
         background-color: #e74c3c; }
       .status__player li .player__cell.player2 {
         background-color: #3498db; }
     .status__player li .player__name {
-      margin: 0.3em 0 0 1.5em; }
+      font-size: 1.2em;
+      font-weight: bold;
+      margin: 0.3em 0 0 0.5em; }
     .status__player li .player__status {
       width: 1em;
       height: 1em;
       border-radius: 50%;
       background-color: #27ae60;
-      margin-top: 0.3em;
+      margin-top: 0.2em;
       float: right; }
 
 /*
