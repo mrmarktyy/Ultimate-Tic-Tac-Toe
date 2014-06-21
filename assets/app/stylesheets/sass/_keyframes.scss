@@ -1,6 +1,8 @@
 /*
  * Key Frames
  =================================*/
+
+// tada
 @-webkit-keyframes tada {
     0% { -webkit-transform: scale(0); }
     6% { -webkit-transform: scale(1); }
@@ -17,6 +19,8 @@
     94% { transform: scale(1); }
     100% { transform: scale(0); }
 }
+
+// guide
 @-webkit-keyframes guide {
     0% { border-color: #ddd; }
     50% { border-color: #999; }
@@ -27,6 +31,8 @@
     50% { border-color: #999; }
     100% { border-color: #ddd; }
 }
+
+// bounceInLeft
 @-webkit-keyframes bounceInLeft {
     0% { opacity: 0; -webkit-transform: translateX(-2000px); }
     60% { opacity: 1; -webkit-transform: translateX(30px); }
@@ -39,6 +45,8 @@
     80% { transform: translateX(-10px); }
     100% { transform: translateX(0); }
 }
+
+// bounceOutRight
 @-webkit-keyframes bounceOutRight {
     0% { -webkit-transform: translateX(0); }
     20% { opacity: 1; -webkit-transform: translateX(-20px); }
@@ -48,4 +56,16 @@
     0% { transform: translateX(0); }
     20% { opacity: 1; transform: translateX(-20px); }
     100% { opacity: 0; transform: translateX(2000px); }
+}
+
+// beap
+@-webkit-keyframes beap {
+    0% { -webkit-transform: scale(1); }
+    50% { -webkit-transform: scale(1.8); }
+    100% { -webkit-transform: scale(1); }
+}
+@keyframes beap {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.8); }
+    100% { transform: scale(1); }
 }

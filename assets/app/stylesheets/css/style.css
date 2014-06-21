@@ -1,9 +1,26 @@
 /*
+ * Miscellaneous
+ =================================*/
+a {
+  text-decoration: none;
+  color: #3498db; }
+
+a:hover,
+a:active {
+  text-decoration: underline; }
+
+span.heart {
+  color: #3498db;
+  margin: 0 5px;
+  animation: beap 0.8s 0.2s infinite linear;
+  -webkit-animation: beap 0.8s 0.2s infinite linear; }
+
+/*
  * #Ultimate
  =================================*/
 #ultimate {
   overflow: hidden;
-  min-height: 300px;
+  min-height: 30em;
   font-size: 16px; }
 
 /*
@@ -196,9 +213,6 @@
     border-color: #3498db; }
 
 /*
- * Miscellaneous
- =================================*/
-/*
  * Key Frames
  =================================*/
 @-webkit-keyframes tada {
@@ -305,3 +319,21 @@
   100% {
     opacity: 0;
     transform: translateX(2000px); } }
+@-webkit-keyframes beap {
+  0% {
+    -webkit-transform: scale(1); }
+
+  50% {
+    -webkit-transform: scale(1.8); }
+
+  100% {
+    -webkit-transform: scale(1); } }
+@keyframes beap {
+  0% {
+    transform: scale(1); }
+
+  50% {
+    transform: scale(1.8); }
+
+  100% {
+    transform: scale(1); } }

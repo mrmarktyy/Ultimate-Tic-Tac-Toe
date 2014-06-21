@@ -31,7 +31,7 @@ function (Backbone, Menu) {
             this.on('route:join', Game.joinGame, Game);
             this.on('route:pair', Game.pairGame, Game);
             this.on('route:tutorial', this.soon);
-            this.on('route:about', this.soon);
+            this.on('route:about', this.about);
         },
 
         homeView: function () {
@@ -48,6 +48,12 @@ function (Backbone, Menu) {
 
         online: function () {
             new Menu.Online({
+                el: this.$el
+            });
+        },
+
+        about: function () {
+            new Menu.About({
                 el: this.$el
             });
         },

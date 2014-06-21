@@ -2,15 +2,17 @@ define(['vendor/lodash', 'vendor/backbone',
     'text!templates/menu/home.html',
     'text!templates/menu/single.html',
     'text!templates/menu/online.html',
+    'text!templates/menu/about.html',
     'text!templates/menu/soon.html'
-], function (_, Backbone, HomeTpl, SingleTpl, OnlineTpl, SoonTpl) {
+], function (_, Backbone, HomeTpl, SingleTpl, OnlineTpl, AboutTpl, SoonTpl) {
     'use strict';
 
     var Menu = {};
 
     Menu.Base = Backbone.View.extend({
-        outAnimation: 'bounceOutRight',
-        inAnimation: 'bounceInLeft',
+        outAnimation        : 'bounceOutRight',
+        inAnimation         : 'bounceInLeft',
+        hideSliderDelay     : 600,
 
         initialize: function (options) {
             this.options = options || {};
@@ -18,10 +20,9 @@ define(['vendor/lodash', 'vendor/backbone',
             return this;
         },
         render: function () {
-            var hasSlider = this.$('.slider').length;
-            if (hasSlider) {
+            if (this.$('.slider').length) {
                 this.$('.slider').addClass(this.outAnimation);
-                _.delay(_.bind(this.renderSlider, this), 600);
+                _.delay(_.bind(this.renderSlider, this), this.hideSliderDelay);
             } else {
                 this.renderSlider();
             }
@@ -42,6 +43,10 @@ define(['vendor/lodash', 'vendor/backbone',
 
     Menu.Online = Menu.Base.extend({
         template: _.template(OnlineTpl),
+    });
+
+    Menu.About = Menu.Base.extend({
+        template: _.template(AboutTpl),
     });
 
     Menu.ComingSoon = Menu.Base.extend({
