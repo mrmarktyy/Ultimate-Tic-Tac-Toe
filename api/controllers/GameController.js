@@ -6,9 +6,9 @@
  */
 'use strict';
 
-var _       = require('lodash-node');
-var utils   = require('../utils');
 var sails   = require('sails');
+var _       = require('lodash-node');
+var GameBuilder = require('../utils/gameBuilder');
 var _sockets = {};
 var _games   = {};
 
@@ -84,22 +84,14 @@ module.exports = {
 
     create: function (req, res) {
         if (req.isSocket) {
-            var uuid = utils.uuid();
+            var uuid = GameBuilder.generateUUID();
             var player = req.param('player');
-            if (!player.nickname) {
-                player.nickname = _.uniqueId('Guest_');
-            }
-            _games[uuid] = {
-                meta: {
-                    mode: req.param('mode'),
-                    status: 'waiting'
-                },
-                creator: {
-                    socket_id: req.socket.id,
-                    status: 'active',
-                    player: player
-                }
-            };
+            GameBuilder.preparePlayer(player);
+            _games[uuid] = GameBuilder.createGame({
+                mode: 'private',
+                socket_id: req.socket.id,
+                player: player
+            });
             return res.json({
                 status: true,
                 uuid: uuid,
@@ -112,6 +104,7 @@ module.exports = {
         if (req.isSocket) {
             var uuid = req.param('uuid');
             var player = req.param('player');
+            GameBuilder.preparePlayer(player);
             if (!_games[uuid] || _games[uuid].joiner) {
                 sails.util.debug('[JOIN  ] game_id: ' + uuid + ' is invalid');
                 return res.json({
@@ -119,26 +112,59 @@ module.exports = {
                     message: 'game_id: ' + uuid + ' is invalid'
                 });
             }
-            if (!player.nickname) {
-                player.nickname = _.uniqueId('Guest_');
-            }
-            _games[uuid].joiner = {
+            _games[uuid].joiner = GameBuilder.joinGame({
                 socket_id: req.socket.id,
-                status: 'active',
                 player: player
-            };
+            });
             _.defer(function () {
                 notifyGameStart(uuid);
             });
             return res.json({
                 status: true,
+                uuid: uuid,
                 nickname: player.nickname
             });
         }
     },
 
-    find: function (req, res) {
-
+    pair: function (req, res) {
+        if (req.isSocket) {
+            var player = req.param('player'),
+                found = false,
+                uuid;
+            GameBuilder.preparePlayer(player);
+            _.each(_games, function (game, key) {
+                if (found) {
+                    return false;
+                }
+                if (game.meta.mode !== 'private' && game.meta.status === 'waiting') {
+                    player.role = 2;
+                    found = true;
+                    uuid = key;
+                    _games[key].joiner = GameBuilder.joinGame({
+                        socket_id: req.socket.id,
+                        player: player
+                    });
+                }
+            });
+            if (found) {
+                _.defer(function () {
+                    notifyGameStart(uuid);
+                });
+            } else {
+                uuid = GameBuilder.generateUUID();
+                player.role = 1;
+                _games[uuid] = GameBuilder.createGame({
+                    socket_id: req.socket.id,
+                    player: player
+                });
+            }
+            return res.json({
+                status: true,
+                uuid: uuid,
+                player: player
+            });
+        }
     },
 
     status: function (req, res) {

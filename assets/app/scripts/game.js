@@ -95,7 +95,36 @@ function (_, Backbone, $, AppRouter, Engine, Board, StatusView, ChatView, Status
             }
         },
 
+        pairGame: function () {
+            this.player = {};
+            Socket.listenTo('game:start', _.bind(this.prepareGame, this));
+            Socket.pairGame(this.player).done(_.bind(function (response) {
+                _.extend(this.player, response.player);
+                this.initGame(
+                    new StatusModel({
+                        uuid: response.uuid,
+                        owner: this.player.role,
+                        mode: 'remote'
+                    }),
+                    Helper.getEmptyState()
+                );
+
+                this.engine
+                    .setPlayer(
+                        this.player.role,
+                        new Player(this.player)
+                    );
+
+                this.chatView.collection.add({
+                    content: 'Please waiting for a player to join the game.'
+                });
+            }, this));
+        },
+
         prepareGame: function (response) {
+            this.chatView.collection.add({
+                content: 'Player ' + response.player.nickname + ' has joined. Game started.'
+            });
             this.engine
                 .setPlayer(
                     response.role,
@@ -139,7 +168,7 @@ function (_, Backbone, $, AppRouter, Engine, Board, StatusView, ChatView, Status
             this.chatView = new ChatView({
                 el: $('.chat', this.$el),
                 collection: new Messages([
-                    {content: 'Welcome to join the Utimate Tic Tac Toe, Hope you\'ll enjoy it!'}
+                    {content: 'Welcome to the Utimate Tic Tac Toe, Hope you\'ll enjoy it!'}
                 ])
             });
         },

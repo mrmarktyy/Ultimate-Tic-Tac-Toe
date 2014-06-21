@@ -48,11 +48,22 @@ define(function () {
         return deferred.promise();
     }
 
+    function pairGame (player) {
+        var deferred = new $.Deferred();
+        init().done(function () {
+            _socket.post('/game/pair', {player: player}, function (response) {
+                deferred.resolve(response);
+            });
+        });
+        return deferred.promise();
+    }
+
     return {
         init        : init,
         listenTo    : listenTo,
         moveAction  : moveAction,
         createGame  : createGame,
-        joinGame    : joinGame
+        joinGame    : joinGame,
+        pairGame    : pairGame
     };
 });

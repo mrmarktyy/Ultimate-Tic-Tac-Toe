@@ -15,7 +15,8 @@ define(['vendor/lodash', 'vendor/backbone', 'utils/socket'], function (_, Backbo
 
     Engine.getInstance = function () {
         if (_.isUndefined(this._instance)) {
-            return this._instance = new this(Array.prototype.slice.call(arguments)[0]);
+            /*jshint newcap:false*/
+            this._instance = new this(Array.prototype.slice.call(arguments)[0]);
         }
         return this._instance;
     };
@@ -24,6 +25,7 @@ define(['vendor/lodash', 'vendor/backbone', 'utils/socket'], function (_, Backbo
 
         setPlayer: function (role, player) {
             this['player' + role] = player;
+            this.status.trigger('change');
             return this;
         },
 
