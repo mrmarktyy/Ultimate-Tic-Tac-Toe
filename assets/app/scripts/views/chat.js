@@ -26,6 +26,10 @@ function (Backbone, _, Engine, ChatTpl, MessageTpl) {
             this.$('.chat__contents').append(
                 this.messageTemplate(message.toJSON())
             );
+        },
+
+        send: function (message) {
+            this.collection.add(message);
         }
 
     });

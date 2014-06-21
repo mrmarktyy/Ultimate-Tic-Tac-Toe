@@ -66,7 +66,7 @@ function (_, Backbone, $, AppRouter, Engine, Board, StatusView, ChatView, Status
                     new Player(this.player)
                 );
 
-                this.chatView.collection.add({
+                this.chatView.send({
                     content: 'Please send below url to your friend for joining the game.' +
                         window.location.origin + '/#online/join?id=' + response.uuid
                 });
@@ -115,14 +115,14 @@ function (_, Backbone, $, AppRouter, Engine, Board, StatusView, ChatView, Status
                         new Player(this.player)
                     );
 
-                this.chatView.collection.add({
+                this.chatView.send({
                     content: 'Please waiting for a player to join the game.'
                 });
             }, this));
         },
 
         prepareGame: function (response) {
-            this.chatView.collection.add({
+            this.chatView.send({
                 content: 'Player ' + response.player.nickname + ' has joined. Game started.'
             });
             this.engine
