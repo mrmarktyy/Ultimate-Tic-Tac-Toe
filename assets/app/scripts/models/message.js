@@ -5,17 +5,16 @@ function (Backbone, Helper) {
     var Message = Backbone.Model.extend({
 
         defaults: {
-            from: 'System',
-            date: new Date()
+            from: 'System'
         },
 
         initialize: function () {
-            var date = this.get('date');
-            this.set(
-                'time_display', Helper.pad(date.getHours()) +
+            var date = new Date();
+            this.set({
+                'time_display': Helper.pad(date.getHours()) +
                             ':' + Helper.pad(date.getMinutes()) +
                             ':' + Helper.pad(date.getSeconds())
-            );
+            });
         },
 
     });

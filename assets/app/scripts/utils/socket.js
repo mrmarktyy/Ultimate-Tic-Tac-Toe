@@ -58,12 +58,23 @@ define(function () {
         return deferred.promise();
     }
 
+    function sendMessage (uuid, message) {
+        var deferred = new $.Deferred();
+        init().done(function () {
+            _socket.post('/game/chat', {uuid: uuid, message: message}, function (response) {
+                deferred.resolve(response);
+            });
+        });
+        return deferred.promise();
+    }
+
     return {
         init        : init,
         listenTo    : listenTo,
         moveAction  : moveAction,
         createGame  : createGame,
         joinGame    : joinGame,
-        pairGame    : pairGame
+        pairGame    : pairGame,
+        sendMessage : sendMessage
     };
 });

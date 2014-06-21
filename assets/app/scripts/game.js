@@ -66,7 +66,7 @@ function (_, Backbone, $, AppRouter, Engine, Board, StatusView, ChatView, Status
                     new Player(this.player)
                 );
 
-                this.chatView.send({
+                this.chatView.addMessage({
                     content: 'Please send below url to your friend for joining the game.' +
                         window.location.origin + '/#online/join?id=' + response.uuid
                 });
@@ -115,14 +115,14 @@ function (_, Backbone, $, AppRouter, Engine, Board, StatusView, ChatView, Status
                         new Player(this.player)
                     );
 
-                this.chatView.send({
+                this.chatView.addMessage({
                     content: 'Please waiting for a player to join the game.'
                 });
             }, this));
         },
 
         prepareGame: function (response) {
-            this.chatView.send({
+            this.chatView.addMessage({
                 content: 'Player ' + response.player.nickname + ' has joined. Game started.'
             });
             this.engine
@@ -138,7 +138,7 @@ function (_, Backbone, $, AppRouter, Engine, Board, StatusView, ChatView, Status
             this.initBoardView(state);
             this.initEngine(this.board, status, player1, player2);
             this.initStatusView(status);
-            this.initChatView();
+            this.initChatView(status);
         },
 
         initBoardView: function (state) {
@@ -164,9 +164,10 @@ function (_, Backbone, $, AppRouter, Engine, Board, StatusView, ChatView, Status
             });
         },
 
-        initChatView: function () {
+        initChatView: function (status) {
             this.chatView = new ChatView({
                 el: $('.chat', this.$el),
+                status: status,
                 collection: new Messages([
                     {content: 'Welcome to the Utimate Tic Tac Toe, Hope you\'ll enjoy it!'}
                 ])

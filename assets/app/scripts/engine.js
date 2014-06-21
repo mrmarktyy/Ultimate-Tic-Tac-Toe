@@ -99,7 +99,7 @@ define(['vendor/lodash', 'vendor/backbone', 'utils/socket'], function (_, Backbo
             ) {
                 this._squareIndex = squareIndex;
                 this._cellIndex = cellIndex;
-                if (this.status.get('mode') === 'remote') {
+                if (this.status.isRemote()) {
                     this.notifyServer();
                 }
                 this.currentPlayer.get('resolver').trigger('cell:move');

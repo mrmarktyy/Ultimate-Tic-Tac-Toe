@@ -46,6 +46,10 @@ define(['vendor/backbone', 'vendor/lodash'], function (Backbone, _) {
 
         swapRole: function () {
             this.set('role', this.get('role') === 1 ? 2 : 1);
+        },
+
+        isRemote: function () {
+            return this.get('mode') === 'remote';
         }
 
     });

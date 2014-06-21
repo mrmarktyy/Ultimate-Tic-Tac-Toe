@@ -13,11 +13,10 @@ var _sockets = {};
 var _games   = {};
 
 function notifyGameAction (uuid, socket_id, action) {
-    if (_games[uuid]) {
-        // Check which socket to send action
+    if (uuid && _games[uuid]) {
         if (_games[uuid].creator.socket_id === socket_id) {
             _sockets[_games[uuid].joiner.socket_id].socket.emit('game:move', action);
-        } else {
+        } else if (_games[uuid].joiner.socket_id === socket_id) {
             _sockets[_games[uuid].creator.socket_id].socket.emit('game:move', action);
         }
     }
@@ -30,6 +29,16 @@ function notifyGameStart (uuid) {
         _sockets[_games[uuid].creator.socket_id].uuid = uuid;
         _sockets[_games[uuid].joiner.socket_id].socket.emit('game:start', {role: 1, player: _games[uuid].creator.player});
         _sockets[_games[uuid].joiner.socket_id].uuid = uuid;
+    }
+}
+
+function notifyChat (uuid, socket_id, message) {
+    if (uuid && _games[uuid]) {
+        if (_games[uuid].creator.socket_id === socket_id) {
+            _sockets[_games[uuid].joiner.socket_id].socket.emit('game:chat', message);
+        } else if (_games[uuid].joiner.socket_id === socket_id) {
+            _sockets[_games[uuid].creator.socket_id].socket.emit('game:chat', message);
+        }
     }
 }
 
@@ -164,6 +173,12 @@ module.exports = {
                 uuid: uuid,
                 player: player
             });
+        }
+    },
+
+    chat: function (req, res) {
+        if (req.isSocket) {
+            notifyChat(req.param('uuid'), req.socket.id, req.param('message'));
         }
     },
 
