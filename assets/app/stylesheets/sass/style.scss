@@ -26,12 +26,8 @@ a:hover,
 a:active {
     text-decoration: underline;
 }
-// about
-span.heart {
-    color: $lightBlue;
-    margin: 0 5px;
-    animation: beap 0.8s 0.2s infinite linear;
-    -webkit-animation: beap 0.8s 0.2s infinite linear;
+.content {
+    height: 100%;
 }
 /*
  * #Ultimate
@@ -46,6 +42,8 @@ span.heart {
  * Menus
  =================================*/
 .slider {
+    min-height: 30em;
+
     &.bounceInLeft {
         animation: bounceInLeft 1s ease both;
         -webkit-animation: bounceInLeft 1s ease both;
@@ -63,11 +61,10 @@ span.heart {
         list-style: none;
 
         li a {
-            padding: 15px;
-            border: 2px solid #ccc;
-            font-size: 20px;
+            padding: 1em;
+            border: 2px solid #ddd;
             width: 50%;
-            margin: 15px auto;
+            margin: 1em auto;
             cursor: pointer;
             transition: background-color 0.5s ease;
             display: block;
@@ -295,6 +292,25 @@ span.heart {
     &:focus,
     &:active {
         border-color: $player2_cell;
+    }
+}
+
+/*
+ * About
+ =================================*/
+
+.about {
+    .heart {
+        color: $lightBlue;
+        margin: 0 5px;
+        animation: beap 0.8s 0.2s infinite linear;
+        -webkit-animation: beap 0.8s 0.2s infinite linear;
+    }
+    .menu {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
     }
 }
 

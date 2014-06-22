@@ -9,11 +9,8 @@ a:hover,
 a:active {
   text-decoration: underline; }
 
-span.heart {
-  color: #3498db;
-  margin: 0 5px;
-  animation: beap 0.8s 0.2s infinite linear;
-  -webkit-animation: beap 0.8s 0.2s infinite linear; }
+.content {
+  height: 100%; }
 
 /*
  * #Ultimate
@@ -26,23 +23,24 @@ span.heart {
 /*
  * Menus
  =================================*/
-.slider.bounceInLeft {
-  animation: bounceInLeft 1s ease both;
-  -webkit-animation: bounceInLeft 1s ease both; }
-.slider.bounceOutRight {
-  animation: bounceOutRight 1s 0.1s ease both;
-  -webkit-animation: bounceOutRight 1s 0.1s ease both; }
+.slider {
+  min-height: 30em; }
+  .slider.bounceInLeft {
+    animation: bounceInLeft 1s ease both;
+    -webkit-animation: bounceInLeft 1s ease both; }
+  .slider.bounceOutRight {
+    animation: bounceOutRight 1s 0.1s ease both;
+    -webkit-animation: bounceOutRight 1s 0.1s ease both; }
 
 .menu {
   text-align: center; }
   .menu ul {
     list-style: none; }
     .menu ul li a {
-      padding: 15px;
-      border: 2px solid #ccc;
-      font-size: 20px;
+      padding: 1em;
+      border: 2px solid #ddd;
       width: 50%;
-      margin: 15px auto;
+      margin: 1em auto;
       cursor: pointer;
       transition: background-color 0.5s ease;
       display: block;
@@ -211,6 +209,20 @@ span.heart {
   border: 1px solid #ddd; }
   .chat__input:focus, .chat__input:active {
     border-color: #3498db; }
+
+/*
+ * About
+ =================================*/
+.about .heart {
+  color: #3498db;
+  margin: 0 5px;
+  animation: beap 0.8s 0.2s infinite linear;
+  -webkit-animation: beap 0.8s 0.2s infinite linear; }
+.about .menu {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0; }
 
 /*
  * Key Frames
