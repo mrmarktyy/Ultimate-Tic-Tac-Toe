@@ -4,7 +4,6 @@ require.config({
         'vendor': '../vendor',
         'text': '../vendor/text'
     },
-    'waitSeconds': 30,
     'urlArgs': 'bust=' + (new Date()).getTime()
 });
 define('main', ['game'], function (Game) {
