@@ -4,18 +4,6 @@ var _ = require('lodash-node');
 
 var GameBuilder = {
     /**
-     * Fake UUID generator
-     */
-    generateUUID: function () {
-        var s4 = function () {
-            return Math.floor((1 + Math.random()) * 0x10000)
-                .toString(16)
-                .substring(1);
-        };
-        return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
-    },
-
-    /**
      * Prepare player json
      */
     preparePlayer: function (player) {

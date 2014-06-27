@@ -8,6 +8,8 @@
 
 var sails   = require('sails');
 var _       = require('lodash-node');
+var UUID    = require('node-uuid');
+
 var GameBuilder = require('../utils/gameBuilder');
 var _sockets = {};
 var _games   = {};
@@ -93,7 +95,7 @@ module.exports = {
 
     create: function (req, res) {
         if (req.isSocket) {
-            var uuid = GameBuilder.generateUUID();
+            var uuid = UUID.v4();
             var player = req.param('player');
             GameBuilder.preparePlayer(player);
             _games[uuid] = GameBuilder.createGame({
@@ -161,7 +163,7 @@ module.exports = {
                     notifyGameStart(uuid);
                 });
             } else {
-                uuid = GameBuilder.generateUUID();
+                uuid = UUID.v4();
                 player.role = 1;
                 _games[uuid] = GameBuilder.createGame({
                     socket_id: req.socket.id,
