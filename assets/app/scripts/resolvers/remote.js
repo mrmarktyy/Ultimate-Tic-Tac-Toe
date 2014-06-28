@@ -1,10 +1,12 @@
-define(['vendor/lodash', 'vendor/jquery', 'resolvers/resolver', 'utils/socket'], function (_, $, Resolver, Socket) {
+define(['vendor/lodash', 'vendor/jquery', 'resolvers/resolver', 'utils/socket'],
+function (_, $, Resolver, Socket) {
     'use strict';
 
-    var OnlineResolver = Resolver.extend({
+    var RemoveResolver = Resolver.extend({
 
         init: function () {
-            this.on('cell:reject', this.rejectListener, this);
+            Resolver.prototype.init.call(this);
+
             Socket.listenTo('game:move', _.bind(this.moveListener, this));
         },
 
@@ -23,5 +25,5 @@ define(['vendor/lodash', 'vendor/jquery', 'resolvers/resolver', 'utils/socket'],
 
     });
 
-    return OnlineResolver;
+    return RemoveResolver;
 });

@@ -1,4 +1,5 @@
-define(['vendor/lodash', 'vendor/backbone'], function (_, Backbone) {
+define(['vendor/lodash', 'vendor/backbone'],
+function (_, Backbone) {
     'use strict';
 
     function Resolver(player) {
@@ -6,8 +7,9 @@ define(['vendor/lodash', 'vendor/backbone'], function (_, Backbone) {
         this.init();
     }
 
-    _.extend(Resolver.prototype, Backbone.Events, {
+    Resolver.extend = Backbone.Model.extend;
 
+    _.extend(Resolver.prototype, Backbone.Events, {
         /**
          * Initialize
          */
@@ -21,7 +23,6 @@ define(['vendor/lodash', 'vendor/backbone'], function (_, Backbone) {
         getNextMove: function (lastMove, validSquares) {
             this.deferred = new $.Deferred();
             this.once('cell:move', this.moveListener, this);
-            _.defer(_.bind(this.computeMove, this), lastMove, validSquares);
             return this.deferred.promise();
         },
 
@@ -40,16 +41,15 @@ define(['vendor/lodash', 'vendor/backbone'], function (_, Backbone) {
         },
 
         /**
-         * To be overriden by child instance. Operations/Computations on
-         * figuring out valid move
+         * To be overriden by child instance. Computations on
+         * finding out a valid move
          *
-         * @return Fire Engine cell:move event with a valid cellModel
+         * @return Fire Engine player:move event with valid
+         *         _squareIndex and _cellIndex
          */
         computeMove: function () {}
 
     });
-
-    Resolver.extend = Backbone.Model.extend;
 
     return Resolver;
 });

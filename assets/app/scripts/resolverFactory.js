@@ -1,5 +1,5 @@
-define(['resolvers/human', 'resolvers/computer', 'resolvers/online'],
-function (HumanResolver, ComputerResolver, OnlineResolver) {
+define(['resolvers/local', 'resolvers/computer', 'resolvers/remote'],
+function (LocalResolver, ComputerResolver, RemoteResolver) {
     'use strict';
 
     var MODE = {
@@ -11,9 +11,9 @@ function (HumanResolver, ComputerResolver, OnlineResolver) {
         switch (player.get('mode')) {
         case MODE.HUMAN:
             if (player.get('type') === 'remote') {
-                return new OnlineResolver(player);
+                return new RemoteResolver(player);
             }
-            return new HumanResolver(player);
+            return new LocalResolver(player);
         case MODE.COMPUTER:
             return new ComputerResolver(player);
         }

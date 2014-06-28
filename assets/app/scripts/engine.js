@@ -1,4 +1,5 @@
-define(['vendor/lodash', 'vendor/backbone', 'utils/socket'], function (_, Backbone, Socket) {
+define(['vendor/lodash', 'vendor/backbone', 'utils/socket'],
+function (_, Backbone, Socket) {
     'use strict';
 
     function Engine (options) {
@@ -30,7 +31,6 @@ define(['vendor/lodash', 'vendor/backbone', 'utils/socket'], function (_, Backbo
         },
 
         start: function () {
-            // TODO initialize
             this.on('player:move', this.playerListener, this);
             this.on('show:guide', this.showGuide, this);
             this.on('hide:guide', this.hideGuide, this);
@@ -39,7 +39,6 @@ define(['vendor/lodash', 'vendor/backbone', 'utils/socket'], function (_, Backbo
             this.status.set('role', 1);
             this.nextMove();
 
-            // TODO create facade
             return this;
         },
 
@@ -47,9 +46,7 @@ define(['vendor/lodash', 'vendor/backbone', 'utils/socket'], function (_, Backbo
             var lastMove = this.status.getLastMove();
             var validSquares = this.board.validateSquares(lastMove);
 
-            var role = this.status.get('role');
-
-            this.currentPlayer = this.getPlayer(role);
+            this.currentPlayer = this.getPlayer(this.status.get('role'));
             this.currentPlayer.get('resolver')
                 .getNextMove(lastMove, validSquares)
                 .done(_.bind(this.afterMove, this))
@@ -93,6 +90,7 @@ define(['vendor/lodash', 'vendor/backbone', 'utils/socket'], function (_, Backbo
         /***************** Event handlers *****************/
 
         playerListener: function (squareIndex, cellIndex, forced) {
+            // TODO review this
             if (this.status.get('owner') === 0 ||
                 this.status.get('owner') === this.currentPlayer.get('role') ||
                 forced === true

@@ -16,7 +16,7 @@ function (_, Backbone, $, AppRouter, Engine, Board, StatusView, ChatView, Status
         return this;
     }
 
-    _.extend(Game.prototype, {
+    _.extend(Game.prototype, Backbone.Events, {
 
         /***************** Initialize *****************/
 
@@ -184,7 +184,7 @@ function (_, Backbone, $, AppRouter, Engine, Board, StatusView, ChatView, Status
 
         /***************** Miscellaneous methods *****************/
 
-    }, Backbone.Events);
+    });
 
     return Game;
 });
