@@ -149,7 +149,7 @@ function (_, Backbone, $,
                         content: 'Please waiting for a player to join the game.'
                     });
                 }, this));
-            });
+            }, this);
 
             if (Storage.get('nickname')) {
                 next();
