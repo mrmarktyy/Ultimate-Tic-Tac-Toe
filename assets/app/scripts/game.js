@@ -28,12 +28,12 @@ function (_, Backbone, $,
 
         init: function () {
             this.router = new AppRouter(this);
-            Backbone.history.start();
-
             this.nicknameModal = new NicknameModal({
                 el: this.$el,
                 router: this.router
             });
+
+            Backbone.history.start();
             return this;
         },
 
@@ -62,8 +62,7 @@ function (_, Backbone, $,
 
         playWithFriend: function () {
             this.player = {role: 1};
-            console.log('playWithFriend');
-            var success = _.bind(function () {
+            var next = _.bind(function () {
                 this.player.nickname = Storage.get('nickname');
                 Socket.listenTo('game:start', _.bind(this.prepareGame, this));
                 Socket.createGame(this.player).done(_.bind(function (response) {
@@ -87,9 +86,9 @@ function (_, Backbone, $,
             }, this);
 
             if (!Storage.get('nickname')) {
-                this.nicknameModal.show(success);
+                this.nicknameModal.show(next);
             } else {
-                success();
+                next();
             }
         },
 
