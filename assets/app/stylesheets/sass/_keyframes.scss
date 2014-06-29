@@ -73,6 +73,16 @@
     100% { transform: translateY(0); }
 }
 
+// fadeIn
+@-webkit-keyframes fadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+}
+@keyframes fadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
 // beap
 @-webkit-keyframes beap {
     0% { -webkit-transform: scale(1); }

@@ -71,6 +71,10 @@ input {
 .slider {
     min-height: 30em;
 }
+.fadeIn {
+    animation: fadeIn 1s ease both;
+    -webkit-animation: fadeIn 1s ease both;
+}
 .bounceInLeft {
     animation: bounceInLeft 1s ease both;
     -webkit-animation: bounceInLeft 1s ease both;

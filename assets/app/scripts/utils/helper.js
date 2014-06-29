@@ -1,4 +1,4 @@
-define(['vendor/lodash'], function (_) {
+define(['vendor/jquery', 'vendor/lodash'], function ($, _) {
     'use strict';
 
     function checkRole (c) {
@@ -92,11 +92,19 @@ define(['vendor/lodash'], function (_) {
         return n < 10 ? ('0' + n) : n;
     }
 
+    function escape (str) {
+        if (window.escape) {
+            return window.escape(str);
+        }
+        return $('<div>').text(str).html();
+    }
+
     return {
         checkRole       : checkRole,
         getQueryParams  : getQueryParams,
         getInitialState : getInitialState,
-        pad             : pad
+        pad             : pad,
+        escape          : escape
     };
 
 });

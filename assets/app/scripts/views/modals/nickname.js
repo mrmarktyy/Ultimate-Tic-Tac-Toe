@@ -23,10 +23,10 @@ function (Backbone, _, Engine, Storage, NicknameTpl) {
             this.success = callback;
         },
 
-        hide: function (navigate) {
+        hide: function (route) {
             this.$('.overlay').remove();
-            if (navigate) {
-                this.router.navigate(navigate, {replace: true});
+            if (route) {
+                this.router.navigate(route, {replace: true});
             }
         },
 

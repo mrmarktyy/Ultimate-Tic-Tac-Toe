@@ -42,6 +42,10 @@ input {
 .slider {
   min-height: 30em; }
 
+.fadeIn {
+  animation: fadeIn 1s ease both;
+  -webkit-animation: fadeIn 1s ease both; }
+
 .bounceInLeft {
   animation: bounceInLeft 1s ease both;
   -webkit-animation: bounceInLeft 1s ease both; }
@@ -423,6 +427,18 @@ input {
 
   100% {
     transform: translateY(0); } }
+@-webkit-keyframes fadeIn {
+  0% {
+    opacity: 0; }
+
+  100% {
+    opacity: 1; } }
+@keyframes fadeIn {
+  0% {
+    opacity: 0; }
+
+  100% {
+    opacity: 1; } }
 @-webkit-keyframes beap {
   0% {
     -webkit-transform: scale(1); }

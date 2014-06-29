@@ -1,5 +1,5 @@
-define(['vendor/backbone', 'vendor/lodash', 'engine', 'utils/socket', 'text!templates/chat.html', 'text!templates/message.html'],
-function (Backbone, _, Engine, Socket, ChatTpl, MessageTpl) {
+define(['vendor/backbone', 'vendor/lodash', 'engine', 'utils/socket', 'utils/helper', 'text!templates/chat.html', 'text!templates/message.html'],
+function (Backbone, _, Engine, Socket, Helper, ChatTpl, MessageTpl) {
     'use strict';
 
     var Chat = Backbone.View.extend({
@@ -37,7 +37,7 @@ function (Backbone, _, Engine, Socket, ChatTpl, MessageTpl) {
                     var player = Engine.getInstance()['player' + this.status.get('owner')];
                     this.addMessage({
                         from: player.get('nickname'),
-                        content: message
+                        content: Helper.escape(message)
                     });
                     this.postMessage(message);
                     this.$('.chat__input').val('');
