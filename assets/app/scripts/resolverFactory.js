@@ -1,5 +1,5 @@
-define(['resolvers/local', 'resolvers/computer', 'resolvers/remote'],
-function (LocalResolver, ComputerResolver, RemoteResolver) {
+define(['resolvers/local', 'resolvers/remote', 'resolvers/easy', 'resolvers/medium'],
+function (LocalResolver, RemoteResolver, EasyrResolver, MediumResolver) {
     'use strict';
 
     var MODE = {
@@ -15,7 +15,14 @@ function (LocalResolver, ComputerResolver, RemoteResolver) {
             }
             return new LocalResolver(player);
         case MODE.COMPUTER:
-            return new ComputerResolver(player);
+            var difficulty = player.get('difficulty');
+            if (difficulty === 'easy') {
+                return new EasyrResolver(player);
+            } else if (difficulty === 'medium') {
+                return new MediumResolver(player);
+            } else {
+                throw 'Invalid computer difficulty: ' + difficulty;
+            }
         }
     }
 

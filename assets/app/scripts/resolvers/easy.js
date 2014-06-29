@@ -2,7 +2,7 @@ define(['vendor/lodash', 'vendor/jquery', 'engine', 'resolvers/resolver'],
 function (_, $, Engine, Resolver) {
     'use strict';
 
-    var ComputerResolver = Resolver.extend({
+    var EasyResolver = Resolver.extend({
 
         getNextMove: function (lastMove, validSquares) {
             this.deferred = new $.Deferred();
@@ -38,5 +38,5 @@ function (_, $, Engine, Resolver) {
 
     });
 
-    return ComputerResolver;
+    return EasyResolver;
 });

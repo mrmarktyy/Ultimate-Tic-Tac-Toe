@@ -54,7 +54,18 @@ function (_, Backbone, $,
                 new StatusModel({owner: 1}),
                 Helper.getInitialState(),
                 new Player({role: 1, nickname: 'mark'}),
-                new Player({role: 2, nickname: 'Easy Computer', mode: 'computer'})
+                new Player({role: 2, nickname: 'Easy Computer', mode: 'computer', difficulty: 'easy'})
+            );
+
+            this.engine.start();
+        },
+
+        vsMedium: function () {
+            this.initGame(
+                new StatusModel({owner: 1}),
+                Helper.getInitialState(),
+                new Player({role: 1, nickname: 'mark'}),
+                new Player({role: 2, nickname: 'Medium Computer', mode: 'computer', difficulty: 'medium'})
             );
 
             this.engine.start();

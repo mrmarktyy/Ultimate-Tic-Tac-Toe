@@ -40,11 +40,13 @@ function (Backbone, _, Engine, Storage, NicknameTpl) {
         },
 
         cancel: function () {
-            this.$('.modal').removeClass(this.inAnimation).addClass(this.outAnimation);
-            _.delay(_.bind(function () {
-                Storage.remove('nickname');
-                this.hide('#online');
-            }, this), this.delay);
+            this.$('.modal')
+                .removeClass(this.inAnimation)
+                .addClass(this.outAnimation)
+                .one('webkitAnimationEnd animationend oanimationend', _.bind(function () {
+                    Storage.remove('nickname');
+                    this.hide('#online');
+                }), this);
         }
 
     });
