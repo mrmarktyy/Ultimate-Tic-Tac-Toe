@@ -2,9 +2,8 @@ define(['vendor/jquery', 'vendor/lodash'], function ($, _) {
     'use strict';
 
     function checkRole (c) {
-
         if (c.length !== 9) {
-            throw 'collection length is not valid.';
+            throw 'array length is not valid.';
         }
 
         function checkHorizontal () {
@@ -70,6 +69,103 @@ define(['vendor/jquery', 'vendor/lodash'], function ($, _) {
         return checkHorizontal() || checkVertical() || checkDiagonal();
     }
 
+    function findCriticalIndexes (c, role) {
+        if (c.length !== 9) {
+            throw 'array length is not valid.';
+        }
+
+        var results = [];
+        function checkHorizontal () {
+            for (var i = 0; i < 3; i++) {
+                var _i = i * 3;
+                if (c[_i].value === c[_i + 1].value &&
+                    c[_i].value === role &&
+                    c[_i + 2].value === 0 ) {
+                    results.push(_i + 2);
+                }
+                if (c[_i].value === c[_i + 2].value &&
+                    c[_i].value === role &&
+                    c[_i + 1].value === 0) {
+                    results.push(_i + 1);
+                }
+                if (c[_i + 1].value === c[_i + 2].value &&
+                    c[_i + 1].value === role &&
+                    c[_i].value === 0) {
+                    results.push(_i);
+                }
+            }
+        }
+
+        function checkVertical () {
+            for (var i = 0; i < 3; i++) {
+                var _i = i;
+                if (c[_i].value === c[_i + 3].value &&
+                    c[_i].value === role &&
+                    c[_i + 6].value === 0 ) {
+                    results.push(_i + 6);
+                }
+                if (c[_i].value === c[_i + 6].value &&
+                    c[_i].value === role &&
+                    c[_i + 3].value === 0) {
+                    results.push(_i + 3);
+                }
+                if (c[_i + 3].value === c[_i + 6].value &&
+                    c[_i + 3].value === role &&
+                    c[_i].value === 0) {
+                    results.push(_i);
+                }
+            }
+        }
+
+        function checkDiagonal () {
+            if (c[0].value === c[4].value &&
+                c[0].value === role &&
+                c[8].value === 0) {
+                results.push(8);
+            }
+            if (c[0].value === c[8].value &&
+                c[0].value === role &&
+                c[4].value === 0) {
+                results.push(4);
+            }
+            if (c[4].value === c[8].value &&
+                c[4].value === role &&
+                c[0].value === 0) {
+                results.push(0);
+            }
+            if (c[2].value === c[4].value &&
+                c[2].value === role &&
+                c[6].value === 0) {
+                results.push(6);
+            }
+            if (c[2].value === c[6].value &&
+                c[2].value === role &&
+                c[4].value === 0) {
+                results.push(4);
+            }
+            if (c[4].value === c[6].value &&
+                c[4].value === role &&
+                c[2].value === 0) {
+                results.push(2);
+            }
+        }
+
+        checkHorizontal();
+        checkVertical();
+        checkDiagonal();
+        return _.uniq(results);
+    }
+
+    function findVacancyIndexes (c) {
+        return _.compact(_.map(c,
+            function (o, index) {
+                if (o.value === 0) {
+                    return index;
+                }
+            })
+        );
+    }
+
     function getQueryParams (queryString) {
         return _.chain(queryString.split('&'))
             .map(function(params) {
@@ -100,11 +196,13 @@ define(['vendor/jquery', 'vendor/lodash'], function ($, _) {
     }
 
     return {
-        checkRole       : checkRole,
-        getQueryParams  : getQueryParams,
-        getInitialState : getInitialState,
-        pad             : pad,
-        escape          : escape
+        checkRole           : checkRole,
+        getQueryParams      : getQueryParams,
+        getInitialState     : getInitialState,
+        pad                 : pad,
+        escape              : escape,
+        findCriticalIndexes : findCriticalIndexes,
+        findVacancyIndexes  : findVacancyIndexes
     };
 
 });

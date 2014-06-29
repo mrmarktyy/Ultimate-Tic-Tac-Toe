@@ -1,5 +1,5 @@
-define(['vendor/backbone', 'views/cell', 'utils/helper'],
-function (Backbone, CellView, Helper) {
+define(['vendor/lodash', 'vendor/backbone', 'views/cell', 'utils/helper'],
+function (_, Backbone, CellView, Helper) {
     'use strict';
 
     var Square = Backbone.View.extend({
@@ -42,6 +42,12 @@ function (Backbone, CellView, Helper) {
 
         getCell: function (index) {
             return this._cells[index];
+        },
+
+        getNumberOfTaken: function (role) {
+            return _.filter(this._cells, function (cellView) {
+                return cellView.model.get('value') === role;
+            }).length;
         },
 
         setInvalid: function () {

@@ -32,6 +32,20 @@ function (_, Backbone, SquareView, Helper) {
             return this.collection.toJSON();
         },
 
+        getTakenSquareIndexes: function (role) {
+            return _.compact(_.map(this._squares, function (squareView) {
+                if (squareView.value === role) {
+                    return squareView._index;
+                }
+            }));
+        },
+
+        getNumberOfTaken: function (role) {
+            return _.map(this._squares, function (squareView) {
+                return squareView.getNumberOfTaken(role);
+            });
+        },
+
         clearTada: function () {
             this.$el.find('.tada').removeClass('tada');
             return this;
