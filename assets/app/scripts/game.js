@@ -1,11 +1,17 @@
 define(['vendor/lodash', 'vendor/backbone', 'vendor/jquery',
     'router', 'engine',
-    'views/board', 'views/status', 'views/chat',
+    'views/board', 'views/status', 'views/chat', 'views/modals/nickname',
     'models/status', 'models/player',
-    'utils/socket', 'utils/helper',
+    'utils/socket', 'utils/helper', 'utils/storage',
     'text!templates/layout.html',
     'collections/squares', 'collections/messages'],
-function (_, Backbone, $, AppRouter, Engine, Board, StatusView, ChatView, StatusModel, Player, Socket, Helper, LayoutTpl, Squares, Messages) {
+function (_, Backbone, $,
+    AppRouter, Engine,
+    Board, StatusView, ChatView, NicknameModal,
+    StatusModel, Player,
+    Socket, Helper, Storage,
+    LayoutTpl,
+    Squares, Messages) {
     'use strict';
 
     function Game (options) {
@@ -22,8 +28,12 @@ function (_, Backbone, $, AppRouter, Engine, Board, StatusView, ChatView, Status
 
         init: function () {
             this.router = new AppRouter(this);
-
             Backbone.history.start();
+
+            this.nicknameModal = new NicknameModal({
+                el: this.$el,
+                router: this.router
+            });
             return this;
         },
 
@@ -32,7 +42,7 @@ function (_, Backbone, $, AppRouter, Engine, Board, StatusView, ChatView, Status
         vsHuman: function () {
             this.initGame(
                 new StatusModel(),
-                Helper.getEmptyState(),
+                Helper.getInitialState(),
                 new Player({role: 1, nickname: 'mark'}),
                 new Player({role: 2, nickname: 'junjun'})
             );
@@ -42,7 +52,7 @@ function (_, Backbone, $, AppRouter, Engine, Board, StatusView, ChatView, Status
         vsEasy: function () {
             this.initGame(
                 new StatusModel({owner: 1}),
-                Helper.getEmptyState(),
+                Helper.getInitialState(),
                 new Player({role: 1, nickname: 'mark'}),
                 new Player({role: 2, nickname: 'Easy Computer', mode: 'computer'})
             );
@@ -51,26 +61,36 @@ function (_, Backbone, $, AppRouter, Engine, Board, StatusView, ChatView, Status
         },
 
         playWithFriend: function () {
-            this.player = {role: 1}; // TODO retrieve current player json from other sources
-            Socket.listenTo('game:start', _.bind(this.prepareGame, this));
-            Socket.createGame(this.player).done(_.bind(function (response) {
-                this.player.nickname = response.nickname;
+            this.player = {role: 1};
+            console.log('playWithFriend');
+            var success = _.bind(function () {
+                this.player.nickname = Storage.get('nickname');
+                Socket.listenTo('game:start', _.bind(this.prepareGame, this));
+                Socket.createGame(this.player).done(_.bind(function (response) {
+                    this.player.nickname = response.nickname;
 
-                this.initGame(
-                    new StatusModel({
-                        uuid: response.uuid,
-                        owner: this.player.role,
-                        mode: 'remote'
-                    }),
-                    Helper.getEmptyState(),
-                    new Player(this.player)
-                );
+                    this.initGame(
+                        new StatusModel({
+                            uuid: response.uuid,
+                            owner: this.player.role,
+                            mode: 'remote'
+                        }),
+                        Helper.getInitialState(),
+                        new Player(this.player)
+                    );
 
-                this.chatView.addMessage({
-                    content: 'Please send below url to your friend for joining the game.' +
-                        window.location.origin + '/#online/join?id=' + response.uuid
-                });
-            }, this));
+                    this.chatView.addMessage({
+                        content: 'Please send below url to your friend for joining the game.' +
+                            window.location.origin + '/#online/join?id=' + response.uuid
+                    });
+                }, this));
+            }, this);
+
+            if (!Storage.get('nickname')) {
+                this.nicknameModal.show(success);
+            } else {
+                success();
+            }
         },
 
         joinGame: function (queryString) {
@@ -87,7 +107,7 @@ function (_, Backbone, $, AppRouter, Engine, Board, StatusView, ChatView, Status
                             owner: this.player.role,
                             mode: 'remote'
                         }),
-                        Helper.getEmptyState(),
+                        Helper.getInitialState(),
                         undefined,
                         new Player(this.player)
                     );
@@ -106,7 +126,7 @@ function (_, Backbone, $, AppRouter, Engine, Board, StatusView, ChatView, Status
                         owner: this.player.role,
                         mode: 'remote'
                     }),
-                    Helper.getEmptyState()
+                    Helper.getInitialState()
                 );
 
                 this.engine

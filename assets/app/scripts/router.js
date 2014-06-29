@@ -48,7 +48,8 @@ function (Backbone, Menu) {
 
         online: function () {
             new Menu.Online({
-                el: this.$el
+                el: this.$el,
+                router: this
             });
         },
 

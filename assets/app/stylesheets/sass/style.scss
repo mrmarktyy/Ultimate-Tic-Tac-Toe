@@ -29,6 +29,51 @@ a:active {
 .content {
     height: 100%;
 }
+button {
+    text-align: center;
+    border-radius: 3px;
+    border: 0;
+    width: 10em;
+    height: 2.5em;
+    margin: 0 1em;
+    position: relative;
+    display: inline-block;
+    outline: none;
+    -webkit-user-select: none;
+    user-select: none;
+    color: white;
+    background: $lightBlue;
+    cursor: pointer;
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
+}
+input {
+    padding: 0.5em;
+    margin: 0;
+    outline: none;
+    border: 1px solid #ddd;
+
+    &:focus,
+    &:active {
+        border-color: $player2_cell;
+    }
+}
+.slider {
+    min-height: 30em;
+}
+.bounceInLeft {
+    animation: bounceInLeft 1s ease both;
+    -webkit-animation: bounceInLeft 1s ease both;
+}
+
+.bounceOutRight {
+    animation: bounceOutRight 1s 0.1s ease both;
+    -webkit-animation: bounceOutRight 1s 0.1s ease both;
+}
+.bounceInDown {
+    animation: bounceInDown 0.8s  ease both;
+    -webkit-animation: bounceInDown 0.8s ease both;
+}
+
 /*
  * #Ultimate
  =================================*/
@@ -36,24 +81,12 @@ a:active {
     overflow: hidden;
     min-height: 30em;
     font-size: $baseFontsize;
+    position: relative;
 }
 
 /*
  * Menus
  =================================*/
-.slider {
-    min-height: 30em;
-
-    &.bounceInLeft {
-        animation: bounceInLeft 1s ease both;
-        -webkit-animation: bounceInLeft 1s ease both;
-    }
-
-    &.bounceOutRight {
-        animation: bounceOutRight 1s 0.1s ease both;
-        -webkit-animation: bounceOutRight 1s 0.1s ease both;
-    }
-}
 .menu {
     text-align: center;
 
@@ -311,6 +344,43 @@ a:active {
         left: 0;
         right: 0;
         bottom: 0;
+    }
+}
+
+/*
+ * Modal
+ =================================*/
+
+.overlay {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 4;
+
+    .modal {
+        position: absolute;
+        top: 50%;
+        width: 30em;
+        height: 7em;
+        background: white;
+        left: 50%;
+        margin-top: -9em;
+        margin-left: -15em;
+        padding: 1.5em;
+        box-shadow: 0 5px 26px 0 rgba(0, 0, 0, 0.8);
+
+        p {
+            margin: 0;
+            padding: 1em 0 0 0;
+            text-align: center;
+        }
+        input {
+            font-size: 20px;
+            width: 20em;
+        }
     }
 }
 

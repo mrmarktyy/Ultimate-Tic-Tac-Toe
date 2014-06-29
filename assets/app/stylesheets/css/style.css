@@ -12,26 +12,58 @@ a:active {
 .content {
   height: 100%; }
 
+button {
+  text-align: center;
+  border-radius: 3px;
+  border: 0;
+  width: 10em;
+  height: 2.5em;
+  margin: 0 1em;
+  position: relative;
+  display: inline-block;
+  outline: none;
+  -webkit-user-select: none;
+  user-select: none;
+  color: white;
+  background: #3498db;
+  cursor: pointer;
+  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26); }
+
+input {
+  padding: 0.5em;
+  margin: 0;
+  outline: none;
+  border: 1px solid #ddd; }
+  input:focus, input:active {
+    border-color: #3498db; }
+
+.slider {
+  min-height: 30em; }
+
+.bounceInLeft {
+  animation: bounceInLeft 1s ease both;
+  -webkit-animation: bounceInLeft 1s ease both; }
+
+.bounceOutRight {
+  animation: bounceOutRight 1s 0.1s ease both;
+  -webkit-animation: bounceOutRight 1s 0.1s ease both; }
+
+.bounceInDown {
+  animation: bounceInDown 0.8s  ease both;
+  -webkit-animation: bounceInDown 0.8s ease both; }
+
 /*
  * #Ultimate
  =================================*/
 #ultimate {
   overflow: hidden;
   min-height: 30em;
-  font-size: 16px; }
+  font-size: 16px;
+  position: relative; }
 
 /*
  * Menus
  =================================*/
-.slider {
-  min-height: 30em; }
-  .slider.bounceInLeft {
-    animation: bounceInLeft 1s ease both;
-    -webkit-animation: bounceInLeft 1s ease both; }
-  .slider.bounceOutRight {
-    animation: bounceOutRight 1s 0.1s ease both;
-    -webkit-animation: bounceOutRight 1s 0.1s ease both; }
-
 .menu {
   text-align: center; }
   .menu ul {
@@ -225,6 +257,36 @@ a:active {
   bottom: 0; }
 
 /*
+ * Modal
+ =================================*/
+.overlay {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 4; }
+  .overlay .modal {
+    position: absolute;
+    top: 50%;
+    width: 30em;
+    height: 7em;
+    background: white;
+    left: 50%;
+    margin-top: -9em;
+    margin-left: -15em;
+    padding: 1.5em;
+    box-shadow: 0 5px 26px 0 rgba(0, 0, 0, 0.8); }
+    .overlay .modal p {
+      margin: 0;
+      padding: 1em 0 0 0;
+      text-align: center; }
+    .overlay .modal input {
+      font-size: 20px;
+      width: 20em; }
+
+/*
  * Key Frames
  =================================*/
 @-webkit-keyframes tada {
@@ -331,6 +393,34 @@ a:active {
   100% {
     opacity: 0;
     transform: translateX(2000px); } }
+@-webkit-keyframes bounceInDown {
+  0% {
+    opacity: 0;
+    -webkit-transform: translateY(-2000px); }
+
+  60% {
+    opacity: 1;
+    -webkit-transform: translateY(30px); }
+
+  80% {
+    -webkit-transform: translateY(-10px); }
+
+  100% {
+    -webkit-transform: translateY(0); } }
+@keyframes bounceInDown {
+  0% {
+    opacity: 0;
+    transform: translateY(-2000px); }
+
+  60% {
+    opacity: 1;
+    transform: translateY(30px); }
+
+  80% {
+    transform: translateY(-10px); }
+
+  100% {
+    transform: translateY(0); } }
 @-webkit-keyframes beap {
   0% {
     -webkit-transform: scale(1); }

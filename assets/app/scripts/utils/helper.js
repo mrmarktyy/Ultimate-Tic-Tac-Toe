@@ -80,7 +80,7 @@ define(['vendor/lodash'], function (_) {
             .value();
     }
 
-    function getEmptyState () {
+    function getInitialState () {
         var state = [];
         for (var i = 0; i < 9; i++) {
             state.push([{},{},{},{},{},{},{},{},{}]);
@@ -95,7 +95,7 @@ define(['vendor/lodash'], function (_) {
     return {
         checkRole       : checkRole,
         getQueryParams  : getQueryParams,
-        getEmptyState   : getEmptyState,
+        getInitialState : getInitialState,
         pad             : pad
     };
 
