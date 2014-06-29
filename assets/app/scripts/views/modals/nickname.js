@@ -1,5 +1,5 @@
-define(['vendor/backbone', 'vendor/lodash', 'engine', 'utils/storage', 'text!templates/modals/nickname.html'],
-function (Backbone, _, Engine, Storage, NicknameTpl) {
+define(['vendor/lodash', 'vendor/backbone', 'engine', 'utils/storage', 'text!templates/modals/nickname.html'],
+function (_, Backbone, Engine, Storage, NicknameTpl) {
     'use strict';
 
     var NicknameModal = Backbone.View.extend({
@@ -24,6 +24,7 @@ function (Backbone, _, Engine, Storage, NicknameTpl) {
         },
 
         hide: function (route) {
+            console.log('hide', route);
             this.$('.overlay').remove();
             if (route) {
                 this.router.navigate(route, {replace: true});
@@ -44,9 +45,11 @@ function (Backbone, _, Engine, Storage, NicknameTpl) {
                 .removeClass(this.inAnimation)
                 .addClass(this.outAnimation)
                 .one('webkitAnimationEnd animationend oanimationend', _.bind(function () {
+                    console.log('cancel');
+                    var route = Backbone.history.fragment;
+                    this.hide(route.substring(0, _.lastIndexOf(route, '/')));
                     Storage.remove('nickname');
-                    this.hide('#online');
-                }), this);
+                }, this));
         }
 
     });

@@ -17,7 +17,6 @@ function (_, Backbone, $,
     function Game (options) {
         this.options = options || {};
         this.$el = $(this.options.el);
-        this.$el.on('click', '.back', _.bind(this.back, this));
 
         return this;
     }
@@ -49,7 +48,7 @@ function (_, Backbone, $,
             this.engine.start();
         },
 
-        vsEasy: function () {
+        easy: function () {
             this.initGame(
                 new StatusModel({owner: 1}),
                 Helper.getInitialState(),
@@ -60,7 +59,7 @@ function (_, Backbone, $,
             this.engine.start();
         },
 
-        vsMedium: function () {
+        medium: function () {
             this.initGame(
                 new StatusModel({owner: 1}),
                 Helper.getInitialState(),
@@ -73,6 +72,9 @@ function (_, Backbone, $,
 
         playWithFriend: function () {
             this.player = {role: 1};
+
+
+
             var next = _.bind(function () {
                 this.player.nickname = Storage.get('nickname');
                 Socket.listenTo('game:start', _.bind(this.prepareGame, this));
@@ -220,14 +222,6 @@ function (_, Backbone, $,
                     {content: 'Welcome to the Utimate Tic Tac Toe, Hope you\'ll enjoy it!'}
                 ])
             });
-        },
-
-        /***************** Event handlers *****************/
-
-        back: function () {
-            var routes = Backbone.history.fragment.split('/');
-            routes.pop();
-            this.router.navigate('#' + routes.join('/'), {trigger: true});
         },
 
         /***************** Miscellaneous methods *****************/

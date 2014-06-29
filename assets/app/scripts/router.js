@@ -1,5 +1,5 @@
-define(['vendor/backbone', 'views/menu'],
-function (Backbone, Menu) {
+define(['vendor/lodash', 'vendor/backbone', 'views/menu', 'views/modals/nickname', 'utils/storage'],
+function (_, Backbone, Menu, NicknameModal, Storage) {
     'use strict';
 
     return Backbone.Router.extend({
@@ -20,27 +20,44 @@ function (Backbone, Menu) {
 
         initialize: function (Game) {
             this.$el = Game.$el;
-            this.on('route:home', this.homeView);
-            this.on('route:single', this.singleGame);
-            this.on('route:online', this.online);
+            this.game = Game;
             this.on('route:human', Game.vsHuman, Game);
-            this.on('route:easy', Game.vsEasy, Game);
+            this.on('route:easy', this.checkNickname);
             this.on('route:medium', Game.vsMedium, Game);
             this.on('route:hard', this.soon);
             this.on('route:friend', Game.playWithFriend, Game);
             this.on('route:join', Game.joinGame, Game);
             this.on('route:pair', Game.pairGame, Game);
             this.on('route:tutorial', this.soon);
-            this.on('route:about', this.about);
+            this.$el.on('click', '.back', _.bind(this.back, this));
+
+            this.nicknameModal = new NicknameModal({
+                el: this.$el,
+                router: this
+            });
         },
 
-        homeView: function () {
+        checkNickname: function (event) {
+            var route = Backbone.history.fragment.split('/')[1];
+            var callback = this.game[route];
+            if (_.isFunction(callback)) {
+                if (Storage.get('nickname')) {
+                    callback.call(this.game);
+                } else {
+                    this.nicknameModal.show(callback);
+                }
+            } else {
+                throw 'Invalid route: ' + Backbone.history.fragment;
+            }
+        },
+
+        home: function () {
             new Menu.Home({
                 el: this.$el
             });
         },
 
-        singleGame: function () {
+        single: function () {
             new Menu.Single({
                 el: this.$el
             });
@@ -62,6 +79,11 @@ function (Backbone, Menu) {
             new Menu.ComingSoon({
                 el: this.$el
             });
+        },
+
+        back: function () {
+            var route = Backbone.history.fragment;
+            this.navigate(route.substring(0, _.lastIndexOf(route, '/')), {trigger: true});
         }
 
     });
