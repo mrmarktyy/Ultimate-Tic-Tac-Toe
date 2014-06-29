@@ -93,24 +93,33 @@ function (_, Backbone, $,
         },
 
         joinGame: function (queryString) {
-            var uuid = Helper.getQueryParams(queryString).id;
-            if (uuid) {
-                this.player = {role: 2};
-                Socket.listenTo('game:start', _.bind(this.prepareGame, this));
-                Socket.joinGame(uuid, this.player).done(_.bind(function (response) {
-                    this.player.nickname = response.nickname;
+            this.player = {role: 2};
+            var next = _.bind(function () {
+                this.player.nickname = Storage.get('nickname');
+                var uuid = Helper.getQueryParams(queryString).id;
+                if (uuid) {
+                    Socket.listenTo('game:start', _.bind(this.prepareGame, this));
+                    Socket.joinGame(uuid, this.player).done(_.bind(function (response) {
+                        this.player.nickname = response.nickname;
 
-                    this.initGame(
-                        new StatusModel({
-                            uuid: uuid,
-                            owner: this.player.role,
-                            mode: 'remote'
-                        }),
-                        Helper.getInitialState(),
-                        undefined,
-                        new Player(this.player)
-                    );
-                }, this));
+                        this.initGame(
+                            new StatusModel({
+                                uuid: uuid,
+                                owner: this.player.role,
+                                mode: 'remote'
+                            }),
+                            Helper.getInitialState(),
+                            undefined,
+                            new Player(this.player)
+                        );
+                    }, this));
+                }
+            }, this);
+
+            if (!Storage.get('nickname')) {
+                this.nicknameModal.show(next);
+            } else {
+                next();
             }
         },
 
