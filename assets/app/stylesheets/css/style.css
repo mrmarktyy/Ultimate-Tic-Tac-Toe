@@ -3,7 +3,7 @@
  =================================*/
 a {
   text-decoration: none;
-  color: #3498db; }
+  color: #12acef; }
 
 a:hover,
 a:active {
@@ -25,9 +25,11 @@ a:active {
   -webkit-user-select: none;
   user-select: none;
   color: white;
-  background: #3498db;
+  background: #12acef;
   cursor: pointer;
-  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26); }
+  transition: background-color 0.3s ease; }
+  .btn:hover, .btn:active, .btn:focus {
+    background-color: #0f9bd9; }
 
 input {
   padding: 0.5em;
@@ -35,7 +37,7 @@ input {
   outline: none;
   border: 1px solid #ddd; }
   input:focus, input:active {
-    border-color: #3498db; }
+    border-color: #12acef; }
 
 .slider {
   min-height: 30em; }
@@ -133,7 +135,7 @@ input {
   .square.p1 {
     background-color: rgba(231, 76, 60, 0.5); }
   .square.p2 {
-    background-color: rgba(52, 152, 219, 0.5); }
+    background-color: rgba(18, 172, 239, 0.5); }
 
 /*
  * Cell
@@ -167,7 +169,7 @@ input {
 .cell.p1:before {
   background-color: #e74c3c; }
 .cell.p2:before {
-  background-color: #3498db; }
+  background-color: #12acef; }
 
 /*
  * Status
@@ -194,7 +196,7 @@ input {
       .status__player li .player__cell.player1 {
         background-color: #e74c3c; }
       .status__player li .player__cell.player2 {
-        background-color: #3498db; }
+        background-color: #12acef; }
     .status__player li .player__name {
       font-size: 1.2em;
       font-weight: bold;
@@ -240,13 +242,13 @@ input {
   outline: none;
   border: 1px solid #ddd; }
   .chat__input:focus, .chat__input:active {
-    border-color: #3498db; }
+    border-color: #12acef; }
 
 /*
  * About
  =================================*/
 .about .heart {
-  color: #3498db;
+  color: #12acef;
   margin: 0 5px;
   animation: beap 0.8s 0.2s infinite linear;
   -webkit-animation: beap 0.8s 0.2s infinite linear; }

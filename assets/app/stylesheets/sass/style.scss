@@ -4,7 +4,8 @@
 $baseFontsize: 16px;
 $boardFontSize: 10px;
 // colors
-$lightBlue: #3498db;
+$lightBlue: #12acef;
+$normalBlue: #0f9bd9;
 $lightRed: #e74c3c;
 $ligthGreen: #27ae60;
 $lightYellow: #f1c40f;
@@ -13,7 +14,7 @@ $invalid: rgba(204, 204, 204, 0.6); // #ccc + opacity 0.6
 $player1_cell: $lightRed;
 $player2_cell: $lightBlue;
 $player1_square: rgba(231, 76, 60, 0.5); // $lightRed + opacity 0.5
-$player2_square: rgba(52, 152, 219, 0.5); // $lightBlue + opacity 0.5
+$player2_square: rgba(18, 172, 239, 0.5); // $lightBlue + opacity 0.5
 
 /*
  * Miscellaneous
@@ -44,7 +45,13 @@ a:active {
     color: white;
     background: $lightBlue;
     cursor: pointer;
-    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
+    transition: background-color 0.3s ease;
+
+    &:hover,
+    &:active,
+    &:focus {
+        background-color: $normalBlue;
+    }
 }
 input {
     padding: 0.5em;
