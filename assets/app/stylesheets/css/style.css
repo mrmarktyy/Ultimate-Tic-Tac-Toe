@@ -35,7 +35,7 @@ input {
   padding: 0.5em;
   margin: 0;
   outline: none;
-  border: 1px solid #ddd; }
+  border: 1px solid #dddddd; }
   input:focus, input:active {
     border-color: #12acef; }
 
@@ -72,16 +72,16 @@ input {
     list-style: none; }
     .menu ul li a {
       padding: 1em;
-      border: 2px solid #ddd;
+      border: 2px solid #dddddd;
       width: 50%;
       margin: 1em auto;
       cursor: pointer;
       transition: background-color 0.5s ease;
       display: block;
       text-decoration: none;
-      color: #333; }
+      color: #333333; }
       .menu ul li a:hover, .menu ul li a:active {
-        background-color: #eee; }
+        background-color: #eeeeee; }
 
 /*
  * Board
@@ -109,7 +109,7 @@ input {
   width: 13em;
   height: 13em;
   padding: 1em;
-  border: 0.5em solid #ddd;
+  border: 0.5em solid #dddddd;
   float: left;
   position: relative; }
   .square:nth-child(3n+2), .square:nth-child(3n) {
@@ -120,7 +120,7 @@ input {
     z-index: 4;
     border-color: #f1c40f; }
   .square.invalid {
-    background-color: rgba(204, 204, 204, 0.6); }
+    background-color: rgba(204, 204, 204, 0.5); }
   .square.guide {
     z-index: 4;
     animation: guide 2s infinite ease-in-out;
@@ -145,8 +145,8 @@ input {
   height: 3em;
   padding: 0.5em;
   float: left;
-  border-right: 0.5em solid #eee;
-  border-bottom: 0.5em solid #eee;
+  border-right: 0.5em solid #eeeeee;
+  border-bottom: 0.5em solid #eeeeee;
   opacity: 1;
   transition: background-color 0.2s ease-in, opacity 0.2s ease-in; }
   .cell:nth-child(3n) {
@@ -220,7 +220,7 @@ input {
 .chat__contents {
   list-style: none;
   height: 17em;
-  border: 1px solid #ddd;
+  border: 1px solid #dddddd;
   margin: 0;
   padding: 0.5em;
   overflow-x: hidden;
@@ -240,7 +240,7 @@ input {
   width: calc(100% - 1em);
   font-size: 14px;
   outline: none;
-  border: 1px solid #ddd; }
+  border: 1px solid #dddddd; }
   .chat__input:focus, .chat__input:active {
     border-color: #12acef; }
 

@@ -9,12 +9,16 @@ $normalBlue: #0f9bd9;
 $lightRed: #e74c3c;
 $ligthGreen: #27ae60;
 $lightYellow: #f1c40f;
+$grey333: #333;
+$greyCCC: #ccc;
+$greyDDD: #ddd;
+$greyEEE: #eee;
 $valid: $lightYellow;
-$invalid: rgba(204, 204, 204, 0.6); // #ccc + opacity 0.6
 $player1_cell: $lightRed;
 $player2_cell: $lightBlue;
-$player1_square: rgba(231, 76, 60, 0.5); // $lightRed + opacity 0.5
-$player2_square: rgba(18, 172, 239, 0.5); // $lightBlue + opacity 0.5
+$invalid: rgba($greyCCC, 0.5);
+$player1_square: rgba($lightRed, 0.5);
+$player2_square: rgba($lightBlue, 0.5);
 
 /*
  * Miscellaneous
@@ -57,7 +61,7 @@ input {
     padding: 0.5em;
     margin: 0;
     outline: none;
-    border: 1px solid #ddd;
+    border: 1px solid $greyDDD;
 
     &:focus,
     &:active {
@@ -102,18 +106,18 @@ input {
 
         li a {
             padding: 1em;
-            border: 2px solid #ddd;
+            border: 2px solid $greyDDD;
             width: 50%;
             margin: 1em auto;
             cursor: pointer;
             transition: background-color 0.5s ease;
             display: block;
             text-decoration: none;
-            color: #333;
+            color: $grey333;
 
             &:hover,
             &:active {
-                background-color: #eee;
+                background-color: $greyEEE;
             }
         }
     }
@@ -147,7 +151,7 @@ input {
     width: 13em;
     height: 13em;
     padding: 1em;
-    border: 0.5em solid #ddd;
+    border: 0.5em solid $greyDDD;
     float: left;
     position: relative;
 
@@ -202,8 +206,8 @@ input {
     height: 3em;
     padding: 0.5em;
     float: left;
-    border-right: 0.5em solid #eee;
-    border-bottom: 0.5em solid #eee;
+    border-right: 0.5em solid $greyEEE;
+    border-bottom: 0.5em solid $greyEEE;
     opacity: 1;
     transition: background-color 0.2s ease-in, opacity 0.2s ease-in;
 
@@ -301,7 +305,7 @@ input {
 .chat__contents {
     list-style: none;
     height: 17em;
-    border: 1px solid #ddd;
+    border: 1px solid $greyDDD;
     margin: 0;
     padding: 0.5em;
     overflow-x: hidden;
@@ -327,7 +331,7 @@ input {
     width: calc(100% - 1em);
     font-size: 14px;
     outline: none;
-    border: 1px solid #ddd;
+    border: 1px solid $greyDDD;
 
     &:focus,
     &:active {
