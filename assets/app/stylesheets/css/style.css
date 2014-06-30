@@ -51,12 +51,12 @@ input {
   -webkit-animation: bounceInLeft 1s ease both; }
 
 .bounceOutRight {
-  animation: bounceOutRight 1s 0.1s ease both;
-  -webkit-animation: bounceOutRight 1s 0.1s ease both; }
+  animation: bounceOutRight 0.6s ease both;
+  -webkit-animation: bounceOutRight 0.6s ease both; }
 
 .bounceInDown {
-  animation: bounceInDown 0.8s  ease both;
-  -webkit-animation: bounceInDown 0.8s ease both; }
+  animation: bounceInDown 0.6s  ease both;
+  -webkit-animation: bounceInDown 0.6s ease both; }
 
 /*
  * #Ultimate

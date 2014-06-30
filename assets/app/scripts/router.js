@@ -19,15 +19,12 @@ function (_, Backbone, Menu, NicknameModal, Storage) {
         },
 
         initialize: function (Game) {
-            this.$el = Game.$el;
             this.game = Game;
-            this.on('route:human', Game.vsHuman, Game);
-            this.on('route:easy', this.checkNickname);
-            this.on('route:medium', Game.vsMedium, Game);
+            this.$el = this.game.$el;
+            this.on('route:human', this.game.vsHuman, this.game);
+            this.on('route:easy route:medium route:friend route:join route:pair',
+                this.checkNickname);
             this.on('route:hard', this.soon);
-            this.on('route:friend', Game.playWithFriend, Game);
-            this.on('route:join', Game.joinGame, Game);
-            this.on('route:pair', Game.pairGame, Game);
             this.on('route:tutorial', this.soon);
             this.$el.on('click', '.back', _.bind(this.back, this));
 
@@ -38,16 +35,22 @@ function (_, Backbone, Menu, NicknameModal, Storage) {
         },
 
         checkNickname: function (event) {
-            var route = Backbone.history.fragment.split('/')[1];
-            var callback = this.game[route];
+            var fragment = Backbone.history.fragment,
+                route = fragment.split('/')[1],
+                _index, queryString;
+            if ((_index = route.indexOf('?')) !== -1) {
+                queryString = route.substring(_index + 1);
+                route = route.substring(0, _index);
+            }
+            var callback = _.bind(this.game[route], this.game);
             if (_.isFunction(callback)) {
                 if (Storage.get('nickname')) {
-                    callback.call(this.game);
+                    callback(queryString);
                 } else {
-                    this.nicknameModal.show(callback);
+                    this.nicknameModal.show(callback, queryString);
                 }
             } else {
-                throw 'Invalid route: ' + Backbone.history.fragment;
+                throw 'Invalid fragment: ' + fragment;
             }
         },
 

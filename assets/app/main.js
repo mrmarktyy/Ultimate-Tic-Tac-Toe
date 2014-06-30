@@ -9,11 +9,6 @@ require.config({
 define('main', ['game'], function (Game) {
     'use strict';
 
-    var options = {
-        el: '#ultimate',
-        data: []
-    };
-
-    var game = new Game(options);
+    var game = new Game({ el: '#ultimate' });
     game.init();
 });

@@ -5,7 +5,6 @@ function (_, Backbone, Engine, Storage, NicknameTpl) {
     var NicknameModal = Backbone.View.extend({
         outAnimation        : 'bounceOutRight',
         inAnimation         : 'bounceInDown',
-        delay               : 600,
 
         template: _.template(NicknameTpl),
 
@@ -18,13 +17,13 @@ function (_, Backbone, Engine, Storage, NicknameTpl) {
             this.router = options.router;
         },
 
-        show: function (callback) {
+        show: function (callback, queryString) {
             this.$el.prepend(this.template());
             this.success = callback;
+            this.queryString = queryString;
         },
 
         hide: function (route) {
-            console.log('hide', route);
             this.$('.overlay').remove();
             if (route) {
                 this.router.navigate(route, {replace: true});
@@ -35,7 +34,7 @@ function (_, Backbone, Engine, Storage, NicknameTpl) {
             Storage.set('nickname', this.$('.nickname__input').val());
             this.hide();
             if (_.isFunction(this.success)) {
-                this.success();
+                this.success(this.queryString);
             }
             this.$('.nickname__input').val('');
         },
@@ -44,8 +43,7 @@ function (_, Backbone, Engine, Storage, NicknameTpl) {
             this.$('.modal')
                 .removeClass(this.inAnimation)
                 .addClass(this.outAnimation)
-                .one('webkitAnimationEnd animationend oanimationend', _.bind(function () {
-                    console.log('cancel');
+                .one('webkitAnimationEnd', _.bind(function (event) {
                     var route = Backbone.history.fragment;
                     this.hide(route.substring(0, _.lastIndexOf(route, '/')));
                     Storage.remove('nickname');

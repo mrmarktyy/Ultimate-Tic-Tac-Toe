@@ -27,10 +27,6 @@ function (_, Backbone, $,
 
         init: function () {
             this.router = new AppRouter(this);
-            this.nicknameModal = new NicknameModal({
-                el: this.$el,
-                router: this.router
-            });
 
             Backbone.history.start();
             return this;
@@ -42,9 +38,10 @@ function (_, Backbone, $,
             this.initGame(
                 new StatusModel(),
                 Helper.getInitialState(),
-                new Player({role: 1, nickname: 'mark'}),
-                new Player({role: 2, nickname: 'junjun'})
+                new Player({role: 1, nickname: 'Player Red'}),
+                new Player({role: 2, nickname: 'Player Blue'})
             );
+
             this.engine.start();
         },
 
@@ -52,7 +49,7 @@ function (_, Backbone, $,
             this.initGame(
                 new StatusModel({owner: 1}),
                 Helper.getInitialState(),
-                new Player({role: 1, nickname: 'mark'}),
+                new Player({role: 1, nickname: Storage.get('nickname') || 'Nobody'}),
                 new Player({role: 2, nickname: 'Easy Computer', mode: 'computer', difficulty: 'easy'})
             );
 
@@ -63,112 +60,82 @@ function (_, Backbone, $,
             this.initGame(
                 new StatusModel({owner: 1}),
                 Helper.getInitialState(),
-                new Player({role: 1, nickname: 'mark'}),
+                new Player({role: 1, nickname: Storage.get('nickname') || 'Nobody'}),
                 new Player({role: 2, nickname: 'Medium Computer', mode: 'computer', difficulty: 'medium'})
             );
 
             this.engine.start();
         },
 
-        playWithFriend: function () {
-            this.player = {role: 1};
+        friend: function () {
+            this.player = {role: 1, nickname: Storage.get('nickname')};
+            Socket.listenTo('game:start', _.bind(this.prepareGame, this));
+            Socket.createGame(this.player).done(_.bind(function (response) {
+                this.player.nickname = response.nickname;
 
+                this.initGame(
+                    new StatusModel({
+                        uuid: response.uuid,
+                        owner: this.player.role,
+                        mode: 'remote'
+                    }),
+                    Helper.getInitialState(),
+                    new Player(this.player)
+                );
 
+                this.chatView.addMessage({
+                    content: 'Please send below url to your friend for joining the game.  <strong>' +
+                        window.location.origin + '/#online/join?id=' + response.uuid + '</strong>'
+                });
+            }, this));
+        },
 
-            var next = _.bind(function () {
-                this.player.nickname = Storage.get('nickname');
+        join: function (queryString) {
+            this.player = {role: 2, nickname: Storage.get('nickname')};
+            var uuid = Helper.getQueryParams(queryString).id;
+            if (uuid) {
                 Socket.listenTo('game:start', _.bind(this.prepareGame, this));
-                Socket.createGame(this.player).done(_.bind(function (response) {
+                Socket.joinGame(uuid, this.player).done(_.bind(function (response) {
                     this.player.nickname = response.nickname;
 
                     this.initGame(
                         new StatusModel({
-                            uuid: response.uuid,
+                            uuid: uuid,
                             owner: this.player.role,
                             mode: 'remote'
                         }),
                         Helper.getInitialState(),
+                        undefined,
+                        new Player(this.player)
+                    );
+                }, this));
+            }
+        },
+
+        pair: function () {
+            this.player = {nickname: Storage.get('nickname')};
+            Socket.listenTo('game:start', _.bind(this.prepareGame, this));
+            Socket.pairGame(this.player).done(_.bind(function (response) {
+                _.extend(this.player, response.player);
+                this.initGame(
+                    new StatusModel({
+                        uuid: response.uuid,
+                        owner: this.player.role,
+                        mode: 'remote'
+                    }),
+                    Helper.getInitialState()
+                );
+
+                this.engine
+                    .setPlayer(
+                        this.player.role,
                         new Player(this.player)
                     );
 
-                    this.chatView.addMessage({
-                        content: 'Please send below url to your friend for joining the game.  <strong>' +
-                            window.location.origin + '/#online/join?id=' + response.uuid + '</strong>'
-                    });
-                }, this));
-            }, this);
-
-            if (Storage.get('nickname')) {
-                next();
-            } else {
-                this.nicknameModal.show(next);
-            }
-        },
-
-        joinGame: function (queryString) {
-            this.player = {role: 2};
-            var next = _.bind(function () {
-                this.player.nickname = Storage.get('nickname');
-                var uuid = Helper.getQueryParams(queryString).id;
-                if (uuid) {
-                    Socket.listenTo('game:start', _.bind(this.prepareGame, this));
-                    Socket.joinGame(uuid, this.player).done(_.bind(function (response) {
-                        this.player.nickname = response.nickname;
-
-                        this.initGame(
-                            new StatusModel({
-                                uuid: uuid,
-                                owner: this.player.role,
-                                mode: 'remote'
-                            }),
-                            Helper.getInitialState(),
-                            undefined,
-                            new Player(this.player)
-                        );
-                    }, this));
-                }
-            }, this);
-
-            if (Storage.get('nickname')) {
-                next();
-            } else {
-                this.nicknameModal.show(next);
-            }
-        },
-
-        pairGame: function () {
-            this.player = {};
-            var next = _.bind(function () {
-                this.player.nickname = Storage.get('nickname');
-                Socket.listenTo('game:start', _.bind(this.prepareGame, this));
-                Socket.pairGame(this.player).done(_.bind(function (response) {
-                    _.extend(this.player, response.player);
-                    this.initGame(
-                        new StatusModel({
-                            uuid: response.uuid,
-                            owner: this.player.role,
-                            mode: 'remote'
-                        }),
-                        Helper.getInitialState()
-                    );
-
-                    this.engine
-                        .setPlayer(
-                            this.player.role,
-                            new Player(this.player)
-                        );
-
-                    this.chatView.addMessage({
-                        content: 'Please waiting for a player to join the game.'
-                    });
-                }, this));
-            }, this);
-
-            if (Storage.get('nickname')) {
-                next();
-            } else {
-                this.nicknameModal.show(next);
-            }
+                this.chatView.addMessage({
+                    content: 'Please waiting for a player to join the game.'
+                });
+            }, this));
         },
 
         prepareGame: function (response) {
