@@ -23,7 +23,8 @@
     "sails-disk": "~0.9.0",
     "ejs": "0.8.4",
     "optimist": "0.3.4",
-    "lodash-node": "*"
+    "lodash-node": "2.4.1",
+    "node-uuid": "1.4.1"
   },
   "devDependencies": {
     "grunt": "^0.4.5",
