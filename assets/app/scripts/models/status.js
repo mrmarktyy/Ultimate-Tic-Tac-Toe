@@ -10,6 +10,8 @@ define(['vendor/backbone', 'vendor/lodash'], function (Backbone, _) {
             owner: 0,
             mode: 'local',
             winner: 0,
+            showOnlinePlayers: false,
+            onlinePlayers: 'waiting',
             movement: []  // [squareIndex, cellIndex, Role]
         },
 
@@ -50,6 +52,10 @@ define(['vendor/backbone', 'vendor/lodash'], function (Backbone, _) {
 
         isRemote: function () {
             return this.get('mode') === 'remote';
+        },
+
+        updateOnlinePlayers: function (number) {
+            this.set('onlinePlayers', number);
         }
 
     });

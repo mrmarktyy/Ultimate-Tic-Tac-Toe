@@ -296,6 +296,15 @@ input {
         }
     }
 }
+.status__online-players {
+    margin: 0;
+    text-align: right;
+    font-size: 12px;
+
+    span {
+        color: red;
+    }
+}
 
 /*
  * Chat

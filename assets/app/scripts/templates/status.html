@@ -14,7 +14,7 @@
         </div>
     </li>
     <li>
-        <div class="player__content player2">
+        <div class="player__content">
             <div class="player__cell player2"></div>
             <% if (player2) { %>
                 <% if (role === 2) { %>
@@ -28,3 +28,6 @@
         </div>
     </li>
 </ul>
+<% if (showOnlinePlayers) { %>
+    <p class="status__online-players">Current online player: <span><%= onlinePlayers %></span></p>
+<% } %>

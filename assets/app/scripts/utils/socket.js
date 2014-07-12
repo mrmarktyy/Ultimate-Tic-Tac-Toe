@@ -16,9 +16,9 @@ define(function () {
         return deferred.promise();
     }
 
-    function listenTo (type, callback) {
+    function listenTo (topic, callback) {
         init().done(function () {
-            _socket.on(type, callback);
+            _socket.on(topic, callback);
         });
     }
 

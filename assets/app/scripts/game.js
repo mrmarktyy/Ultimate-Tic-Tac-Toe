@@ -117,12 +117,15 @@ function (_, Backbone, $,
             Socket.listenTo('game:start', _.bind(this.prepareGame, this));
             Socket.pairGame(this.player).done(_.bind(function (response) {
                 _.extend(this.player, response.player);
+                var statusModel = new StatusModel({
+                    uuid: response.uuid,
+                    owner: this.player.role,
+                    mode: 'remote',
+                    showOnlinePlayers: true,
+                    onlinePlayers: response.players
+                });
                 this.initGame(
-                    new StatusModel({
-                        uuid: response.uuid,
-                        owner: this.player.role,
-                        mode: 'remote'
-                    }),
+                    statusModel,
                     Helper.getInitialState()
                 );
 
@@ -134,6 +137,10 @@ function (_, Backbone, $,
 
                 this.chatView.addMessage({
                     content: 'Please waiting for a player to join the game.'
+                });
+
+                Socket.listenTo('game:players', function (response) {
+                    statusModel.updateOnlinePlayers(response);
                 });
             }, this));
         },

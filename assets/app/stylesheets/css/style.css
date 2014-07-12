@@ -213,6 +213,13 @@ input {
       margin-top: 0.2em;
       float: right; }
 
+.status__online-players {
+  margin: 0;
+  text-align: right;
+  font-size: 12px; }
+  .status__online-players span {
+    color: red; }
+
 /*
  * Chat
  =================================*/

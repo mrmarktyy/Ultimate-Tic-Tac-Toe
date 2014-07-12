@@ -14,6 +14,12 @@ var GameBuilder = require('../utils/gameBuilder');
 var _sockets = {};
 var _games   = {};
 
+function broadcast (topic, message) {
+    _.each(_sockets, function (s) {
+        s.socket.emit(topic, message);
+    });
+}
+
 function notifyGameAction (uuid, socket_id, action) {
     if (uuid && _games[uuid]) {
         if (_games[uuid].creator.socket_id === socket_id) {
@@ -51,6 +57,7 @@ module.exports = {
             _sockets[socket.id] = {
                 socket: socket
             };
+            broadcast('game:players', _.keys(_sockets).length);
             sails.util.debug('[ESTABLISH  ] socket_id: ' + socket.id + ' is connected.');
         }
     },
@@ -72,6 +79,7 @@ module.exports = {
                     delete _games[uuid];
                 }
             }
+            broadcast('game:players', _.keys(_sockets).length);
         }
     },
 
@@ -173,7 +181,8 @@ module.exports = {
             return res.json({
                 status: true,
                 uuid: uuid,
-                player: player
+                player: player,
+                players: _.keys(_sockets).length
             });
         }
     },
