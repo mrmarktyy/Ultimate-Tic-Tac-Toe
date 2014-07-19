@@ -1,53 +1,92 @@
 /**
  * GameController
  *
- * @module      :: Controller
- * @description :: Contains logic for handling requests.
+ * @module      : GameController
+ * @description : Contains logic for handling requests
  */
 'use strict';
 
 var sails   = require('sails');
 var _       = require('lodash-node');
 var UUID    = require('node-uuid');
-
 var GameBuilder = require('../utils/gameBuilder');
+
+/**
+ *  _sockets schema:
+ *
+ *  {
+ *      socket_id: {
+ *          socket: "",
+ *          uuid: ""
+ *      }
+ *  }
+ */
 var _sockets = {};
+/**
+ *  _games schema:
+ *
+ *  {
+ *      uuid: {
+ *          meta: {
+ *              mode: "",
+ *              status: ""
+ *          }
+ *      },
+ *      creator: {
+ *          socket_id: "",
+ *          status: ""
+ *          player: { }
+ *      },
+ *      joiner: {
+ *          socket_id: "",
+ *          status: "",
+ *          player: { }
+ *      }
+ *  }
+ *
+ */
 var _games   = {};
 
-function broadcast (topic, message) {
-    _.each(_sockets, function (s) {
-        s.socket.emit(topic, message);
+function emit (sockets, topic, message) {
+    if (!_.isArray(sockets)) {
+        sockets = [sockets];
+    }
+    _.each(sockets, function (s) {
+        s.emit(topic, message);
     });
 }
 
-function notifyGameAction (uuid, socket_id, action) {
-    if (uuid && _games[uuid]) {
-        if (_games[uuid].creator.socket_id === socket_id) {
-            _sockets[_games[uuid].joiner.socket_id].socket.emit('game:move', action);
-        } else if (_games[uuid].joiner.socket_id === socket_id) {
-            _sockets[_games[uuid].creator.socket_id].socket.emit('game:move', action);
-        }
-    }
-}
-
 function notifyGameStart (uuid) {
-    if (_games[uuid]) {
-        _games[uuid].meta.status = 'in_progress';
-        _sockets[_games[uuid].creator.socket_id].socket.emit('game:start', {role: 2, player: _games[uuid].joiner.player});
-        _sockets[_games[uuid].creator.socket_id].uuid = uuid;
-        _sockets[_games[uuid].joiner.socket_id].socket.emit('game:start', {role: 1, player: _games[uuid].creator.player});
-        _sockets[_games[uuid].joiner.socket_id].uuid = uuid;
-    }
+    _.defer(function () {
+        var game = _games[uuid];
+        if (game) {
+            var sockets = getSockets(uuid);
+            game.meta.status = 'in_progress';
+            emit(sockets.creator.socket, 'game:start', {role: 2, player: game.joiner.player});
+            emit(sockets.joiner.socket, 'game:start', {role: 1, player: game.creator.player});
+            sockets.creator.uuid = uuid;
+            sockets.joiner.uuid = uuid;
+        }
+    });
 }
 
-function notifyChat (uuid, socket_id, message) {
+function getSockets (uuid, socket_id) {
     if (uuid && _games[uuid]) {
-        if (_games[uuid].creator.socket_id === socket_id) {
-            _sockets[_games[uuid].joiner.socket_id].socket.emit('game:chat', message);
-        } else if (_games[uuid].joiner.socket_id === socket_id) {
-            _sockets[_games[uuid].creator.socket_id].socket.emit('game:chat', message);
+        if (socket_id) {
+            if (_games[uuid].creator && _games[uuid].creator.socket_id === socket_id) {
+                return _sockets[_games[uuid].joiner.socket_id];
+            }
+            if (_games[uuid].joiner && _games[uuid].joiner.socket_id === socket_id) {
+                return _sockets[_games[uuid].creator.socket_id];
+            }
+        } else {
+            return {
+                creator: _sockets[_games[uuid].creator.socket_id],
+                joiner: _sockets[_games[uuid].joiner.socket_id]
+            };
         }
     }
+    return _.pluck(_sockets, 'socket');
 }
 
 module.exports = {
@@ -57,59 +96,67 @@ module.exports = {
             _sockets[socket.id] = {
                 socket: socket
             };
-            broadcast('game:players', _.keys(_sockets).length);
+            emit(getSockets(), 'game:players', _.keys(_sockets).length);
             sails.util.debug('[ESTABLISH  ] socket_id: ' + socket.id + ' is connected.');
         }
     },
 
     disconnect: function (session, socket) {
         if (socket) {
-            var uuid = _sockets[socket.id].uuid;
             sails.util.debug('[DISCONNECT  ] socket_id: ' + socket.id + ' is disconnected.');
-            delete _sockets[socket.id];
-            if (uuid && _games[uuid]) {
-                if (_games[uuid].creator.socket_id === socket.id) {
-                    _games[uuid].creator.status = 'inactive';
+            var socket_id = socket.id,
+                uuid = _sockets[socket_id].uuid,
+                game = _games[uuid];
+            delete _sockets[socket_id];
+            if (uuid && game) {
+                if (game.creator.socket_id === socket_id) {
+                    game.creator.status = false;
+                    emit(getSockets(uuid, socket_id), 'game:leave', game.creator.player);
                 }
-                if (_games[uuid].joiner.socket_id === socket.id) {
-                    _games[uuid].joiner.status = 'inactive';
+                if (game.joiner.socket_id === socket_id) {
+                    game.joiner.status = false;
+                    emit(getSockets(uuid, socket_id), 'game:leave', game.joiner.player);
                 }
-                if (_games[uuid].creator.status === 'inactive' && _games[uuid].joiner.status === 'inactive') {
+                if (!game.creator.status && !game.joiner.status) {
                     sails.util.debug('[DISCONNECT  ] game_id: ' + uuid + ' is closed.');
                     delete _games[uuid];
                 }
             }
-            broadcast('game:players', _.keys(_sockets).length);
+            emit(getSockets(), 'game:players', _.keys(_sockets).length);
         }
     },
 
     action: function (req, res) {
         var uuid = req.param('uuid');
-        if (uuid && _games[uuid]) {
-            var action = {
-                square: req.param('square'),
-                cell: req.param('cell')
-            };
-
-            notifyGameAction(uuid, req.socket.id, action);
-        } else {
-            sails.util.debug('[ACTION  ] game_id: ' + uuid + ' is invalid');
+        var _socket = getSockets(uuid, req.socket.id);
+        if (_socket) {
+            emit(
+                _socket.socket,
+                'game:move',
+                {
+                    square: req.param('square'),
+                    cell: req.param('cell')
+                }
+            );
             return res.json({
-                status: false,
-                message: 'game_id: ' + uuid + ' is invalid.'
+                status: true
             });
         }
+        sails.util.debug('[ACTION  ] game_id: ' + uuid + ' is invalid');
+        return res.json({
+            status: false,
+            message: 'game_id: ' + uuid + ' is invalid.'
+        });
     },
 
     create: function (req, res) {
         if (req.isSocket) {
-            var uuid = UUID.v4();
-            var player = req.param('player');
-            GameBuilder.preparePlayer(player);
+            var uuid = UUID.v4(),
+                player = req.param('player');
             _games[uuid] = GameBuilder.createGame({
                 mode: 'private',
                 socket_id: req.socket.id,
-                player: player
+                player: GameBuilder.preparePlayer(player)
             });
             return res.json({
                 status: true,
@@ -135,9 +182,7 @@ module.exports = {
                 socket_id: req.socket.id,
                 player: player
             });
-            _.defer(function () {
-                notifyGameStart(uuid);
-            });
+            notifyGameStart(uuid);
             return res.json({
                 status: true,
                 uuid: uuid,
@@ -167,9 +212,7 @@ module.exports = {
                 }
             });
             if (found) {
-                _.defer(function () {
-                    notifyGameStart(uuid);
-                });
+                notifyGameStart(uuid);
             } else {
                 uuid = UUID.v4();
                 player.role = 1;
@@ -189,7 +232,10 @@ module.exports = {
 
     chat: function (req, res) {
         if (req.isSocket) {
-            notifyChat(req.param('uuid'), req.socket.id, req.param('message'));
+            var _socket = getSockets(req.param('uuid'), req.socket.id);
+            if (_socket) {
+                emit(_socket.socket, 'game:chat', req.param('message'));
+            }
         }
     },
 

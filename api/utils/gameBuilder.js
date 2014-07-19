@@ -27,7 +27,7 @@ var GameBuilder = {
             },
             creator: {
                 socket_id: options.socket_id,
-                status: 'active',
+                status: true,
                 player: options.player
             }
         };
@@ -42,7 +42,7 @@ var GameBuilder = {
     joinGame: function (options) {
         return {
             socket_id: options.socket_id,
-            status: 'active',
+            status: true,
             player: options.player
         };
     }
