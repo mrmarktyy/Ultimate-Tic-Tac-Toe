@@ -49,7 +49,7 @@ function (_, Backbone, $,
             this.initGame(
                 new StatusModel({owner: 1}),
                 Helper.getInitialState(),
-                new Player({role: 1, nickname: Storage.get('nickname') || 'Nobody'}),
+                new Player({role: 1, nickname: Storage.get('nickname') || 'Unknown'}),
                 new Player({role: 2, nickname: 'Easy Computer', mode: 'computer', difficulty: 'easy'})
             );
 
@@ -60,7 +60,7 @@ function (_, Backbone, $,
             this.initGame(
                 new StatusModel({owner: 1}),
                 Helper.getInitialState(),
-                new Player({role: 1, nickname: Storage.get('nickname') || 'Nobody'}),
+                new Player({role: 1, nickname: Storage.get('nickname') || 'Unknown'}),
                 new Player({role: 2, nickname: 'Medium Computer', mode: 'computer', difficulty: 'medium'})
             );
 
@@ -149,6 +149,11 @@ function (_, Backbone, $,
             this.chatView.addMessage({
                 content: 'Player ' + response.player.nickname + ' has joined. Game started.'
             });
+            Socket.listenTo('game:leave', _.bind(function () {
+                this.chatView.addMessage({
+                    content: 'Ops, Looks like player ' + response.player.nickname + ' has just left the game.'
+                });
+            }, this));
             this.engine
                 .setPlayer(
                     response.role,

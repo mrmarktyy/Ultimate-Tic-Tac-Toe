@@ -71,18 +71,19 @@ function notifyGameStart (uuid) {
 }
 
 function getSockets (uuid, socket_id) {
-    if (uuid && _games[uuid]) {
+    var game = _games[uuid];
+    if (uuid && game) {
         if (socket_id) {
-            if (_games[uuid].creator && _games[uuid].creator.socket_id === socket_id) {
-                return _sockets[_games[uuid].joiner.socket_id];
+            if (game.creator && game.creator.socket_id === socket_id) {
+                return _sockets[game.joiner.socket_id];
             }
-            if (_games[uuid].joiner && _games[uuid].joiner.socket_id === socket_id) {
-                return _sockets[_games[uuid].creator.socket_id];
+            if (game.joiner && game.joiner.socket_id === socket_id) {
+                return _sockets[game.creator.socket_id];
             }
         } else {
             return {
-                creator: _sockets[_games[uuid].creator.socket_id],
-                joiner: _sockets[_games[uuid].joiner.socket_id]
+                creator: _sockets[game.creator.socket_id],
+                joiner: _sockets[game.joiner.socket_id]
             };
         }
     }
@@ -111,11 +112,11 @@ module.exports = {
             if (uuid && game) {
                 if (game.creator.socket_id === socket_id) {
                     game.creator.status = false;
-                    emit(getSockets(uuid, socket_id), 'game:leave', game.creator.player);
+                    emit(getSockets(uuid, socket_id).socket, 'game:leave', game.creator.player);
                 }
                 if (game.joiner.socket_id === socket_id) {
                     game.joiner.status = false;
-                    emit(getSockets(uuid, socket_id), 'game:leave', game.joiner.player);
+                    emit(getSockets(uuid, socket_id).socket, 'game:leave', game.joiner.player);
                 }
                 if (!game.creator.status && !game.joiner.status) {
                     sails.util.debug('[DISCONNECT  ] game_id: ' + uuid + ' is closed.');
