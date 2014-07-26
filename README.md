@@ -9,7 +9,7 @@ A stategic boardgame for 2 players
 
 ### Description
 
-Ultimate Tic-Tac-Toe is a variant on tic-tac-toe with a twist. There are 9 games of 3x3 tic-tac-toe on the board. The rules are simple and copied verbatim from this write up by Ben Orlin.
+Ultimate Tic-Tac-Toe is a variant on tic-tac-toe with a twist. There are 9 games of 3x3 tic-tac-toe on the board. The rules are simple and copied verbatim from [this write up by Ben Orlin](http://mathwithbaddrawings.com/2013/06/16/ultimate-tic-tac-toe/).
 
 ### Interesting Modes
 
