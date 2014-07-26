@@ -19,13 +19,12 @@ function (_, Backbone, Menu, NicknameModal, Storage) {
         },
 
         initialize: function (Game) {
-            this.game = Game;
-            this.$el = this.game.$el;
-            this.on('route:human', this.game.vsHuman, this.game);
+            this.Game = Game;
+            this.$el = this.Game.$el;
+            this.on('route:human', this.Game.vsHuman, this.Game);
             this.on('route:easy route:medium route:friend route:join route:pair',
                 this.checkNickname);
             this.on('route:hard', this.soon);
-            this.on('route:tutorial', this.soon);
             this.$el.on('click', '.back', _.bind(this.back, this));
 
             this.nicknameModal = new NicknameModal({
@@ -42,7 +41,7 @@ function (_, Backbone, Menu, NicknameModal, Storage) {
                 queryString = route.substring(_index + 1);
                 route = route.substring(0, _index);
             }
-            var callback = _.bind(this.game[route], this.game);
+            var callback = _.bind(this.Game[route], this.Game);
             if (_.isFunction(callback)) {
                 if (Storage.get('nickname')) {
                     callback(queryString);
@@ -74,6 +73,12 @@ function (_, Backbone, Menu, NicknameModal, Storage) {
 
         about: function () {
             new Menu.About({
+                el: this.$el
+            });
+        },
+
+        tutorial: function () {
+            new Menu.Tutorial({
                 el: this.$el
             });
         },

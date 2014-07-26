@@ -3,8 +3,9 @@ define(['vendor/lodash', 'vendor/backbone',
     'text!templates/menu/single.html',
     'text!templates/menu/online.html',
     'text!templates/menu/about.html',
+    'text!templates/menu/tutorial.html',
     'text!templates/menu/soon.html'
-], function (_, Backbone, HomeTpl, SingleTpl, OnlineTpl, AboutTpl, SoonTpl) {
+], function (_, Backbone, HomeTpl, SingleTpl, OnlineTpl, AboutTpl, TutorialTpl, SoonTpl) {
     'use strict';
 
     var Menu = {};
@@ -48,6 +49,10 @@ define(['vendor/lodash', 'vendor/backbone',
 
     Menu.About = Menu.Base.extend({
         template: _.template(AboutTpl)
+    });
+
+    Menu.Tutorial = Menu.Base.extend({
+        template: _.template(TutorialTpl)
     });
 
     Menu.ComingSoon = Menu.Base.extend({

@@ -17,8 +17,6 @@ function (_, Backbone, $,
     function Game (options) {
         this.options = options || {};
         this.$el = $(this.options.el);
-
-        return this;
     }
 
     _.extend(Game.prototype, Backbone.Events, {

@@ -42,12 +42,12 @@ function (_, Backbone, Engine, Storage, NicknameTpl) {
         cancel: function () {
             this.$('.modal')
                 .removeClass(this.inAnimation)
-                .addClass(this.outAnimation)
-                .one('webkitAnimationEnd', _.bind(function (event) {
-                    var route = Backbone.history.fragment;
-                    this.hide(route.substring(0, _.lastIndexOf(route, '/')));
-                    Storage.remove('nickname');
-                }, this));
+                .addClass(this.outAnimation);
+            _.delay(_.bind(function () {
+                var route = Backbone.history.fragment;
+                this.hide(route.substring(0, _.lastIndexOf(route, '/')));
+                Storage.remove('nickname');
+            }, this), 500);
         }
 
     });
