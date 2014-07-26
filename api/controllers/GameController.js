@@ -113,7 +113,7 @@ module.exports = {
             if (uuid && game) {
                 var _socket = getSockets(uuid, socket_id);
                 // If need emit `game:leave` message to leaver's opponent
-                if (_socket.socket) {
+                if (_socket && _socket.socket) {
                     if (game.creator.socket_id === socket_id) {
                         game.creator.status = false;
                         emit(_socket.socket, 'game:leave', game.creator.player);
