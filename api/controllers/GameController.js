@@ -80,6 +80,7 @@ function getSockets (uuid, socket_id) {
             if (game.joiner && game.joiner.socket_id === socket_id) {
                 return _sockets[game.creator.socket_id];
             }
+            return null;
         } else {
             return {
                 creator: _sockets[game.creator.socket_id],
@@ -110,13 +111,17 @@ module.exports = {
                 game = _games[uuid];
             delete _sockets[socket_id];
             if (uuid && game) {
-                if (game.creator.socket_id === socket_id) {
-                    game.creator.status = false;
-                    emit(getSockets(uuid, socket_id).socket, 'game:leave', game.creator.player);
-                }
-                if (game.joiner.socket_id === socket_id) {
-                    game.joiner.status = false;
-                    emit(getSockets(uuid, socket_id).socket, 'game:leave', game.joiner.player);
+                var _socket = getSockets(uuid, socket_id);
+                // If need emit `game:leave` message to leaver's opponent
+                if (_socket.socket) {
+                    if (game.creator.socket_id === socket_id) {
+                        game.creator.status = false;
+                        emit(_socket.socket, 'game:leave', game.creator.player);
+                    }
+                    if (game.joiner.socket_id === socket_id) {
+                        game.joiner.status = false;
+                        emit(_socket.socket, 'game:leave', game.joiner.player);
+                    }
                 }
                 if (!game.creator.status && !game.joiner.status) {
                     sails.util.debug('[DISCONNECT  ] game_id: ' + uuid + ' is closed.');
