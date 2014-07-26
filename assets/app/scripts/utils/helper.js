@@ -189,9 +189,6 @@ define(['vendor/jquery', 'vendor/lodash'], function ($, _) {
     }
 
     function escape (str) {
-        if (window.escape) {
-            return window.escape(str);
-        }
         return $('<div>').text(str).html();
     }
 

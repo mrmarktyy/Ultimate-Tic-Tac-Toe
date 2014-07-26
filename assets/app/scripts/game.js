@@ -134,7 +134,7 @@ function (_, Backbone, $,
                     );
 
                 this.chatView.addMessage({
-                    content: 'Please waiting for a player to join the game.'
+                    content: 'Please wait for a player to join the game.'
                 });
 
                 Socket.listenTo('game:players', function (response) {
