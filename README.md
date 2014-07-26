@@ -3,6 +3,8 @@ Ultimate Tic Tac Toe
 
 A stategic boardgame for 2 players
 
+![Ultimate Tic Tac Toe](http://s3-ap-southeast-2.amazonaws.com/tantanguanguan-file-uploader/M3p8dbbT0bwmkn19.png)
+
 ### Demo
 
 [Play it here](http://ultimate.tantanguanguan.com/)
