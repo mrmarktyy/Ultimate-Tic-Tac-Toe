@@ -14,7 +14,7 @@ function (_, Backbone, Menu, NicknameModal, Storage) {
             'online/friend'     : 'friend',
             'online/join'       : 'join',
             'online/pair'       : 'pair',
-            'tutorial'          : 'tutorial',
+            'rules'             : 'rules',
             'about'             : 'about'
         },
 
@@ -77,8 +77,8 @@ function (_, Backbone, Menu, NicknameModal, Storage) {
             });
         },
 
-        tutorial: function () {
-            new Menu.Tutorial({
+        rules: function () {
+            new Menu.Rules({
                 el: this.$el
             });
         },

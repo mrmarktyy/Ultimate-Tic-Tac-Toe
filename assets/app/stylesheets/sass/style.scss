@@ -383,6 +383,30 @@ input {
 }
 
 /*
+ * Rules
+ =================================*/
+
+.rules {
+
+    .content {
+        font-size: 1.2em;
+
+        .title {
+            text-align: center;
+        }
+        ul {
+            list-style: lower-roman;
+            padding-left: 2em;
+
+            li {
+                margin: 0.5em 0;
+            }
+        }
+    }
+
+}
+
+/*
  * Modal
  =================================*/
 
@@ -421,3 +445,4 @@ input {
 
 @import 'keyframes';
 @import 'loader';
+@import 'fonts';
