@@ -103,24 +103,36 @@ input {
  =================================*/
 .menu {
     text-align: center;
+    margin-top: 4em;
 
     ul {
         list-style: none;
 
         li a {
-            padding: 1em;
-            border: 2px solid $greyDDD;
-            width: 50%;
-            margin: 1em auto;
+            font-family: inherit;
+            font-size: inherit;
             cursor: pointer;
-            transition: background-color 0.5s ease;
             display: block;
+            width: 50%;
+            padding: 1em;
+            margin: 1em auto;
+            text-transform: uppercase;
             text-decoration: none;
-            color: $grey333;
+            letter-spacing: 1px;
+            font-weight: 700;
+            outline: none;
+            position: relative;
+            -webkit-transition: background-color 0.3s;
+            -moz-transition: background-color 0.3s;
+            transition: background-color 0.3s;
+            color: $lightBlue;
+            border: 3px solid $lightBlue;
+            background-color: #fff;
 
             &:hover,
             &:active {
-                background-color: $greyEEE;
+                color: #fff;
+                background-color: $lightBlue;
             }
         }
     }

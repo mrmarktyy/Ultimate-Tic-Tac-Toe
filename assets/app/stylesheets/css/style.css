@@ -71,21 +71,33 @@ input {
  * Menus
  =================================*/
 .menu {
-  text-align: center; }
+  text-align: center;
+  margin-top: 4em; }
   .menu ul {
     list-style: none; }
     .menu ul li a {
-      padding: 1em;
-      border: 2px solid #dddddd;
-      width: 50%;
-      margin: 1em auto;
+      font-family: inherit;
+      font-size: inherit;
       cursor: pointer;
-      transition: background-color 0.5s ease;
       display: block;
+      width: 50%;
+      padding: 1em;
+      margin: 1em auto;
+      text-transform: uppercase;
       text-decoration: none;
-      color: #333333; }
+      letter-spacing: 1px;
+      font-weight: 700;
+      outline: none;
+      position: relative;
+      -webkit-transition: background-color 0.3s;
+      -moz-transition: background-color 0.3s;
+      transition: background-color 0.3s;
+      color: #12acef;
+      border: 3px solid #12acef;
+      background-color: #fff; }
       .menu ul li a:hover, .menu ul li a:active {
-        background-color: #eeeeee; }
+        color: #fff;
+        background-color: #12acef; }
 
 /*
  * Board
