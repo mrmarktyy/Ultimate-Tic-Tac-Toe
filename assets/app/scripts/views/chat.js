@@ -35,11 +35,17 @@ function (Backbone, _, Engine, Socket, Helper, ChatTpl, MessageTpl) {
                 var message = $(event.currentTarget).val();
                 if (message) {
                     var player = Engine.getInstance()['player' + this.status.get('owner')];
-                    this.addMessage({
-                        from: player.get('nickname'),
-                        content: Helper.escape(message)
-                    });
-                    this.postMessage(message);
+                    if (player) {
+                        this.addMessage({
+                            from: player.get('nickname'),
+                            content: Helper.escape(message)
+                        });
+                        this.postMessage(message);
+                    } else {
+                        this.addMessage({
+                            content: 'Local game chat is disabled.'
+                        });
+                    }
                     this.$('.chat__input').val('');
                 }
             }

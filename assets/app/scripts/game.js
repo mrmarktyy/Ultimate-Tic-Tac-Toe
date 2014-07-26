@@ -34,7 +34,7 @@ function (_, Backbone, $,
 
         vsHuman: function () {
             this.initGame(
-                new StatusModel({owner: 1}),
+                new StatusModel(),
                 Helper.getInitialState(),
                 new Player({role: 1, nickname: 'Player Red'}),
                 new Player({role: 2, nickname: 'Player Blue'})
