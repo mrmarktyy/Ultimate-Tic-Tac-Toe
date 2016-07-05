@@ -6,8 +6,11 @@ var keystone = require('keystone'),
     webpack = require('webpack'),
     devMiddleware = require('webpack-dev-middleware'),
     hotMiddleware = require('webpack-hot-middleware'),
-    config = require('./webpack.config.dev')
+    config = require('./webpack.config.dev'),
     compiler = webpack(config)
+    customFields = require('keystone-custom-fieldtypes')
+
+customFields.loadFromDir('./src/fields');
 
 // Require keystone
 var keystone = require('keystone');
