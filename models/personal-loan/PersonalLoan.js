@@ -27,7 +27,7 @@ PersonalLoan.add({
 		index: true,
 		many: true
 	},
-	availableTo457VisaHolders: {type: Boolean, default: false},
+	availableTo457VisaHolders: {type: Types.EditableBoolean, default: false},
 	minimumIncome: {type: Number},
 	minimumYearsAddress: {type: Number},
 	employmentStatus: {
@@ -53,5 +53,5 @@ PersonalLoan.add({
 
 });
 
-PersonalLoan.defaultColumns = 'name, loanType, secureType';
+PersonalLoan.defaultColumns = 'name, loanType, secureType, availableTo457VisaHolders';
 PersonalLoan.register();
