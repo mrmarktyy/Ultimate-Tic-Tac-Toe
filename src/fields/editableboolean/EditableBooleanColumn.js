@@ -15,7 +15,7 @@ var EditableBooleanColumn = React.createClass({
   },
   change (e) {
     this.setState({checked: !this.state.checked})
-    updateModel('users', this.props.data.id, {[this.props.col.path]: !this.state.checked})
+    updateModel(this.props.list.id, this.props.data.id, {[this.props.col.path]: !this.state.checked})
     console.log(this.props.data)
   },
   renderValue () {
