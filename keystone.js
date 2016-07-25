@@ -3,12 +3,12 @@
 require('dotenv').config();
 
 var keystone = require('keystone'),
-    webpack = require('webpack'),
-    devMiddleware = require('webpack-dev-middleware'),
-    hotMiddleware = require('webpack-hot-middleware'),
-    config = require('./webpack.config.dev'),
-    compiler = webpack(config)
-    customFields = require('keystone-custom-fieldtypes')
+	webpack = require('webpack'),
+	devMiddleware = require('webpack-dev-middleware'),
+	hotMiddleware = require('webpack-hot-middleware'),
+	config = require('./webpack.config.dev'),
+	compiler = webpack(config)
+customFields = require('keystone-custom-fieldtypes')
 
 customFields.loadFromDir('./src/fields');
 
@@ -31,17 +31,28 @@ keystone.init({
 	'session': true,
 	'auth': true,
 	'user model': 'User',
-  'port': '4000'
+	'port': '4000',
+	'session store': 'connect-mongostore',
+	'session store options': {
+	'db': {
+		'name': 'ratecity-data',
+		'servers': [
+			{'host': 'localhost', 'port': 27017},
+			{'host': 'localhost', 'port': 27018},
+			{'host': 'localhost', 'port': 27019}
+		]
+	}
+}
 });
 
 
 if (process.env.NODE_ENV == 'development') {
-  keystone.pre('routes', devMiddleware(compiler, {
-    noInfo: true,
-    publicPath: config.output.publicPath
-  }))
+	keystone.pre('routes', devMiddleware(compiler, {
+		noInfo: true,
+		publicPath: config.output.publicPath
+	}))
 
-  keystone.pre('routes', hotMiddleware(compiler))
+	keystone.pre('routes', hotMiddleware(compiler))
 };
 
 keystone.import('models');
