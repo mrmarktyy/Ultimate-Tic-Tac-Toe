@@ -1,6 +1,7 @@
 // Simulate config options from your production environment by
 // customising the .env file in your project's root folder.
 require('dotenv').config();
+var configFile = require('config');
 
 var keystone = require('keystone'),
 	webpack = require('webpack'),
@@ -14,7 +15,8 @@ customFields.loadFromDir('./src/fields');
 
 // Require keystone
 var keystone = require('keystone');
-
+var dbConfig = configFile.get('mongo');
+console.log(dbConfig)
 keystone.init({
 	'name': 'RateCity Data',
 	'brand': 'RateCity Data',
@@ -33,16 +35,7 @@ keystone.init({
 	'user model': 'User',
 	'port': '4000',
 	'session store': 'connect-mongostore',
-	'session store options': {
-	'db': {
-		'name': 'ratecity-data',
-		'servers': [
-			{'host': 'localhost', 'port': 27017},
-			{'host': 'localhost', 'port': 27018},
-			{'host': 'localhost', 'port': 27019}
-		]
-	}
-}
+	'session store options': dbConfig
 });
 
 
