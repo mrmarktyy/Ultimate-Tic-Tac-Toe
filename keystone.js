@@ -16,7 +16,7 @@ customFields.loadFromDir('./src/fields');
 // Require keystone
 var keystone = require('keystone');
 var dbConfig = configFile.get('mongo');
-console.log(dbConfig)
+
 keystone.init({
 	'name': 'RateCity Data',
 	'brand': 'RateCity Data',

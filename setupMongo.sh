@@ -52,11 +52,11 @@ echo ""
 sleep 2
 ${mongo} --port=${port1} --eval 'rs.conf();'
 echo ""
-echo "Added 2nd node into replica set"
+echo "Adding 2nd node into replica set"
 sleep 2
 ${mongo} --port=${port1} --eval "rs.add(\"${hostname}.local:${port2}\");"
 echo ""
-echo "Add 3rd nod einto replica set"
+echo "Adding 3rd node into replica set"
 sleep 2
 ${mongo} --port=${port1} --eval "rs.add(\"${hostname}.local:${port3}\");"
 sleep 5
