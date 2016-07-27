@@ -18,6 +18,7 @@
 
 ## MongoDB Replica Set Setup
 
+******* TIPS: run mongoSetup.sh does the samething as below *******
 * Create data directory for each node  
   ```
   mkdir -p ~/mongodb/data/ratecity-data-0
