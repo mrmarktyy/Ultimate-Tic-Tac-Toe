@@ -27,7 +27,7 @@ PersonalLoan.add({
 		index: true,
 		many: true
 	},
-	availableTo457VisaHolders: {type: Types.EditableBoolean, default: false},
+	// availableTo457VisaHolders: {type: Types.EditableBoolean, default: false},
 	minimumIncome: {type: Number},
 	minimumYearsAddress: {type: Number},
 	employmentStatus: {

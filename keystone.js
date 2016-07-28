@@ -1,19 +1,21 @@
 // Simulate config options from your production environment by
 // customising the .env file in your project's root folder.
 require('dotenv').config();
+var configFile = require('config');
 
 var keystone = require('keystone'),
-    webpack = require('webpack'),
-    devMiddleware = require('webpack-dev-middleware'),
-    hotMiddleware = require('webpack-hot-middleware'),
-    config = require('./webpack.config.dev'),
-    compiler = webpack(config)
-    customFields = require('keystone-custom-fieldtypes')
+	webpack = require('webpack'),
+	devMiddleware = require('webpack-dev-middleware'),
+	hotMiddleware = require('webpack-hot-middleware'),
+	config = require('./webpack.config.dev'),
+	compiler = webpack(config)
+customFields = require('keystone-custom-fieldtypes')
 
 customFields.loadFromDir('./src/fields');
 
 // Require keystone
 var keystone = require('keystone');
+var dbConfig = configFile.get('mongo');
 
 keystone.init({
 	'name': 'RateCity Data',
@@ -31,17 +33,19 @@ keystone.init({
 	'session': true,
 	'auth': true,
 	'user model': 'User',
-  'port': '4000'
+	'port': '4000',
+	'session store': 'connect-mongostore',
+	'session store options': dbConfig
 });
 
 
 if (process.env.NODE_ENV == 'development') {
-  keystone.pre('routes', devMiddleware(compiler, {
-    noInfo: true,
-    publicPath: config.output.publicPath
-  }))
+	keystone.pre('routes', devMiddleware(compiler, {
+		noInfo: true,
+		publicPath: config.output.publicPath
+	}))
 
-  keystone.pre('routes', hotMiddleware(compiler))
+	keystone.pre('routes', hotMiddleware(compiler))
 };
 
 keystone.import('models');

@@ -4,6 +4,8 @@
   "private": true,
   "dependencies": {
     "async": "^1.5.0",
+    "config": "^1.21.0",
+    "connect-mongostore": "^0.1.4",
     "dotenv": "^2.0.0",
     "keystone": "https://github.com/keystonejs/keystone.git",
     "keystone-custom-fieldtypes": "git@github.com:ratecity/keystone-custom-fieldtypes.git",
