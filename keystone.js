@@ -35,7 +35,8 @@ keystone.init({
 	'user model': 'User',
 	'port': '4000',
 	'session store': 'connect-mongostore',
-	'session store options': dbConfig
+	'session store options': dbConfig,
+	'mongo' : process.env.MONGO_URI
 });
 
 
