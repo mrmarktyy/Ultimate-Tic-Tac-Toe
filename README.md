@@ -15,7 +15,6 @@
 * Start the server `npm start`
 * Visit `http://localhost:4000` to check the website
 
-
 ## MongoDB Replica Set Setup
 
 ******* TIPS: run mongoSetup.sh does the samething as below *******
@@ -121,3 +120,7 @@
 	"ok" : 1
 }
   ```
+
+## Deployment
+
+Please refer to this confluence page https://ratecityconfluence.atlassian.net/wiki/display/IN/Keystone
