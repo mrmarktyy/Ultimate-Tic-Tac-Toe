@@ -1,10 +1,6 @@
 var keystone = require('keystone');
 var Types = keystone.Field.Types;
 
-/**
- * User Model
- * ==========
- */
 var Company = new keystone.List('Company');
 
 Company.add({
@@ -22,8 +18,5 @@ Company.add({
 	canstarRecno: {type: String}
 });
 
-/**
- * Registration
- */
 Company.defaultColumns = 'name, companyType, canstarRecno';
 Company.register();

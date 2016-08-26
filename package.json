@@ -10,6 +10,7 @@
     "keystone": "https://github.com/keystonejs/keystone.git",
     "keystone-custom-fieldtypes": "git@github.com:ratecity/keystone-custom-fieldtypes.git",
     "lodash": "^4.13.1",
+    "node-fetch": "^1.6.0",
     "node-sass": "^3.3.2",
     "node-sass-middleware": "^0.9.7",
     "webpack": "^1.13.1",

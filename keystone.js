@@ -17,6 +17,10 @@ customFields.loadFromDir('./src/fields');
 var keystone = require('keystone');
 var dbConfig = configFile.get('mongo');
 
+const mongoUsername = process.env.MONGO_USERNAME ?
+  `${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@` : ''
+
+
 keystone.init({
   'name': 'RateCity Data',
   'brand': 'RateCity Data',
@@ -42,7 +46,7 @@ keystone.init({
     'username': process.env.MONGO_USERNAME,
     'password': process.env.MONGO_PASSWORD
   },
-  'mongo' : `mongodb://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@${process.env.MONGO_HOST}:${process.env.MONGO_PORT}/${process.env.MONGO_DB_NAME}`
+  'mongo' : `mongodb://${mongoUsername}${process.env.MONGO_HOST}:${process.env.MONGO_PORT}/${process.env.MONGO_DB_NAME}`
 });
 
 if (process.env.NODE_ENV == 'development') {
@@ -54,6 +58,11 @@ if (process.env.NODE_ENV == 'development') {
   keystone.pre('routes', hotMiddleware(compiler))
 };
 
+keystone.set('s3 config', {
+  bucket: process.env.AWS_S3_BUCKET,
+  key: process.env.AWS_ACCESS_KEY,
+  secret: process.env.AWS_SECRET_ACCESS_KEY
+});
 keystone.import('models');
 keystone.set('locals', {
   _: require('lodash'),
@@ -77,7 +86,6 @@ keystone.set('email locals', {
   },
 });
 keystone.set('email tests', require('./routes/emails'));
-
 keystone.set('nav', {
   users: 'users',
 });
