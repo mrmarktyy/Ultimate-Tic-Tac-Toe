@@ -1,11 +1,6 @@
 var keystone = require('keystone');
 var Types = keystone.Field.Types;
 
-/**
- * Personal Loan Model
- * ==========
- */
-
 var PersonalLoan = new keystone.List('PersonalLoan');
 
 PersonalLoan.add({
@@ -49,9 +44,7 @@ PersonalLoan.add({
 	otherBenefits: {type: String},
 	otherRestrictions: {type: String},
 	adminNotes: {type: String}
-
-
 });
 
-PersonalLoan.defaultColumns = 'name, loanType, secureType, availableTo457VisaHolders';
+PersonalLoan.defaultColumns = 'name, loanType, secureType';
 PersonalLoan.register();
