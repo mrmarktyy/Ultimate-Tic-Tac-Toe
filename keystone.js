@@ -58,11 +58,6 @@ if (process.env.NODE_ENV == 'development') {
   keystone.pre('routes', hotMiddleware(compiler))
 };
 
-keystone.set('s3 config', {
-  bucket: process.env.AWS_S3_BUCKET,
-  key: process.env.AWS_ACCESS_KEY,
-  secret: process.env.AWS_SECRET_ACCESS_KEY
-});
 keystone.import('models');
 keystone.set('locals', {
   _: require('lodash'),

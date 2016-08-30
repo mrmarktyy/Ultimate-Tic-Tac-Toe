@@ -9,6 +9,7 @@
     "dotenv": "^2.0.0",
     "keystone": "https://github.com/keystonejs/keystone.git",
     "keystone-custom-fieldtypes": "git@github.com:ratecity/keystone-custom-fieldtypes.git",
+    "keystone-storage-adapter-s3": "^1.1.0",
     "lodash": "^4.13.1",
     "node-fetch": "^1.6.0",
     "node-sass": "^3.3.2",
