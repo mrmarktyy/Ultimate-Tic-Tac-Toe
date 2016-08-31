@@ -2,13 +2,15 @@ node {
     checkout scm
 
     try {
+        stage 'Login to Amazon ECR'
+        sh "make login"
+
         stage 'Create release environment and run acceptance tests'
         sh 'make release'
 
         stage 'Tag and publish release image'
         sh "make tag latest \$(git rev-parse --short HEAD) \$(git tag --points-at HEAD)"
         sh "make buildtag master \$(git tag --points-at HEAD)"
-        sh "make login"
         sh "make publish"
 
         stage 'Deploy release'
