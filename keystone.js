@@ -20,6 +20,7 @@ var dbConfig = configFile.get('mongo');
 const mongoUsername = process.env.MONGO_USERNAME ?
   `${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@` : ''
 
+var mongoUri = process.env.MONGO_URI || `mongodb://${mongoUsername}${process.env.MONGO_HOST}:${process.env.MONGO_PORT}/${process.env.MONGO_DB_NAME}`
 
 keystone.init({
   'name': 'RateCity Data',
@@ -46,7 +47,7 @@ keystone.init({
     'username': process.env.MONGO_USERNAME,
     'password': process.env.MONGO_PASSWORD
   },
-  'mongo' : `mongodb://${mongoUsername}${process.env.MONGO_HOST}:${process.env.MONGO_PORT}/${process.env.MONGO_DB_NAME}`
+  'mongo' : process.env.MONGO_URI
 });
 
 if (process.env.NODE_ENV == 'development') {
