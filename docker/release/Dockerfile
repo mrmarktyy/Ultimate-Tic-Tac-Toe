@@ -7,8 +7,6 @@ ENV AP /data/app
 ADD . $AP
 WORKDIR $AP
 
-COPY .env.example .env
-
 RUN npm install
 
 CMD ["supervisord", "-n"]
