@@ -47,7 +47,7 @@ keystone.init({
     'username': process.env.MONGO_USERNAME,
     'password': process.env.MONGO_PASSWORD
   },
-  'mongo' : process.env.MONGO_URI
+  'mongo' : mongoUri
 });
 
 if (process.env.NODE_ENV == 'development') {
