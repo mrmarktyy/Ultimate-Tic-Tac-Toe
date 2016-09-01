@@ -7,6 +7,8 @@ ENV AP /data/app
 ADD . $AP
 WORKDIR $AP
 
+RUN touch .env
+
 RUN npm install
 
 CMD ["supervisord", "-n"]
