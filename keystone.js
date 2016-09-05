@@ -1,7 +1,6 @@
 // Simulate config options from your production environment by
 // customising the .env file in your project's root folder.
 require('dotenv').config();
-var configFile = require('config');
 
 var keystone = require('keystone'),
 webpack = require('webpack'),
@@ -15,12 +14,6 @@ customFields.loadFromDir('./src/fields');
 
 // Require keystone
 var keystone = require('keystone');
-var dbConfig = configFile.get('mongo');
-
-const mongoUsername = process.env.MONGO_USERNAME ?
-  `${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@` : ''
-
-var mongoUri = process.env.MONGO_URI || `mongodb://${mongoUsername}${process.env.MONGO_HOST}:${process.env.MONGO_PORT}/${process.env.MONGO_DB_NAME}`
 
 keystone.init({
   'name': 'RateCity Data',
@@ -39,15 +32,8 @@ keystone.init({
   'auth': true,
   'user model': 'User',
   'port': '4000',
-  'session store': 'connect-mongostore',
-  'session store options': {
-    'db': process.env.MONGO_DB_NAME,
-    'host': process.env.MONGO_HOST,
-    'port': process.env.MONGO_PORT,
-    'username': process.env.MONGO_USERNAME,
-    'password': process.env.MONGO_PASSWORD
-  },
-  'mongo' : mongoUri
+  'session store': 'mongo',
+  'mongo' : process.env.MONGO_URI
 });
 
 if (process.env.NODE_ENV == 'development') {
