@@ -4,7 +4,7 @@ module.exports = process.env.S3_SECRET ?
   new keystone.Storage({
     adapter: require('keystone-storage-adapter-s3'),
     s3: {
-      path: 'keystone',
+      path: '/keystone',
       headers: {
         'x-amz-acl': 'public-read',
       }
