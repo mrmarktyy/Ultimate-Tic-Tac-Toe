@@ -4,15 +4,6 @@ var ImageMIMETypes = require('../helpers/images')
 var blazeCallback = require('../helpers/blazeCallback.js')
 
 var StaticFeedInclusion = new keystone.List('StaticFeedInclusion');
-var s3Storage = new keystone.Storage({
-  adapter: require('keystone-storage-adapter-s3'),
-  s3: {
-    path: 'keystone',
-    headers: {
-      'x-amz-acl': 'public-read',
-    }
-  }
-});
 
 StaticFeedInclusion.add({
   name: {type: Types.Text, initial: true, required: true},
@@ -20,7 +11,7 @@ StaticFeedInclusion.add({
   url: {type: Types.Text, initial: true, required: true},
   image: {
     type: Types.File,
-    storage: s3Storage
+    storage: require('../helpers/fileStorage')
   },
   feed: {
     type: Types.Relationship,
