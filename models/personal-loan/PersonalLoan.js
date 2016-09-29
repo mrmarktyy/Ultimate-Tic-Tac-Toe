@@ -46,5 +46,7 @@ PersonalLoan.add({
 	adminNotes: {type: String}
 });
 
-PersonalLoan.defaultColumns = 'name, loanType, secureType';
+PersonalLoan.track = true;
+PersonalLoan.defaultColumns = 'name, company, loanType, secureType, createdAt';
+PersonalLoan.drilldown = 'company';
 PersonalLoan.register();
