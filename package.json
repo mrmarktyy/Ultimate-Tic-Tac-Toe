@@ -6,6 +6,7 @@
     "async": "^1.5.0",
     "connect-mongo": "^1.3.2",
     "dotenv": "^2.0.0",
+    "jade": "^1.11.0",
     "keystone": "4.0.0-beta.3",
     "keystone-custom-fieldtypes": "git@github.com:ratecity/keystone-custom-fieldtypes.git",
     "keystone-storage-adapter-s3": "^1.1.0",
