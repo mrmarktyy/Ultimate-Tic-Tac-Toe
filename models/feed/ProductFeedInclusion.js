@@ -7,6 +7,7 @@ ProductFeedInclusion.add({
   productUuid: {type: Types.Text, required: true, index: true, initial: true},
   name: {type: Types.Text, initial: true, required: true},
   feed: {type: Types.Relationship, required: true, initial: true, ref: 'ProductFeed'},
+  url: {type: Types.Url, required: false, initial: false}
 });
 
 ProductFeedInclusion.defaultColumns = 'name, feed, productUuid';
