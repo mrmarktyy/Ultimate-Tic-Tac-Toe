@@ -1,5 +1,6 @@
 var keystone = require('keystone');
 var Types = keystone.Field.Types;
+var imageStorage = require('../helpers/fileStorage')
 
 var Company = new keystone.List('Company');
 
@@ -24,11 +25,7 @@ Company.add({
 	legacyCode: {type: Types.Text},
 	url: {type: Types.Url, required: true, index: true, initial: true},
 	searchKeyword: {type: Types.TextArray},
-	logo: {
-		type: Types.CloudinaryImage,
-		folder: 'company',
-		autoCleanup : true
-	},
+	logo: imageStorage('company'),
 });
 
 Company.track = true;

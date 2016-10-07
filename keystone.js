@@ -46,8 +46,10 @@ if (process.env.NODE_ENV == 'development') {
 }
 ;
 
-keystone.set('cloudinary config', process.env.CLOUDINARY_URL);
-keystone.set('cloudinary folders', true);
+if (process.env.CLOUDINARY_URL) {
+  keystone.set('cloudinary config', process.env.CLOUDINARY_URL);
+  keystone.set('cloudinary folders', true);
+}
 
 keystone.import('models');
 keystone.set('locals', {
