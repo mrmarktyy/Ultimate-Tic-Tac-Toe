@@ -76,7 +76,7 @@ keystone.set('email locals', {
 keystone.set('email tests', require('./routes/emails'));
 keystone.set('nav', {
 	'companies': ['Company', 'Branch', 'ATM'],
-	'personalLoans': 'PersonalLoan',
+	'personalLoans': ['CompanyPersonalLoan', 'PersonalLoan', 'PersonalLoanVariation'],
 	'feeds': ['ProductFeedInclusion', 'ProductFeed', 'StaticFeed', 'StaticFeedInclusion'],
 	'users': 'users',
 });

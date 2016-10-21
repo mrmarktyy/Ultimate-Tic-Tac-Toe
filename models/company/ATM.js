@@ -5,11 +5,19 @@ var uniqueValidator = require('mongoose-unique-validator');
 var ATM = new keystone.List('ATM');
 
 ATM.add({
-	company: {type: Types.Relationship, ref: 'Company', required: true, initial: true, unique: true, index:true},
-	numberOfATMs: {type: Types.Number, required: true, initial: true},
-	feeForWithdrawal: {type: Types.Money},
-	feeForBalanceEnquiry: {type: Types.Money},
-	ATMPartners: {type: Types.Relationship, ref: 'Company', many: true},
+  company: {
+    type: Types.Relationship,
+    ref: 'Company',
+    required: true,
+    initial: true,
+    unique: true,
+    index: true,
+    noedit: true
+  },
+  numberOfATMs: {type: Types.Number, required: true, initial: true},
+  feeForWithdrawal: {type: Types.Money},
+  feeForBalanceEnquiry: {type: Types.Money},
+  ATMPartners: {type: Types.Relationship, ref: 'Company', many: true},
 });
 
 ATM.track = true;
