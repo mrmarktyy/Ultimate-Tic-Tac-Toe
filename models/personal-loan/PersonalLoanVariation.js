@@ -17,7 +17,7 @@ PersonalLoanVariation.add({
   product: {
     type: Types.Relationship,
     ref: 'PersonalLoan',
-    // required: true, // this is  a hack to create the variation under a product 
+    // required: true, // this is  a hack to create the variation under a product
     // initial: true,
     index: true,
     // noedit: true,

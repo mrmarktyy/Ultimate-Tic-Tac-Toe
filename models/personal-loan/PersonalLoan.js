@@ -1,4 +1,5 @@
 var keystone = require('keystone');
+var uuid = require('node-uuid');
 var frequency = require('../helpers/frequency')
 var availableOptions = require('../helpers/availableOptions')
 var productCommonAttributes = require('../common/ProductCommonAttributes')
@@ -32,7 +33,7 @@ PersonalLoan.add({
     required: true,
     initial: true
   },
-	uuid: {type: Types.Text, required: true, initial: true},
+	uuid: {type: Types.Text, required: true, initial: true, default: uuid.v4(), noedit: true},
   legacyCode: {type: Types.Text},
   docReleaseFees: {type: Types.Number},
   isSecuredByVehicle: {type: Types.Select, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown},
