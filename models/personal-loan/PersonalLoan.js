@@ -33,7 +33,7 @@ PersonalLoan.add({
     required: true,
     initial: true
   },
-	uuid: {type: Types.Text, required: true, initial: true, default: uuid.v4(), noedit: true},
+	uuid: {type: Types.Text, initial: true, noedit: true}, // this should be unique, however, team don't have the data yet. will make this unique once all data loaded.
   legacyCode: {type: Types.Text},
   docReleaseFees: {type: Types.Number},
   isSecuredByVehicle: {type: Types.Select, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown},
@@ -100,6 +100,13 @@ PersonalLoan.add({
 PersonalLoan.relationship({path: 'personalLoanVariations', ref: 'PersonalLoanVariation', refPath: 'product'});
 
 PersonalLoan.schema.index({company: 1, name: 1}, {unique: true});
+
+PersonalLoan.schema.pre('save', function (next) {
+  if (!this.uuid) {
+    this.uuid = uuid.v4()
+  }
+  next();
+});
 
 PersonalLoan.track = true;
 PersonalLoan.defaultColumns = 'name, company, carLoan, personalLoan, lineOfCredit';
