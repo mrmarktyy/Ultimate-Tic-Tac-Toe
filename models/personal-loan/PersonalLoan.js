@@ -25,8 +25,8 @@ PersonalLoan.add({
   extraRepayments: {type: Types.Select, initial: true, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown},
   hasRedrawFacility: {type: Types.Select, initial: true, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown},
   securedType: {type: Types.Select, initial: true, required: true, options: ['SECURED', 'UNSECURED'], emptyOption: false},
-  applicationFees: {type: Types.Number, initial: true, default: 0},
-  ongoingFees: {type: Types.Number, initial: true, default: 0},
+  applicationFees: {type: Types.Number, initial: true, default: 0, min: 0},
+  ongoingFees: {type: Types.Number, initial: true, default: 0, min: 0},
   ongoingFeesFrequency: {
     type: Types.Select,
     options: frequency,
@@ -35,7 +35,7 @@ PersonalLoan.add({
   },
 	uuid: {type: Types.Text, initial: true, noedit: true}, // this should be unique, however, team don't have the data yet. will make this unique once all data loaded.
   legacyCode: {type: Types.Text},
-  docReleaseFees: {type: Types.Number},
+  docReleaseFees: {type: Types.Number, min: 0},
   isSecuredByVehicle: {type: Types.Select, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown},
   isSecuredByProperty: {type: Types.Select, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown},
   isSecuredByDeposit: {type: Types.Select, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown},
@@ -44,23 +44,23 @@ PersonalLoan.add({
   isRCSpecial: {type: Types.Select, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown},
   specialConditions: {type: Types.Text},
   isRestrictedToCurrentHLCustomer: {type: Types.Select, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown},
-  minimumYearsAddress: {type: Number},
-  minimumIncome: {type: Number},
+  minimumYearsAddress: {type: Number, min: 0},
+  minimumIncome: {type: Number, min: 0},
   isFullTimeEmploymentAccepted: {type: Types.Select, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown},
   isPartTimeEmploymentAccepted: {type: Types.Select, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown},
   isContractEmploymentAccepted: {type: Types.Select, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown},
   isSelfEmploymentAccepted: {type: Types.Select, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown},
   isSoleTraderAccepted: {type: Types.Select, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown},
-  minEmploymentLengthFullTime: {type: Number},
-  minEmploymentLengthPartTime: {type: Number},
-  minEmploymentLengthContractors: {type: Number},
-  minEmploymentLengthSelfEmployed: {type: Number},
-  minEmploymentLengthSoleTrader: {type: Number},
-  minVedaScore: {type: Number},
-  minExperianScore: {type: Number},
-  minDunBradstreetScore: {type: Number},
-  minYearsNoBankruptcy: {type: Number},
-  minYearsGoodCredit: {type: Number},
+  minEmploymentLengthFullTime: {type: Number, min: 0},
+  minEmploymentLengthPartTime: {type: Number, min: 0},
+  minEmploymentLengthContractors: {type: Number, min: 0},
+  minEmploymentLengthSelfEmployed: {type: Number, min: 0},
+  minEmploymentLengthSoleTrader: {type: Number, min: 0},
+  minVedaScore: {type: Number, min: 200},
+  minExperianScore: {type: Number, min: 0},
+  minDunBradstreetScore: {type: Number, min: 0},
+  minYearsNoBankruptcy: {type: Number, min: 0},
+  minYearsGoodCredit: {type: Number, min: 0},
   otherBenefits: {type: Types.Text},
   otherRestrictions: {type: Types.Text},
   adminNotes: {type: Types.Text},
@@ -81,18 +81,18 @@ PersonalLoan.add({
   //   type: Types.Select,
   //   options: frequency
   // },
-  extraRepaymentDollarLimits: {type: Types.Number},
-  extraRepaymentDollarLimitsPeriod: {type: Types.Number},
-  extraRepaymentPercentageLimits: {type: Types.Number},
-  extraRepaymentPercentageLimitsPeriod: {type: Types.Number},
-  encumberanceCheckFees: {type: Types.Number},
+  extraRepaymentDollarLimits: {type: Types.Number, min: 0},
+  extraRepaymentDollarLimitsPeriod: {type: Types.Number, min: 0},
+  extraRepaymentPercentageLimits: {type: Types.Number, min: 0, max: 100},
+  extraRepaymentPercentageLimitsPeriod: {type: Types.Number, min: 0},
+  encumberanceCheckFees: {type: Types.Number, min: 0},
   isFullyDrawnAdvance: {type: Types.Select, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown},
-  redrawActivationFee: {type: Types.Number},
-  minRedrawAmount: {type: Types.Number},
+  redrawActivationFee: {type: Types.Number, min: 0},
+  minRedrawAmount: {type: Types.Number, min: 0},
   hasEarlyExitPenalty: {type: Types.Select, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown},
-  missedPaymentPenalty: {type: Types.Number, default: 0},
-  earlyExitPenaltyFee: {type: Types.Number},
-  earlyExitPenaltyFeePeriod: {type: Types.Number},
+  missedPaymentPenalty: {type: Types.Number, default: 0, min: 0},
+  earlyExitPenaltyFee: {type: Types.Number, min: 0},
+  earlyExitPenaltyFeePeriod: {type: Types.Number, min: 0},
   hasEarlyExitPenaltyFeeVaries: {type: Types.Select, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown},
   otherFees: {type: Types.Text}
 });
@@ -100,6 +100,28 @@ PersonalLoan.add({
 PersonalLoan.relationship({path: 'personalLoanVariations', ref: 'PersonalLoanVariation', refPath: 'product'});
 
 PersonalLoan.schema.index({company: 1, name: 1}, {unique: true});
+
+PersonalLoan.schema.pre('validate', function (next) {
+  if ((this.extraRepaymentDollarLimits !== undefined) && (this.extraRepayments !== availableOptions.yes)) {
+    next(Error('Extra Repayments must be YES if Extra Repayment Dollar Limits is not empty'));
+  }
+  if ((this.extraRepaymentDollarLimitsPeriod !== undefined) && (this.extraRepayments !== availableOptions.yes)) {
+    next(Error('Extra Repayments must be YES if Extra Repayment Dollar Limits Period is not empty'));
+  }
+  if ((this.extraRepaymentPercentageLimits !== undefined) && (this.extraRepayments !== availableOptions.yes)) {
+    next(Error('Extra Repayments must be YES if Extra Repayment Percentage Limits is not empty'));
+  }
+  if ((this.extraRepaymentPercentageLimitsPeriod !== undefined) && (this.extraRepayments !== availableOptions.yes)) {
+    next(Error('Extra Repayments must be YES if Extra Repayment Percentage Limits Period is not empty'));
+  }
+  if ((this.extraRepaymentDollarLimits == undefined) !== (this.extraRepaymentDollarLimitsPeriod == undefined)) {
+    next(Error('Extra Repayments Dollar limits and Extra Repayment Dollar Limits Period must both empty or not empty'));
+  }
+  if ((this.extraRepaymentPercentageLimits == undefined) !== (this.extraRepaymentPercentageLimitsPeriod == undefined)) {
+    next(Error('Extra Repayments Percentage limits and Extra Repayment Percentage Limits Period must both empty or not empty'));
+  }
+  next();
+});
 
 PersonalLoan.schema.pre('save', function (next) {
   if (!this.uuid) {
