@@ -1,6 +1,6 @@
 var keystone = require('keystone');
 var Types = keystone.Field.Types;
-var availableOptions = require('../helpers/availableOptions')
+var availableOptions = require('../attributes/availableOptions')
 
 var PersonalLoanVariation = new keystone.List('PersonalLoanVariation');
 

@@ -1,7 +1,7 @@
 var keystone = require('keystone');
 var uuid = require('node-uuid');
-var frequency = require('../helpers/frequency')
-var availableOptions = require('../helpers/availableOptions')
+var frequency = require('../attributes/frequency')
+var availableOptions = require('../attributes/availableOptions')
 var productCommonAttributes = require('../common/ProductCommonAttributes')
 var Types = keystone.Field.Types;
 
@@ -21,7 +21,13 @@ PersonalLoan.add({
   isCarLoan: {type: Types.Select, initial: true, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown},
   isPersonalLoan: {type: Types.Select, initial: true, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown},
   isLineOfCredit: {type: Types.Select, initial: true, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown},
-  repaymentType: {type: Types.Select, initial: true, required: true, options: ['FIXED', 'VARIABLE', 'FIXED AND VARIABLE'], emptyOption: false},
+  repaymentType: {
+    type: Types.MultiSelect,
+    initial: true,
+    required: true,
+    emptyOption: false,
+    options: ['FIXED', 'VARIABLE']
+  },
   extraRepayments: {type: Types.Select, initial: true, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown},
   hasRedrawFacility: {type: Types.Select, initial: true, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown},
   securedType: {type: Types.Select, initial: true, required: true, options: ['SECURED', 'UNSECURED'], emptyOption: false},
@@ -77,10 +83,10 @@ PersonalLoan.add({
   isMedicalBillAllowed: {type: Types.Select, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown},
   isWeddingAllowed: {type: Types.Select, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown},
   otherPurposes: {type: Types.Text},
-  // repaymentFrequency: { // comment out for now, really need multi select feature in our fork
-  //   type: Types.Select,
-  //   options: frequency
-  // },
+  repaymentFrequency: {
+    type: Types.MultiSelect,
+    options: frequency
+  },
   extraRepaymentDollarLimits: {type: Types.Number, min: 0},
   extraRepaymentDollarLimitsPeriod: {type: Types.Number, min: 0},
   extraRepaymentPercentageLimits: {type: Types.Number, min: 0, max: 100},

@@ -1,6 +1,7 @@
 var keystone = require('keystone');
 var Types = keystone.Field.Types;
-var availableOptions = require('../helpers/availableOptions')
+var availableOptions = require('../attributes/availableOptions')
+var states = require('../attributes/states')
 
 var CompanyPersonalLoan = new keystone.List('CompanyPersonalLoan');
 
@@ -14,13 +15,12 @@ CompanyPersonalLoan.add({
     index: true,
     noedit: true
   },
-  // availableStates: { // comment out for now, really need multi select feature in our fork
-  //   type: Types.Relationship,
-  //   ref: 'State',
-  //   required: true,
-  //   initial: true,
-  //   many: true
-  // },
+  availableStates: {
+    type: Types.MultiSelect,
+    options: states,
+    required: true,
+    initial: true
+  },
   peer2Peer: {type: Types.Select, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown},
   applyInBranch: {type: Types.Select, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown},
   applyOnline: {type: Types.Select, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown},
