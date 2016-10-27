@@ -46,9 +46,6 @@ PersonalLoanVariation.schema.pre('validate', function (next) {
   if ((this.comparisonRatePersonal == undefined) && (this.comparisonRateCar == undefined)) {
     next(Error('Need to have either Comparision Rate Personal or Comparision Rate Car'));
   }
-  if ((this.comparisonRatePersonal !== undefined) && (this.comparisonRateCar !== undefined)) {
-    next(Error('Only one needed for Comparision Rate Personal and Comparision Rate Car'));
-  }
   if (this.maxRate < this.minRate) {
     next(Error('Max Rate can not be lower than Min Rate'));
   }
