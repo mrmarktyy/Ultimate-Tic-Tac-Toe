@@ -101,6 +101,28 @@ PersonalLoan.relationship({path: 'personalLoanVariations', ref: 'PersonalLoanVar
 
 PersonalLoan.schema.index({company: 1, name: 1}, {unique: true});
 
+PersonalLoan.schema.pre('validate', function (next) {
+  if ((this.extraRepaymentDollarLimits !== undefined) && (this.extraRepayments !== availableOptions.yes)) {
+    next(Error('Extra Repayments must be YES if Extra Repayment Dollar Limits is not empty'));
+  }
+  if ((this.extraRepaymentDollarLimitsPeriod !== undefined) && (this.extraRepayments !== availableOptions.yes)) {
+    next(Error('Extra Repayments must be YES if Extra Repayment Dollar Limits Period is not empty'));
+  }
+  if ((this.extraRepaymentPercentageLimits !== undefined) && (this.extraRepayments !== availableOptions.yes)) {
+    next(Error('Extra Repayments must be YES if Extra Repayment Percentage Limits is not empty'));
+  }
+  if ((this.extraRepaymentPercentageLimitsPeriod !== undefined) && (this.extraRepayments !== availableOptions.yes)) {
+    next(Error('Extra Repayments must be YES if Extra Repayment Percentage Limits Period is not empty'));
+  }
+  if ((this.extraRepaymentDollarLimits == undefined) !== (this.extraRepaymentDollarLimitsPeriod == undefined)) {
+    next(Error('Extra Repayments Dollar limits and Extra Repayment Dollar Limits Period must both empty or not empty'));
+  }
+  if ((this.extraRepaymentPercentageLimits == undefined) !== (this.extraRepaymentPercentageLimitsPeriod == undefined)) {
+    next(Error('Extra Repayments Percentage limits and Extra Repayment Percentage Limits Period must both empty or not empty'));
+  }
+  next();
+});
+
 PersonalLoan.schema.pre('save', function (next) {
   if (!this.uuid) {
     this.uuid = uuid.v4()
