@@ -74,6 +74,7 @@ keystone.set('email tests', require('./routes/emails'));
 keystone.set('nav', {
 	'companies': ['Company', 'Branch', 'ATM'],
 	'personalLoans': ['CompanyPersonalLoan', 'PersonalLoan', 'PersonalLoanVariation'],
+	'sponsoredLinks': 'SponsoredLink',
 	'feeds': ['ProductFeedInclusion', 'ProductFeed', 'StaticFeed', 'StaticFeedInclusion'],
 	'users': 'users',
 });
