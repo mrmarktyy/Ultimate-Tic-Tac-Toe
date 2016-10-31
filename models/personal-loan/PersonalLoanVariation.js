@@ -23,7 +23,7 @@ PersonalLoanVariation.add({
     // noedit: true,
     filters: {company: ':company'}
   },
-  repVariation: {type: Types.Select, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown},
+  repVariation: {type: Types.Select, required: true, initial: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown},
   minLoanAmount: {type: Types.Number, required: true, initial: true, min: 0},
   maxLoanAmount: {type: Types.Number, required: true, initial: true, min: 0},
   minVedaScore: {type: Types.Number, min: 0},
@@ -43,9 +43,9 @@ PersonalLoanVariation.add({
 PersonalLoanVariation.schema.index({company: 1, product: 1, name: 1}, {unique: true});
 
 PersonalLoanVariation.schema.pre('validate', function (next) {
-  if ((this.comparisonRatePersonal == undefined) && (this.comparisonRateCar == undefined)) {
-    next(Error('Need to have either Comparision Rate Personal or Comparision Rate Car'));
-  }
+  // if ((this.comparisonRatePersonal == undefined) && (this.comparisonRateCar == undefined)) {
+  //   next(Error('Need to have either Comparision Rate Personal or Comparision Rate Car'));
+  // } // disable this check for now until we decided how to handle comparison rate.
   if (this.maxRate < this.minRate) {
     next(Error('Max Rate can not be lower than Min Rate'));
   }
