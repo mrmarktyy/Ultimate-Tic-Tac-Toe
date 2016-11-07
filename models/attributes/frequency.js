@@ -1,1 +1,1 @@
-module.exports = 'Weekly, Fortnightly, Monthly, Quarterly, Annually'
+module.exports = 'Weekly, Fortnightly, Monthly, Quarterly, Semi-annually, Annually'

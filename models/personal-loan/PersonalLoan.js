@@ -31,7 +31,8 @@ PersonalLoan.add({
   extraRepayments: {type: Types.Select, initial: true, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown},
   hasRedrawFacility: {type: Types.Select, initial: true, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown},
   securedType: {type: Types.Select, initial: true, required: true, options: ['SECURED', 'UNSECURED'], emptyOption: false},
-  applicationFees: {type: Types.Number, initial: true, default: 0, min: 0},
+  applicationFeesDollar: {type: Types.Number, initial: true, default: 0, min: 0},
+  applicationFeesPercent: {type: Types.Number, default: 0, min: 0, max: 100},
   ongoingFees: {type: Types.Number, initial: true, default: 0, min: 0},
   ongoingFeesFrequency: {
     type: Types.Select,
