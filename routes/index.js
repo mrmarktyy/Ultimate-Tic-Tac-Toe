@@ -14,7 +14,7 @@ var routes = {
 
 function checkAPIKey(req, res, next) {
   console.log(JSON.stringify(req.headers))
-  if (req.headers['apikey '] == "1234567890") return next();
+  if (req.headers['apikey'] == "1234567890") return next();
   return res.status(403).json({ 'error': 'no access' });
 }
 
