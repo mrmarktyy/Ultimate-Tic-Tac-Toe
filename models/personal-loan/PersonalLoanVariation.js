@@ -5,7 +5,6 @@ var availableOptions = require('../attributes/availableOptions')
 var PersonalLoanVariation = new keystone.List('PersonalLoanVariation');
 
 PersonalLoanVariation.add({
-  name: {type: Types.Text, required: true, initial: true, index: true},
   company: {
     type: Types.Relationship,
     ref: 'Company',

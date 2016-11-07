@@ -39,7 +39,6 @@ PersonalLoan.add({
     required: true,
     initial: true
   },
-	uuid: {type: Types.Text, initial: true, noedit: true}, // this should be unique, however, team don't have the data yet. will make this unique once all data loaded.
   legacyCode: {type: Types.Text},
   docReleaseFees: {type: Types.Number, min: 0},
   isSecuredByVehicle: {type: Types.Select, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown},
