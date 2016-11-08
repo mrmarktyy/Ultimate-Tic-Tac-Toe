@@ -40,8 +40,7 @@ if (process.env.NODE_ENV == 'development') {
 	}))
 
 	keystone.pre('routes', hotMiddleware(compiler))
-}
-;
+};
 
 if (process.env.CLOUDINARY_URL) {
   keystone.set('cloudinary config', process.env.CLOUDINARY_URL);
@@ -73,6 +72,7 @@ keystone.set('email locals', {
 keystone.set('email tests', require('./routes/emails'));
 keystone.set('nav', {
 	'companies': ['Company', 'Branch', 'ATM'],
+	'creditCards': ['CompanyCreditCard', 'CreditCard', 'PartnerConversion', 'Redemption', 'Program', 'RedemptionType', 'RedemptionName'],
 	'personalLoans': ['CompanyPersonalLoan', 'PersonalLoan', 'PersonalLoanVariation'],
 	'sponsoredLinks': 'SponsoredLink',
 	'feeds': ['ProductFeedInclusion', 'ProductFeed', 'StaticFeed', 'StaticFeedInclusion'],
