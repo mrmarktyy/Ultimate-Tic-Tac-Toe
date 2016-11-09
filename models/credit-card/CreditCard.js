@@ -49,7 +49,6 @@ CreditCard.add({
   otherRestrictions: { type: Types.Text },
   adminNotes: { type: Types.Text },
   annualFeeIntro: { type: Types.Number, min: 0 },
-  annualFeeRevert: { type: Types.Number, min: 0 },
   annualFeeIntroTerm: { type: Types.Number, min: 0 },
   annualFeeStandard: { type: Types.Number, min: 0 },
   annualFeeSpendWaiver: { type: Types.Number, min: 0 },
@@ -82,6 +81,7 @@ CreditCard.add({
   minimumCreditRating: { type: Types.Text },
   availableTo457Visa: { type: Types.Select, options: availableOptions.all },
   eligibilityConditions: { type: Types.Text },
+  instantApproval: { type: Types.Select, options: availableOptions.all },
   perksFreeDomesticTravelInsurance: { type: Types.Select, options: availableOptions.all, label: 'Prk Free Dmstc Trvl Ins' },
   perksFreeDomesticTravelInsuranceConditions: { type: Types.Text, label: 'Prk Free Dmstc Trvl Ins Cnd' },
   perksFreeInternationalTravelInsurance: { type: Types.Select, options: availableOptions.all, label: 'Prk Free Intn Trvl Ins' },
@@ -111,7 +111,6 @@ CreditCard.add({
   perksAirportLoungeConditions: { type: Types.Text, label: 'Prk Arprt Lng Cndtns' },
   perksAdditional: { type: Types.Text },
   purchaseRateStandard: { type: Types.Number, require: true, min: 0 },
-  revertRate: { type: Types.Number, min: 0 },
   purchaseRateIntro: { type: Types.Number, min: 0 },
   purchaseRateIntroTerm: { type: Types.Number, min: 0 },
   balanceTransferStandard: { type: Types.Number, min: 0 },
@@ -151,12 +150,6 @@ CreditCard.schema.pre('validate', function (next) {
   if (([undefined, null].indexOf(this.offerExpires) < 0) && (this.offerExpires <= new Date())) {
     console.log(this.offerExpires);
     next(Error('Offer Expires has to be greater than today'));
-  }
-  if ((this.annualFeeIntro !== undefined) && (this.annualFeeRevert !== this.purchaseRateStandard)) {
-    next(Error('When the Annual Fee Intro is defined, the annual fee revert should equal the purcahse rate standard'));
-  }
-  if ((this.purchaseRateIntro !== undefined) && (this.revertRate !== this.purchaseRateStandard)) {
-    next(Error('Purchase rate intro is defined so revert rate should equal purcahse rate standard'));
   }
   if ((this.purchaseRateIntro !== undefined) && (this.purchaseRateIntro > this.purchaseRateStandard)) {
     next(Error('Purchase rate intro should be less than purchase rate standard'));
