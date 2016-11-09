@@ -38,7 +38,6 @@ exports.create = {
     { 'name': 'Air NZ', 'isReward': false, 'isPartner': true },
     { 'name': 'American Airlines', 'isReward': false, 'isPartner': true },
     { 'name': 'Cathay Pacific', 'isReward': false, 'isPartner': true },
-    { 'name': 'Delta Airlines', 'isReward': false, 'isPartner': false },
     { 'name': 'Delta Airlines', 'isReward': false, 'isPartner': true },
     { 'name': 'Etihad', 'isReward': false, 'isPartner': true },
     { 'name': 'Korean Air', 'isReward': false, 'isPartner': true },
