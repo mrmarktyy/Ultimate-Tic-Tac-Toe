@@ -7,7 +7,7 @@ RedemptionType.add({
   name: { type: Types.Text, required: true, initial: true, index: true },
 });
 
-Program.schema.pre('remove', function (next) {
+RedemptionType.schema.pre('remove', function (next) {
   next(Error('You cannot remove a redemption type'));
 });
 
