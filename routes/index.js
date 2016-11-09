@@ -1,4 +1,5 @@
 var keystone = require('keystone');
+var ApiKeyService = require('../services/ApiKeyService')
 var middleware = require('./middleware');
 var importRoutes = keystone.importer(__dirname);
 
@@ -8,14 +9,17 @@ keystone.pre('render', middleware.flashMessages);
 
 // Import Route Controllers
 var routes = {
-	views: importRoutes('./views'),
+  views: importRoutes('./views'),
   api: importRoutes('./api')
 };
 
 function checkAPIKey(req, res, next) {
   console.log(JSON.stringify(req.headers))
-  if (req.headers['apikey'] == "1234567890") return next();
-  return res.status(403).json({ 'error': 'no access' });
+  let promise = ApiKeyService.isApiKeyValid(req.headers['apikey']);
+  promise.then(function (isApiKeyValid) {
+    if (isApiKeyValid) return next();
+    return res.status(403).json({'error': 'no access'});
+  })
 }
 
 // Setup Route Bindings
@@ -24,7 +28,7 @@ exports = module.exports = function (app) {
   app.all('/api*', checkAPIKey);
 
   // Views
-	app.get('/', routes.views.index);
+  app.get('/', routes.views.index);
 
   // APIs
 
