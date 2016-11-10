@@ -17,10 +17,6 @@ Program.schema.pre('validate', function (next) {
   next();
 });
 
-Program.schema.pre('remove', function (next) {
-  next(Error('You cannot remove a program'));
-});
-
 Program.schema.index({ name: 1 }, { unique: true });
 Program.track = true;
 Program.defaultColumns = 'name, isReward, isPartner';
