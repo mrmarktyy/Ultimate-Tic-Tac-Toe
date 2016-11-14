@@ -21,13 +21,7 @@ PersonalLoan.add({
   isCarLoan: {type: Types.Select, initial: true, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown},
   isPersonalLoan: {type: Types.Select, initial: true, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown},
   isLineOfCredit: {type: Types.Select, initial: true, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown},
-  repaymentType: {
-    type: Types.MultiSelect,
-    initial: true,
-    required: true,
-    emptyOption: false,
-    options: ['FIXED', 'VARIABLE']
-  },
+  repaymentType: {type: Types.Select, initial: true, required: true, options: ['FIXED', 'VARIABLE'], emptyOption: false},
   extraRepayments: {type: Types.Select, initial: true, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown},
   hasRedrawFacility: {type: Types.Select, initial: true, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown},
   securedType: {type: Types.Select, initial: true, required: true, options: ['SECURED', 'UNSECURED'], emptyOption: false},
