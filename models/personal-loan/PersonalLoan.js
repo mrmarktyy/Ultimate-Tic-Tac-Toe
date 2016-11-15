@@ -25,8 +25,8 @@ PersonalLoan.add({
   extraRepayments: {type: Types.Select, initial: true, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown},
   hasRedrawFacility: {type: Types.Select, initial: true, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown},
   securedType: {type: Types.Select, initial: true, required: true, options: ['SECURED', 'UNSECURED'], emptyOption: false},
-  applicationFeesDollar: {type: Types.Number, initial: true, default: 0, min: 0},
-  applicationFeesPercent: {type: Types.Number, default: 0, min: 0, max: 100},
+  applicationFeesDollar: {type: Types.Number, initial: true, min: 0},
+  applicationFeesPercent: {type: Types.Number, initial: true, min: 0, max: 100},
   ongoingFees: {type: Types.Number, initial: true, default: 0, min: 0},
   ongoingFeesFrequency: {
     type: Types.Select,
@@ -35,7 +35,7 @@ PersonalLoan.add({
     initial: true
   },
   legacyCode: {type: Types.Text},
-  docReleaseFees: {type: Types.Number, min: 0},
+  docReleaseFees: {type: Types.Number, min: 0, initial: true, required: true},
   isSecuredByVehicle: {type: Types.Select, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown},
   isSecuredByProperty: {type: Types.Select, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown},
   isSecuredByDeposit: {type: Types.Select, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown},
@@ -90,7 +90,7 @@ PersonalLoan.add({
   redrawActivationFee: {type: Types.Number, min: 0},
   minRedrawAmount: {type: Types.Number, min: 0},
   hasEarlyExitPenalty: {type: Types.Select, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown},
-  missedPaymentPenalty: {type: Types.Number, default: 0, min: 0},
+  missedPaymentPenalty: {type: Types.Number, default: 0, min: 0, initial: true, required: true},
   earlyExitPenaltyFee: {type: Types.Number, min: 0},
   earlyExitPenaltyFeePeriod: {type: Types.Number, min: 0},
   hasEarlyExitPenaltyFeeVaries: {type: Types.Select, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown},
@@ -102,6 +102,9 @@ PersonalLoan.relationship({path: 'personalLoanVariations', ref: 'PersonalLoanVar
 PersonalLoan.schema.index({company: 1, name: 1}, {unique: true});
 
 PersonalLoan.schema.pre('validate', function (next) {
+  if ((this.applicationFeesDollar === undefined) && (this.applicationFeesPercent === undefined)) {
+    next(Error('Application Fee need to fill in either Dollar or Percent'));
+  }
   if ((this.extraRepaymentDollarLimits !== undefined) && (this.extraRepayments !== availableOptions.yes)) {
     next(Error('Extra Repayments must be YES if Extra Repayment Dollar Limits is not empty'));
   }
