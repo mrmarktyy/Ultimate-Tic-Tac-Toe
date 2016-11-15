@@ -1,8 +1,8 @@
-var async = require('async');
 var keystone = require('keystone');
 
 var PersonalLoan = keystone.list('PersonalLoan');
 var PersonalLoanVariation = keystone.list('PersonalLoanVariation');
+var CompanyPersonalLoan = keystone.list('CompanyPersonalLoan');
 
 
 exports.list = function (req, res) {
@@ -19,6 +19,13 @@ exports.list = function (req, res) {
         response.push(personalLoan)
       });
       variationPromises.push(promise)
+
+      let plcPromise = CompanyPersonalLoan.model.find({company: personalLoan.company._id}).lean().exec(function (err, plc) {
+        if (err) return 'database error'
+        personalLoan['companyVertical'] = plc
+        response.push(personalLoan)
+      });
+      variationPromises.push(plcPromise)
     });
 
     Promise.all(variationPromises).then(()=> {
