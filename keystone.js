@@ -76,7 +76,7 @@ keystone.set('nav', {
 	'personalLoans': ['CompanyPersonalLoan', 'PersonalLoan', 'PersonalLoanVariation'],
 	'sponsoredLinks': 'SponsoredLink',
 	'feeds': ['ProductFeedInclusion', 'ProductFeed', 'StaticFeed', 'StaticFeedInclusion'],
-	'users': 'users',
+  	'users': ['users', 'ApiKey'],
 });
 
 keystone.set( 'cors allow origin', true);
