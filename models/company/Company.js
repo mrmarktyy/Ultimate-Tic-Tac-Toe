@@ -20,15 +20,16 @@ Company.add({
   abnOrAcn: {type: Types.Number},
   acl: {type: Types.Number},
   afsl: {type: Types.Number},
-  uuid: { type: Types.Text, initial: true, noedit: true }, // this should be unique, however, team don't have the data yet. will make this unique once all data loaded.
-	legacyCode: {type: Types.Text, unique: true},
+  uuid: {type: Types.Text, initial: true, noedit: true}, // this should be unique, however, team don't have the data yet. will make this unique once all data loaded.
+  slug: {type: Types.Text, unique: true, required: true, initial: true},
+  legacyCode: {type: Types.Text, unique: true},
   url: {type: Types.Url, required: true, index: true, initial: true},
   searchKeyword: {type: Types.TextArray},
   logo: imageStorage('company'),
 });
 
-Company.relationship({ path: 'ATMs', ref: 'ATM', refPath: 'company' });
-Company.relationship({ path: 'Branches', ref: 'Branch', refPath: 'company' });
+Company.relationship({path: 'ATMs', ref: 'ATM', refPath: 'company'});
+Company.relationship({path: 'Branches', ref: 'Branch', refPath: 'company'});
 
 Company.schema.pre('save', function (next) {
   if (!this.uuid) {
