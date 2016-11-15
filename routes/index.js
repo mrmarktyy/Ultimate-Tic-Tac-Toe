@@ -17,7 +17,7 @@ function checkAPIKey(req, res, next) {
   console.log(JSON.stringify(req.headers))
   let promise = ApiKeyService.isApiKeyValid(req.headers['apikey']);
   promise.then(function (isApiKeyValid) {
-    if (isApiKeyValid) return next();
+    if (isApiKeyValid != null) return next();
     return res.status(403).json({'error': 'no access'});
   })
 }
