@@ -42,22 +42,16 @@ PersonalLoanVariation.add({
 PersonalLoanVariation.schema.index({company: 1, product: 1, name: 1}, {unique: true});
 
 PersonalLoanVariation.schema.pre('validate', function (next) {
-  // if ((this.comparisonRatePersonal == undefined) && (this.comparisonRateCar == undefined)) {
-  //   next(Error('Need to have either Comparision Rate Personal or Comparision Rate Car'));
-  // } // disable this check for now until we decided how to handle comparison rate.
+  if (!this.comparisonRatePersonalManual && !this.comparisonRateCarManual) {
+    next(Error('Need to have either Comparision Rate Personal or Comparision Rate Car'));
+  }
   if (this.maxRate < this.minRate) {
     next(Error('Max Rate can not be lower than Min Rate'));
   }
-  if (this.comparisonRatePersonal < this.minRate) {
-    next(Error('Comparison Rate Personal can not be lower than Min Rate'));
-  }
-  if (this.comparisonRatePersonalManual < this.minRate) {
+  if (this.comparisonRatePersonalManual && this.comparisonRatePersonalManual < this.minRate) {
     next(Error('Comparison Rate Personal Manual can not be lower than Min Rate'));
   }
-  if (this.comparisonRateCar < this.minRate) {
-    next(Error('Comparison Rate Car can not be lower than Min Rate'));
-  }
-  if (this.comparisonRateCarManual < this.minRate) {
+  if (this.comparisonRateCarManual && this.comparisonRateCarManual < this.minRate) {
     next(Error('Comparison Rate Car Manual can not be lower than Min Rate'));
   }
   if (this.introRate > this.minRate) {
