@@ -31,6 +31,8 @@ exports = module.exports = function (app) {
   app.get('/', routes.views.index);
 
   // APIs
+  //salesforce turn on and off products
+  app.post('/api/v1/salesforce/product_monetize', keystone.middleware.api, routes.api.salesforceActivation.monetize);
 
   // Company
   app.get('/api/companies', keystone.middleware.api, routes.api.companies.list);
