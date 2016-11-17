@@ -29,7 +29,7 @@ exports.list = function (req, res) {
     });
 
     Promise.all(variationPromises).then(()=> {
-      let result = [] + res.jsonp(Object.values(response));
+      let result = []
       for (let key in response) {
         result.push(response[key])
       }
