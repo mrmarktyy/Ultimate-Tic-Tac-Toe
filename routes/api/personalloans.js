@@ -29,7 +29,11 @@ exports.list = function (req, res) {
     });
 
     Promise.all(variationPromises).then(()=> {
-      res.jsonp(response);
+      let result = []
+      for (let key in response) {
+        result.push(response[key])
+      }
+      res.jsonp(result);
     })
   });
 }
