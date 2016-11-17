@@ -15,9 +15,8 @@ CompanyPersonalLoan.add({
     index: true,
     noedit: true
   },
-  availableStates: {
-    type: Types.MultiSelect,
-    options: states,
+  availablePostcodes: {
+    type: Types.TextArray,
     required: true,
     initial: true
   },
@@ -29,6 +28,17 @@ CompanyPersonalLoan.add({
   applyByBroker: {type: Types.Select, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown},
   availableTo457VisaHolders: {type: Types.Select, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown},
   approvalTime: {type: Types.Number}
+});
+
+CompanyPersonalLoan.schema.pre('validate', function (next) {
+  let postcodeArrayLength = this.availablePostcodes.length;
+  for(let i = 0; i < postcodeArrayLength; i++){
+    if (this.availablePostcodes[i].length != 4) {
+      next(Error('each available post code need to be exactly 4 digits'));
+      break;
+    }
+  }
+  next();
 });
 
 CompanyPersonalLoan.track = true;

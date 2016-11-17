@@ -9,27 +9,31 @@ exports.list = function (req, res) {
 
   let promise = PersonalLoan.model.find().populate('company').lean().exec();
 
-  let response = []
+  let response = {}
   let variationPromises = []
   promise.then(function (personalLoans) {
     personalLoans.forEach(function (personalLoan) {
       let promise = PersonalLoanVariation.model.find({product: personalLoan._id}).lean().exec(function (err, variation) {
         if (err) return 'database error'
         personalLoan['variations'] = variation
-        response.push(personalLoan)
+        response[personalLoan._id] = Object.assign({}, personalLoan, response[personalLoan._id], {variations: variation})
       });
       variationPromises.push(promise)
 
       let plcPromise = CompanyPersonalLoan.model.find({company: personalLoan.company._id}).lean().exec(function (err, plc) {
         if (err) return 'database error'
         personalLoan['companyVertical'] = plc
-        response.push(personalLoan)
+        response[personalLoan._id] = Object.assign({}, personalLoan, response[personalLoan._id], {companyVertical: plc})
       });
       variationPromises.push(plcPromise)
     });
 
     Promise.all(variationPromises).then(()=> {
-      res.jsonp(response);
+      let result = []
+      for (let key in response) {
+        result.push(response[key])
+      }
+      res.jsonp(result);
     })
   });
 }
