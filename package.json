@@ -9,6 +9,7 @@
     "jade": "^1.11.0",
     "keystone": "git@github.com:ratecity/keystone.git",
     "keystone-storage-adapter-s3": "^1.1.0",
+    "keystone-utils": "^0.4.0",
     "lodash": "^4.13.1",
     "mongoose-unique-validator": "^1.0.2",
     "node-fetch": "^1.6.0",
