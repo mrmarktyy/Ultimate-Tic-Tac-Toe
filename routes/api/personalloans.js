@@ -3,40 +3,49 @@ var keystone = require('keystone');
 var PersonalLoan = keystone.list('PersonalLoan');
 var PersonalLoanVariation = keystone.list('PersonalLoanVariation');
 var CompanyPersonalLoan = keystone.list('CompanyPersonalLoan');
-
+var Monetize = keystone.list('Monetize');
 
 exports.list = function (req, res) {
 
   let promise = PersonalLoan.model.find().populate('company').lean().exec();
 
-  let response = {}
-  let variationPromises = []
+  let response = {};
+  let variationPromises = [];
   promise.then(function (personalLoans) {
     personalLoans.forEach(function (personalLoan) {
-      let promise = PersonalLoanVariation.model.find({product: personalLoan._id}).lean().exec(function (err, variation) {
-        if (err) return 'database error'
-        personalLoan['variations'] = variation
-        response[personalLoan._id] = Object.assign({}, personalLoan, response[personalLoan._id], {variations: variation})
+      let promise = PersonalLoanVariation.model.find({product: personalLoan._id }).lean().exec(function (err, variation) {
+        if (err) return 'database error';
+        response[personalLoan._id] = Object.assign({}, personalLoan, response[personalLoan._id], { variations: variation });
       });
-      variationPromises.push(promise)
+      variationPromises.push(promise);
 
-      let plcPromise = CompanyPersonalLoan.model.find({company: personalLoan.company._id}).lean().exec(function (err, plc) {
-        if (err) return 'database error'
-        personalLoan['companyVertical'] = plc
-        response[personalLoan._id] = Object.assign({}, personalLoan, response[personalLoan._id], {companyVertical: plc})
+      let plcPromise = CompanyPersonalLoan.model.find({ company: personalLoan.company._id }).lean().exec(function (err, plc) {
+        if (err) return 'database error';
+        response[personalLoan._id] = Object.assign({}, personalLoan, response[personalLoan._id], { companyVertical: plc });
       });
-      variationPromises.push(plcPromise)
+      variationPromises.push(plcPromise);
+
+      let mntzPromise = Monetize.model.findOne({ product: personalLoan._id }).lean().exec(function (err, monetize) {
+        if (err) return 'database error';
+        let applyUrl = null;
+        if (monetize !== null) {
+          applyUrl = monetize.applyUrl;
+        }
+        response[personalLoan._id] = Object.assign({}, personalLoan, response[personalLoan._id], { applyURL: applyUrl });
+      });
+      variationPromises.push(mntzPromise);
+
     });
 
-    Promise.all(variationPromises).then(()=> {
-      let result = []
+    Promise.all(variationPromises).then(() => {
+      let result = [];
       for (let key in response) {
-        result.push(response[key])
+        result.push(response[key]);
       }
       res.jsonp(result);
-    })
+    });
   });
-}
+};
 
 exports.one = function (req, res) {
 
@@ -44,17 +53,17 @@ exports.one = function (req, res) {
   let promise = PersonalLoan.model.findById(id).populate('company').lean().exec();
 
   promise.then(function (personalLoan) {
-    if(personalLoan == null){
+    if (personalLoan == null) {
       res.jsonp('{error: id not found }');
-      return
+      return;
     }
-    PersonalLoanVariation.model.find({product: personalLoan._id}).lean().exec(function (err, variation) {
-      if (err) return 'database error'
-      personalLoan['variations'] = variation
+    PersonalLoanVariation.model.find({ product: personalLoan._id }).lean().exec(function (err, variation) {
+      if (err) return 'database error';
+      personalLoan['variations'] = variation;
       res.jsonp(personalLoan);
     });
-  }).catch(function(e){
-      console.log(e)
+  }).catch(function (e) {
+    console.log(e);
     res.jsonp('{error:error}');
-  })
-}
+  });
+};
