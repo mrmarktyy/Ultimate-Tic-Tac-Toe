@@ -10,6 +10,7 @@ var PersonalLoan = new keystone.List('PersonalLoan');
 PersonalLoan.add(productCommonAttributes);
 
 PersonalLoan.add({
+  existsOnSorbet: {type: Types.Boolean, default: false},
   company: {
     type: Types.Relationship,
     ref: 'Company',
