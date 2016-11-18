@@ -1,18 +1,17 @@
 var keystone = require('keystone');
-var verticalModel = require('../helpers/verticalModel');
+var salesforceVerticals = require('../helpers/salesforceVerticals');
 
 var Types = keystone.Field.Types;
 var Monetize = new keystone.List('Monetize');
 
 var verticals = [];
-for (let vertical in verticalModel) {
+for (let vertical in salesforceVerticals) {
   verticals.push(vertical);
 }
 
 Monetize.add({
   uuid: { type: Types.Text },
   vertical: { type: Types.Select, options: verticals },
-  deliveryType: { type: Types.Text },
   applyUrl:  { type: Types.Text },
   product: { type: Types.Relationship },
 });

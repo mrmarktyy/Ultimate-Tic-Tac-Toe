@@ -1,5 +1,5 @@
 var keystone = require('keystone');
-var verticalModel = require('../../models/helpers/verticalModel');
+var salesforceVerticals = require('../../models/helpers/salesforceVerticals');
 
 var Monetize = keystone.list('Monetize');
 
@@ -11,12 +11,12 @@ exports.monetize = function (req, res) {
 
   for (var i = 0; i < products.length; i++) {
     let change_request = products[i];
-    if (typeof(verticalModel[change_request.RC_Product_Type]) === 'undefined') {
+    if (typeof(salesforceVerticals[change_request.RC_Product_Type]) === 'undefined') {
       continue;
     }
     let uuid = change_request.RC_Product_ID;
 
-    let product = keystone.list(verticalModel[change_request.RC_Product_Type]);
+    let product = keystone.list(salesforceVerticals[change_request.RC_Product_Type]);
     promise = product.model.findOne({ uuid: uuid })
     .exec()
     .then(function (product) {
@@ -29,7 +29,6 @@ exports.monetize = function (req, res) {
             vertical: change_request.RC_Product_Type,
           },
           {
-            deliveryType: 'goToSite',
             applyUrl: change_request.RC_Url,
             product: product._id,
           },
