@@ -33,10 +33,10 @@ PersonalLoanVariation.add({
   maxRate: {type: Types.Number, required: true, initial: true},
   introRate: {type: Types.Number, min: 3},
   introTerm: {type: Types.Number, min: 0},
-  comparisonRatePersonal: {type: Types.Number},
-	comparisonRatePersonalManual: {type: Types.Number},
-	comparisonRateCar: {type: Types.Number},
-	comparisonRateCarManual: {type: Types.Number}
+  comparisonRatePersonal: {type: Types.Number, initial: true},
+	comparisonRatePersonalManual: {type: Types.Number, initial: true},
+	comparisonRateCar: {type: Types.Number, initial: true},
+	comparisonRateCarManual: {type: Types.Number, initial: true}
 });
 
 PersonalLoanVariation.schema.index({company: 1, product: 1, name: 1}, {unique: true});
