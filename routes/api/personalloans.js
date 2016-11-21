@@ -1,9 +1,11 @@
 var keystone = require('keystone');
+var availableOptions = require('../../models/attributes/availableOptions')
 
 var PersonalLoan = keystone.list('PersonalLoan');
 var PersonalLoanVariation = keystone.list('PersonalLoanVariation');
 var CompanyPersonalLoan = keystone.list('CompanyPersonalLoan');
 var Monetize = keystone.list('Monetize');
+
 
 exports.list = function (req, res) {
 
@@ -13,28 +15,29 @@ exports.list = function (req, res) {
   let variationPromises = [];
   promise.then(function (personalLoans) {
     personalLoans.forEach(function (personalLoan) {
-      let promise = PersonalLoanVariation.model.find({product: personalLoan._id }).lean().exec(function (err, variation) {
-        if (err) return 'database error';
-        response[personalLoan._id] = Object.assign({}, personalLoan, response[personalLoan._id], { variations: variation });
-      });
-      variationPromises.push(promise);
+      if (personalLoan.existsOnSorbet && personalLoan.isPersonalLoan == availableOptions.yes) {
+        let promise = PersonalLoanVariation.model.find({product: personalLoan._id }).lean().exec(function (err, variation) {
+          if (err) return 'database error';
+          response[personalLoan._id] = Object.assign({}, personalLoan, response[personalLoan._id], { variations: variation });
+        });
+        variationPromises.push(promise);
 
-      let plcPromise = CompanyPersonalLoan.model.find({ company: personalLoan.company._id }).lean().exec(function (err, plc) {
-        if (err) return 'database error';
-        response[personalLoan._id] = Object.assign({}, personalLoan, response[personalLoan._id], { companyVertical: plc });
-      });
-      variationPromises.push(plcPromise);
+        let plcPromise = CompanyPersonalLoan.model.find({ company: personalLoan.company._id }).lean().exec(function (err, plc) {
+          if (err) return 'database error';
+          response[personalLoan._id] = Object.assign({}, personalLoan, response[personalLoan._id], { companyVertical: plc });
+        });
+        variationPromises.push(plcPromise);
 
-      let mntzPromise = Monetize.model.findOne({ product: personalLoan._id }).lean().exec(function (err, monetize) {
-        if (err) return 'database error';
-        let applyUrl = null;
-        if (monetize !== null) {
-          applyUrl = monetize.applyUrl;
-        }
-        response[personalLoan._id] = Object.assign({}, personalLoan, response[personalLoan._id], { applyURL: applyUrl });
-      });
-      variationPromises.push(mntzPromise);
-
+        let mntzPromise = Monetize.model.findOne({ product: personalLoan._id }).lean().exec(function (err, monetize) {
+          if (err) return 'database error';
+          let applyUrl = null;
+          if (monetize !== null) {
+            applyUrl = monetize.applyUrl;
+          }
+          response[personalLoan._id] = Object.assign({}, personalLoan, response[personalLoan._id], { applyURL: applyUrl });
+        });
+        variationPromises.push(mntzPromise);
+      }
     });
 
     Promise.all(variationPromises).then(() => {
