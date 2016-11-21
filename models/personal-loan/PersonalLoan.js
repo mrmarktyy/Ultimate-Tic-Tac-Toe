@@ -3,6 +3,7 @@ var uuid = require('node-uuid');
 var frequency = require('../attributes/frequency')
 var availableOptions = require('../attributes/availableOptions')
 var productCommonAttributes = require('../common/ProductCommonAttributes')
+var utils = keystone.utils;
 var Types = keystone.Field.Types;
 
 var PersonalLoan = new keystone.List('PersonalLoan');
@@ -101,6 +102,7 @@ PersonalLoan.add({
 PersonalLoan.relationship({path: 'personalLoanVariations', ref: 'PersonalLoanVariation', refPath: 'product'});
 
 PersonalLoan.schema.index({company: 1, name: 1}, {unique: true});
+PersonalLoan.schema.index({company: 1, slug: 1}, {unique: true});
 
 PersonalLoan.schema.pre('validate', function (next) {
   if ((this.applicationFeesDollar === undefined) && (this.applicationFeesPercent === undefined)) {
@@ -128,10 +130,14 @@ PersonalLoan.schema.pre('validate', function (next) {
 });
 
 PersonalLoan.schema.pre('save', function (next) {
-  if (!this.uuid) {
-    this.uuid = uuid.v4()
-  }
-  next();
+	if (!this.uuid) {
+		this.uuid = uuid.v4()
+	}
+	if (!this.slug) {
+		let slug = utils.slug(this.name.toLowerCase());
+		this.slug = slug
+	}
+	next()
 });
 
 PersonalLoan.track = true;
