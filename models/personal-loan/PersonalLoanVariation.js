@@ -71,32 +71,23 @@ PersonalLoanVariation.schema.pre('validate', function (next) {
 });
 
 PersonalLoanVariation.schema.pre('save', function (next) {
-
-	console.log('pre save ', this.minRate)
-	let minRate = this.minRate
-	let introRate = this.introRate
-	let introTerm = this.introTerm
+	let thiz = this
 	let promise = PersonalLoan.model.find({_id: this.product}).lean().exec();
 	promise.then(function (personalLoans) {
 		let personalLoan = personalLoans[0]
-		console.log('found the personalLoan ', personalLoan)
 		let totalMonthlyFee = PersonaLoanService.getTotalMonthlyFee(personalLoan)
 		let totalYearlyFee = PersonaLoanService.getTotalYearlyFee(personalLoan)
 		if (personalLoan.isPersonalLoan === availableOptions.yes) {
 			let totalUpfrontFee = PersonaLoanService.getPersonalLoanUpfrontFee(personalLoan)
-			console.log('in personal loan ', minRate, introRate, introTerm, totalUpfrontFee, totalMonthlyFee, totalYearlyFee, 0)
-			let comparisonRate = ComparisonRateCalculator.calculatePersonalLoanComparisonRate(minRate, introRate, introTerm,
+			let comparisonRate = ComparisonRateCalculator.calculatePersonalLoanComparisonRate(thiz.minRate, thiz.introRate, thiz.introTerm,
 				totalUpfrontFee, totalMonthlyFee, totalYearlyFee, 0)
-			this.comparisonRatePersonal = comparisonRate
-			console.log('personal loan', comparisonRate)
+			thiz.comparisonRatePersonal = comparisonRate
 		}
 		if (personalLoan.isCarLoan === availableOptions.yes) {
 			let totalUpfrontFee = PersonaLoanService.getCarLoanUpfrontFee(personalLoan)
-			console.log('in car loan')
-			let comparisonRate = ComparisonRateCalculator.calculateCarLoanComparisonRate(minRate, introRate, introTerm,
+			let comparisonRate = ComparisonRateCalculator.calculateCarlLoanComparisonRate(thiz.minRate, thiz.introRate, thiz.introTerm,
 				totalUpfrontFee, totalMonthlyFee, totalYearlyFee, 0)
-			this.comparisonRateCar = comparisonRate
-			console.log('car loan', comparisonRate)
+			thiz.comparisonRateCar = comparisonRate
 		}
 		next()
 	})
