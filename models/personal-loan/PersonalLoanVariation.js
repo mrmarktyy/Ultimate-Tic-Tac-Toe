@@ -43,18 +43,15 @@ PersonalLoanVariation.add({
 	maxRate: {type: Types.Number, required: true, initial: true},
 	introRate: {type: Types.Number, min: 3},
 	introTerm: {type: Types.Number, min: 0},
-	comparisonRatePersonal: {type: Types.Number, initial: true},
+	comparisonRatePersonal: {type: Types.Number, noedit: true},
 	comparisonRatePersonalManual: {type: Types.Number, initial: true},
-	comparisonRateCar: {type: Types.Number, initial: true},
+	comparisonRateCar: {type: Types.Number, noedit: true},
 	comparisonRateCarManual: {type: Types.Number, initial: true}
 });
 
 PersonalLoanVariation.schema.index({company: 1, product: 1, name: 1}, {unique: true});
 
 PersonalLoanVariation.schema.pre('validate', function (next) {
-	if (!this.comparisonRatePersonalManual && !this.comparisonRateCarManual) {
-		next(Error('Need to have either Comparision Rate Personal or Comparision Rate Car'));
-	}
 	if (this.maxRate < this.minRate) {
 		next(Error('Max Rate can not be lower than Min Rate'));
 	}

@@ -30,10 +30,8 @@ function calculateComparisonRate(rate, loanAmount, loanTerm, introRate, introTer
 		}
 	}
 	cashflow[size] = cashflow[size] + totalEndOfLoanFees //  add end of loan fees
-	console.log(cashflow)
 
 	var comparisonRate = IRR(cashflow);
-	console.log(comparisonRate * 12)
 	return Number(Math.round(parseFloat(comparisonRate * 12) + 'e2') + 'e-2')
 }
 
