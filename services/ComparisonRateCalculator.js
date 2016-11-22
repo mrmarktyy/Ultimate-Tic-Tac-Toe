@@ -1,10 +1,24 @@
 function calculateComparisonRate(rate, loanAmount, loanTerm, introRate, introTerm, totalUpfrontFees, totalMonthlyFees, totalYearlyFees, totalEndOfLoanFees) {
 	let cashflow = []
-	cashflow.push(-loanAmount)
-	let repayment = PMT(rate, loanTerm, -loanAmount);
-	for (let i = loanTerm; i > 0; i--) {
+	cashflow.push(Number(Math.round(parseFloat(-loanAmount) + 'e2') + 'e-2'))
+
+	let remainingLoanTerm = loanTerm
+	let remainingPrincipal = loanAmount
+	if (introRate && introTerm) {
+		let repayment = PMT(introRate, remainingLoanTerm, -remainingPrincipal);
+		let i = introTerm
+		while (i > 0) {
+			cashflow.push(Number(Math.round(parseFloat(repayment) + 'e2') + 'e-2'))
+			remainingPrincipal = remainingPrincipal - (repayment - remainingPrincipal * introRate);
+			i--;
+		}
+		remainingLoanTerm = loanTerm - introTerm
+	}
+	let repayment = PMT(rate, remainingLoanTerm, -remainingPrincipal);
+	for (let i = remainingLoanTerm; i > 0; i--) {
 		cashflow.push(Number(Math.round(parseFloat(repayment) + 'e2') + 'e-2'))
 	}
+
 	let size = cashflow.length - 1; // last month payment is only interest + end of loan fee
 	for (let i = 0; i < size; i++) {
 		if (i == 0) {
@@ -19,23 +33,26 @@ function calculateComparisonRate(rate, loanAmount, loanTerm, introRate, introTer
 	console.log(cashflow)
 
 	var comparisonRate = IRR(cashflow);
-	return Number(Math.round(parseFloat(comparisonRate) + 'e2') + 'e-2')
+	console.log(comparisonRate * 12)
+	return Number(Math.round(parseFloat(comparisonRate * 12) + 'e2') + 'e-2')
 }
 
-function calculatePersonalLoanComparisonRate(rate, totalUpfrontFees, totalMonthlyFees, totalYearlyFees, totalEndOfLoanFees) {
+function calculatePersonalLoanComparisonRate(rate, introRate, introTerm, totalUpfrontFees, totalMonthlyFees, totalYearlyFees, totalEndOfLoanFees) {
 	let monthlyRate = rate / 100 / 12
+	let monthlyIntroRate = introRate / 100 / 12
 	let loanAmount = 10000
 	let loanTerm = 36
 
-	calculateComparisonRate(monthlyRate, loanAmount, loanTerm, 0, 0, totalUpfrontFees, totalMonthlyFees, totalYearlyFees, totalEndOfLoanFees)
+	calculateComparisonRate(monthlyRate, loanAmount, loanTerm, monthlyIntroRate, introTerm, totalUpfrontFees, totalMonthlyFees, totalYearlyFees, totalEndOfLoanFees)
 }
 
-function calculateCarlLoanComparisonRate(rate, totalUpfrontFees, totalMonthlyFees, totalYearlyFees, totalEndOfLoanFees) {
+function calculateCarlLoanComparisonRate(rate, introRate, introTerm, totalUpfrontFees, totalMonthlyFees, totalYearlyFees, totalEndOfLoanFees) {
 	let monthlyRate = rate / 100 / 12
+	let monthlyIntroRate = introRate / 100 / 12
 	let loanAmount = 30000
 	let loanTerm = 60
 
-	calculateComparisonRate(monthlyRate, loanAmount, loanTerm, 0, 0, totalUpfrontFees, totalMonthlyFees, totalYearlyFees, totalEndOfLoanFees)
+	calculateComparisonRate(monthlyRate, loanAmount, loanTerm, monthlyIntroRate, introTerm, totalUpfrontFees, totalMonthlyFees, totalYearlyFees, totalEndOfLoanFees)
 }
 
 function PMT(rate, nper, pv, fv, type) {
@@ -60,8 +77,8 @@ function IRR(CArray) {
 	do {
 		guest = (min + max) / 2;
 		NPV = 0;
-		for (var j=0; j<CArray.length; j++) {
-			NPV += CArray[j]/Math.pow((1+guest),j);
+		for (var j = 0; j < CArray.length; j++) {
+			NPV += CArray[j] / Math.pow((1 + guest), j);
 		}
 		if (NPV > 0) {
 			min = guest;
@@ -69,9 +86,9 @@ function IRR(CArray) {
 		else {
 			max = guest;
 		}
-	} while(Math.abs(NPV) > 0.000001);
+	} while (Math.abs(NPV) > 0.000001);
 	return guest * 100;
 }
 
 
-// calculatePersonalLoanComparisonRate(4.5, 50, 10, 100, 200)
+// calculatePersonalLoanComparisonRate(4.5, 3.5, 12, 50, 40, 200, 0)
