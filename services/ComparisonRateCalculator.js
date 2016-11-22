@@ -37,13 +37,14 @@ function calculateComparisonRate(rate, loanAmount, loanTerm, introRate, introTer
 	return Number(Math.round(parseFloat(comparisonRate * 12) + 'e2') + 'e-2')
 }
 
-function calculatePersonalLoanComparisonRate(rate, introRate, introTerm, totalUpfrontFees, totalMonthlyFees, totalYearlyFees, totalEndOfLoanFees) {
+exports.calculatePersonalLoanComparisonRate = function (rate, introRate, introTerm, totalUpfrontFees, totalMonthlyFees, totalYearlyFees, totalEndOfLoanFees) {
 	let monthlyRate = rate / 100 / 12
 	let monthlyIntroRate = introRate / 100 / 12
 	let loanAmount = 10000
 	let loanTerm = 36
 
-	calculateComparisonRate(monthlyRate, loanAmount, loanTerm, monthlyIntroRate, introTerm, totalUpfrontFees, totalMonthlyFees, totalYearlyFees, totalEndOfLoanFees)
+	console.log("calculating......",rate, introRate, introTerm, totalUpfrontFees, totalMonthlyFees, totalYearlyFees, totalEndOfLoanFees)
+	return calculateComparisonRate(monthlyRate, loanAmount, loanTerm, monthlyIntroRate, introTerm, totalUpfrontFees, totalMonthlyFees, totalYearlyFees, totalEndOfLoanFees)
 }
 
 function calculateCarlLoanComparisonRate(rate, introRate, introTerm, totalUpfrontFees, totalMonthlyFees, totalYearlyFees, totalEndOfLoanFees) {
@@ -52,7 +53,7 @@ function calculateCarlLoanComparisonRate(rate, introRate, introTerm, totalUpfron
 	let loanAmount = 30000
 	let loanTerm = 60
 
-	calculateComparisonRate(monthlyRate, loanAmount, loanTerm, monthlyIntroRate, introTerm, totalUpfrontFees, totalMonthlyFees, totalYearlyFees, totalEndOfLoanFees)
+	return calculateComparisonRate(monthlyRate, loanAmount, loanTerm, monthlyIntroRate, introTerm, totalUpfrontFees, totalMonthlyFees, totalYearlyFees, totalEndOfLoanFees)
 }
 
 function PMT(rate, nper, pv, fv, type) {
