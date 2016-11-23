@@ -1,6 +1,6 @@
 function calculateComparisonRate(monthlyRate, loanAmount, loanTermInMonth, monthlyIntroRate, introTermInMonth, totalUpfrontFees, totalMonthlyFees, totalYearlyFees, totalEndOfLoanFees) {
 	let cashflow = []
-	cashflow.push(Number(Math.round(parseFloat(-loanAmount) + 'e2') + 'e-2'))
+	cashflow.push(toTwoDecimal(-loanAmount))
 
 	let remainingLoanTerm = loanTermInMonth
 	let remainingPrincipal = loanAmount
@@ -8,7 +8,7 @@ function calculateComparisonRate(monthlyRate, loanAmount, loanTermInMonth, month
 		let repayment = PMT(monthlyIntroRate, remainingLoanTerm, -remainingPrincipal);
 		let i = introTermInMonth
 		while (i > 0) {
-			cashflow.push(Number(Math.round(parseFloat(repayment) + 'e2') + 'e-2'))
+			cashflow.push(toTwoDecimal(repayment))
 			remainingPrincipal = remainingPrincipal - (repayment - remainingPrincipal * monthlyIntroRate);
 			i--;
 		}
@@ -16,7 +16,7 @@ function calculateComparisonRate(monthlyRate, loanAmount, loanTermInMonth, month
 	}
 	let repayment = PMT(monthlyRate, remainingLoanTerm, -remainingPrincipal);
 	for (let i = remainingLoanTerm; i > 0; i--) {
-		cashflow.push(Number(Math.round(parseFloat(repayment) + 'e2') + 'e-2'))
+		cashflow.push(toTwoDecimal(repayment))
 	}
 
 	let size = cashflow.length - 1; // last month payment is only interest + end of loan fee
@@ -32,7 +32,11 @@ function calculateComparisonRate(monthlyRate, loanAmount, loanTermInMonth, month
 	cashflow[size] = cashflow[size] + totalEndOfLoanFees //  add end of loan fees
 
 	var comparisonRate = IRR(cashflow);
-	return Number(Math.round(parseFloat(comparisonRate * 12) + 'e2') + 'e-2')
+	return toTwoDecimal(comparisonRate * 12)
+}
+
+function toTwoDecimal(number) {
+	return Number(Math.round(parseFloat(number) + 'e2') + 'e-2')
 }
 
 exports.calculatePersonalLoanComparisonRate = function (data = {}) {
