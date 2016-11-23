@@ -13,6 +13,7 @@ Monetize.add({
   uuid: { type: Types.Text },
   vertical: { type: Types.Select, options: verticals },
   applyUrl:  { type: Types.Text },
+  enabled: { type: Types.Boolean },
   product: { type: Types.Relationship },
 });
 

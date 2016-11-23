@@ -31,6 +31,7 @@ exports.monetize = function (req, res) {
           {
             applyUrl: change_request.RC_Url,
             product: product._id,
+            enabled: true,
           },
           {
             new: true,
@@ -38,10 +39,19 @@ exports.monetize = function (req, res) {
           })
         );
       } else {
-        return (Monetize.model.findOneAndRemove(
+        return (Monetize.model.findOneAndUpdate(
           {
             uuid: uuid,
             vertical: change_request.RC_Product_Type,
+          },
+          {
+            applyUrl: change_request.RC_Url,
+            product: product._id,
+            enabled: false,
+          },
+          {
+            new: true,
+            upsert: true,
           })
         );
       }
