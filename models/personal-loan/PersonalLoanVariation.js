@@ -83,20 +83,22 @@ PersonalLoanVariation.schema.pre('save', function (next) {
 	let promise = PersonalLoan.model.find({_id: this.product}).lean().exec();
 	promise.then(function (personalLoans) {
 		let personalLoan = personalLoans[0]
-		let totalMonthlyFee = PersonaLoanService.getTotalMonthlyFee(personalLoan)
-		let totalYearlyFee = PersonaLoanService.getTotalYearlyFee(personalLoan)
+		let loan = {}
+		loan.yearlyRate = thiz.minRate
+		loan.yearlyIntroRate = thiz.introRate
+		loan.introTermInMonth = thiz.introTerm
+		loan.totalMonthlyFees = PersonaLoanService.getTotalMonthlyFee(personalLoan)
+		loan.totalYearlyFees = PersonaLoanService.getTotalYearlyFee(personalLoan)
 		if (personalLoan.isPersonalLoan === availableOptions.yes) {
-			let totalUpfrontFee = PersonaLoanService.getPersonalLoanUpfrontFee(personalLoan)
-			let comparisonRate = ComparisonRateCalculator.calculatePersonalLoanComparisonRate(thiz.minRate, thiz.introRate, thiz.introTerm,
-				totalUpfrontFee, totalMonthlyFee, totalYearlyFee, 0)
+			loan.totalUpfrontFees = PersonaLoanService.getPersonalLoanUpfrontFee(personalLoan)
+			let comparisonRate = ComparisonRateCalculator.calculatePersonalLoanComparisonRate(loan)
 			thiz.comparisonRatePersonal = comparisonRate
 		} else {
 			thiz.comparisonRatePersonal = null
 		}
 		if (personalLoan.isCarLoan === availableOptions.yes) {
-			let totalUpfrontFee = PersonaLoanService.getCarLoanUpfrontFee(personalLoan)
-			let comparisonRate = ComparisonRateCalculator.calculateCarlLoanComparisonRate(thiz.minRate, thiz.introRate, thiz.introTerm,
-				totalUpfrontFee, totalMonthlyFee, totalYearlyFee, 0)
+			loan.totalUpfrontFees = PersonaLoanService.getCarLoanUpfrontFee(personalLoan)
+			let comparisonRate = ComparisonRateCalculator.calculateCarlLoanComparisonRate(loan)
 			thiz.comparisonRateCar = comparisonRate
 		} else {
 			thiz.comparisonRateCar = null

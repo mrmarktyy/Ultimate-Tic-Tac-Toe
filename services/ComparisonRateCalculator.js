@@ -35,7 +35,17 @@ function calculateComparisonRate(monthlyRate, loanAmount, loanTermInMonth, month
 	return Number(Math.round(parseFloat(comparisonRate * 12) + 'e2') + 'e-2')
 }
 
-exports.calculatePersonalLoanComparisonRate = function (yearlyRate, yearlyIntroRate, introTermInMonth, totalUpfrontFees, totalMonthlyFees, totalYearlyFees, totalEndOfLoanFees) {
+exports.calculatePersonalLoanComparisonRate = function (data = {}) {
+	let {
+		yearlyRate = 0,
+		yearlyIntroRate = 0,
+		introTermInMonth = 0,
+		totalUpfrontFees = 0,
+		totalMonthlyFees = 0,
+		totalYearlyFees = 0,
+		totalEndOfLoanFees = 0
+	} = data
+
 	let monthlyRate = yearlyRate / 100 / 12
 	let monthlyIntroRate = yearlyIntroRate / 100 / 12
 	let loanAmount = 10000
@@ -44,7 +54,17 @@ exports.calculatePersonalLoanComparisonRate = function (yearlyRate, yearlyIntroR
 	return calculateComparisonRate(monthlyRate, loanAmount, loanTermInMonth, monthlyIntroRate, introTermInMonth, totalUpfrontFees, totalMonthlyFees, totalYearlyFees, totalEndOfLoanFees)
 }
 
-exports.calculateCarlLoanComparisonRate = function (yearlyRate, yearlyIntroRate, introTermInMonth, totalUpfrontFees, totalMonthlyFees, totalYearlyFees, totalEndOfLoanFees) {
+exports.calculateCarlLoanComparisonRate = function (data) {
+	let {
+		yearlyRate = 0,
+		yearlyIntroRate = 0,
+		introTermInMonth = 0,
+		totalUpfrontFees = 0,
+		totalMonthlyFees = 0,
+		totalYearlyFees = 0,
+		totalEndOfLoanFees = 0
+	} = data
+
 	let monthlyRate = yearlyRate / 100 / 12
 	let monthlyIntroRate = yearlyIntroRate / 100 / 12
 	let loanAmount = 30000
