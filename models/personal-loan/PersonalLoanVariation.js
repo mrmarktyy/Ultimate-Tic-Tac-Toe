@@ -64,7 +64,18 @@ PersonalLoanVariation.schema.pre('validate', function (next) {
 	if (this.introRate > this.minRate) {
 		next(Error('Intro Rate can not be higher than Min Rate'));
 	}
-	next();
+	let thiz = this
+	let promise = PersonalLoan.model.find({_id: this.product}).lean().exec();
+	promise.then(function (personalLoans) {
+		let personalLoan = personalLoans[0]
+		if (personalLoan.isPersonalLoan === availableOptions.no && thiz.comparisonRatePersonalManual) {
+			next(Error('This product is not for personal loan, can not have a personal loan comparison rate'));
+		}
+		if (personalLoan.isCarLoan === availableOptions.no && thiz.comparisonRateCarManual) {
+			next(Error('This product is not for car loan, can not have a car loan comparison rate'));
+		}
+		next();
+	})
 });
 
 PersonalLoanVariation.schema.pre('save', function (next) {
@@ -79,12 +90,16 @@ PersonalLoanVariation.schema.pre('save', function (next) {
 			let comparisonRate = ComparisonRateCalculator.calculatePersonalLoanComparisonRate(thiz.minRate, thiz.introRate, thiz.introTerm,
 				totalUpfrontFee, totalMonthlyFee, totalYearlyFee, 0)
 			thiz.comparisonRatePersonal = comparisonRate
+		} else {
+			thiz.comparisonRatePersonal = null
 		}
 		if (personalLoan.isCarLoan === availableOptions.yes) {
 			let totalUpfrontFee = PersonaLoanService.getCarLoanUpfrontFee(personalLoan)
 			let comparisonRate = ComparisonRateCalculator.calculateCarlLoanComparisonRate(thiz.minRate, thiz.introRate, thiz.introTerm,
 				totalUpfrontFee, totalMonthlyFee, totalYearlyFee, 0)
 			thiz.comparisonRateCar = comparisonRate
+		} else {
+			thiz.comparisonRateCar = null
 		}
 		next()
 	})

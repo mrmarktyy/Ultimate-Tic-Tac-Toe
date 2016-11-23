@@ -1,31 +1,33 @@
 exports.getPersonalLoanUpfrontFee = function (personalLoan) {
-	if (personalLoan.applicationFeesDollar) {
+	if (personalLoan.applicationFeesDollar != null) {
 		return personalLoan.applicationFeesDollar
-	} else if (personalLoan.applicationFeesPercent) {
+	}
+	if (personalLoan.applicationFeesPercent != null) {
 		return personalLoan.applicationFeesPercent * 10000
 	}
 }
 
 exports.getCarLoanUpfrontFee = function (personalLoan) {
-	if (personalLoan.applicationFeesDollar) {
+	if (personalLoan.applicationFeesDollar != null) {
 		return personalLoan.applicationFeesDollar
-	} else if (personalLoan.applicationFeesPercent) {
+	}
+	if (personalLoan.applicationFeesPercent != null) {
 		return personalLoan.applicationFeesPercent * 30000
 	}
 }
 
 exports.getTotalMonthlyFee = function (loan) {
-	if(loan.ongoingFeesFrequency === 'Monthly') {
+	if (loan.ongoingFeesFrequency === 'Monthly') {
 		return loan.ongoingFees
-	}else{
+	} else {
 		return 0
 	}
 }
 
 exports.getTotalYearlyFee = function (loan) {
-	if(loan.ongoingFeesFrequency === 'Annually') {
+	if (loan.ongoingFeesFrequency === 'Annually') {
 		return loan.ongoingFees
-	}else{
+	} else {
 		return 0
 	}
 }
