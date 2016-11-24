@@ -1,3 +1,5 @@
+var personalLoanConstant = require('../models/constants/PersonalLoanConstant')
+
 function calculateComparisonRate(monthlyRate, loanAmount, loanTermInMonth, monthlyIntroRate, introTermInMonth, totalUpfrontFees, totalMonthlyFees, totalYearlyFees, totalEndOfLoanFees) {
 	let cashflow = []
 	cashflow.push(toTwoDecimal(-loanAmount))
@@ -52,8 +54,8 @@ exports.calculatePersonalLoanComparisonRate = function (data = {}) {
 
 	let monthlyRate = yearlyRate / 100 / 12
 	let monthlyIntroRate = yearlyIntroRate / 100 / 12
-	let loanAmount = 10000
-	let loanTermInMonth = 36
+	let loanAmount = personalLoanConstant.PERSONAL_LOAN_DEFAULT_LOAN_AMOUNT
+	let loanTermInMonth = personalLoanConstant.PERSONAL_LOAN_DEFAULT_LOAN_TERM
 
 	return calculateComparisonRate(monthlyRate, loanAmount, loanTermInMonth, monthlyIntroRate, introTermInMonth, totalUpfrontFees, totalMonthlyFees, totalYearlyFees, totalEndOfLoanFees)
 }
@@ -71,8 +73,8 @@ exports.calculateCarlLoanComparisonRate = function (data) {
 
 	let monthlyRate = yearlyRate / 100 / 12
 	let monthlyIntroRate = yearlyIntroRate / 100 / 12
-	let loanAmount = 30000
-	let loanTermInMonth = 60
+	let loanAmount = personalLoanConstant.CAR_LOAN_DEFAULT_LOAN_AMOUNT
+	let loanTermInMonth = personalLoanConstant.CAR_LOAN_DEFAULT_LOAN_TERM
 
 	return calculateComparisonRate(monthlyRate, loanAmount, loanTermInMonth, monthlyIntroRate, introTermInMonth, totalUpfrontFees, totalMonthlyFees, totalYearlyFees, totalEndOfLoanFees)
 }

@@ -2,7 +2,6 @@ var keystone = require('keystone');
 var Types = keystone.Field.Types;
 var availableOptions = require('../attributes/availableOptions')
 var PersonalLoan = keystone.list('PersonalLoan');
-var PersonaLoanService = require('../../services/PersonalLoanService')
 var ComparisonRateCalculator = require('../../services/ComparisonRateCalculator')
 
 var PersonalLoanVariation = new keystone.List('PersonalLoanVariation');
@@ -80,24 +79,24 @@ PersonalLoanVariation.schema.pre('validate', function (next) {
 
 PersonalLoanVariation.schema.pre('save', function (next) {
 	let thiz = this
-	let promise = PersonalLoan.model.find({_id: this.product}).lean().exec();
+	let promise = PersonalLoan.model.find({_id: this.product}).exec();
 	promise.then(function (personalLoans) {
-		let personalLoan = personalLoans[0]
+		let personalLoan = personalLoans[0].toObject();
 		let loan = {}
 		loan.yearlyRate = thiz.minRate
 		loan.yearlyIntroRate = thiz.introRate
 		loan.introTermInMonth = thiz.introTerm
-		loan.totalMonthlyFees = PersonaLoanService.getTotalMonthlyFee(personalLoan)
-		loan.totalYearlyFees = PersonaLoanService.getTotalYearlyFee(personalLoan)
+		loan.totalMonthlyFees = personalLoan.totalMonthlyFee
+		loan.totalYearlyFees = personalLoan.totalYearlyFee
 		if (personalLoan.isPersonalLoan === availableOptions.yes) {
-			loan.totalUpfrontFees = PersonaLoanService.getPersonalLoanUpfrontFee(personalLoan)
+			loan.totalUpfrontFees = personalLoan.personalLoanTotalUpfrontFee
 			let comparisonRate = ComparisonRateCalculator.calculatePersonalLoanComparisonRate(loan)
 			thiz.comparisonRatePersonal = comparisonRate
 		} else {
 			thiz.comparisonRatePersonal = null
 		}
 		if (personalLoan.isCarLoan === availableOptions.yes) {
-			loan.totalUpfrontFees = PersonaLoanService.getCarLoanUpfrontFee(personalLoan)
+			loan.totalUpfrontFees = personalLoan.carLoanTotalUpfrontFee
 			let comparisonRate = ComparisonRateCalculator.calculateCarlLoanComparisonRate(loan)
 			thiz.comparisonRateCar = comparisonRate
 		} else {
