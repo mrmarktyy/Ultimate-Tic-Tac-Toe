@@ -2,19 +2,16 @@
 // customising the .env file in your project's root folder.
 require('dotenv').config();
 
-var keystone = require('keystone'),
-	webpack = require('webpack'),
-	devMiddleware = require('webpack-dev-middleware'),
-	hotMiddleware = require('webpack-hot-middleware'),
-	config = require('./webpack.config.dev'),
-	compiler = webpack(config)
-
-// Require keystone
 var keystone = require('keystone');
+var webpack = require('webpack');
+var devMiddleware = require('webpack-dev-middleware');
+var hotMiddleware = require('webpack-hot-middleware');
+var config = require('./webpack.config.dev');
+var compiler = webpack(config);
 
 keystone.init({
-	'name': 'RateCity Data',
-	'brand': 'RateCity Data',
+	'name': 'RateCity Ultimate',
+	'brand': 'RateCity Ultimate',
 
 	'sass': 'public',
 	'static': 'public',
@@ -30,21 +27,21 @@ keystone.init({
 	'user model': 'User',
 	'port': '4000',
 	'session store': 'mongo',
-	'mongo': process.env.MONGO_URI
+	'mongo': process.env.MONGO_URI,
 });
 
-if (process.env.NODE_ENV == 'development') {
+if (process.env.NODE_ENV === 'development') {
 	keystone.pre('routes', devMiddleware(compiler, {
 		noInfo: true,
-		publicPath: config.output.publicPath
-	}))
+		publicPath: config.output.publicPath,
+	}));
 
-	keystone.pre('routes', hotMiddleware(compiler))
+	keystone.pre('routes', hotMiddleware(compiler));
 };
 
 if (process.env.CLOUDINARY_URL) {
-  keystone.set('cloudinary config', process.env.CLOUDINARY_URL);
-  keystone.set('cloudinary folders', true);
+	keystone.set('cloudinary config', process.env.CLOUDINARY_URL);
+	keystone.set('cloudinary folders', true);
 }
 
 keystone.import('models');
@@ -71,14 +68,14 @@ keystone.set('email locals', {
 });
 keystone.set('email tests', require('./routes/emails'));
 keystone.set('nav', {
-	'companies': ['Company', 'Branch', 'ATM'],
-	'creditCards': ['CompanyCreditCard', 'CreditCard', 'Redemption', 'PartnerConversion', 'Program', 'RedemptionType', 'RedemptionName'],
-	'personalLoans': ['CompanyPersonalLoan', 'PersonalLoan', 'PersonalLoanVariation'],
-	'sponsoredLinks': 'SponsoredLink',
-	'feeds': ['ProductFeedInclusion', 'ProductFeed', 'StaticFeed', 'StaticFeedInclusion'],
-  	'users': ['users', 'ApiKey'],
+	companies: ['Company', 'Branch', 'ATM'],
+	creditCards: ['CompanyCreditCard', 'CreditCard', 'Redemption', 'PartnerConversion', 'Program', 'RedemptionType', 'RedemptionName'],
+	personalLoans: ['CompanyPersonalLoan', 'PersonalLoan', 'PersonalLoanVariation'],
+	sponsoredLinks: 'SponsoredLink',
+	feeds: ['ProductFeedInclusion', 'ProductFeed', 'StaticFeed', 'StaticFeedInclusion'],
+	users: ['users', 'ApiKey'],
 });
 
-keystone.set( 'cors allow origin', true);
+keystone.set('cors allow origin', true);
 
 keystone.start();
