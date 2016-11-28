@@ -3,6 +3,7 @@ var uuid = require('node-uuid');
 var frequency = require('../attributes/frequency')
 var availableOptions = require('../attributes/availableOptions')
 var productCommonAttributes = require('../common/ProductCommonAttributes')
+var personalLoanConstant = require('../constants/PersonalLoanConstant')
 var utils = keystone.utils;
 var Types = keystone.Field.Types;
 
@@ -103,6 +104,8 @@ PersonalLoan.relationship({path: 'personalLoanVariations', ref: 'PersonalLoanVar
 
 PersonalLoan.schema.index({company: 1, name: 1}, {unique: true});
 PersonalLoan.schema.index({company: 1, slug: 1}, {unique: true});
+PersonalLoan.schema.set('toObject', { getters: true });
+PersonalLoan.schema.set('toJSON', { getters: true, virtuals: false });
 
 PersonalLoan.schema.pre('validate', function (next) {
   if ((this.applicationFeesDollar === undefined) && (this.applicationFeesPercent === undefined)) {
@@ -129,15 +132,55 @@ PersonalLoan.schema.pre('validate', function (next) {
   next();
 });
 
+PersonalLoan.schema.virtual('personalLoanTotalUpfrontFee').get(function () {
+  if (this.isPersonalLoan === availableOptions.yes) {
+    if (this.applicationFeesDollar != null) {
+      return this.applicationFeesDollar
+    } else if (this.applicationFeesPercent != null) {
+      return this.applicationFeesPercent * personalLoanConstant.PERSONAL_LOAN_DEFAULT_LOAN_AMOUNT
+    }
+  } else {
+    return null
+  }
+});
+
+PersonalLoan.schema.virtual('carLoanTotalUpfrontFee').get(function () {
+  if (this.isCarLoan === availableOptions.yes) {
+    if (this.applicationFeesDollar != null) {
+      return this.applicationFeesDollar
+    } else if (this.applicationFeesPercent != null) {
+      return this.applicationFeesPercent * personalLoanConstant.CAR_LOAN_DEFAULT_LOAN_AMOUNT
+    }
+  } else {
+    return null
+  }
+});
+
+PersonalLoan.schema.virtual('totalMonthlyFee').get(function () {
+  if (this.ongoingFeesFrequency === 'Monthly') {
+    return this.ongoingFees
+  } else {
+    return 0
+  }
+});
+
+PersonalLoan.schema.virtual('totalYearlyFee').get(function () {
+  if (this.ongoingFeesFrequency === 'Annually') {
+    return this.ongoingFees
+  } else {
+    return 0
+  }
+});
+
 PersonalLoan.schema.pre('save', function (next) {
-	if (!this.uuid) {
-		this.uuid = uuid.v4()
-	}
-	if (!this.slug) {
-		let slug = utils.slug(this.name.toLowerCase());
-		this.slug = slug
-	}
-	next()
+  if (!this.uuid) {
+    this.uuid = uuid.v4()
+  }
+  if (!this.slug) {
+    let slug = utils.slug(this.name.toLowerCase());
+    this.slug = slug
+  }
+  next()
 });
 
 PersonalLoan.track = true;
