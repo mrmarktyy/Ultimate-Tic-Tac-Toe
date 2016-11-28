@@ -1,10 +1,11 @@
 var keystone = require('keystone');
 var availableOptions = require('../../models/attributes/availableOptions')
+var mongoose = require('mongoose');
 
 var PersonalLoan = keystone.list('PersonalLoan');
 var PersonalLoanVariation = keystone.list('PersonalLoanVariation');
 var CompanyPersonalLoan = keystone.list('CompanyPersonalLoan');
-var Monetize = keystone.list('Monetize');
+var Monetize = mongoose.model('Monetize')
 
 
 exports.list = function (req, res) {
@@ -28,7 +29,7 @@ exports.list = function (req, res) {
         });
         variationPromises.push(plcPromise);
 
-        let mntzPromise = Monetize.model.findOne({ product: personalLoan._id }).lean().exec(function (err, monetize) {
+        let mntzPromise = Monetize.findOne({ product: personalLoan._id }).lean().exec(function (err, monetize) {
           if (err) return 'database error';
           let applyUrl = null;
           let enabled = false;
