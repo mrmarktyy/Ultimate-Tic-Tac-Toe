@@ -1,7 +1,7 @@
 var keystone = require('keystone');
 var salesforceVerticals = require('../../models/helpers/salesforceVerticals');
-
-var Monetize = keystone.list('Monetize');
+var mongoose = require('mongoose');
+var Monetize = mongoose.model('Monetize')
 
 exports.monetize = function (req, res) {
   let products = req.body;
@@ -23,7 +23,7 @@ exports.monetize = function (req, res) {
       if (product === null) {
         missingUUIDs.push(uuid);
       } else if (change_request.RC_Active) {
-        return (Monetize.model.findOneAndUpdate(
+        return (Monetize.findOneAndUpdate(
           {
             uuid: uuid,
             vertical: change_request.RC_Product_Type,
@@ -31,6 +31,7 @@ exports.monetize = function (req, res) {
           {
             applyUrl: change_request.RC_Url,
             product: product._id,
+            enabled: true,
           },
           {
             new: true,
@@ -38,10 +39,19 @@ exports.monetize = function (req, res) {
           })
         );
       } else {
-        return (Monetize.model.findOneAndRemove(
+        return (Monetize.findOneAndUpdate(
           {
             uuid: uuid,
             vertical: change_request.RC_Product_Type,
+          },
+          {
+            applyUrl: change_request.RC_Url,
+            product: product._id,
+            enabled: false,
+          },
+          {
+            new: true,
+            upsert: true,
           })
         );
       }

@@ -5,9 +5,7 @@ var _ = require('lodash');
 	Initialises the standard view locals
 */
 exports.initLocals = function (req, res, next) {
-	res.locals.navLinks = [
-		{ label: 'Home', key: 'home', href: '/' },
-	];
+	res.locals.navLinks = [];
 	res.locals.user = req.user;
 	next();
 };

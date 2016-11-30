@@ -1,22 +1,13 @@
-var keystone = require('keystone');
-var salesforceVerticals = require('../helpers/salesforceVerticals');
+var mongoose = require('mongoose');
+var Schema = mongoose.Schema;
 
-var Types = keystone.Field.Types;
-var Monetize = new keystone.List('Monetize');
+var monetizeSchema = new Schema( {
+	uuid: String,
+	vertical: String,
+	applyUrl: String,
+	enabled: Schema.Types.Boolean,
+	product: Schema.Types.ObjectId,
+} );
 
-var verticals = [];
-for (let vertical in salesforceVerticals) {
-  verticals.push(vertical);
-}
-
-Monetize.add({
-  uuid: { type: Types.Text },
-  vertical: { type: Types.Select, options: verticals },
-  applyUrl:  { type: Types.Text },
-  product: { type: Types.Relationship },
-});
-
-Monetize.schema.index({ uuid: 1, vertical: 1 }, { unique: true });
-Monetize.track = true;
-
-Monetize.register();
+monetizeSchema.index({ uuid: 1, vertical: 1 }, { unique: true });
+module.exports = mongoose.model('Monetize', monetizeSchema);
