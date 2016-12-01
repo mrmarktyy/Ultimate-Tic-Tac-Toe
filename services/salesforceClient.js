@@ -52,12 +52,12 @@ class SalesforceClient {
             RC_Company_ID__c: companiesLot[lot].uuid,
             Name:             companiesLot[lot].name,
         });
-        let body = this.salesforcify({ acct: companiesBlock });
-        let postings = await this.post(process.env.SALESFORCE_COMPANIES_URL, body);
-        if (!postings) {
-          status = 'errors';
-        };
       }
+      let body = this.salesforcify({ acct: companiesBlock });
+      let postings = await this.post(process.env.SALESFORCE_COMPANIES_URL, body);
+      if (!postings) {
+        status = 'errors';
+      };
     }
     return status;
   };
@@ -72,20 +72,18 @@ class SalesforceClient {
           RC_Product_ID__c:       productsLot[lot].uuid,
           RC_Product_Type__c:     vertical,
           RC_Company_ID__c:       productsLot[lot].company.uuid,
-          RC_Product_Name__c:     (productsLot[lot].name).first(80),
-          // RC_Product_Visible__c:  product.visibility == 'all',
-          // RC_Product_Archived__c: false,
-          // RC_Product_Active__c:   product.go_to_site?,
-          // RC_Product_Url__c:      product.apply_url
+          RC_Product_Name__c:     productsLot[lot].name.substring(0, 80),
+          RC_Product_Visible__c:  productsLot[lot].goToSite,
+          RC_Product_Archived__c: false,
+          RC_Product_Active__c:   productsLot[lot].goToSite,
+          RC_Product_Url__c:      productsLot[lot].applyUrl,
         });
-
-        let body = this.salesforcify({ product: productsBlock });
-        console.log(JSON.stringify(body));
-        let postings = await this.post(process.env.SALESFORCE_PRODUCTS_URL, body);
-        if (!postings) {
-          status = 'errors';
-        }
       }
+      let body = this.salesforcify({ product: productsBlock });
+      let postings = await this.post(process.env.SALESFORCE_PRODUCTS_URL, body);
+      if (!postings) {
+        status = 'errors';
+      };
     }
     return status;
   }
