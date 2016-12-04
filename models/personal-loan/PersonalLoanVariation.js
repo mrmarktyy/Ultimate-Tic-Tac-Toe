@@ -18,10 +18,10 @@ PersonalLoanVariation.add({
 	product: {
 		type: Types.Relationship,
 		ref: 'PersonalLoan',
-		// required: true, // this is  a hack to create the variation under a product
-		// initial: true,
+		required: true,
+		initial: true,
 		index: true,
-		// noedit: true,
+		noedit: true,
 		filters: { company: ':company' },
 	},
 	repVariation: {
