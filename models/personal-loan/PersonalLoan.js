@@ -138,7 +138,7 @@ PersonalLoan.schema.virtual('personalLoanTotalUpfrontFee').get(function () {
 		if (this.applicationFeesDollar != null) {
 			return this.applicationFeesDollar;
 		} else if (this.applicationFeesPercent != null) {
-			return this.applicationFeesPercent * personalLoanConstant.PERSONAL_LOAN_DEFAULT_LOAN_AMOUNT;
+			return this.applicationFeesPercent * personalLoanConstant.PERSONAL_LOAN_DEFAULT_LOAN_AMOUNT * 0.01;
 		}
 	} else {
 		return null;
@@ -150,7 +150,7 @@ PersonalLoan.schema.virtual('carLoanTotalUpfrontFee').get(function () {
 		if (this.applicationFeesDollar != null) {
 			return this.applicationFeesDollar;
 		} else if (this.applicationFeesPercent != null) {
-			return this.applicationFeesPercent * personalLoanConstant.CAR_LOAN_DEFAULT_LOAN_AMOUNT;
+			return this.applicationFeesPercent * personalLoanConstant.CAR_LOAN_DEFAULT_LOAN_AMOUNT * 0.01;
 		}
 	} else {
 		return null;
