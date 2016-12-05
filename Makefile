@@ -50,9 +50,9 @@ clean:
 	${INFO} "Removing dangling images..."
 	@ docker images -q -f dangling=true -f label=application=$(REPO_NAME) | xargs -I ARGS docker rmi -f ARGS
 	${INFO} "Removing old images..."
-	@ docker images | grep keystone | grep 'weeks ago' | awk '{print $3}' | xargs -I ARGS docker rmi -f ARGS
+	@ docker images | grep keystone | grep 'weeks ago' | awk '{print $3}' | xargs -I ARGS docker rmi -f ARGS || exit 0
 	${INFO} "Removing old networks..."
-	@ docker network ls | grep keystone | awk '{ print $1 }' | xargs -I ARGS docker network rm ARGS
+	@ docker network ls | grep keystone | awk '{ print $1 }' | xargs -I ARGS docker network rm ARGS || exit 0
 	${INFO} "Clean complete"
 
 tag:
