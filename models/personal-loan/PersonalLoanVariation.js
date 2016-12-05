@@ -106,6 +106,10 @@ PersonalLoanVariation.schema.pre('save', function (next) {
 	});
 });
 
+PersonalLoan.schema.post('remove', function (next) {
+	PersonalLoanVariation.model.remove({ product: Object(next._id) }).exec();
+});
+
 PersonalLoanVariation.track = true;
 PersonalLoanVariation.defaultColumns = 'name, company, product, minLoanAmount, maxLoanAmount, minLoanTerm, maxLoanTerm, comparisonRatePersonal, comparisonRatePersonalManual, comparisonRateCar, comparisonRateCarManual';
 PersonalLoanVariation.register();
