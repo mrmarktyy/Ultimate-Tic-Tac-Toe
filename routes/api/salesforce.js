@@ -1,6 +1,6 @@
 var keystone = require('keystone');
-import SalesforceClient from '../../services/salesforceClient';
-import salesforceVerticals from '../../models/helpers/salesforceVerticals';
+var SalesforceClient = require('../../services/salesforceClient');
+var salesforceVerticals = require('../../models/helpers/salesforceVerticals');
 var Company = keystone.list('Company');
 var mongoose = require('mongoose');
 var Monetize = mongoose.model('Monetize');
@@ -9,53 +9,37 @@ var Monetize = mongoose.model('Monetize');
 var client = new SalesforceClient();
 
 exports.pushCompanies = async function (req, res) {
-  Company.model.find()
-  .lean()
-  .exec()
-  .then(async function (companies) {
-    let companiesStatus = await client.pushCompanies(companies);
-    res.jsonp({ text: companiesStatus });
-  });
+  let companies = await Company.model.find().lean();
+  let companiesStatus = await client.pushCompanies(companies);
+  res.jsonp({ text: companiesStatus });
 };
 
 exports.pushProducts = async function (req, res) {
-  let promises = [];
+  let productsStatus = 'ok';
   for (let vertical in salesforceVerticals) {
-    promises.push(salesforceProductFactory(vertical, loanTypeObject(vertical)));
-  }
-  return Promise.all(promises).then((stati) => {
-    let productsStatus = 'ok';
-    if (stati.indexOf('errors') > 0) {
-      productsStatus = 'errors';
+    let status = await salesforceProductFactory(vertical, loanTypeObject(vertical));
+    if (status !== 200) {
+      productsStatus = status;
     }
-    console.log('finished');
-    return res.jsonp({ text: productsStatus });
-  });
+  }
+  return res.jsonp({ text: productsStatus });
 };
 
-var salesforceProductFactory = function (vertical, loanType) {
+var salesforceProductFactory = async function (vertical, loanTypeQuery) {
   let ProductVertical = keystone.list(salesforceVerticals[vertical]);
 
-  return ProductVertical.model.find(loanType)
-  .populate('company')
-  .lean()
-  .exec()
-  .then(async function (products) {
-    for (var i = 0; i < products.length; i++) {
-      products[i].applyUrl = null;
-      products[i].goToSite = false;
-      let monetize = await Monetize.findOne({ id: products[i].product }).lean();
-      if (monetize) {
-        products[i].applyUrl = monetize.applyUrl;
-        products[i].goToSite = monetize.enabled;
-      }
+  let products = await (ProductVertical.model.find(loanTypeQuery).populate('company').lean());
+  for (var i = 0; i < products.length; i++) {
+    products[i].applyUrl = null;
+    products[i].goToSite = false;
+    let monetize = await (Monetize.findOne({ id: products[i].product }).lean());
+    if (monetize) {
+      products[i].applyUrl = monetize.applyUrl;
+      products[i].goToSite = monetize.enabled;
     }
-    return products;
-  })
-  .then(async function (products) {
-    let productsStatus = await client.pushProducts(vertical, products);
-    return productsStatus;
-  });
+  }
+  let productsStatus = await (client.pushProducts(vertical, products));
+  return productsStatus;
 };
 
 
@@ -73,4 +57,3 @@ var loanTypeObject = function (vertical) {
   }
   return result;
 };
-

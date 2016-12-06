@@ -33,11 +33,14 @@ class SalesforceClient {
         });
 
         let jsonResponse = await response.json();
+        if (jsonResponse.error) {
+          throw jsonResponse.error_description;
+        }
         this.authorization = jsonResponse.token_type + ' ' + jsonResponse.access_token;
         return this.authorization;
       } catch (error) {
         console.log(error);
-        return ({ error: error });
+        throw error;
       }
     }
   }
@@ -49,14 +52,14 @@ class SalesforceClient {
       let companiesBlock = [];
       for (var lot = 0; lot < companiesLot.length; lot++) {
         companiesBlock.push({
-            RC_Company_ID__c: companiesLot[lot].uuid,
-            Name:             companiesLot[lot].name,
+          RC_Company_ID__c: companiesLot[lot].uuid,
+          Name:             companiesLot[lot].name,
         });
       }
       let body = this.salesforcify({ acct: companiesBlock });
       let postings = await this.post(process.env.SALESFORCE_COMPANIES_URL, body);
-      if (!postings) {
-        status = 'errors';
+      if (postings !== 200) {
+        status = postings;
       };
     }
     return status;
@@ -82,7 +85,7 @@ class SalesforceClient {
       let body = this.salesforcify({ product: productsBlock });
       let postings = await this.post(process.env.SALESFORCE_PRODUCTS_URL, body);
       if (!postings) {
-        status = 'errors';
+        status = postings;
       };
     }
     return status;
@@ -94,22 +97,23 @@ class SalesforceClient {
         body: JSON.stringify(attributes),
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': await this.getAuthorization(),
+          'Authorization': await (this.getAuthorization()),
           'Accept': 'application/json',
         },
       });
       if (response.status !== 200) {
-        console.log('Salesforce ' + url + ' responded with ' + response.status);
-        return null;
+        let salesforceError = 'Salesforce ' + url + ' responded with ' + response.status;
+        throw salesforceError;
       }
       return 200;
     } catch (error) {
       console.log(error);
-      return null;
+      return error;
     }
   };
   salesforcify (map) {
     return ({ data: map });
   };
 }
-export default SalesforceClient;
+
+module.exports = SalesforceClient;
