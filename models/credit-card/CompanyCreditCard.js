@@ -5,21 +5,22 @@ var states = require('../attributes/states');
 var CompanyCreditCard = new keystone.List('CompanyCreditCard');
 
 CompanyCreditCard.add({
-  company: {
-    type: Types.Relationship,
-    ref: 'Company',
-    required: true,
-    initial: true,
-    unique: true,
-    index: true,
-    noedit: true
-  },
-  availableStates: {
-    type: Types.MultiSelect,
-    options: states,
-    required: true,
-    initial: true,
-  },
+	company: {
+		type: Types.Relationship,
+		ref: 'Company',
+		required: true,
+		initial: true,
+		unique: true,
+		index: true,
+		noedit: true,
+	},
+	availableStates: {
+		type: Types.MultiSelect,
+		options: states,
+		required: true,
+		initial: true,
+	},
+	blurb: { type: Types.Code, height: 250, language: 'html' },
 });
 
 CompanyCreditCard.track = true;
