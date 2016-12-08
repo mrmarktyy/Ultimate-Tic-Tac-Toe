@@ -27,7 +27,8 @@ CompanyPersonalLoan.add({
 	applyByBroker: { type: Types.Select, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown },
 	availableTo457VisaHolders: { type: Types.Select, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown },
 	approvalTime: { type: Types.Number },
-	blurb: { type: Types.Code, height: 250, language: 'html' },
+	personalLoanBlurb: { type: Types.Code, height: 250, language: 'html' },
+	carLoanBlurb: { type: Types.Code, height: 250, language: 'html' },
 });
 
 CompanyPersonalLoan.schema.pre('validate', function (next) {
