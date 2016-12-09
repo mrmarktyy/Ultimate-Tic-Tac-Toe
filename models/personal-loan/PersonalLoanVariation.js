@@ -40,7 +40,7 @@ PersonalLoanVariation.add({
 	maxLoanTerm: { type: Types.Number, required: true, initial: true, min: 0 },
 	minRate: { type: Types.Number, required: true, initial: true, min: 3 },
 	maxRate: { type: Types.Number, required: true, initial: true },
-	introRate: { type: Types.Number, min: 3 },
+	introRate: { type: Types.Number, min: 0 },
 	introTerm: { type: Types.Number, min: 0 },
 	comparisonRatePersonal: { type: Types.Number, noedit: true },
 	comparisonRatePersonalManual: { type: Types.Number, initial: true },
