@@ -1,7 +1,7 @@
 var keystone = require('keystone');
 var uuid = require('node-uuid');
 var Types = keystone.Field.Types;
-var imageStorage = require('../helpers/fileStorage');
+var { imageStorage } = require('../helpers/fileStorage');
 
 var Company = new keystone.List('Company');
 
