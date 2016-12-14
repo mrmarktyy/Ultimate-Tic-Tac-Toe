@@ -6,7 +6,7 @@ var PersonalLoan = keystone.list('PersonalLoan');
 var PersonalLoanVariation = keystone.list('PersonalLoanVariation');
 var CompanyPersonalLoan = keystone.list('CompanyPersonalLoan');
 var Monetize = mongoose.model('Monetize');
-var logger = require('../../utils/logger');
+
 
 exports.list = function (req, res) {
 
@@ -19,10 +19,7 @@ exports.list = function (req, res) {
 			if (personalLoan.existsOnSorbet && personalLoan.isPersonalLoan === availableOptions.yes) {
 
 				let promise = PersonalLoanVariation.model.find({ product: personalLoan._id }).lean().exec(function (err, variations) {
-					if (err) {
-						logger.error('database error on find personal loan variation by product id');
-						return 'database error';
-					}
+					if (err) return 'database error';
 					let variationObjects = variations.map(function (v) {
 						return handleComparisonRate(v);
 					});
@@ -31,19 +28,13 @@ exports.list = function (req, res) {
 				variationPromises.push(promise);
 
 				let plcPromise = CompanyPersonalLoan.model.find({ company: personalLoan.company._id }).lean().exec(function (err, plc) {
-					if (err) {
-						logger.error('database error on find company personal loan vertical by company id');
-						return 'database error';
-					}
+					if (err) return 'database error';
 					response[personalLoan._id] = Object.assign({}, personalLoan, response[personalLoan._id], { companyVertical: plc });
 				});
 				variationPromises.push(plcPromise);
 
 				let mntzPromise = Monetize.findOne({ product: personalLoan._id }).lean().exec(function (err, monetize) {
-					if (err) {
-						logger.error('database error on find monetize by product id');
-						return 'database error';
-					}
+					if (err) return 'database error';
 					let applyUrl = null;
 					let enabled = false;
 					if (monetize !== null) {
@@ -77,15 +68,12 @@ exports.one = function (req, res) {
 			return;
 		}
 		PersonalLoanVariation.model.find({ product: personalLoan._id }).lean().exec(function (err, variation) {
-			if (err) {
-				logger.error('database error on find personal loan variation by product id');
-				return 'database error';
-			}
+			if (err) return 'database error';
 			personalLoan.variations = variation;
 			res.jsonp(personalLoan);
 		});
 	}).catch(function (e) {
-		logger.error(e);
+		console.log(e);
 		res.jsonp('{error:error}');
 	});
 };
