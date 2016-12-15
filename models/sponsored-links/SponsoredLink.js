@@ -1,5 +1,5 @@
 var keystone = require('keystone');
-var imageStorage = require('../helpers/fileStorage');
+var { imageStorage } = require('../helpers/fileStorage');
 var verticals = require('../helpers/verticals');
 var Types = keystone.Field.Types;
 

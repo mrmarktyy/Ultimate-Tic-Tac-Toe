@@ -2,7 +2,7 @@ var keystone = require('keystone');
 var uuid = require('node-uuid');
 var availableOptions = require('../attributes/availableOptions');
 var productCommonAttributes = require('../common/ProductCommonAttributes');
-var imageStorage = require('../helpers/fileStorage');
+var { imageStorage } = require('../helpers/fileStorage');
 var logger = require('../../utils/logger');
 
 var Types = keystone.Field.Types;
