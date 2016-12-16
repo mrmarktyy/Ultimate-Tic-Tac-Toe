@@ -10,5 +10,6 @@ module.exports = {
 	isDiscontinued: { type: Types.Boolean, indent: true, default: false },
 	isFeaturedProduct: { type: Types.Boolean, indent: true, default: false },
 	isPromotedProduct: { type: Types.Boolean, indent: true, default: false },
+	promotedOrder: { type: Types.Select, options: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], emptyOption: true, default: '', required: true, initial: true },
 	visibility: { type: Types.Select, options: ['seo', 'none', 'all'], default: 'all', required: true, initial: true },
 };
