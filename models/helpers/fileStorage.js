@@ -1,7 +1,7 @@
 var keystone = require('keystone');
 var Types = keystone.Field.Types;
 
-imageStorage = function (namespace) {
+const imageStorage = function (namespace) {
   if (process.env.CLOUDINARY_URL) {
     return {
       type: Types.CloudinaryImage,
@@ -26,7 +26,7 @@ imageStorage = function (namespace) {
   namespace_url to the model that contains the publicly available url of the image.
   This allows images to work seamlessly in development mode if the cloudinary
   service has not been configured */
-addImage = function (model, namespace, options = {initial: true, required: true}) {
+const addImage = function (model, namespace, options = {initial: true, required: true}) {
   model.schema.virtual(`${namespace}_url`).get(function () {
     if (process.env.CLOUDINARY_URL) {
       return this[namespace].url
@@ -43,7 +43,7 @@ addImage = function (model, namespace, options = {initial: true, required: true}
   });
 
   model.add({
-    [namespace]: Object.assign(imageStorage(`${model.modelName}-${namespace}`), options),
+    [namespace]: Object.assign(imageStorage(`${model.path}-${namespace}`), options),
   });
 
 }
