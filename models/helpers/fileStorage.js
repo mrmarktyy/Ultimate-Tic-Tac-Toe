@@ -29,15 +29,18 @@ const imageStorage = function (namespace) {
 const addImage = function (model, namespace, options = {initial: true, required: true}) {
   model.schema.virtual(`${namespace}_url`).get(function () {
     if (process.env.CLOUDINARY_URL) {
-      return this[namespace].url
+      if (this[namespace].url) {
+        return this[namespace].url.replace('res.cloudinary.com', 'production-ultimate-assets.ratecity.com.au')
+      }
+      return null
     } else {
-      if (!this.image.filename) {
+      if (!this[namespace].filename) {
         return null
       }
       if (process.env.HOST_DOMAIN) {
-        return `http://${HOST_DOMAIN}/uploads/${this.image.filename}`
+        return `http://${HOST_DOMAIN}/uploads/${this[namespace].filename}`
       } else {
-        return `http://localhost:4000/uploads/${this.image.filename}`
+        return `http://localhost:4000/uploads/${this[namespace].filename}`
       }
     }
   });
