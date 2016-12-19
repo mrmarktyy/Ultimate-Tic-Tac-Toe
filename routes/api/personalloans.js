@@ -17,6 +17,8 @@ exports.list = function (req, res) {
 	promise.then(function (personalLoans) {
 		personalLoans.forEach(function (personalLoan) {
 			if (personalLoan.existsOnSorbet && personalLoan.isPersonalLoan === availableOptions.yes) {
+				// this make sure API always return promotedOrder for all products
+				personalLoan.promotedOrder = 100 - parseInt(personalLoan.promotedOrder);
 
 				let promise = PersonalLoanVariation.model.find({ product: personalLoan._id }).lean().exec(function (err, variations) {
 					if (err) {
