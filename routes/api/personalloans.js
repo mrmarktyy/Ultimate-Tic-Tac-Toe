@@ -1,5 +1,4 @@
 var keystone = require('keystone');
-var availableOptions = require('../../models/attributes/availableOptions');
 var mongoose = require('mongoose');
 
 var PersonalLoan = keystone.list('PersonalLoan');
@@ -16,7 +15,7 @@ exports.list = function (req, res) {
 	let variationPromises = [];
 	promise.then(function (personalLoans) {
 		personalLoans.forEach(function (personalLoan) {
-			if (personalLoan.existsOnSorbet && personalLoan.isPersonalLoan === availableOptions.yes) {
+			if (personalLoan.existsOnSorbet) {
 				// this make sure API always return promotedOrder for all products
 				personalLoan.promotedOrder = 100 - parseInt(personalLoan.promotedOrder);
 
