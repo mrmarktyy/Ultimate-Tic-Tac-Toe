@@ -26,10 +26,10 @@ exports.monetize = function (req, res) {
         return (Monetize.findOneAndUpdate(
           {
             uuid: uuid,
-            vertical: change_request.RC_Product_Type,
           },
           {
             applyUrl: change_request.RC_Url,
+            vertical: change_request.RC_Product_Type,
             product: product._id,
             enabled: true,
           },
