@@ -43,4 +43,6 @@ exports = module.exports = function (app) {
   app.get('/api/personalloans', keystone.middleware.api, routes.api.personalloans.list);
   app.get('/api/personalloans/:id', keystone.middleware.api, routes.api.personalloans.one);
 
+  // Featured Product
+  app.get('/api/featured-products', keystone.middleware.api, routes.api.featuredProducts.list);
 };
