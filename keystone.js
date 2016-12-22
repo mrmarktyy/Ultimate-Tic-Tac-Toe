@@ -72,6 +72,7 @@ keystone.set('nav', {
 	creditCards: ['CompanyCreditCard', 'CreditCard', 'Redemption', 'PartnerConversion', 'Program', 'RedemptionType', 'RedemptionName'],
 	personalLoans: ['CompanyPersonalLoan', 'PersonalLoan', 'PersonalLoanVariation'],
 	sponsoredLinks: 'SponsoredLink',
+	featuredProducts: 'FeaturedProduct',
 	feeds: ['ProductFeedInclusion', 'ProductFeed', 'WidgetImage'],
 	users: ['users', 'ApiKey'],
 });
