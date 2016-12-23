@@ -10,7 +10,6 @@ FeaturedProduct.add({
   vertical: { type: Types.Select, required: true, options: verticals, initial: true },
   title: { type: Types.Text, required: true, initial: true, index: true },
   description: { type: Types.Text, required: true, initial: true },
-  applyUrl: { type: Types.Url, required: true, initial: true },
   sortOrder: { type: Types.Number, default: 1, initial: true },
   dateStart: { type: Types.Datetime, required: true, initial: true },
   dateEnd: { type: Types.Datetime, initial: true },
