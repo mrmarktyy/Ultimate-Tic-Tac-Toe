@@ -5,6 +5,7 @@ var PersonalLoan = keystone.list('PersonalLoan');
 var PersonalLoanVariation = keystone.list('PersonalLoanVariation');
 var CompanyPersonalLoan = keystone.list('CompanyPersonalLoan');
 var Monetize = mongoose.model('Monetize');
+var CompanyService = require('../../services/CompanyService');
 var logger = require('../../utils/logger');
 
 exports.list = function (req, res) {
@@ -16,6 +17,7 @@ exports.list = function (req, res) {
 	promise.then(function (personalLoans) {
 		personalLoans.forEach(function (personalLoan) {
 			if (personalLoan.existsOnSorbet) {
+				personalLoan.company = CompanyService.fixLogoUrl(personalLoan.company);
 				// this make sure API always return promotedOrder for all products
 				personalLoan.promotedOrder = 100 - parseInt(personalLoan.promotedOrder);
 
@@ -77,6 +79,7 @@ exports.one = function (req, res) {
 			res.jsonp('{error: id not found }');
 			return;
 		}
+		personalLoan.company = CompanyService.fixLogoUrl(personalLoan.company);
 		PersonalLoanVariation.model.find({ product: personalLoan._id }).lean().exec(function (err, variation) {
 			if (err) {
 				logger.error('database error on find personal loan variation by product id');

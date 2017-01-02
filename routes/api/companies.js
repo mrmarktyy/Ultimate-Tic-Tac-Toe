@@ -4,6 +4,7 @@ var Company = keystone.list('Company');
 var PersonalLoan = keystone.list('PersonalLoan');
 var CompanyPersonalLoan = keystone.list('CompanyPersonalLoan');
 var CreditCard = keystone.list('CreditCard');
+var CompanyService = require('../../services/CompanyService');
 
 exports.list = function (req, res) {
 
@@ -13,6 +14,7 @@ exports.list = function (req, res) {
 	let countPromises = [];
 	promise.then(function (companies) {
 		companies.forEach(function (company) {
+			company = CompanyService.fixLogoUrl(company);
 
 			response[company._id] = Object.assign(company, {
 				verticals: {
