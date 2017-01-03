@@ -24,6 +24,7 @@ PersonalLoanVariation.add({
 		noedit: true,
 		filters: { company: ':company' },
 	},
+	name: { type: Types.Text, required: true, initial: true },
 	repVariation: {
 		type: Types.Select,
 		required: true,
