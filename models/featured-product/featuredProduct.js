@@ -14,6 +14,7 @@ FeaturedProduct.add({
   dateStart: { type: Types.Datetime, required: true, initial: true },
   dateEnd: { type: Types.Datetime, initial: true },
   enabled: { type: Types.Boolean, indent: true, required: true, default: true, initial: true },
+  notes: { type: Types.Text, required: false, initial: true},
   image: imageStorage('featuredProduct'),
 });
 
@@ -28,5 +29,5 @@ FeaturedProduct.schema.pre('validate', function (next) {
 FeaturedProduct.schema.index({ uuid: 1, vertical: 1 }, { unique: true });
 
 FeaturedProduct.track = true;
-FeaturedProduct.defaultColumns = 'uuid, vertical, title, description, dateStart, dateEnd';
+FeaturedProduct.defaultColumns = 'uuid, vertical, title, notes, sortOrder, dateStart, dateEnd';
 FeaturedProduct.register();
