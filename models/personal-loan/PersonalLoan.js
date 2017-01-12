@@ -25,7 +25,7 @@ PersonalLoan.add({
 	isPersonalLoan: { type: Types.Select, initial: true, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown },
 	isLineOfCredit: { type: Types.Select, initial: true, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown },
 	repaymentType: { type: Types.Select, initial: true, required: true, options: ['FIXED', 'VARIABLE'], emptyOption: false },
-	extraRepayments: { type: Types.Select, initial: true, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown },
+	isExtraRepaymentsAllowed: { type: Types.Select, initial: true, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown },
 	hasRedrawFacility: { type: Types.Select, initial: true, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown },
 	securedType: { type: Types.Select, initial: true, required: true, options: ['SECURED', 'UNSECURED'], emptyOption: false },
 	applicationFeesDollar: { type: Types.Number, initial: true, min: 0 },
@@ -112,16 +112,16 @@ PersonalLoan.schema.pre('validate', function (next) {
 	if ((this.applicationFeesDollar === undefined) && (this.applicationFeesPercent === undefined)) {
 		next(Error('Application Fee need to fill in either Dollar or Percent'));
 	}
-	if ((this.extraRepaymentDollarLimits !== undefined) && (this.extraRepayments !== availableOptions.yes)) {
+	if ((this.extraRepaymentDollarLimits !== undefined) && (this.isExtraRepaymentsAllowed !== availableOptions.yes)) {
 		next(Error('Extra Repayments must be YES if Extra Repayment Dollar Limits is not empty'));
 	}
-	if ((this.extraRepaymentDollarLimitsPeriod !== undefined) && (this.extraRepayments !== availableOptions.yes)) {
+	if ((this.extraRepaymentDollarLimitsPeriod !== undefined) && (this.isExtraRepaymentsAllowed !== availableOptions.yes)) {
 		next(Error('Extra Repayments must be YES if Extra Repayment Dollar Limits Period is not empty'));
 	}
-	if ((this.extraRepaymentPercentageLimits !== undefined) && (this.extraRepayments !== availableOptions.yes)) {
+	if ((this.extraRepaymentPercentageLimits !== undefined) && (this.isExtraRepaymentsAllowed !== availableOptions.yes)) {
 		next(Error('Extra Repayments must be YES if Extra Repayment Percentage Limits is not empty'));
 	}
-	if ((this.extraRepaymentPercentageLimitsPeriod !== undefined) && (this.extraRepayments !== availableOptions.yes)) {
+	if ((this.extraRepaymentPercentageLimitsPeriod !== undefined) && (this.isExtraRepaymentsAllowed !== availableOptions.yes)) {
 		next(Error('Extra Repayments must be YES if Extra Repayment Percentage Limits Period is not empty'));
 	}
 	if ((this.extraRepaymentDollarLimits === undefined) !== (this.extraRepaymentDollarLimitsPeriod === undefined)) {
