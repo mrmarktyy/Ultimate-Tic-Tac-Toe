@@ -1,5 +1,6 @@
 var keystone = require('keystone');
 var mongoose = require('mongoose');
+var changeCase = require('change-case');
 
 var PersonalLoan = keystone.list('PersonalLoan');
 var PersonalLoanVariation = keystone.list('PersonalLoanVariation');
@@ -17,6 +18,11 @@ exports.list = function (req, res) {
 	promise.then(function (personalLoans) {
 		personalLoans.forEach(function (personalLoan) {
 			if (personalLoan.existsOnSorbet) {
+				// change the value to titleCase
+				['repaymentType', 'securedType'].map(function (attribute) {
+					personalLoan[attribute] = changeCase.titleCase(personalLoan[attribute]);
+				});
+
 				personalLoan.company = CompanyService.fixLogoUrl(personalLoan.company);
 				// this make sure API always return promotedOrder for all products
 				personalLoan.promotedOrder = 100 - parseInt(personalLoan.promotedOrder);
