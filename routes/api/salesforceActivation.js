@@ -1,7 +1,7 @@
 var keystone = require('keystone');
 var salesforceVerticals = require('../../models/helpers/salesforceVerticals');
 var mongoose = require('mongoose');
-var Monetize = mongoose.model('Monetize')
+var Monetize = mongoose.model('Monetize');
 
 exports.monetize = function (req, res) {
   let products = req.body;
@@ -11,7 +11,7 @@ exports.monetize = function (req, res) {
 
   for (var i = 0; i < products.length; i++) {
     let change_request = products[i];
-    if (typeof(salesforceVerticals[change_request.RC_Product_Type]) === 'undefined') {
+    if (typeof (salesforceVerticals[change_request.RC_Product_Type]) === 'undefined') {
       continue;
     }
     let uuid = change_request.RC_Product_ID;
@@ -22,32 +22,16 @@ exports.monetize = function (req, res) {
     .then(function (product) {
       if (product === null) {
         missingUUIDs.push(uuid);
-      } else if (change_request.RC_Active) {
-        return (Monetize.findOneAndUpdate(
-          {
-            uuid: uuid,
-          },
-          {
-            applyUrl: change_request.RC_Url,
-            vertical: change_request.RC_Product_Type,
-            product: product._id,
-            enabled: true,
-          },
-          {
-            new: true,
-            upsert: true,
-          })
-        );
       } else {
         return (Monetize.findOneAndUpdate(
           {
             uuid: uuid,
-            vertical: change_request.RC_Product_Type,
           },
           {
+            vertical: change_request.RC_Product_Type,
             applyUrl: change_request.RC_Url,
             product: product._id,
-            enabled: false,
+            enabled: change_request.RC_Active,
           },
           {
             new: true,
