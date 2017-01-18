@@ -8,8 +8,5 @@ module.exports = {
 	otherNames: { type: Types.TextArray },
 	displayName: { type: Types.Text, required: true, initial: true },
 	isDiscontinued: { type: Types.Boolean, indent: true, default: false },
-	isFeaturedProduct: { type: Types.Boolean, indent: true, default: false },
-	isPromotedProduct: { type: Types.Boolean, indent: true, default: false },
 	promotedOrder: { type: Types.Select, options: [{ value: '', label: 'None' }, { value: '1', label: '1 - First' }, 2, 3, 4, 5, 6, 7, 8, 9, 10], default: '' },
-	visibility: { type: Types.Select, options: ['seo', 'none', 'all'], default: 'all', required: true, initial: true },
 };
