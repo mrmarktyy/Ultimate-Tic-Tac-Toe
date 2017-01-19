@@ -17,52 +17,49 @@ exports.list = function (req, res) {
 	let variationPromises = [];
 	promise.then(function (personalLoans) {
 		personalLoans.forEach(function (personalLoan) {
-			if (personalLoan.existsOnSorbet) {
-				// change the value to titleCase
-				['repaymentType', 'securedType'].map(function (attribute) {
-					personalLoan[attribute] = changeCase.titleCase(personalLoan[attribute]);
-				});
+			// change the value to titleCase
+			['repaymentType', 'securedType'].map(function (attribute) {
+				personalLoan[attribute] = changeCase.titleCase(personalLoan[attribute]);
+			});
+			personalLoan.company = CompanyService.fixLogoUrl(personalLoan.company);
+			// this make sure API always return promotedOrder for all products
+			personalLoan.promotedOrder = 100 - parseInt(personalLoan.promotedOrder);
 
-				personalLoan.company = CompanyService.fixLogoUrl(personalLoan.company);
-				// this make sure API always return promotedOrder for all products
-				personalLoan.promotedOrder = 100 - parseInt(personalLoan.promotedOrder);
-
-				let promise = PersonalLoanVariation.model.find({ product: personalLoan._id }).lean().exec(function (err, variations) {
-					if (err) {
-						logger.error('database error on find personal loan variation by product id');
-						return 'database error';
-					}
-					let variationObjects = variations.map(function (v) {
-						return handleComparisonRate(v);
-					});
-					response[personalLoan._id] = Object.assign({}, personalLoan, response[personalLoan._id], { variations: variationObjects });
+			let promise = PersonalLoanVariation.model.find({ product: personalLoan._id }).lean().exec(function (err, variations) {
+				if (err) {
+					logger.error('database error on find personal loan variation by product id');
+					return 'database error';
+				}
+				let variationObjects = variations.map(function (v) {
+					return handleComparisonRate(v);
 				});
-				variationPromises.push(promise);
+				response[personalLoan._id] = Object.assign({}, personalLoan, response[personalLoan._id], { variations: variationObjects });
+			});
+			variationPromises.push(promise);
 
-				let plcPromise = CompanyPersonalLoan.model.find({ company: personalLoan.company._id }).lean().exec(function (err, plc) {
-					if (err) {
-						logger.error('database error on find company personal loan vertical by company id');
-						return 'database error';
-					}
-					response[personalLoan._id] = Object.assign({}, personalLoan, response[personalLoan._id], { companyVertical: plc });
-				});
-				variationPromises.push(plcPromise);
+			let plcPromise = CompanyPersonalLoan.model.find({ company: personalLoan.company._id }).lean().exec(function (err, plc) {
+				if (err) {
+					logger.error('database error on find company personal loan vertical by company id');
+					return 'database error';
+				}
+				response[personalLoan._id] = Object.assign({}, personalLoan, response[personalLoan._id], { companyVertical: plc });
+			});
+			variationPromises.push(plcPromise);
 
-				let mntzPromise = Monetize.findOne({ product: personalLoan._id }).lean().exec(function (err, monetize) {
-					if (err) {
-						logger.error('database error on find monetize by product id');
-						return 'database error';
-					}
-					let applyUrl = null;
-					let enabled = false;
-					if (monetize !== null) {
-						applyUrl = monetize.applyUrl;
-						enabled = monetize.enabled;
-					}
-					response[personalLoan._id] = Object.assign({}, personalLoan, response[personalLoan._id], { gotoSiteUrl: applyUrl, gotoSiteEnabled: enabled });
-				});
-				variationPromises.push(mntzPromise);
-			}
+			let mntzPromise = Monetize.findOne({ product: personalLoan._id }).lean().exec(function (err, monetize) {
+				if (err) {
+					logger.error('database error on find monetize by product id');
+					return 'database error';
+				}
+				let applyUrl = null;
+				let enabled = false;
+				if (monetize !== null) {
+					applyUrl = monetize.applyUrl;
+					enabled = monetize.enabled;
+				}
+				response[personalLoan._id] = Object.assign({}, personalLoan, response[personalLoan._id], { gotoSiteUrl: applyUrl, gotoSiteEnabled: enabled });
+			});
+			variationPromises.push(mntzPromise);
 		});
 
 		Promise.all(variationPromises).then(() => {
