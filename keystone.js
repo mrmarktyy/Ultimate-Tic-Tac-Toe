@@ -71,6 +71,7 @@ keystone.set('nav', {
 	companies: ['Company', 'Branch', 'ATM'],
 	creditCards: ['CompanyCreditCard', 'CreditCard', 'Redemption', 'PartnerConversion', 'Program', 'RedemptionType', 'RedemptionName'],
 	personalLoans: ['CompanyPersonalLoan', 'PersonalLoan', 'PersonalLoanVariation'],
+	savingsAccounts: ['CompanySavingsAccount', 'SavingsAccount', 'SavingsAccountTier'],
 	sponsoredLinks: 'SponsoredLink',
 	featuredProducts: 'FeaturedProduct',
 	feeds: ['ProductFeedInclusion', 'ProductFeed', 'WidgetImage'],
