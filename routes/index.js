@@ -14,7 +14,6 @@ var routes = {
 }
 
 function checkAPIKey (req, res, next) {
-  console.log(JSON.stringify(req.headers))
   let promise = ApiKeyService.isApiKeyValid(req.headers.apikey)
   promise.then((isApiKeyValid) => {
     if (isApiKeyValid != null) return next()

@@ -38,7 +38,7 @@ const addImage = function (model, namespace, options = {initial: true, required:
         return null
       }
       if (process.env.HOST_DOMAIN) {
-        return `http://${HOST_DOMAIN}/uploads/${this[namespace].filename}`
+        return `http://${process.env.HOST_DOMAIN}/uploads/${this[namespace].filename}`
       } else {
         return `http://localhost:4000/uploads/${this[namespace].filename}`
       }

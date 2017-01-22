@@ -1,7 +1,7 @@
 var keystone = require('keystone')
 var Types = keystone.Field.Types
 var blazeCallback = require('../helpers/blazeCallback.js')
-var { imageStorage, addImage } = require('../helpers/fileStorage')
+var { addImage } = require('../helpers/fileStorage')
 
 var WidgetImage = new keystone.List('WidgetImage')
 

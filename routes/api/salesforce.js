@@ -16,7 +16,7 @@ exports.pushCompanies = async function (req, res) {
 exports.pushProducts = async function (req, res) {
   let productsStatus = 'ok'
   for (let vertical in salesforceVerticals) {
-    let status = await salesforceProductFactory(vertical, loanTypeObject(vertical))
+    let status = await salesforceProductFactory(vertical, loanTypeObject(vertical))  // eslint-disable-line babel/no-await-in-loop
     if (status !== 200) {
       productsStatus = status
     }
@@ -31,7 +31,7 @@ var salesforceProductFactory = async function (vertical, loanTypeQuery) {
   for (var i = 0; i < products.length; i++) {
     products[i].applyUrl = null
     products[i].goToSite = false
-    let monetize = await (Monetize.findOne({ id: products[i].product }).lean())
+    let monetize = await (Monetize.findOne({ id: products[i].product }).lean()) // eslint-disable-line babel/no-await-in-loop
     if (monetize) {
       products[i].applyUrl = monetize.applyUrl
       products[i].goToSite = monetize.enabled

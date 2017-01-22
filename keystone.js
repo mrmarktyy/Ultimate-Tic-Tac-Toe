@@ -66,7 +66,7 @@ keystone.set('email locals', {
 		},
 	},
 })
-keystone.set('email tests', require('./routes/emails'))
+
 keystone.set('nav', {
 	companies: ['Company', 'Branch', 'ATM'],
 	creditCards: ['CompanyCreditCard', 'CreditCard', 'Redemption', 'PartnerConversion', 'Program', 'RedemptionType', 'RedemptionName'],
