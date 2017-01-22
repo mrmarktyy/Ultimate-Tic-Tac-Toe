@@ -96,12 +96,14 @@ function PMT (rate, nper, pv, fv, type) {
 }
 
 function IRR (CArray) {
-	min = 0.0
-	max = 1.0
+	let min = 0.0
+	let max = 1.0
+	let guest
+	let NPV
 	do {
 		guest = (min + max) / 2
 		NPV = 0
-		for (var j = 0; j < CArray.length; j++) {
+		for (let j = 0; j < CArray.length; j++) {
 			NPV += CArray[j] / Math.pow((1 + guest), j)
 		}
 		if (NPV > 0) {

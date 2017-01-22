@@ -58,7 +58,7 @@ class SalesforceClient {
 				})
 			}
 			let body = this.salesforcify({ acct: companiesBlock })
-			let postings = await this.post(process.env.SALESFORCE_COMPANIES_URL, body)
+			let postings = await this.post(process.env.SALESFORCE_COMPANIES_URL, body) // eslint-disable-line babel/no-await-in-loop
 			if (postings !== 200) {
 				status = postings
 			}
@@ -84,7 +84,7 @@ class SalesforceClient {
 				})
 			}
 			let body = this.salesforcify({ product: productsBlock })
-			let postings = await this.post(process.env.SALESFORCE_PRODUCTS_URL, body)
+			let postings = await this.post(process.env.SALESFORCE_PRODUCTS_URL, body) // eslint-disable-line babel/no-await-in-loop
 			if (!postings) {
 				status = postings
 			}

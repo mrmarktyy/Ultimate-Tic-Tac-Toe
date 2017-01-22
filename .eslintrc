@@ -12,7 +12,7 @@
 		"jsx-quotes": ["warn", "prefer-double"],
 		"key-spacing": 2,
 		"no-class-assign": 1,
-		"no-console": 2,
+		"no-console": 1,
 		"no-multiple-empty-lines": ["error", {"max":1, "maxEOF": 1}],
 		"no-nested-ternary": 2,
 		"no-trailing-spaces": 2,
@@ -48,7 +48,8 @@
 	],
 	"env": {
 		"browser": true,
-		"es6": true
+		"es6": true,
+		"mocha": true
 	},
 	"globals": {
 		"__DEV__": true
