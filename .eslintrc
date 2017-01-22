@@ -1,3 +1,62 @@
 {
-    "extends": "keystone"
+	"parser": "babel-eslint",
+	"rules": {
+		"array-callback-return": 2,
+		"arrow-parens": ["warn", "always"],
+		"babel/no-await-in-loop": 2,
+		"camelcase": ["warn", {"properties": "never"}],
+		"comma-dangle": ["warn", "always-multiline"],
+		"comma-spacing": 2,
+		"comma-style": ["error", "last"],
+		"generator-star-spacing": 1,
+		"jsx-quotes": ["warn", "prefer-double"],
+		"key-spacing": 2,
+		"no-class-assign": 1,
+		"no-console": 2,
+		"no-multiple-empty-lines": ["error", {"max":1, "maxEOF": 1}],
+		"no-nested-ternary": 2,
+		"no-trailing-spaces": 2,
+		"no-undef": 2,
+		"no-unexpected-multiline": 2,
+		"no-unneeded-ternary": 2,
+		"no-unused-vars": ["warn", { "argsIgnorePattern": "^_", "varsIgnorePattern": "[uU]nused", "caughtErrorsIgnorePattern": "^_" }],
+		"operator-linebreak": 2,
+		"prefer-arrow-callback": 1,
+		"quotes": 2,
+		"react/jsx-boolean-value": ["error"],
+		"react/jsx-closing-bracket-location": ["error"],
+		"react/no-danger": 1,
+		"react/no-did-mount-set-state": 1,
+		"react/no-find-dom-node": ["warn"],
+		"react/prop-types": 2,
+		"semi": 2,
+		"space-before-function-paren": 2,
+		"space-in-parens": 2,
+		"strict": 0
+	},
+	"parserOptions": {
+		"ecmaVersion": 6,
+		"sourceType": "module",
+		"ecmaFeatures": {
+			"jsx": true
+		},
+	},
+	"plugins": [
+		"react",
+		"babel",
+		"mocha"
+	],
+	"env": {
+		"browser": true,
+		"es6": true
+	},
+	"globals": {
+		"__DEV__": true
+	},
+	"extends": [
+		"standard",
+		"standard-react",
+		"eslint:recommended",
+		"plugin:react/recommended"
+	]
 }
