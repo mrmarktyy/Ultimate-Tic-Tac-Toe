@@ -1,27 +1,27 @@
-var keystone = require('keystone');
-var salesforceVerticals = require('../../models/helpers/salesforceVerticals');
-var mongoose = require('mongoose');
-var Monetize = mongoose.model('Monetize');
+var keystone = require('keystone')
+var salesforceVerticals = require('../../models/helpers/salesforceVerticals')
+var mongoose = require('mongoose')
+var Monetize = mongoose.model('Monetize')
 
 exports.monetize = function (req, res) {
-  let products = req.body;
-  let missingUUIDs = [];
-  let promise;
-  let promises = [];
+  let products = req.body
+  let missingUUIDs = []
+  let promise
+  let promises = []
 
   for (var i = 0; i < products.length; i++) {
-    let change_request = products[i];
+    let change_request = products[i]
     if (typeof (salesforceVerticals[change_request.RC_Product_Type]) === 'undefined') {
-      continue;
+      continue
     }
-    let uuid = change_request.RC_Product_ID;
+    let uuid = change_request.RC_Product_ID
 
-    let product = keystone.list(salesforceVerticals[change_request.RC_Product_Type]);
+    let product = keystone.list(salesforceVerticals[change_request.RC_Product_Type])
     promise = product.model.findOne({ uuid: uuid })
     .exec()
-    .then(function (product) {
+    .then((product) => {
       if (product === null) {
-        missingUUIDs.push(uuid);
+        missingUUIDs.push(uuid)
       } else {
         return (Monetize.findOneAndUpdate(
           {
@@ -37,22 +37,22 @@ exports.monetize = function (req, res) {
             new: true,
             upsert: true,
           })
-        );
+        )
       }
     })
-    .catch(function (err) {
-      console.log(err);
-      res.jsonp({ error: err });
-    });
+    .catch((err) => {
+      console.log(err)
+      res.jsonp({ error: err })
+    })
 
-    promises.push(promise);
+    promises.push(promise)
 
   }
-  Promise.all(promises).then(function () {
+  Promise.all(promises).then(() => {
     if (missingUUIDs.length === 0) {
-      res.status(200).jsonp({ text: 'OK' });
+      res.status(200).jsonp({ text: 'OK' })
     } else {
-      res.status(400).jsonp({ message: 'Missing UUIDs', missing: missingUUIDs });
+      res.status(400).jsonp({ message: 'Missing UUIDs', missing: missingUUIDs })
     }
-  });
-};
+  })
+}

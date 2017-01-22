@@ -1,13 +1,13 @@
 // Simulate config options from your production environment by
 // customising the .env file in your project's root folder.
-require('dotenv').config();
+require('dotenv').config()
 
-var keystone = require('keystone');
-var webpack = require('webpack');
-var devMiddleware = require('webpack-dev-middleware');
-var hotMiddleware = require('webpack-hot-middleware');
-var config = require('./webpack.config.dev');
-var compiler = webpack(config);
+var keystone = require('keystone')
+var webpack = require('webpack')
+var devMiddleware = require('webpack-dev-middleware')
+var hotMiddleware = require('webpack-hot-middleware')
+var config = require('./webpack.config.dev')
+var compiler = webpack(config)
 
 keystone.init({
 	'name': 'RateCity Ultimate',
@@ -28,30 +28,30 @@ keystone.init({
 	'port': '4000',
 	'session store': 'mongo',
 	'mongo': process.env.MONGO_URI,
-});
+})
 
 if (process.env.NODE_ENV === 'development') {
 	keystone.pre('routes', devMiddleware(compiler, {
 		noInfo: true,
 		publicPath: config.output.publicPath,
-	}));
+	}))
 
-	keystone.pre('routes', hotMiddleware(compiler));
-};
-
-if (process.env.CLOUDINARY_URL) {
-	keystone.set('cloudinary config', process.env.CLOUDINARY_URL);
-	keystone.set('cloudinary folders', true);
+	keystone.pre('routes', hotMiddleware(compiler))
 }
 
-keystone.import('models');
+if (process.env.CLOUDINARY_URL) {
+	keystone.set('cloudinary config', process.env.CLOUDINARY_URL)
+	keystone.set('cloudinary folders', true)
+}
+
+keystone.import('models')
 keystone.set('locals', {
 	_: require('lodash'),
 	env: keystone.get('env'),
 	utils: keystone.utils,
 	editable: keystone.content.editable,
-});
-keystone.set('routes', require('./routes'));
+})
+keystone.set('routes', require('./routes'))
 keystone.set('email locals', {
 	logo_src: '/images/logo-email.gif',
 	logo_width: 194,
@@ -65,8 +65,8 @@ keystone.set('email locals', {
 			border_color: '#1a7cb7',
 		},
 	},
-});
-keystone.set('email tests', require('./routes/emails'));
+})
+keystone.set('email tests', require('./routes/emails'))
 keystone.set('nav', {
 	companies: ['Company', 'Branch', 'ATM'],
 	creditCards: ['CompanyCreditCard', 'CreditCard', 'Redemption', 'PartnerConversion', 'Program', 'RedemptionType', 'RedemptionName'],
@@ -75,8 +75,8 @@ keystone.set('nav', {
 	featuredProducts: 'FeaturedProduct',
 	feeds: ['ProductFeedInclusion', 'ProductFeed', 'WidgetImage'],
 	users: ['users', 'ApiKey'],
-});
+})
 
-keystone.set('cors allow origin', true);
+keystone.set('cors allow origin', true)
 
-keystone.start();
+keystone.start()

@@ -1,5 +1,5 @@
-var keystone = require('keystone');
+var keystone = require('keystone')
 
 module.exports = {
 
-};
+}

@@ -1,8 +1,8 @@
-var keystone = require('keystone');
-var Types = keystone.Field.Types;
-var states = require('../attributes/states');
+var keystone = require('keystone')
+var Types = keystone.Field.Types
+var states = require('../attributes/states')
 
-var CompanyCreditCard = new keystone.List('CompanyCreditCard');
+var CompanyCreditCard = new keystone.List('CompanyCreditCard')
 
 CompanyCreditCard.add({
 	company: {
@@ -21,9 +21,9 @@ CompanyCreditCard.add({
 		initial: true,
 	},
 	blurb: { type: Types.Code, height: 250, language: 'html' },
-});
+})
 
-CompanyCreditCard.track = true;
-CompanyCreditCard.defaultColumns = 'company, availableStates';
-CompanyCreditCard.drilldown = 'company';
-CompanyCreditCard.register();
+CompanyCreditCard.track = true
+CompanyCreditCard.defaultColumns = 'company, availableStates'
+CompanyCreditCard.drilldown = 'company'
+CompanyCreditCard.register()

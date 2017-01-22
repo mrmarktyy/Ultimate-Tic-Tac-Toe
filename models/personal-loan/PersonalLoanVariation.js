@@ -1,10 +1,10 @@
-var keystone = require('keystone');
-var Types = keystone.Field.Types;
-var availableOptions = require('../attributes/availableOptions');
-var PersonalLoan = keystone.list('PersonalLoan');
-var ComparisonRateCalculator = require('../../services/ComparisonRateCalculator');
+var keystone = require('keystone')
+var Types = keystone.Field.Types
+var availableOptions = require('../attributes/availableOptions')
+var PersonalLoan = keystone.list('PersonalLoan')
+var ComparisonRateCalculator = require('../../services/ComparisonRateCalculator')
 
-var PersonalLoanVariation = new keystone.List('PersonalLoanVariation');
+var PersonalLoanVariation = new keystone.List('PersonalLoanVariation')
 
 PersonalLoanVariation.add({
 	company: {
@@ -47,70 +47,70 @@ PersonalLoanVariation.add({
 	comparisonRatePersonalManual: { type: Types.Number, initial: true },
 	comparisonRateCar: { type: Types.Number, noedit: true },
 	comparisonRateCarManual: { type: Types.Number, initial: true },
-});
+})
 
-PersonalLoanVariation.schema.index({ company: 1, product: 1, name: 1 }, { unique: true });
+PersonalLoanVariation.schema.index({ company: 1, product: 1, name: 1 }, { unique: true })
 
 PersonalLoanVariation.schema.pre('validate', function (next) {
 	if (this.maxRate < this.minRate) {
-		next(Error('Max Rate can not be lower than Min Rate'));
+		next(Error('Max Rate can not be lower than Min Rate'))
 	}
 	if (this.comparisonRatePersonalManual && this.comparisonRatePersonalManual < this.minRate) {
-		next(Error('Comparison Rate Personal Manual can not be lower than Min Rate'));
+		next(Error('Comparison Rate Personal Manual can not be lower than Min Rate'))
 	}
 	if (this.comparisonRateCarManual && this.comparisonRateCarManual < this.minRate) {
-		next(Error('Comparison Rate Car Manual can not be lower than Min Rate'));
+		next(Error('Comparison Rate Car Manual can not be lower than Min Rate'))
 	}
 	if (this.introRate > this.minRate) {
-		next(Error('Intro Rate can not be higher than Min Rate'));
+		next(Error('Intro Rate can not be higher than Min Rate'))
 	}
-	let thiz = this;
-	let promise = PersonalLoan.model.find({ _id: this.product }).lean().exec();
-	promise.then(function (personalLoans) {
-		let personalLoan = personalLoans[0];
+	let thiz = this
+	let promise = PersonalLoan.model.find({ _id: this.product }).lean().exec()
+	promise.then((personalLoans) => {
+		let personalLoan = personalLoans[0]
 		if (personalLoan.isPersonalLoan === availableOptions.no && thiz.comparisonRatePersonalManual) {
-			next(Error('This product is not for personal loan, can not have a personal loan comparison rate'));
+			next(Error('This product is not for personal loan, can not have a personal loan comparison rate'))
 		}
 		if (personalLoan.isCarLoan === availableOptions.no && thiz.comparisonRateCarManual) {
-			next(Error('This product is not for car loan, can not have a car loan comparison rate'));
+			next(Error('This product is not for car loan, can not have a car loan comparison rate'))
 		}
-		next();
-	});
-});
+		next()
+	})
+})
 
 PersonalLoanVariation.schema.pre('save', function (next) {
-	let thiz = this;
-	let promise = PersonalLoan.model.find({ _id: this.product }).exec();
-	promise.then(function (personalLoans) {
-		let personalLoan = personalLoans[0].toObject();
-		let loan = {};
-		loan.yearlyRate = thiz.minRate;
-		loan.yearlyIntroRate = thiz.introRate;
-		loan.introTermInMonth = thiz.introTerm;
-		loan.totalMonthlyFees = personalLoan.totalMonthlyFee;
-		loan.totalYearlyFees = personalLoan.totalYearlyFee;
+	let thiz = this
+	let promise = PersonalLoan.model.find({ _id: this.product }).exec()
+	promise.then((personalLoans) => {
+		let personalLoan = personalLoans[0].toObject()
+		let loan = {}
+		loan.yearlyRate = thiz.minRate
+		loan.yearlyIntroRate = thiz.introRate
+		loan.introTermInMonth = thiz.introTerm
+		loan.totalMonthlyFees = personalLoan.totalMonthlyFee
+		loan.totalYearlyFees = personalLoan.totalYearlyFee
 		if (personalLoan.isPersonalLoan === availableOptions.yes) {
-			loan.totalUpfrontFees = personalLoan.personalLoanTotalUpfrontFee;
-			let comparisonRate = ComparisonRateCalculator.calculatePersonalLoanComparisonRate(loan);
-			thiz.comparisonRatePersonal = comparisonRate;
+			loan.totalUpfrontFees = personalLoan.personalLoanTotalUpfrontFee
+			let comparisonRate = ComparisonRateCalculator.calculatePersonalLoanComparisonRate(loan)
+			thiz.comparisonRatePersonal = comparisonRate
 		} else {
-			thiz.comparisonRatePersonal = null;
+			thiz.comparisonRatePersonal = null
 		}
 		if (personalLoan.isCarLoan === availableOptions.yes) {
-			loan.totalUpfrontFees = personalLoan.carLoanTotalUpfrontFee;
-			let comparisonRate = ComparisonRateCalculator.calculateCarlLoanComparisonRate(loan);
-			thiz.comparisonRateCar = comparisonRate;
+			loan.totalUpfrontFees = personalLoan.carLoanTotalUpfrontFee
+			let comparisonRate = ComparisonRateCalculator.calculateCarlLoanComparisonRate(loan)
+			thiz.comparisonRateCar = comparisonRate
 		} else {
-			thiz.comparisonRateCar = null;
+			thiz.comparisonRateCar = null
 		}
-		next();
-	});
-});
+		next()
+	})
+})
 
-PersonalLoan.schema.post('remove', function (next) {
-	PersonalLoanVariation.model.remove({ product: Object(next._id) }).exec();
-});
+PersonalLoan.schema.post('remove', (next) => {
+	PersonalLoanVariation.model.remove({ product: Object(next._id) }).exec()
+})
 
-PersonalLoanVariation.track = true;
-PersonalLoanVariation.defaultColumns = 'name, company, product, minLoanAmount, maxLoanAmount, minLoanTerm, maxLoanTerm, comparisonRatePersonal, comparisonRatePersonalManual, comparisonRateCar, comparisonRateCarManual';
-PersonalLoanVariation.register();
+PersonalLoanVariation.track = true
+PersonalLoanVariation.defaultColumns = 'name, company, product, minLoanAmount, maxLoanAmount, minLoanTerm, maxLoanTerm, comparisonRatePersonal, comparisonRatePersonalManual, comparisonRateCar, comparisonRateCarManual'
+PersonalLoanVariation.register()

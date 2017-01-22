@@ -8,4 +8,4 @@ module.exports = [
   { value: 'superannuation', label: 'Superannuation' },
   { value: 'pension', label: 'Pension' },
   { value: 'managed-funds', label: 'Managed Funds' },
-];
+]

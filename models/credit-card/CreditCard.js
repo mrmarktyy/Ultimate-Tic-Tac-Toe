@@ -1,15 +1,15 @@
-var keystone = require('keystone');
-var uuid = require('node-uuid');
-var availableOptions = require('../attributes/availableOptions');
-var productCommonAttributes = require('../common/ProductCommonAttributes');
-var { imageStorage } = require('../helpers/fileStorage');
-var logger = require('../../utils/logger');
+var keystone = require('keystone')
+var uuid = require('node-uuid')
+var availableOptions = require('../attributes/availableOptions')
+var productCommonAttributes = require('../common/ProductCommonAttributes')
+var { imageStorage } = require('../helpers/fileStorage')
+var logger = require('../../utils/logger')
 
-var Types = keystone.Field.Types;
+var Types = keystone.Field.Types
 
-var CreditCard = new keystone.List('CreditCard');
+var CreditCard = new keystone.List('CreditCard')
 
-CreditCard.add(productCommonAttributes);
+CreditCard.add(productCommonAttributes)
 
 CreditCard.add({
 	company: {
@@ -153,40 +153,39 @@ CreditCard.add({
 	bonusPoints: { type: Types.Number, min: 0 },
 	bonusPointsConditions: { type: Types.Text, label: 'Bonus Pts Cond' },
 	cardArt: imageStorage('creditcard'),
-});
+})
 
 CreditCard.schema.pre('validate', function (next) {
 	if (([undefined, null].indexOf(this.offerExpires) < 0) && (this.offerExpires <= new Date())) {
-		logger.error(this.offerExpires);
-		next(Error('Offer Expires has to be greater than today'));
+		logger.error(this.offerExpires)
+		next(Error('Offer Expires has to be greater than today'))
 	}
 	if ((this.purchaseRateIntro !== undefined) && (this.purchaseRateIntro > this.purchaseRateStandard)) {
-		next(Error('Purchase rate intro should be less than purchase rate standard'));
+		next(Error('Purchase rate intro should be less than purchase rate standard'))
 	}
 	if ((this.balanceTransferIntro !== undefined) && (this.balanceTransferIntro > this.balanceTransferStandard)) {
-		next(Error('Balance transfer intro should be less than balance transfer standard'));
+		next(Error('Balance transfer intro should be less than balance transfer standard'))
 	}
 	if ((this.cashAdvanceRateIntro !== undefined) && (this.cashAdvanceRateIntro > this.cashAdvanceRateStandard)) {
-		next(Error('Cash advance rate intro should be less than cash advance rate standard'));
+		next(Error('Cash advance rate intro should be less than cash advance rate standard'))
 	}
 
-	next();
-});
-
+	next()
+})
 
 CreditCard.schema.pre('save', function (next) {
 	if (!this.uuid) {
-		this.uuid = uuid.v4();
+		this.uuid = uuid.v4()
 	}
-	this.isLowRate = this.purchaseRateStandard <= 14.0;
-	this.isLowFee = this.annualFeeStandard <= 50;
-	this.isReward = this.rewardProgram === undefined ? false : true;
+	this.isLowRate = this.purchaseRateStandard <= 14.0
+	this.isLowFee = this.annualFeeStandard <= 50
+	this.isReward = this.rewardProgram !== undefined
 
-	next();
-});
+	next()
+})
 
-CreditCard.schema.index({ company: 1, name: 1 }, { unique: true });
+CreditCard.schema.index({ company: 1, name: 1 }, { unique: true })
 
-CreditCard.track = true;
-CreditCard.defaultColumns = 'name, company, uuid';
-CreditCard.register();
+CreditCard.track = true
+CreditCard.defaultColumns = 'name, company, uuid'
+CreditCard.register()

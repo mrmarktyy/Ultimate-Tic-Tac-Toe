@@ -11,7 +11,7 @@ exports.create = {
 	User: [
 		{ 'name.first': 'Admin', 'name.last': 'User', 'email': 'gareth.robinson@ratecity.com.au', 'password': 'computer', 'isAdmin': true },
 	],
-};
+}
 
 /*
 

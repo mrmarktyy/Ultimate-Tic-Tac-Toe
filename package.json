@@ -46,6 +46,7 @@
   "scripts": {
     "test": "mocha --recursive",
     "lint": "eslint .",
+		"lint:fix": "eslint . --fix",
     "start": "node --harmony_async_await keystone.js",
     "lint:changed": "LIST=`git diff-index --name-only HEAD | grep '.jsx\\{0,1\\}'$`; if [ \"$LIST\" ]; then eslint $LIST; fi",
     "lint:changed:fix": "LIST=`git diff-index --name-only HEAD | grep '.jsx\\{0,1\\}'$`; if [ \"$LIST\" ]; then eslint $LIST --fix; fi",
@@ -53,7 +54,6 @@
   },
   "precommit": {
     "run": [
-      "lint:changed"
     ]
   }
 }

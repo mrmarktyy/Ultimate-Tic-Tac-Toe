@@ -5,4 +5,4 @@ exports.create = {
     { 'name': 'Gift Card' },
     { 'name': 'International Flights' },
   ],
-};
+}

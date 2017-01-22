@@ -1,9 +1,9 @@
-var keystone = require('keystone');
-var { imageStorage } = require('../helpers/fileStorage');
-var verticals = require('../helpers/verticals');
-var Types = keystone.Field.Types;
+var keystone = require('keystone')
+var { imageStorage } = require('../helpers/fileStorage')
+var verticals = require('../helpers/verticals')
+var Types = keystone.Field.Types
 
-var FeaturedProduct = new keystone.List('FeaturedProduct');
+var FeaturedProduct = new keystone.List('FeaturedProduct')
 
 FeaturedProduct.add({
   uuid: { type: Types.Text, initial: true },
@@ -16,18 +16,18 @@ FeaturedProduct.add({
   enabled: { type: Types.Boolean, indent: true, required: true, default: true, initial: true },
   notes: { type: Types.Text, required: false, initial: true},
   image: imageStorage('featuredProduct'),
-});
+})
 
 FeaturedProduct.schema.pre('validate', function (next) {
   if ((this.dateEnd !== null) && (this.dateEnd < this.dateStart)) {
-    next(Error('End date has to be greater than start date'));
+    next(Error('End date has to be greater than start date'))
   } else {
-    next();
+    next()
   }
-});
+})
 
-FeaturedProduct.schema.index({ uuid: 1, vertical: 1 }, { unique: true });
+FeaturedProduct.schema.index({ uuid: 1, vertical: 1 }, { unique: true })
 
-FeaturedProduct.track = true;
-FeaturedProduct.defaultColumns = 'uuid, vertical, title, notes, sortOrder, dateStart, dateEnd';
-FeaturedProduct.register();
+FeaturedProduct.track = true
+FeaturedProduct.defaultColumns = 'uuid, vertical, title, notes, sortOrder, dateStart, dateEnd'
+FeaturedProduct.register()

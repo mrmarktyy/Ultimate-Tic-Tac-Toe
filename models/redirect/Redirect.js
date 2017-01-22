@@ -1,7 +1,7 @@
-var keystone = require('keystone');
-var Types = keystone.Field.Types;
+var keystone = require('keystone')
+var Types = keystone.Field.Types
 
-var Redirect = new keystone.List('Redirect');
+var Redirect = new keystone.List('Redirect')
 
 Redirect.add({
   from: { type: Types.Text, required: true, initial: true, unique: true },
@@ -12,9 +12,9 @@ Redirect.add({
     required: true,
     initial: true,
   },
-});
+})
 
-Redirect.defaultColumns = 'from, to, status';
-Redirect.track = true;
-Redirect.register();
+Redirect.defaultColumns = 'from, to, status'
+Redirect.track = true
+Redirect.register()
 

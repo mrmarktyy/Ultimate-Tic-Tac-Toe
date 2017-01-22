@@ -1,28 +1,28 @@
-var fetch = require('node-fetch');
-var _ = require('lodash');
-var logger = require('../utils/logger');
+var fetch = require('node-fetch')
+var _ = require('lodash')
+var logger = require('../utils/logger')
 
 class SalesforceClient {
 	constructor (username = process.env.SALESFORCE_USERNAME, password = process.env.SALESFORCE_PASSWORD, secret = process.env.SALESFORCE_SECRET, clientId = process.env.SALESFORCE_KEY) {
-		this.username = username;
-		this.password = password;
-		this.clientId = clientId;
-		this.secret = secret;
-		this.maxRequestSize = 200;
-		this.authorization = null;
+		this.username = username
+		this.password = password
+		this.clientId = clientId
+		this.secret = secret
+		this.maxRequestSize = 200
+		this.authorization = null
 	}
 	getMax () {
-		return this.maxRequestSize;
+		return this.maxRequestSize
 	}
 	async getAuthorization () {
 		if (this.authorization) {
-			return this.authorization;
+			return this.authorization
 		} else {
-			let authenticationBody = 'grant_type=password';
-			authenticationBody += '&client_id=' + this.clientId;
-			authenticationBody += '&client_secret=' + this.secret;
-			authenticationBody += '&username=' + this.username;
-			authenticationBody += '&password=' + this.password;
+			let authenticationBody = 'grant_type=password'
+			authenticationBody += '&client_id=' + this.clientId
+			authenticationBody += '&client_secret=' + this.secret
+			authenticationBody += '&username=' + this.username
+			authenticationBody += '&password=' + this.password
 
 			try {
 				const response = await fetch(process.env.SALESFORCE_LOGIN_URL, {
@@ -31,46 +31,46 @@ class SalesforceClient {
 					headers: { 'Content-Type': 'application/x-www-form-urlencoded',
 						'Accept': 'application/json',
 					},
-				});
+				})
 
-				let jsonResponse = await response.json();
+				let jsonResponse = await response.json()
 				if (jsonResponse.error) {
-					throw jsonResponse.error_description;
+					throw jsonResponse.error_description
 				}
-				this.authorization = jsonResponse.token_type + ' ' + jsonResponse.access_token;
-				return this.authorization;
+				this.authorization = jsonResponse.token_type + ' ' + jsonResponse.access_token
+				return this.authorization
 			} catch (error) {
-				logger.error(error);
-				throw error;
+				logger.error(error)
+				throw error
 			}
 		}
 	}
 	async pushCompanies (allCompanies) {
-		let status = 'ok';
-		let companiesChunk = _.chunk(allCompanies, this.maxRequestSize);
+		let status = 'ok'
+		let companiesChunk = _.chunk(allCompanies, this.maxRequestSize)
 		for (var chunk = 0; chunk < companiesChunk.length; chunk++) {
-			let companiesLot = companiesChunk[chunk];
-			let companiesBlock = [];
+			let companiesLot = companiesChunk[chunk]
+			let companiesBlock = []
 			for (var lot = 0; lot < companiesLot.length; lot++) {
 				companiesBlock.push({
 					RC_Company_ID__c: companiesLot[lot].uuid,
 					Name: companiesLot[lot].name,
-				});
+				})
 			}
-			let body = this.salesforcify({ acct: companiesBlock });
-			let postings = await this.post(process.env.SALESFORCE_COMPANIES_URL, body);
+			let body = this.salesforcify({ acct: companiesBlock })
+			let postings = await this.post(process.env.SALESFORCE_COMPANIES_URL, body)
 			if (postings !== 200) {
-				status = postings;
-			};
+				status = postings
+			}
 		}
-		return status;
-	};
+		return status
+	}
 	async pushProducts (vertical, allProducts) {
-		let status = 'ok';
-		let productsChunk = _.chunk(allProducts, this.maxRequestSize);
+		let status = 'ok'
+		let productsChunk = _.chunk(allProducts, this.maxRequestSize)
 		for (var chunk = 0; chunk < productsChunk.length; chunk++) {
-			let productsLot = productsChunk[chunk];
-			let productsBlock = [];
+			let productsLot = productsChunk[chunk]
+			let productsBlock = []
 			for (var lot = 0; lot < productsLot.length; lot++) {
 				productsBlock.push({
 					RC_Product_ID__c: productsLot[lot].uuid,
@@ -81,15 +81,15 @@ class SalesforceClient {
 					RC_Product_Archived__c: false,
 					RC_Product_Active__c: productsLot[lot].goToSite,
 					RC_Product_Url__c: productsLot[lot].applyUrl,
-				});
+				})
 			}
-			let body = this.salesforcify({ product: productsBlock });
-			let postings = await this.post(process.env.SALESFORCE_PRODUCTS_URL, body);
+			let body = this.salesforcify({ product: productsBlock })
+			let postings = await this.post(process.env.SALESFORCE_PRODUCTS_URL, body)
 			if (!postings) {
-				status = postings;
-			};
+				status = postings
+			}
 		}
-		return status;
+		return status
 	}
 	async post (url, attributes) {
 		try {
@@ -101,20 +101,20 @@ class SalesforceClient {
 					'Authorization': await (this.getAuthorization()),
 					'Accept': 'application/json',
 				},
-			});
+			})
 			if (response.status !== 200) {
-				let salesforceError = 'Salesforce ' + url + ' responded with ' + response.status;
-				throw salesforceError;
+				let salesforceError = 'Salesforce ' + url + ' responded with ' + response.status
+				throw salesforceError
 			}
-			return 200;
+			return 200
 		} catch (error) {
-			logger.error(error);
-			return error;
+			logger.error(error)
+			return error
 		}
-	};
+	}
 	salesforcify (map) {
-		return ({ data: map });
-	};
+		return ({ data: map })
+	}
 }
 
-module.exports = SalesforceClient;
+module.exports = SalesforceClient

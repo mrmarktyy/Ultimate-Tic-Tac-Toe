@@ -1,23 +1,23 @@
-var keystone = require('keystone');
-var Types = keystone.Field.Types;
+var keystone = require('keystone')
+var Types = keystone.Field.Types
 
 const imageStorage = function (namespace) {
   if (process.env.CLOUDINARY_URL) {
     return {
       type: Types.CloudinaryImage,
       folder: namespace,
-      autoCleanup : true
+      autoCleanup: true,
     }
   } else {
     return  {
       type: Types.File,
-      storage:  new keystone.Storage({
+      storage: new keystone.Storage({
         adapter: keystone.Storage.Adapters.FS,
         fs: {
           path: keystone.expandPath('./public/uploads'),
           publicPath: '/public/uploads',
-        }
-      })
+        },
+      }),
     }
   }
 }
@@ -43,11 +43,11 @@ const addImage = function (model, namespace, options = {initial: true, required:
         return `http://localhost:4000/uploads/${this[namespace].filename}`
       }
     }
-  });
+  })
 
   model.add({
     [namespace]: Object.assign(imageStorage(`${model.path}-${namespace}`), options),
-  });
+  })
 
 }
 

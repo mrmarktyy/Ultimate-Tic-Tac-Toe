@@ -1,7 +1,7 @@
-var keystone = require('keystone');
-var Types = keystone.Field.Types;
+var keystone = require('keystone')
+var Types = keystone.Field.Types
 
-var Redemption = new keystone.List('Redemption');
+var Redemption = new keystone.List('Redemption')
 
 Redemption.add({
   program: {
@@ -30,10 +30,10 @@ Redemption.add({
     noedit: false,
   },
   pointsRequired: { type: Types.Number, min: 0, initial: true, required: true},
-});
+})
 
-Redemption.schema.index({ program: 1, redemptionType: 1, redemptionName: 1 }, { unique: true });
+Redemption.schema.index({ program: 1, redemptionType: 1, redemptionName: 1 }, { unique: true })
 
-Redemption.track = true;
-Redemption.defaultColumns = 'program, type, redemptionName, pointsRequired';
-Redemption.register();
+Redemption.track = true
+Redemption.defaultColumns = 'program, type, redemptionName, pointsRequired'
+Redemption.register()
