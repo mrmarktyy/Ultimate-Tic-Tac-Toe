@@ -46,4 +46,4 @@ exports.create = {
     { 'name': 'THAI Airlines', 'isReward': false, 'isPartner': true },
     { 'name': 'Virgin Atlantic', 'isReward': false, 'isPartner': true },
   ],
-};
+}

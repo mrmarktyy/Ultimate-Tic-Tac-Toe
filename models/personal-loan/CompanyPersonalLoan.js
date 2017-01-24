@@ -1,8 +1,8 @@
-var keystone = require('keystone');
-var Types = keystone.Field.Types;
-var availableOptions = require('../attributes/availableOptions');
+var keystone = require('keystone')
+var Types = keystone.Field.Types
+var availableOptions = require('../attributes/availableOptions')
 
-var CompanyPersonalLoan = new keystone.List('CompanyPersonalLoan');
+var CompanyPersonalLoan = new keystone.List('CompanyPersonalLoan')
 
 CompanyPersonalLoan.add({
 	company: {
@@ -29,20 +29,20 @@ CompanyPersonalLoan.add({
 	approvalTime: { type: Types.Number },
 	personalLoanBlurb: { type: Types.Code, height: 250, language: 'html' },
 	carLoanBlurb: { type: Types.Code, height: 250, language: 'html' },
-});
+})
 
 CompanyPersonalLoan.schema.pre('validate', function (next) {
-	let postcodeArrayLength = this.availablePostcodes.length;
+	let postcodeArrayLength = this.availablePostcodes.length
 	for (let i = 0; i < postcodeArrayLength; i++) {
 		if (this.availablePostcodes[i].length !== 4) {
-			next(Error('each available post code need to be exactly 4 digits'));
-			break;
+			next(Error('each available post code need to be exactly 4 digits'))
+			break
 		}
 	}
-	next();
-});
+	next()
+})
 
-CompanyPersonalLoan.track = true;
-CompanyPersonalLoan.defaultColumns = 'company, availableStates, applyInBranch, applyOnline, applyByMobileLender, applyByPhone, applyByBroker';
-CompanyPersonalLoan.drilldown = 'company';
-CompanyPersonalLoan.register();
+CompanyPersonalLoan.track = true
+CompanyPersonalLoan.defaultColumns = 'company, availableStates, applyInBranch, applyOnline, applyByMobileLender, applyByPhone, applyByBroker'
+CompanyPersonalLoan.drilldown = 'company'
+CompanyPersonalLoan.register()

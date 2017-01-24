@@ -1,4 +1,4 @@
-var fetch = require('node-fetch');
+var fetch = require('node-fetch')
 
 module.exports = function (modelName) {
   return function (model) {

@@ -1,27 +1,27 @@
 var personalLoanConstant = require('../models/constants/PersonalLoanConstant')
 
-function calculateComparisonRate(monthlyRate, loanAmount, loanTermInMonth, monthlyIntroRate, introTermInMonth, totalUpfrontFees, totalMonthlyFees, totalYearlyFees, totalEndOfLoanFees) {
+function calculateComparisonRate (monthlyRate, loanAmount, loanTermInMonth, monthlyIntroRate, introTermInMonth, totalUpfrontFees, totalMonthlyFees, totalYearlyFees, totalEndOfLoanFees) {
 	let cashflow = []
 	cashflow.push(toTwoDecimal(-loanAmount))
 
 	let remainingLoanTerm = loanTermInMonth
 	let remainingPrincipal = loanAmount
 	if (monthlyIntroRate && introTermInMonth) {
-		let repayment = PMT(monthlyIntroRate, remainingLoanTerm, -remainingPrincipal);
+		let repayment = PMT(monthlyIntroRate, remainingLoanTerm, -remainingPrincipal)
 		let i = introTermInMonth
 		while (i > 0) {
 			cashflow.push(toTwoDecimal(repayment))
-			remainingPrincipal = remainingPrincipal - (repayment - remainingPrincipal * monthlyIntroRate);
-			i--;
+			remainingPrincipal = remainingPrincipal - (repayment - remainingPrincipal * monthlyIntroRate)
+			i--
 		}
 		remainingLoanTerm = loanTermInMonth - introTermInMonth
 	}
-	let repayment = PMT(monthlyRate, remainingLoanTerm, -remainingPrincipal);
+	let repayment = PMT(monthlyRate, remainingLoanTerm, -remainingPrincipal)
 	for (let i = remainingLoanTerm; i > 0; i--) {
 		cashflow.push(toTwoDecimal(repayment))
 	}
 
-	let size = cashflow.length - 1; // last month payment is only interest + end of loan fee
+	let size = cashflow.length - 1 // last month payment is only interest + end of loan fee
 	for (let i = 0; i < size; i++) {
 		if (i == 0) {
 			cashflow[i] = cashflow[i] + totalUpfrontFees
@@ -33,11 +33,11 @@ function calculateComparisonRate(monthlyRate, loanAmount, loanTermInMonth, month
 	}
 	cashflow[size] = cashflow[size] + totalEndOfLoanFees //  add end of loan fees
 
-	var comparisonRate = IRR(cashflow);
+	var comparisonRate = IRR(cashflow)
 	return toTwoDecimal(comparisonRate * 12)
 }
 
-function toTwoDecimal(number) {
+function toTwoDecimal (number) {
 	return Number(Math.round(parseFloat(number) + 'e2') + 'e-2')
 }
 
@@ -49,7 +49,7 @@ exports.calculatePersonalLoanComparisonRate = function (data = {}) {
 		totalUpfrontFees = 0,
 		totalMonthlyFees = 0,
 		totalYearlyFees = 0,
-		totalEndOfLoanFees = 0
+		totalEndOfLoanFees = 0,
 	} = data
 
 	let monthlyRate = yearlyRate / 100 / 12
@@ -68,7 +68,7 @@ exports.calculateCarlLoanComparisonRate = function (data) {
 		totalUpfrontFees = 0,
 		totalMonthlyFees = 0,
 		totalYearlyFees = 0,
-		totalEndOfLoanFees = 0
+		totalEndOfLoanFees = 0,
 	} = data
 
 	let monthlyRate = yearlyRate / 100 / 12
@@ -79,7 +79,7 @@ exports.calculateCarlLoanComparisonRate = function (data) {
 	return calculateComparisonRate(monthlyRate, loanAmount, loanTermInMonth, monthlyIntroRate, introTermInMonth, totalUpfrontFees, totalMonthlyFees, totalYearlyFees, totalEndOfLoanFees)
 }
 
-function PMT(rate, nper, pv, fv, type) {
+function PMT (rate, nper, pv, fv, type) {
 	if (!fv) fv = 0
 	if (!type) type = 0
 
@@ -95,21 +95,23 @@ function PMT(rate, nper, pv, fv, type) {
 	return pmt
 }
 
-function IRR(CArray) {
-	min = 0.0;
-	max = 1.0;
+function IRR (CArray) {
+	let min = 0.0
+	let max = 1.0
+	let guest
+	let NPV
 	do {
-		guest = (min + max) / 2;
-		NPV = 0;
-		for (var j = 0; j < CArray.length; j++) {
-			NPV += CArray[j] / Math.pow((1 + guest), j);
+		guest = (min + max) / 2
+		NPV = 0
+		for (let j = 0; j < CArray.length; j++) {
+			NPV += CArray[j] / Math.pow((1 + guest), j)
 		}
 		if (NPV > 0) {
-			min = guest;
+			min = guest
 		}
 		else {
-			max = guest;
+			max = guest
 		}
-	} while (Math.abs(NPV) > 0.000001);
-	return guest * 100;
+	} while (Math.abs(NPV) > 0.000001)
+	return guest * 100
 }

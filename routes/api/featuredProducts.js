@@ -1,10 +1,10 @@
-var keystone = require('keystone');
+var keystone = require('keystone')
 
-var FeaturedProduct = keystone.list('FeaturedProduct');
-var logger = require('../../utils/logger');
+var FeaturedProduct = keystone.list('FeaturedProduct')
+var logger = require('../../utils/logger')
 
 exports.list = function (req, res) {
-  let datenow = new Date();
+  let datenow = new Date()
   FeaturedProduct.model.find({
     $or: [
         { dateStart: { $lte: datenow }, enabled: true, dateEnd: null },
@@ -14,10 +14,10 @@ exports.list = function (req, res) {
     )
     .lean()
     .exec()
-    .then(function (products) {
-      res.jsonp(products);
-    }).catch(function (e) {
-      logger.error(e);
-      res.jsonp({ error: e });
-    });
-};
+    .then((products) => {
+      res.jsonp(products)
+    }).catch((e) => {
+      logger.error(e)
+      res.jsonp({ error: e })
+    })
+}

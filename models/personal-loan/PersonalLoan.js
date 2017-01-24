@@ -1,15 +1,15 @@
-var keystone = require('keystone');
-var uuid = require('node-uuid');
-var frequency = require('../attributes/frequency');
-var availableOptions = require('../attributes/availableOptions');
-var productCommonAttributes = require('../common/ProductCommonAttributes');
-var personalLoanConstant = require('../constants/PersonalLoanConstant');
-var utils = keystone.utils;
-var Types = keystone.Field.Types;
+var keystone = require('keystone')
+var uuid = require('node-uuid')
+var frequency = require('../attributes/frequency')
+var availableOptions = require('../attributes/availableOptions')
+var productCommonAttributes = require('../common/ProductCommonAttributes')
+var personalLoanConstant = require('../constants/PersonalLoanConstant')
+var utils = keystone.utils
+var Types = keystone.Field.Types
 
-var PersonalLoan = new keystone.List('PersonalLoan');
+var PersonalLoan = new keystone.List('PersonalLoan')
 
-PersonalLoan.add(productCommonAttributes);
+PersonalLoan.add(productCommonAttributes)
 
 PersonalLoan.add({
 	existsOnSorbet: { type: Types.Boolean, indent: true, default: false },
@@ -99,93 +99,93 @@ PersonalLoan.add({
 	earlyExitPenaltyFeePeriod: { type: Types.Number, min: 0 },
 	hasEarlyExitPenaltyFeeVaries: { type: Types.Select, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown },
 	otherFees: { type: Types.Text },
-});
+})
 
-PersonalLoan.relationship({ path: 'personalLoanVariations', ref: 'PersonalLoanVariation', refPath: 'product' });
+PersonalLoan.relationship({ path: 'personalLoanVariations', ref: 'PersonalLoanVariation', refPath: 'product' })
 
-PersonalLoan.schema.index({ company: 1, name: 1 }, { unique: true });
-PersonalLoan.schema.index({ company: 1, slug: 1 }, { unique: true });
-PersonalLoan.schema.set('toObject', { getters: true });
-PersonalLoan.schema.set('toJSON', { getters: true, virtuals: false });
+PersonalLoan.schema.index({ company: 1, name: 1 }, { unique: true })
+PersonalLoan.schema.index({ company: 1, slug: 1 }, { unique: true })
+PersonalLoan.schema.set('toObject', { getters: true })
+PersonalLoan.schema.set('toJSON', { getters: true, virtuals: false })
 
 PersonalLoan.schema.pre('validate', function (next) {
 	if ((this.applicationFeesDollar === undefined) && (this.applicationFeesPercent === undefined)) {
-		next(Error('Application Fee need to fill in either Dollar or Percent'));
+		next(Error('Application Fee need to fill in either Dollar or Percent'))
 	}
 	if ((this.extraRepaymentDollarLimits !== undefined) && (this.isExtraRepaymentsAllowed !== availableOptions.yes)) {
-		next(Error('Extra Repayments must be YES if Extra Repayment Dollar Limits is not empty'));
+		next(Error('Extra Repayments must be YES if Extra Repayment Dollar Limits is not empty'))
 	}
 	if ((this.extraRepaymentDollarLimitsPeriod !== undefined) && (this.isExtraRepaymentsAllowed !== availableOptions.yes)) {
-		next(Error('Extra Repayments must be YES if Extra Repayment Dollar Limits Period is not empty'));
+		next(Error('Extra Repayments must be YES if Extra Repayment Dollar Limits Period is not empty'))
 	}
 	if ((this.extraRepaymentPercentageLimits !== undefined) && (this.isExtraRepaymentsAllowed !== availableOptions.yes)) {
-		next(Error('Extra Repayments must be YES if Extra Repayment Percentage Limits is not empty'));
+		next(Error('Extra Repayments must be YES if Extra Repayment Percentage Limits is not empty'))
 	}
 	if ((this.extraRepaymentPercentageLimitsPeriod !== undefined) && (this.isExtraRepaymentsAllowed !== availableOptions.yes)) {
-		next(Error('Extra Repayments must be YES if Extra Repayment Percentage Limits Period is not empty'));
+		next(Error('Extra Repayments must be YES if Extra Repayment Percentage Limits Period is not empty'))
 	}
 	if ((this.extraRepaymentDollarLimits === undefined) !== (this.extraRepaymentDollarLimitsPeriod === undefined)) {
-		next(Error('Extra Repayments Dollar limits and Extra Repayment Dollar Limits Period must both empty or not empty'));
+		next(Error('Extra Repayments Dollar limits and Extra Repayment Dollar Limits Period must both empty or not empty'))
 	}
 	if ((this.extraRepaymentPercentageLimits === undefined) !== (this.extraRepaymentPercentageLimitsPeriod === undefined)) {
-		next(Error('Extra Repayments Percentage limits and Extra Repayment Percentage Limits Period must both empty or not empty'));
+		next(Error('Extra Repayments Percentage limits and Extra Repayment Percentage Limits Period must both empty or not empty'))
 	}
-	next();
-});
+	next()
+})
 
 PersonalLoan.schema.virtual('personalLoanTotalUpfrontFee').get(function () {
 	if (this.isPersonalLoan === availableOptions.yes) {
 		if (this.applicationFeesDollar != null) {
-			return this.applicationFeesDollar;
+			return this.applicationFeesDollar
 		} else if (this.applicationFeesPercent != null) {
-			return this.applicationFeesPercent * personalLoanConstant.PERSONAL_LOAN_DEFAULT_LOAN_AMOUNT * 0.01;
+			return this.applicationFeesPercent * personalLoanConstant.PERSONAL_LOAN_DEFAULT_LOAN_AMOUNT * 0.01
 		}
 	} else {
-		return null;
+		return null
 	}
-});
+})
 
 PersonalLoan.schema.virtual('carLoanTotalUpfrontFee').get(function () {
 	if (this.isCarLoan === availableOptions.yes) {
 		if (this.applicationFeesDollar != null) {
-			return this.applicationFeesDollar;
+			return this.applicationFeesDollar
 		} else if (this.applicationFeesPercent != null) {
-			return this.applicationFeesPercent * personalLoanConstant.CAR_LOAN_DEFAULT_LOAN_AMOUNT * 0.01;
+			return this.applicationFeesPercent * personalLoanConstant.CAR_LOAN_DEFAULT_LOAN_AMOUNT * 0.01
 		}
 	} else {
-		return null;
+		return null
 	}
-});
+})
 
 PersonalLoan.schema.virtual('totalMonthlyFee').get(function () {
 	if (this.ongoingFeesFrequency === 'Monthly') {
-		return this.ongoingFees;
+		return this.ongoingFees
 	} else {
-		return 0;
+		return 0
 	}
-});
+})
 
 PersonalLoan.schema.virtual('totalYearlyFee').get(function () {
 	if (this.ongoingFeesFrequency === 'Annually') {
-		return this.ongoingFees;
+		return this.ongoingFees
 	} else {
-		return 0;
+		return 0
 	}
-});
+})
 
 PersonalLoan.schema.pre('save', function (next) {
 	if (!this.uuid) {
-		this.uuid = uuid.v4();
+		this.uuid = uuid.v4()
 	}
 	if (!this.slug) {
-		let slug = utils.slug(this.name.toLowerCase());
-		this.slug = slug;
+		let slug = utils.slug(this.name.toLowerCase())
+		this.slug = slug
 	}
-	next();
-});
+	next()
+})
 
-PersonalLoan.track = true;
-PersonalLoan.defaultColumns = 'name, company, isCarLoan, isPersonalLoan, applicationFeesDollar, applicationFeesPercent';
-PersonalLoan.searchFields = 'name, legacyCode';
-PersonalLoan.drilldown = 'company';
-PersonalLoan.register();
+PersonalLoan.track = true
+PersonalLoan.defaultColumns = 'name, company, isCarLoan, isPersonalLoan, applicationFeesDollar, applicationFeesPercent'
+PersonalLoan.searchFields = 'name, legacyCode'
+PersonalLoan.drilldown = 'company'
+PersonalLoan.register()

@@ -1,5 +1,5 @@
-var keystone = require('keystone');
-var Types = keystone.Field.Types;
+var keystone = require('keystone')
+var Types = keystone.Field.Types
 
 module.exports = {
 	name: { type: Types.Text, required: true, initial: true, index: true },
@@ -9,4 +9,4 @@ module.exports = {
 	displayName: { type: Types.Text, required: true, initial: true },
 	isDiscontinued: { type: Types.Boolean, indent: true, default: false },
 	promotedOrder: { type: Types.Select, options: [{ value: '', label: 'None' }, { value: '1', label: '1 - First' }, 2, 3, 4, 5, 6, 7, 8, 9, 10], default: '' },
-};
+}

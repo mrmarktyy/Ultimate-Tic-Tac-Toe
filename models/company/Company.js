@@ -1,9 +1,9 @@
-var keystone = require('keystone');
-var uuid = require('node-uuid');
-var Types = keystone.Field.Types;
-var { imageStorage } = require('../helpers/fileStorage');
+var keystone = require('keystone')
+var uuid = require('node-uuid')
+var Types = keystone.Field.Types
+var { imageStorage } = require('../helpers/fileStorage')
 
-var Company = new keystone.List('Company');
+var Company = new keystone.List('Company')
 
 Company.add({
 	name: { type: Types.Text, required: true, index: true },
@@ -27,20 +27,20 @@ Company.add({
 	searchKeyword: { type: Types.TextArray },
 	logo: imageStorage('company'),
 	blurb: { type: Types.Code, height: 250, language: 'html' },
-});
+})
 
-Company.relationship({ path: 'ATMs', ref: 'ATM', refPath: 'company' });
-Company.relationship({ path: 'Branches', ref: 'Branch', refPath: 'company' });
+Company.relationship({ path: 'ATMs', ref: 'ATM', refPath: 'company' })
+Company.relationship({ path: 'Branches', ref: 'Branch', refPath: 'company' })
 
 Company.schema.pre('save', function (next) {
 	if (!this.uuid) {
-		this.uuid = uuid.v4();
+		this.uuid = uuid.v4()
 	}
-	next();
-});
+	next()
+})
 
-Company.track = true;
-Company.defaultSort = 'name';
-Company.defaultColumns = 'name, url, displayName, code, searchKeyword, createdAt';
-Company.searchFields = 'name, url, displayName, code, searchKeyword';
-Company.register();
+Company.track = true
+Company.defaultSort = 'name'
+Company.defaultColumns = 'name, url, displayName, code, searchKeyword, createdAt'
+Company.searchFields = 'name, url, displayName, code, searchKeyword'
+Company.register()

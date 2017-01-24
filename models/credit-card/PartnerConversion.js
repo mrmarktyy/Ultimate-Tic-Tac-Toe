@@ -1,7 +1,7 @@
-var keystone = require('keystone');
-var Types = keystone.Field.Types;
+var keystone = require('keystone')
+var Types = keystone.Field.Types
 
-var PartnerConversion = new keystone.List('PartnerConversion');
+var PartnerConversion = new keystone.List('PartnerConversion')
 
 PartnerConversion.add({
   rewardProgram: {
@@ -25,10 +25,10 @@ PartnerConversion.add({
 
   },
   conversionRate: { type: Types.Number, min: 0, initial: true, required: true },
-});
+})
 
-PartnerConversion.schema.index({ rewardProgram: 1, partnerProgram: 1 }, { unique: true });
+PartnerConversion.schema.index({ rewardProgram: 1, partnerProgram: 1 }, { unique: true })
 
-PartnerConversion.track = true;
-PartnerConversion.defaultColumns = 'rewardProgram, partnerProgram, conversionRate';
-PartnerConversion.register();
+PartnerConversion.track = true
+PartnerConversion.defaultColumns = 'rewardProgram, partnerProgram, conversionRate'
+PartnerConversion.register()

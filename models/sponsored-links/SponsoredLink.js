@@ -1,9 +1,9 @@
-var keystone = require('keystone');
-var { imageStorage } = require('../helpers/fileStorage');
-var verticals = require('../helpers/verticals');
-var Types = keystone.Field.Types;
+var keystone = require('keystone')
+var { imageStorage } = require('../helpers/fileStorage')
+var verticals = require('../helpers/verticals')
+var Types = keystone.Field.Types
 
-var SponsoredLink = new keystone.List('SponsoredLink');
+var SponsoredLink = new keystone.List('SponsoredLink')
 
 SponsoredLink.add({
     company: {
@@ -12,7 +12,7 @@ SponsoredLink.add({
     required: true,
     initial: true,
     index: true,
-    noedit: false
+    noedit: false,
   },
   title: { type: Types.Text, required: true, initial: true, index: true },
   description: { type: Types.Text, required: true, initial: true },
@@ -32,20 +32,20 @@ SponsoredLink.add({
   applyUrl: { type: Types.Url, required: true, initial: true },
   messages: { type: Types.Text },
   image: imageStorage('sponsoredLink'),
-});
+})
 
 SponsoredLink.schema.pre('validate', function (next) {
   if ((this.dateEnd !== undefined) && (this.dateEnd < this.dateStart)) {
-    next(Error('End date has to be greater than start date'));
+    next(Error('End date has to be greater than start date'))
   } else {
-    next();
+    next()
   }
-});
+})
 
-SponsoredLink.schema.index({ company: 1, vertical: 1, title: 1 }, { unique: true });
+SponsoredLink.schema.index({ company: 1, vertical: 1, title: 1 }, { unique: true })
 
-SponsoredLink.track = true;
-SponsoredLink.defaultColumns = 'vertical, company, title, description, uuid, dateStart, dateEnd';
-SponsoredLink.drilldown = 'company';
-SponsoredLink.register();
+SponsoredLink.track = true
+SponsoredLink.defaultColumns = 'vertical, company, title, description, uuid, dateStart, dateEnd'
+SponsoredLink.drilldown = 'company'
+SponsoredLink.register()
 

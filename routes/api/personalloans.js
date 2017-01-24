@@ -1,114 +1,114 @@
-var keystone = require('keystone');
-var mongoose = require('mongoose');
-var changeCase = require('change-case');
+var keystone = require('keystone')
+var mongoose = require('mongoose')
+var changeCase = require('change-case')
 
-var PersonalLoan = keystone.list('PersonalLoan');
-var PersonalLoanVariation = keystone.list('PersonalLoanVariation');
-var CompanyPersonalLoan = keystone.list('CompanyPersonalLoan');
-var Monetize = mongoose.model('Monetize');
-var CompanyService = require('../../services/CompanyService');
-var logger = require('../../utils/logger');
+var PersonalLoan = keystone.list('PersonalLoan')
+var PersonalLoanVariation = keystone.list('PersonalLoanVariation')
+var CompanyPersonalLoan = keystone.list('CompanyPersonalLoan')
+var Monetize = mongoose.model('Monetize')
+var CompanyService = require('../../services/CompanyService')
+var logger = require('../../utils/logger')
 
 exports.list = function (req, res) {
 
-	let promise = PersonalLoan.model.find().populate('company').lean().exec();
+	let promise = PersonalLoan.model.find().populate('company').lean().exec()
 
-	let response = {};
-	let variationPromises = [];
-	promise.then(function (personalLoans) {
-		personalLoans.forEach(function (personalLoan) {
+	let response = {}
+	let variationPromises = []
+	promise.then((personalLoans) => {
+		personalLoans.forEach((personalLoan) => {
 			// change the value to titleCase
-			['repaymentType', 'securedType'].map(function (attribute) {
-				personalLoan[attribute] = changeCase.titleCase(personalLoan[attribute]);
-			});
-			personalLoan.company = CompanyService.fixLogoUrl(personalLoan.company);
+			['repaymentType', 'securedType'].map((attribute) => {
+				personalLoan[attribute] = changeCase.titleCase(personalLoan[attribute])
+			})
+			personalLoan.company = CompanyService.fixLogoUrl(personalLoan.company)
 			// this make sure API always return promotedOrder for all products
-			personalLoan.promotedOrder = 100 - parseInt(personalLoan.promotedOrder);
+			personalLoan.promotedOrder = 100 - parseInt(personalLoan.promotedOrder)
 
-			let promise = PersonalLoanVariation.model.find({ product: personalLoan._id }).lean().exec(function (err, variations) {
+			let promise = PersonalLoanVariation.model.find({ product: personalLoan._id }).lean().exec((err, variations) => {
 				if (err) {
-					logger.error('database error on find personal loan variation by product id');
-					return 'database error';
+					logger.error('database error on find personal loan variation by product id')
+					return 'database error'
 				}
-				let variationObjects = variations.map(function (v) {
-					return handleComparisonRate(v);
-				});
-				response[personalLoan._id] = Object.assign({}, personalLoan, response[personalLoan._id], { variations: variationObjects });
-			});
-			variationPromises.push(promise);
+				let variationObjects = variations.map((v) => {
+					return handleComparisonRate(v)
+				})
+				response[personalLoan._id] = Object.assign({}, personalLoan, response[personalLoan._id], { variations: variationObjects })
+			})
+			variationPromises.push(promise)
 
-			let plcPromise = CompanyPersonalLoan.model.find({ company: personalLoan.company._id }).lean().exec(function (err, plc) {
+			let plcPromise = CompanyPersonalLoan.model.find({ company: personalLoan.company._id }).lean().exec((err, plc) => {
 				if (err) {
-					logger.error('database error on find company personal loan vertical by company id');
-					return 'database error';
+					logger.error('database error on find company personal loan vertical by company id')
+					return 'database error'
 				}
-				response[personalLoan._id] = Object.assign({}, personalLoan, response[personalLoan._id], { companyVertical: plc });
-			});
-			variationPromises.push(plcPromise);
+				response[personalLoan._id] = Object.assign({}, personalLoan, response[personalLoan._id], { companyVertical: plc })
+			})
+			variationPromises.push(plcPromise)
 
-			let mntzPromise = Monetize.findOne({ product: personalLoan._id }).lean().exec(function (err, monetize) {
+			let mntzPromise = Monetize.findOne({ product: personalLoan._id }).lean().exec((err, monetize) => {
 				if (err) {
-					logger.error('database error on find monetize by product id');
-					return 'database error';
+					logger.error('database error on find monetize by product id')
+					return 'database error'
 				}
-				let applyUrl = null;
-				let enabled = false;
+				let applyUrl = null
+				let enabled = false
 				if (monetize !== null) {
-					applyUrl = monetize.applyUrl;
-					enabled = monetize.enabled;
+					applyUrl = monetize.applyUrl
+					enabled = monetize.enabled
 				}
-				response[personalLoan._id] = Object.assign({}, personalLoan, response[personalLoan._id], { gotoSiteUrl: applyUrl, gotoSiteEnabled: enabled });
-			});
-			variationPromises.push(mntzPromise);
-		});
+				response[personalLoan._id] = Object.assign({}, personalLoan, response[personalLoan._id], { gotoSiteUrl: applyUrl, gotoSiteEnabled: enabled })
+			})
+			variationPromises.push(mntzPromise)
+		})
 
 		Promise.all(variationPromises).then(() => {
-			let result = [];
+			let result = []
 			for (let key in response) {
-				result.push(response[key]);
+				result.push(response[key])
 			}
-			res.jsonp(result);
-		});
-	});
-};
+			res.jsonp(result)
+		})
+	})
+}
 
 exports.one = function (req, res) {
 
-	let id = req.params.id;
-	let promise = PersonalLoan.model.findById(id).populate('company').lean().exec();
+	let id = req.params.id
+	let promise = PersonalLoan.model.findById(id).populate('company').lean().exec()
 
-	promise.then(function (personalLoan) {
+	promise.then((personalLoan) => {
 		if (personalLoan == null) {
-			res.jsonp('{error: id not found }');
-			return;
+			res.jsonp('{error: id not found }')
+			return
 		}
-		personalLoan.company = CompanyService.fixLogoUrl(personalLoan.company);
-		PersonalLoanVariation.model.find({ product: personalLoan._id }).lean().exec(function (err, variation) {
+		personalLoan.company = CompanyService.fixLogoUrl(personalLoan.company)
+		PersonalLoanVariation.model.find({ product: personalLoan._id }).lean().exec((err, variation) => {
 			if (err) {
-				logger.error('database error on find personal loan variation by product id');
-				return 'database error';
+				logger.error('database error on find personal loan variation by product id')
+				return 'database error'
 			}
-			personalLoan.variations = variation;
-			res.jsonp(personalLoan);
-		});
-	}).catch(function (e) {
-		logger.error(e);
-		res.jsonp('{error:error}');
-	});
-};
+			personalLoan.variations = variation
+			res.jsonp(personalLoan)
+		})
+	}).catch((e) => {
+		logger.error(e)
+		res.jsonp('{error:error}')
+	})
+}
 
 function handleComparisonRate (variation) {
 	if (variation.comparisonRatePersonalManual) {
-		variation.personalLoanComparisonRate = variation.comparisonRatePersonalManual;
+		variation.personalLoanComparisonRate = variation.comparisonRatePersonalManual
 	} else {
-		variation.personalLoanComparisonRate = variation.comparisonRatePersonal;
+		variation.personalLoanComparisonRate = variation.comparisonRatePersonal
 	}
 
 	if (variation.comparisonRateCarManual) {
-		variation.carLoanComparisonRate = variation.comparisonRateCarManual;
+		variation.carLoanComparisonRate = variation.comparisonRateCarManual
 	} else {
-		variation.carLoanComparisonRate = variation.comparisonRateCar;
+		variation.carLoanComparisonRate = variation.comparisonRateCar
 	}
 
-	return variation;
+	return variation
 }

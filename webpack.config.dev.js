@@ -7,18 +7,18 @@ module.exports = {
   devtool: 'cheap-module-source-map',
   entry: [
     'webpack-hot-middleware/client',
-    './app/client'
+    './app/client',
   ],
   output: {
     path: path.join(__dirname, 'public'),
     filename: 'client.js',
-    publicPath: '/'
+    publicPath: '/',
   },
   resolve: {
-    extensions: ['', '.coffee', '.js', '.css']
+    extensions: ['', '.coffee', '.js', '.css'],
   },
   plugins: [
-    new webpack.HotModuleReplacementPlugin()
+    new webpack.HotModuleReplacementPlugin(),
   ],
   module: {
     loaders: [{
@@ -31,7 +31,7 @@ module.exports = {
         'style-loader',
         'css-loader?importLoaders=1',
         'postcss-loader',
-      ]
-    }]
-  }
+      ],
+    }],
+  },
 }

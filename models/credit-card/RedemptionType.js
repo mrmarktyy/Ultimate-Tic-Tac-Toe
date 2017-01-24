@@ -1,13 +1,13 @@
-var keystone = require('keystone');
-var Types = keystone.Field.Types;
+var keystone = require('keystone')
+var Types = keystone.Field.Types
 
-var RedemptionType = new keystone.List('RedemptionType');
+var RedemptionType = new keystone.List('RedemptionType')
 
 RedemptionType.add({
   name: { type: Types.Text, required: true, initial: true, index: true },
-});
+})
 
-RedemptionType.schema.index({ name: 1 }, { unique: true });
-RedemptionType.track = true;
-RedemptionType.defaultColumns = 'name';
-RedemptionType.register();
+RedemptionType.schema.index({ name: 1 }, { unique: true })
+RedemptionType.track = true
+RedemptionType.defaultColumns = 'name'
+RedemptionType.register()

@@ -13,4 +13,4 @@ exports.create = {
     { 'name': 'Sydney - Perth' },
     { 'name': 'Sydney - Tokyo' },
   ],
-};
+}
