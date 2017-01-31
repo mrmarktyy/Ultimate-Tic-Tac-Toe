@@ -54,7 +54,7 @@ class SalesforceClient {
 			for (var lot = 0; lot < companiesLot.length; lot++) {
 				companiesBlock.push({
 					RC_Company_ID__c: companiesLot[lot].uuid,
-					Name: companiesLot[lot].name,
+					Name: companiesLot[lot].displayName || companiesLot[lot].name,
 				})
 			}
 			let body = this.salesforcify({ acct: companiesBlock })
