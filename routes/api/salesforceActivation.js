@@ -2,8 +2,16 @@ var keystone = require('keystone')
 var salesforceVerticals = require('../../models/helpers/salesforceVerticals')
 var mongoose = require('mongoose')
 var Monetize = mongoose.model('Monetize')
+var Log = keystone.list('Log')
+var logger = require('../../utils/logger')
+
+function log(event, response) {
+  (new Log.model({event: event, message: JSON.stringify(response)})).save()
+}
 
 exports.monetize = function (req, res) {
+  log('salesforce-incoming', req.body)
+
   let products = req.body
   let missingUUIDs = []
   let promise
@@ -41,8 +49,10 @@ exports.monetize = function (req, res) {
       }
     })
     .catch((err) => {
-      console.log(err)
-      res.jsonp({ error: err })
+      logger.error(err)
+      var response = { error: err }
+      log('salesforce-response', response)
+      res.jsonp(response)
     })
 
     promises.push(promise)
@@ -50,9 +60,13 @@ exports.monetize = function (req, res) {
   }
   Promise.all(promises).then(() => {
     if (missingUUIDs.length === 0) {
-      res.status(200).jsonp({ text: 'OK' })
+      var response = { text: 'OK' }
+      log('salesforce-response', response)
+      res.status(200).jsonp(response)
     } else {
-      res.status(400).jsonp({ message: 'Missing UUIDs', missing: missingUUIDs })
+      var response = { message: 'Missing UUIDs', missing: missingUUIDs }
+      log('salesforce-response', response)
+      res.status(400).jsonp(response)
     }
   })
 }
