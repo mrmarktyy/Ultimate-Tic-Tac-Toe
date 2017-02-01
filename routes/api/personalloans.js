@@ -11,7 +11,7 @@ var logger = require('../../utils/logger')
 
 exports.list = function (req, res) {
 
-	let promise = PersonalLoan.model.find().populate('company').lean().exec()
+	let promise = PersonalLoan.model.find({ isDiscontinued: false }).populate('company').lean().exec()
 
 	let response = {}
 	let variationPromises = []
