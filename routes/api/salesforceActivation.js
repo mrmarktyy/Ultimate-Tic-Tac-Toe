@@ -6,7 +6,11 @@ var Log = keystone.list('Log')
 var logger = require('../../utils/logger')
 
 function log(event, response) {
-  (new Log.model({event: event, message: JSON.stringify(response)})).save()
+  (new Log.model({event: event, message: JSON.stringify(response)})).save(function(error) {
+    if (error) {
+      logger.error(error)
+    }
+  })
 }
 
 exports.monetize = function (req, res) {
