@@ -23,7 +23,6 @@ function checkAPIKey (req, res, next) {
 
 // Setup Route Bindings
 exports = module.exports = function (app) {
-
   app.all('/api*', checkAPIKey)
 
   // Views
