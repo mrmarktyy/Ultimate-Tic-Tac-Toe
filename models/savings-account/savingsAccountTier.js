@@ -1,10 +1,13 @@
-var availableOptions = require('../attributes/availableOptions');
+var availableOptions = require('../attributes/availableOptions')
 
-var keystone = require('keystone');
-var Types = keystone.Field.Types;
+var keystone = require('keystone')
+var Types = keystone.Field.Types
+var changeLogService = require('../../services/changeLogService')
 
-var SavingsAccount = keystone.list('SavingsAccount');
-var SavingsAccountTier = new keystone.List('SavingsAccountTier');
+var SavingsAccount = keystone.list('SavingsAccount')
+var SavingsAccountTier = new keystone.List('SavingsAccountTier', {
+    track: true,
+})
 
 SavingsAccountTier.add({
   company: {
@@ -41,15 +44,19 @@ SavingsAccountTier.add({
   bonusRateCondition: { type: Types.Text },
   introductoryRate: { type: Types.Number, min: 0 },
   introductoryRateTerm: { type: Types.Number, min: 0 },
-});
+})
 
-SavingsAccountTier.schema.index({ company: 1, product: 1, name: 1 }, { unique: true });
+SavingsAccountTier.schema.index({ company: 1, product: 1, name: 1 }, { unique: true })
 
 SavingsAccount.schema.post('remove', function (next) {
-  SavingsAccountTier.model.remove({ product: Object(next._id) }).exec();
-});
+  SavingsAccountTier.model.remove({ product: Object(next._id) }).exec()
+})
 
-SavingsAccountTier.track = true;
-SavingsAccountTier.defaultColumns = 'baseRate, company, product';
-SavingsAccountTier.drilldown = 'company product';
-SavingsAccountTier.register();
+SavingsAccountTier.schema.pre('save', async function (next) {
+  await changeLogService(this)
+  next()
+})
+
+SavingsAccountTier.defaultColumns = 'baseRate, company, product'
+SavingsAccountTier.drilldown = 'company product'
+SavingsAccountTier.register()

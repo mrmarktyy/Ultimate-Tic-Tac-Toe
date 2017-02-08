@@ -1,9 +1,12 @@
 var keystone = require('keystone')
 var {imageStorage} = require('../helpers/fileStorage')
 var verticals = require('../helpers/verticals')
+var changeLogService = require('../../services/changeLogService')
 var Types = keystone.Field.Types
 
-var FeaturedProduct = new keystone.List('FeaturedProduct')
+var FeaturedProduct = new keystone.List('FeaturedProduct', {
+    track: true,
+})
 
 FeaturedProduct.add({
 	uuid: {type: Types.Text, initial: true},
@@ -28,6 +31,10 @@ FeaturedProduct.schema.pre('validate', function (next) {
 
 FeaturedProduct.schema.index({uuid: 1, vertical: 1}, {unique: true})
 
-FeaturedProduct.track = true
+FeaturedProduct.schema.pre('save', async function (next) {
+  await changeLogService(this)
+  next()
+})
+
 FeaturedProduct.defaultColumns = 'uuid, vertical, title, notes, sortOrder, dateStart, dateEnd'
 FeaturedProduct.register()

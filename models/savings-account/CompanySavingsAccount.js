@@ -1,7 +1,10 @@
-var keystone = require('keystone');
-var Types = keystone.Field.Types;
+var keystone = require('keystone')
+var Types = keystone.Field.Types
+var changeLogService = require('../../services/changeLogService')
 
-var CompanySavingsAccount = new keystone.List('CompanySavingsAccount');
+var CompanySavingsAccount = new keystone.List('CompanySavingsAccount', {
+    track: true,
+})
 
 CompanySavingsAccount.add({
   company: {
@@ -19,21 +22,24 @@ CompanySavingsAccount.add({
     initial: true,
   },
   blurb: { type: Types.Code, height: 250, language: 'html' },
-});
+})
 
 CompanySavingsAccount.schema.pre('validate', function (next) {
-  let postcodeArrayLength = this.availablePostcodes.length;
+  let postcodeArrayLength = this.availablePostcodes.length
   for (let i = 0; i < postcodeArrayLength; i++) {
     if (this.availablePostcodes[i].length !== 4) {
-      next(Error('each available post code need to be exactly 4 digits'));
-      break;
+      next(Error('each available post code need to be exactly 4 digits'))
+      break
     }
   }
-  next();
-});
+  next()
+})
 
+CompanySavingsAccount.schema.pre('save', async function (next) {
+  await changeLogService(this)
+  next()
+})
 
-CompanySavingsAccount.track = true;
-CompanySavingsAccount.defaultColumns = 'company';
-CompanySavingsAccount.drilldown = 'company';
-CompanySavingsAccount.register();
+CompanySavingsAccount.defaultColumns = 'company'
+CompanySavingsAccount.drilldown = 'company'
+CompanySavingsAccount.register()

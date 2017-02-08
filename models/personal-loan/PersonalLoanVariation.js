@@ -3,8 +3,11 @@ var Types = keystone.Field.Types
 var availableOptions = require('../attributes/availableOptions')
 var PersonalLoan = keystone.list('PersonalLoan')
 var ComparisonRateCalculator = require('../../services/ComparisonRateCalculator')
+var changeLogService = require('../../services/changeLogService')
 
-var PersonalLoanVariation = new keystone.List('PersonalLoanVariation')
+var PersonalLoanVariation = new keystone.List('PersonalLoanVariation', {
+    track: true,
+})
 
 PersonalLoanVariation.add({
 	company: {
@@ -111,6 +114,10 @@ PersonalLoan.schema.post('remove', (next) => {
 	PersonalLoanVariation.model.remove({ product: Object(next._id) }).exec()
 })
 
-PersonalLoanVariation.track = true
+PersonalLoanVariation.schema.pre('save', async function (next) {
+	await changeLogService(this)
+	next()
+})
+
 PersonalLoanVariation.defaultColumns = 'name, company, product, minLoanAmount, maxLoanAmount, minLoanTerm, maxLoanTerm, comparisonRatePersonal, comparisonRatePersonalManual, comparisonRateCar, comparisonRateCarManual'
 PersonalLoanVariation.register()

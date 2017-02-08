@@ -2,7 +2,9 @@ var keystone = require('keystone')
 var randomstring = require('randomstring')
 var Types = keystone.Field.Types
 
-var ApiKey = new keystone.List('ApiKey')
+var ApiKey = new keystone.List('ApiKey', {
+    track: true,
+})
 
 ApiKey.add({
   apiClient: {type: Types.Text, initial: true, required: true, index: true, unique: true},
@@ -19,7 +21,6 @@ ApiKey.schema.pre('save', function (next) {
   next()
 })
 
-ApiKey.track = true
 ApiKey.defaultSort = 'apiClient'
 ApiKey.defaultColumns = 'apiClient, apiKey'
 ApiKey.searchFields = 'apiClient, apiKey'

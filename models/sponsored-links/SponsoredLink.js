@@ -2,8 +2,11 @@ var keystone = require('keystone')
 var { imageStorage } = require('../helpers/fileStorage')
 var verticals = require('../helpers/verticals')
 var Types = keystone.Field.Types
+var changeLogService = require('../../services/changeLogService')
 
-var SponsoredLink = new keystone.List('SponsoredLink')
+var SponsoredLink = new keystone.List('SponsoredLink', {
+    track: true,
+})
 
 SponsoredLink.add({
     company: {
@@ -42,9 +45,13 @@ SponsoredLink.schema.pre('validate', function (next) {
   }
 })
 
+SponsoredLink.schema.pre('save', async function (next) {
+  await changeLogService(this)
+  next()
+})
+
 SponsoredLink.schema.index({ company: 1, vertical: 1, title: 1 }, { unique: true })
 
-SponsoredLink.track = true
 SponsoredLink.defaultColumns = 'vertical, company, title, description, uuid, dateStart, dateEnd'
 SponsoredLink.drilldown = 'company'
 SponsoredLink.register()

@@ -1,8 +1,11 @@
 var keystone = require('keystone')
 var Types = keystone.Field.Types
 var availableOptions = require('../attributes/availableOptions')
+var changeLogService = require('../../services/changeLogService')
 
-var CompanyPersonalLoan = new keystone.List('CompanyPersonalLoan')
+var CompanyPersonalLoan = new keystone.List('CompanyPersonalLoan', {
+    track: true,
+})
 
 CompanyPersonalLoan.add({
 	company: {
@@ -42,7 +45,11 @@ CompanyPersonalLoan.schema.pre('validate', function (next) {
 	next()
 })
 
-CompanyPersonalLoan.track = true
+CompanyPersonalLoan.schema.pre('save', async function (next) {
+	await changeLogService(this)
+	next()
+})
+
 CompanyPersonalLoan.defaultColumns = 'company, availableStates, applyInBranch, applyOnline, applyByMobileLender, applyByPhone, applyByBroker'
 CompanyPersonalLoan.drilldown = 'company'
 CompanyPersonalLoan.register()

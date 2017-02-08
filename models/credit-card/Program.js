@@ -1,7 +1,10 @@
 var keystone = require('keystone')
 var Types = keystone.Field.Types
+var changeLogService = require('../../services/changeLogService')
 
-var Program = new keystone.List('Program')
+var Program = new keystone.List('Program', {
+    track: true,
+})
 
 Program.add({
   name: { type: Types.Text, required: true, initial: true, index: true },
@@ -18,6 +21,11 @@ Program.schema.pre('validate', function (next) {
 })
 
 Program.schema.index({ name: 1 }, { unique: true })
-Program.track = true
+
+Program.schema.pre('save', async function (next) {
+  await changeLogService(this)
+  next()
+})
+
 Program.defaultColumns = 'name, isReward, isPartner'
 Program.register()

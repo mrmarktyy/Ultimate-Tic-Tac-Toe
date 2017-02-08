@@ -1,14 +1,17 @@
-var keystone = require('keystone');
-var uuid = require('node-uuid');
-var frequency = require('../attributes/frequency');
-var availableOptions = require('../attributes/availableOptions');
-var productCommonAttributes = require('../common/ProductCommonAttributes');
-var utils = keystone.utils;
-var Types = keystone.Field.Types;
+var keystone = require('keystone')
+var uuid = require('node-uuid')
+var frequency = require('../attributes/frequency')
+var availableOptions = require('../attributes/availableOptions')
+var productCommonAttributes = require('../common/ProductCommonAttributes')
+var changeLogService = require('../../services/changeLogService')
+var utils = keystone.utils
+var Types = keystone.Field.Types
 
-var SavingsAccount = new keystone.List('SavingsAccount');
+var SavingsAccount = new keystone.List('SavingsAccount', {
+    track: true,
+})
 
-SavingsAccount.add(productCommonAttributes);
+SavingsAccount.add(productCommonAttributes)
 
 SavingsAccount.add({
   existsOnSorbet: { type: Types.Boolean, indent: true, default: false },
@@ -59,19 +62,20 @@ SavingsAccount.schema.pre('validate', function (next) {
   next();
 });
 
-SavingsAccount.schema.pre('save', function (next) {
+SavingsAccount.schema.pre('save', async function (next) {
   if (!this.uuid) {
-    this.uuid = uuid.v4();
+    this.uuid = uuid.v4()
   }
   if (!this.slug) {
-    let slug = utils.slug(this.name.toLowerCase());
-    this.slug = slug;
+    let slug = utils.slug(this.name.toLowerCase())
+    this.slug = slug
   }
-  next();
-});
 
-SavingsAccount.track = true;
-SavingsAccount.defaultColumns = 'name, company';
-SavingsAccount.searchFields = 'name, legacyCode';
-SavingsAccount.drilldown = 'company';
-SavingsAccount.register();
+  await changeLogService(this)
+  next()
+})
+
+SavingsAccount.defaultColumns = 'name, company'
+SavingsAccount.searchFields = 'name, legacyCode'
+SavingsAccount.drilldown = 'company'
+SavingsAccount.register()
