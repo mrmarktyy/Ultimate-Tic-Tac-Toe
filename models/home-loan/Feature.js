@@ -4,6 +4,14 @@ var featureTypes = require('./featureTypes')
 var Feature = new keystone.List('Feature')
 
 Feature.add({
+	company: {
+		type: Types.Relationship,
+		ref: 'Company',
+		required: true,
+		initial: true,
+		index: true,
+		noedit: true,
+	},
 	product: {
 		type: Types.Relationship,
 		ref: 'HomeLoan',

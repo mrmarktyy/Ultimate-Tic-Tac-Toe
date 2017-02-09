@@ -20,7 +20,6 @@ HomeLoan.add({
 		ref: 'HomeLoanFamily',
 		initial: true,
 		index: true,
-		noedit: true,
 		filters: { company: ':company' },
 	},
 	neo4jId: {type: Types.Number},

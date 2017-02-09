@@ -5,6 +5,14 @@ var conditionTypes = require('./conditionTypes')
 var Condition = new keystone.List('Condition')
 
 Condition.add({
+	company: {
+		type: Types.Relationship,
+		ref: 'Company',
+		required: true,
+		initial: true,
+		index: true,
+		noedit: true,
+	},
 	product: {
 		type: Types.Relationship,
 		ref: 'HomeLoan',
@@ -13,6 +21,13 @@ Condition.add({
 		index: true,
 		noedit: true,
 		filters: {company: ':company'},
+	},
+	conditionType: {
+		type: Types.Select,
+		options: conditionTypes,
+		initial: true,
+		required: true,
+		emptyOption: false
 	},
 	frequency: {type: Types.Select, options: frequency, required: true, initial: true },
 	isWhicheverLower: {type: Types.Boolean, indent: true, default: false},

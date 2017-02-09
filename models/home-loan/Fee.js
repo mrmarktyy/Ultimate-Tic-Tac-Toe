@@ -5,6 +5,14 @@ var frequency = require('../attributes/frequency')
 var Fee = new keystone.List('Fee')
 
 Fee.add({
+	company: {
+		type: Types.Relationship,
+		ref: 'Company',
+		required: true,
+		initial: true,
+		index: true,
+		noedit: true,
+	},
 	product: {
 		type: Types.Relationship,
 		ref: 'HomeLoan',

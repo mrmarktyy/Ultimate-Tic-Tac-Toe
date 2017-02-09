@@ -3,6 +3,14 @@ var Types = keystone.Field.Types
 var HomeLoanVariation = new keystone.List('HomeLoanVariation')
 
 HomeLoanVariation.add({
+	company: {
+		type: Types.Relationship,
+		ref: 'Company',
+		required: true,
+		initial: true,
+		index: true,
+		noedit: true,
+	},
 	product: {
 		type: Types.Relationship,
 		ref: 'HomeLoan',
