@@ -1,7 +1,10 @@
 var keystone = require('keystone')
 var Types = keystone.Field.Types
+var changeLogService = require('../../services/changeLogService')
 
-var Redemption = new keystone.List('Redemption')
+var Redemption = new keystone.List('Redemption', {
+    track: true,
+})
 
 Redemption.add({
 	program: {
@@ -34,6 +37,10 @@ Redemption.add({
 
 Redemption.schema.index({program: 1, redemptionType: 1, redemptionName: 1}, {unique: true})
 
-Redemption.track = true
+Redemption.schema.pre('save', async function (next) {
+  await changeLogService(this)
+  next()
+})
+
 Redemption.defaultColumns = 'program, type, redemptionName, pointsRequired'
 Redemption.register()

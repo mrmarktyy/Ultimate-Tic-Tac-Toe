@@ -4,10 +4,14 @@ var frequency = require('../attributes/frequency')
 var availableOptions = require('../attributes/availableOptions')
 var productCommonAttributes = require('../common/ProductCommonAttributes')
 var personalLoanConstant = require('../constants/PersonalLoanConstant')
+var changeLogService = require('../../services/changeLogService')
+
 var utils = keystone.utils
 var Types = keystone.Field.Types
 
-var PersonalLoan = new keystone.List('PersonalLoan')
+var PersonalLoan = new keystone.List('PersonalLoan', {
+    track: true,
+})
 
 PersonalLoan.add(productCommonAttributes)
 
@@ -173,7 +177,7 @@ PersonalLoan.schema.virtual('totalYearlyFee').get(function () {
 	}
 })
 
-PersonalLoan.schema.pre('save', function (next) {
+PersonalLoan.schema.pre('save', async function (next) {
 	if (!this.uuid) {
 		this.uuid = uuid.v4()
 	}
@@ -181,10 +185,11 @@ PersonalLoan.schema.pre('save', function (next) {
 		let slug = utils.slug(this.name.toLowerCase())
 		this.slug = slug
 	}
+
+	await changeLogService(this)
 	next()
 })
 
-PersonalLoan.track = true
 PersonalLoan.defaultColumns = 'name, company, isCarLoan, isPersonalLoan, applicationFeesDollar, applicationFeesPercent'
 PersonalLoan.searchFields = 'name, legacyCode'
 PersonalLoan.drilldown = 'company'

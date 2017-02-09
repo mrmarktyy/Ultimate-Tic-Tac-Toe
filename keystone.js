@@ -77,6 +77,7 @@ keystone.set('nav', {
 	featuredProducts: 'FeaturedProduct',
 	feeds: ['ProductFeedInclusion', 'ProductFeed', 'WidgetImage'],
 	users: ['users', 'ApiKey'],
+	utilites: ['ChangeLog'],
 })
 
 keystone.set('cors allow origin', true)

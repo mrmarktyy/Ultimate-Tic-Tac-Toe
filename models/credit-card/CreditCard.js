@@ -4,10 +4,13 @@ var availableOptions = require('../attributes/availableOptions')
 var productCommonAttributes = require('../common/ProductCommonAttributes')
 var { imageStorage } = require('../helpers/fileStorage')
 var logger = require('../../utils/logger')
+var changeLogService = require('../../services/changeLogService')
 
 var Types = keystone.Field.Types
 
-var CreditCard = new keystone.List('CreditCard')
+var CreditCard = new keystone.List('CreditCard', {
+    track: true,
+})
 
 CreditCard.add(productCommonAttributes)
 
@@ -186,6 +189,10 @@ CreditCard.schema.pre('save', function (next) {
 
 CreditCard.schema.index({ company: 1, name: 1 }, { unique: true })
 
-CreditCard.track = true
+CreditCard.schema.pre('save', async function (next) {
+  await changeLogService(this)
+  next()
+})
+
 CreditCard.defaultColumns = 'name, company, uuid'
 CreditCard.register()

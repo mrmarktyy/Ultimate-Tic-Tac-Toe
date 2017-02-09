@@ -1,8 +1,11 @@
 var keystone = require('keystone')
 var Types = keystone.Field.Types
 var uniqueValidator = require('mongoose-unique-validator')
+var changeLogService = require('../../services/changeLogService')
 
-var ATM = new keystone.List('ATM')
+var ATM = new keystone.List('ATM', {
+    track: true,
+})
 
 ATM.add({
   company: {
@@ -20,7 +23,11 @@ ATM.add({
   ATMPartners: {type: Types.Relationship, ref: 'Company', many: true},
 })
 
-ATM.track = true
+ATM.schema.pre('save', async function (next) {
+  await changeLogService(this)
+  next()
+})
+
 ATM.schema.plugin(uniqueValidator)
 ATM.defaultSort = 'company'
 ATM.defaultColumns = 'company, numberOfATMs, feeForWithdrawal, feeForBalanceEnquiry, ATMPartners'

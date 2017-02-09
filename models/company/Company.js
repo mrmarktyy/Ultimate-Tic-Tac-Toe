@@ -2,8 +2,11 @@ var keystone = require('keystone')
 var uuid = require('node-uuid')
 var Types = keystone.Field.Types
 var { imageStorage } = require('../helpers/fileStorage')
+var changeLogService = require('../../services/changeLogService')
 
-var Company = new keystone.List('Company')
+var Company = new keystone.List('Company', {
+    track: true,
+})
 
 Company.add({
 	name: { type: Types.Text, required: true, index: true },
@@ -32,14 +35,15 @@ Company.add({
 Company.relationship({ path: 'ATMs', ref: 'ATM', refPath: 'company' })
 Company.relationship({ path: 'Branches', ref: 'Branch', refPath: 'company' })
 
-Company.schema.pre('save', function (next) {
+Company.schema.pre('save', async function (next) {
 	if (!this.uuid) {
 		this.uuid = uuid.v4()
 	}
+
+	await changeLogService(this)
 	next()
 })
 
-Company.track = true
 Company.defaultSort = 'name'
 Company.defaultColumns = 'name, url, displayName, code, searchKeyword, createdAt'
 Company.searchFields = 'name, url, displayName, code, searchKeyword'
