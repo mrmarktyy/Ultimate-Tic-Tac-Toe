@@ -69,6 +69,7 @@ keystone.set('email locals', {
 
 keystone.set('nav', {
 	companies: ['Company', 'Branch', 'ATM'],
+	homeLoans: ['CompanyHomeLoan', 'HomeLoanFamily', 'HomeLoan', 'HomeLoanVariation', 'ExtraRepayment', 'OffsetAccount', 'RedrawFacility', 'Fee', 'Feature', 'Condition'],
 	creditCards: ['CompanyCreditCard', 'CreditCard', 'Redemption', 'PartnerConversion', 'Program', 'RedemptionType', 'RedemptionName'],
 	personalLoans: ['CompanyPersonalLoan', 'PersonalLoan', 'PersonalLoanVariation'],
 	savingsAccounts: ['CompanySavingsAccount', 'SavingsAccount', 'SavingsAccountTier'],

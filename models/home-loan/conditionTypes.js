@@ -1,0 +1,9 @@
+module.exports = [
+	'TOTAL_LOAN_AMOUNT',
+	'LOAN_TERM',
+	'FIX_MONTH',
+	'AMOUNT',
+	'LVR',
+	'LVR_WITHOUT_LMI',
+	'LENGTH_OF_IO_REPAYMENT'
+]
