@@ -177,7 +177,12 @@ PersonalLoan.schema.virtual('totalYearlyFee').get(function () {
 	}
 })
 
-PersonalLoan.schema.pre('save', async function (next) {
+PersonalLoan.schema.pre('find', function (next) {
+  this.where('isDiscontinued').equals(false)
+  next()
+})
+
+PersonalLoan.schema.pre('save', function (next) {
 	if (!this.uuid) {
 		this.uuid = uuid.v4()
 	}
@@ -189,6 +194,11 @@ PersonalLoan.schema.pre('save', async function (next) {
 	await changeLogService(this)
 	next()
 })
+
+PersonalLoan.schema.methods.remove = function (callback) {
+  this.isDiscontinued = true
+  return this.save(callback)
+}
 
 PersonalLoan.defaultColumns = 'name, company, isCarLoan, isPersonalLoan, applicationFeesDollar, applicationFeesPercent'
 PersonalLoan.searchFields = 'name, legacyCode'
