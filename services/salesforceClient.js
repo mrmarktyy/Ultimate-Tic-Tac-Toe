@@ -15,34 +15,30 @@ class SalesforceClient {
 		return this.maxRequestSize
 	}
 	async getAuthorization () {
-		if (this.authorization) {
-			return this.authorization
-		} else {
-			let authenticationBody = 'grant_type=password'
-			authenticationBody += '&client_id=' + this.clientId
-			authenticationBody += '&client_secret=' + this.secret
-			authenticationBody += '&username=' + this.username
-			authenticationBody += '&password=' + this.password
+		let authenticationBody = 'grant_type=password'
+		authenticationBody += '&client_id=' + this.clientId
+		authenticationBody += '&client_secret=' + this.secret
+		authenticationBody += '&username=' + this.username
+		authenticationBody += '&password=' + this.password
 
-			try {
-				const response = await fetch(process.env.SALESFORCE_LOGIN_URL, {
-					method: 'POST',
-					body: authenticationBody,
-					headers: { 'Content-Type': 'application/x-www-form-urlencoded',
-						'Accept': 'application/json',
-					},
-				})
+		try {
+			const response = await fetch(process.env.SALESFORCE_LOGIN_URL, {
+				method: 'POST',
+				body: authenticationBody,
+				headers: { 'Content-Type': 'application/x-www-form-urlencoded',
+					'Accept': 'application/json',
+				},
+			})
 
-				let jsonResponse = await response.json()
-				if (jsonResponse.error) {
-					throw jsonResponse.error_description
-				}
-				this.authorization = jsonResponse.token_type + ' ' + jsonResponse.access_token
-				return this.authorization
-			} catch (error) {
-				logger.error(error)
-				throw error
+			let jsonResponse = await response.json()
+			if (jsonResponse.error) {
+				throw jsonResponse.error_description
 			}
+			this.authorization = jsonResponse.token_type + ' ' + jsonResponse.access_token
+			return this.authorization
+		} catch (error) {
+			logger.error(error)
+			throw error
 		}
 	}
 	async pushCompanies (allCompanies) {
