@@ -182,7 +182,7 @@ PersonalLoan.schema.pre('find', function (next) {
   next()
 })
 
-PersonalLoan.schema.pre('save', function (next) {
+PersonalLoan.schema.pre('save', async function (next) {
 	if (!this.uuid) {
 		this.uuid = uuid.v4()
 	}
