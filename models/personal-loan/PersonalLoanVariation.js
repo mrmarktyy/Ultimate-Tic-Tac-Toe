@@ -7,6 +7,7 @@ var changeLogService = require('../../services/changeLogService')
 
 var PersonalLoanVariation = new keystone.List('PersonalLoanVariation', {
     track: true,
+    map: { name: 'id' },
 })
 
 PersonalLoanVariation.add({
@@ -27,7 +28,7 @@ PersonalLoanVariation.add({
 		noedit: true,
 		filters: { company: ':company' },
 	},
-	name: { type: Types.Text, required: true, initial: true },
+	name: { type: Types.Text, initial: true },
 	repVariation: {
 		type: Types.Select,
 		required: true,
@@ -51,8 +52,6 @@ PersonalLoanVariation.add({
 	comparisonRateCar: { type: Types.Number, noedit: true },
 	comparisonRateCarManual: { type: Types.Number, initial: true },
 })
-
-PersonalLoanVariation.schema.index({ company: 1, product: 1, name: 1 }, { unique: true })
 
 PersonalLoanVariation.schema.pre('validate', function (next) {
 	if (this.maxRate < this.minRate) {
