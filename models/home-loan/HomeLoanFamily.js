@@ -1,6 +1,9 @@
 var keystone = require('keystone')
 var Types = keystone.Field.Types
-var HomeLoanFamily = new keystone.List('HomeLoanFamily')
+
+var HomeLoanFamily = new keystone.List('HomeLoanFamily', {
+	track: true,
+})
 
 HomeLoanFamily.add({
 	company: {
@@ -15,7 +18,6 @@ HomeLoanFamily.add({
 	name: {type: Types.Text, required: true, initial: true}
 })
 
-HomeLoanFamily.track = true
 HomeLoanFamily.defaultColumns = 'name, neo4jId'
 HomeLoanFamily.register()
 

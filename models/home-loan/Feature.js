@@ -1,7 +1,10 @@
 var keystone = require('keystone')
 var Types = keystone.Field.Types
 var featureTypes = require('./featureTypes')
-var Feature = new keystone.List('Feature')
+
+var Feature = new keystone.List('Feature', {
+	track: true,
+})
 
 Feature.add({
 	company: {
@@ -42,7 +45,6 @@ Feature.add({
 	minAmount: {type: Types.Number, initial: true}
 })
 
-Feature.track = true
-Feature.defaultColumns = 'featureBand, featureType, isAffectComparisonRate'
+Feature.defaultColumns = 'product, company, featureBand, featureType, isAffectComparisonRate'
 Feature.register()
 

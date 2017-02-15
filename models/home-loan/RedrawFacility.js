@@ -1,6 +1,10 @@
 var keystone = require('keystone')
 var Types = keystone.Field.Types
-var RedrawFacility = new keystone.List('RedrawFacility')
+
+var RedrawFacility = new keystone.List('RedrawFacility', {
+	track: true,
+	map: { name: 'id' },
+})
 
 RedrawFacility.add({
 	company: {
@@ -29,7 +33,6 @@ RedrawFacility.add({
 	feeToActivateRedraw: { type: Types.Number, initial: true},
 })
 
-RedrawFacility.track = true
-RedrawFacility.defaultColumns = 'name, duringPeriod, isUnlimitedRedraw'
+RedrawFacility.defaultColumns = 'name, product, company, duringPeriod, isUnlimitedRedraw'
 RedrawFacility.register()
 

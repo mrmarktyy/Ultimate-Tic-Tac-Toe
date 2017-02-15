@@ -1,8 +1,11 @@
 var keystone = require('keystone')
 var Types = keystone.Field.Types
 var feeTypes = require('./feeTypes')
-var frequency = require('../attributes/frequency')
-var Fee = new keystone.List('Fee')
+var frequency = require('./paymentFrequencies')
+
+var Fee = new keystone.List('Fee', {
+	track: true,
+})
 
 Fee.add({
 	company: {
@@ -36,10 +39,10 @@ Fee.add({
 		initial: true,
 	},
 	fixedCost: {type: Types.Number, initial: true},
-	fixedPercentage: {type: Types.Number, initial: true}
+	fixedPercentage: {type: Types.Number, initial: true},
+	description: {type: Types.Text},
 })
 
-Fee.track = true
-Fee.defaultColumns = 'feeType, frequency, fixedCost'
+Fee.defaultColumns = 'product, company, feeType, frequency, fixedCost'
 Fee.register()
 

@@ -1,6 +1,10 @@
 var keystone = require('keystone')
 var Types = keystone.Field.Types
-var HomeLoanVariation = new keystone.List('HomeLoanVariation')
+
+var HomeLoanVariation = new keystone.List('HomeLoanVariation', {
+	track: true,
+	map: { name: 'id' },
+})
 
 HomeLoanVariation.add({
 	company: {
@@ -36,7 +40,6 @@ HomeLoanVariation.add({
 	isStandardVariable: {type: Types.Boolean, indent: true, default: false},
 })
 
-HomeLoanVariation.track = true
-HomeLoanVariation.defaultColumns = 'neo4jId, fixMonth, minLVR, maxLVR, minTotalLoanAmount, maxTotalLoanAmount, rate, comparisonRate'
+HomeLoanVariation.defaultColumns = 'product, company, neo4jId, fixMonth, minLVR, maxLVR, minTotalLoanAmount, maxTotalLoanAmount, rate, comparisonRate'
 HomeLoanVariation.register()
 

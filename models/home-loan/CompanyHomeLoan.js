@@ -1,7 +1,9 @@
 var keystone = require('keystone')
 var Types = keystone.Field.Types
 
-var CompanyHomeLoan = new keystone.List('CompanyHomeLoan')
+var CompanyHomeLoan = new keystone.List('CompanyHomeLoan', {
+	track: true,
+})
 
 CompanyHomeLoan.add({
 	company: {
@@ -13,10 +15,8 @@ CompanyHomeLoan.add({
 		index: true,
 		noedit: true,
 	},
-	homeLoanBlurb: { type: Types.Code, height: 250, language: 'html' },
+	homeLoanBlurb: {type: Types.Code, height: 250, language: 'html'},
 })
 
-
-CompanyHomeLoan.track = true
 CompanyHomeLoan.defaultColumns = 'company'
 CompanyHomeLoan.register()

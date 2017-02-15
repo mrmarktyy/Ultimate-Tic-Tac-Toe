@@ -1,8 +1,11 @@
 var keystone = require('keystone')
 var Types = keystone.Field.Types
-var frequency = require('../attributes/frequency')
+var frequency = require('./paymentFrequencies')
 var conditionTypes = require('./conditionTypes')
-var Condition = new keystone.List('Condition')
+
+var Condition = new keystone.List('Condition', {
+	track: true,
+})
 
 Condition.add({
 	company: {
@@ -42,7 +45,6 @@ Condition.add({
 	endAt: {type: Types.Number, initial: true},
 })
 
-Condition.track = true
-Condition.defaultColumns = 'product, frequency, fixAmount, minAmount, maxAmount'
+Condition.defaultColumns = 'product, company, fixAmount, minAmount, maxAmount'
 Condition.register()
 

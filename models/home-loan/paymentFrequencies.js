@@ -1,0 +1,10 @@
+module.exports = [
+	'ONE_OFF',
+	'WEEKLY',
+	'FORTNIGHTLY',
+	'MONTHLY',
+	'QUARTERLY',
+	'BIANNUALLY',
+	'SEMIANNUALLY',
+	'ANNUALLY'
+]
