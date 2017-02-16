@@ -9,8 +9,7 @@ module.exports = function (currentRecord, options = {}) {
   let collectionName = currentRecord.constructor.modelName
   let Model = mongoose.model(collectionName)
   let dontLogKeys = options['dontLogKeys'] || []
-  dontLogKeys = _.union(dontLogKeys, ['updatedAt', 'updatedBy', 'createdAt', 'createdBy'])
-  let user = options['user']
+  dontLogKeys = _.union(dontLogKeys, ['updatedAt', 'updatedBy', 'createdAt', 'createdBy', 'logo', 'image', 'cardArt'])
 
   Model.findOne({ _id: currentRecord._id }).lean().exec((err, oldRecord) => {
     if (oldRecord !== null) {
@@ -32,7 +31,7 @@ module.exports = function (currentRecord, options = {}) {
           })
           changeLog.save((err) => {
             if (err) {
-              logger.error('database error on adding a diff to the changeLog')
+              logger.error('database error on adding a diff to the changeLog ' + err)
               return 'database error'
             }
           })
