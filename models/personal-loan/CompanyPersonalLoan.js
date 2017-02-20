@@ -34,6 +34,8 @@ CompanyPersonalLoan.add({
 	carLoanBlurb: { type: Types.Code, height: 250, language: 'html' },
 })
 
+CompanyPersonalLoan.relationship({ path: 'ChangeLogs', ref: 'ChangeLog', refPath: 'model', many: true })
+
 CompanyPersonalLoan.schema.pre('validate', function (next) {
 	let postcodeArrayLength = this.availablePostcodes.length
 	for (let i = 0; i < postcodeArrayLength; i++) {

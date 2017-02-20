@@ -158,6 +158,8 @@ CreditCard.add({
 	cardArt: imageStorage('creditcard'),
 })
 
+CreditCard.relationship({ path: 'ChangeLogs', ref: 'ChangeLog', refPath: 'model', many: true })
+
 CreditCard.schema.pre('validate', function (next) {
 	if (([undefined, null].indexOf(this.offerExpires) < 0) && (this.offerExpires <= new Date())) {
 		logger.error(this.offerExpires)

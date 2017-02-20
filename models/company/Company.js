@@ -34,6 +34,7 @@ Company.add({
 
 Company.relationship({ path: 'ATMs', ref: 'ATM', refPath: 'company' })
 Company.relationship({ path: 'Branches', ref: 'Branch', refPath: 'company' })
+Company.relationship({ path: 'ChangeLogs', ref: 'ChangeLog', refPath: 'model', many: true })
 
 Company.schema.pre('save', async function (next) {
 	if (!this.uuid) {

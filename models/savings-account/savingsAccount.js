@@ -48,19 +48,20 @@ SavingsAccount.add({
   overTheCounterDepositFee: { type: Types.Number, min: 0 },
   overTheCounterWithdrawalFee: { type: Types.Number, min: 0 },
   atmWithdrawalFee: { type: Types.Number, min: 0 },
-});
+})
 
-SavingsAccount.relationship({ path: 'savingsAccountTiers', ref: 'SavingsAccountTier', refPath: 'product' });
+SavingsAccount.relationship({ path: 'savingsAccountTiers', ref: 'SavingsAccountTier', refPath: 'product' })
+SavingsAccount.relationship({ path: 'ChangeLogs', ref: 'ChangeLog', refPath: 'model', many: true })
 
-SavingsAccount.schema.index({ company: 1, name: 1 }, { unique: true });
-SavingsAccount.schema.index({ company: 1, slug: 1 }, { unique: true });
+SavingsAccount.schema.index({ company: 1, name: 1 }, { unique: true })
+SavingsAccount.schema.index({ company: 1, slug: 1 }, { unique: true })
 
 SavingsAccount.schema.pre('validate', function (next) {
   if ((this.offerExpires !== undefined) && (this.offerExpires < new Date())) {
-    next(Error('OfferExpires must be greater than today'));
+    next(Error('OfferExpires must be greater than today'))
   }
-  next();
-});
+  next()
+})
 
 SavingsAccount.schema.pre('save', async function (next) {
   if (!this.uuid) {

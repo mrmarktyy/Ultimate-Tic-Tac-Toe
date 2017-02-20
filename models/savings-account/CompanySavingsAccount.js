@@ -24,6 +24,8 @@ CompanySavingsAccount.add({
   blurb: { type: Types.Code, height: 250, language: 'html' },
 })
 
+CompanySavingsAccount.relationship({ path: 'ChangeLogs', ref: 'ChangeLog', refPath: 'model', many: true })
+
 CompanySavingsAccount.schema.pre('validate', function (next) {
   let postcodeArrayLength = this.availablePostcodes.length
   for (let i = 0; i < postcodeArrayLength; i++) {

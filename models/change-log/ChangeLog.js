@@ -1,18 +1,21 @@
 var keystone = require('keystone')
 var Types = keystone.Field.Types
 
-var ChangeLog = new keystone.List('ChangeLog')
+var ChangeLog = new keystone.List('ChangeLog', { nocreate: true, nodelete: true })
 
 ChangeLog.add({
-  collectionName: { type: Types.Text },
-  modelId: { type: Types.Text },
-  attributeName: { type: Types.Text },
-  newValue: { type: Types.Text },
-  oldValue: { type: Types.Text },
-  updatedAt: { type: Types.Datetime },
-  updatedBy: { type: Types.Text },
+  model: { type: Types.Relationship, ref: 'Company', required: false, hidden: true },
+  collectionName: { type: Types.Text, noedit: true },
+  modelId: { type: Types.Text, noedit: true },
+  attributeName: { type: Types.Text, noedit: true },
+  newValue: { type: Types.Text, noedit: true },
+  oldValue: { type: Types.Text, noedit: true },
+  updatedAt: { type: Types.Datetime, noedit: true },
+  updatedBy: { type: Types.Relationship, ref: 'User', noedit: true },
 })
 
-ChangeLog.defaultColumns = 'collectionName, modelId, attributeName, newValue, oldValue'
+ChangeLog.defaultColumns = 'collectionName, modelId, attributeName, newValue, oldValue', 'updatedAt'
 ChangeLog.searchFields = 'collectionName, attributeName'
+ChangeLog.defaultSort = '-updatedAt'
 ChangeLog.register()
+

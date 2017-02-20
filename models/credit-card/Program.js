@@ -12,6 +12,8 @@ Program.add({
   isPartner: { type: Types.Boolean, indent: true, default: false, initial: true },
 })
 
+Program.relationship({ path: 'ChangeLogs', ref: 'ChangeLog', refPath: 'model', many: true })
+
 Program.schema.pre('validate', function (next) {
   if (this.isReward === false && this.isPartner === false) {
     next(Error('Both is reward and is partner cannot be false'))

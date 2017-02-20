@@ -10,6 +10,8 @@ RedemptionType.add({
   name: { type: Types.Text, required: true, initial: true, index: true },
 })
 
+RedemptionType.relationship({ path: 'ChangeLogs', ref: 'ChangeLog', refPath: 'model', many: true })
+
 RedemptionType.schema.index({ name: 1 }, { unique: true })
 
 RedemptionType.schema.pre('save', async function (next) {

@@ -21,6 +21,7 @@ module.exports = function (currentRecord, options = {}) {
           let oldValue = oldRecord[key] == undefined ? null : oldRecord[key]
 
           let changeLog = new ChangeLog.model({
+            model: oldRecord._id,
             collectionName: collectionName,
             modelId: oldRecord._id,
             attributeName: key,

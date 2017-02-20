@@ -21,6 +21,8 @@ FeaturedProduct.add({
 	image: imageStorage('featuredProduct'),
 })
 
+FeaturedProduct.relationship({ path: 'ChangeLogs', ref: 'ChangeLog', refPath: 'model', many: true })
+
 FeaturedProduct.schema.pre('validate', function (next) {
 	if ((this.dateEnd !== null) && (this.dateEnd < this.dateStart)) {
 		next(Error('End date has to be greater than start date'))
