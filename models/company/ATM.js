@@ -23,6 +23,8 @@ ATM.add({
   ATMPartners: {type: Types.Relationship, ref: 'Company', many: true},
 })
 
+ATM.relationship({ path: 'ChangeLogs', ref: 'ChangeLog', refPath: 'model', many: true })
+
 ATM.schema.pre('save', async function (next) {
   await changeLogService(this)
   next()

@@ -106,6 +106,7 @@ PersonalLoan.add({
 })
 
 PersonalLoan.relationship({ path: 'personalLoanVariations', ref: 'PersonalLoanVariation', refPath: 'product' })
+PersonalLoan.relationship({ path: 'ChangeLogs', ref: 'ChangeLog', refPath: 'model', many: true })
 
 PersonalLoan.schema.index({ company: 1, name: 1 }, { unique: true })
 PersonalLoan.schema.index({ company: 1, slug: 1 }, { unique: true })

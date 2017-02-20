@@ -26,6 +26,8 @@ CompanyCreditCard.add({
 	blurb: { type: Types.Code, height: 250, language: 'html' },
 })
 
+CompanyCreditCard.relationship({ path: 'ChangeLogs', ref: 'ChangeLog', refPath: 'model', many: true })
+
 CompanyCreditCard.schema.pre('save', async function (next) {
   await changeLogService(this)
   next()

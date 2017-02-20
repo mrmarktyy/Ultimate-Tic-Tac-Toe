@@ -46,6 +46,8 @@ SavingsAccountTier.add({
   introductoryRateTerm: { type: Types.Number, min: 0 },
 })
 
+SavingsAccountTier.relationship({ path: 'ChangeLogs', ref: 'ChangeLog', refPath: 'model', many: true })
+
 SavingsAccountTier.schema.index({ company: 1, product: 1, name: 1 }, { unique: true })
 
 SavingsAccount.schema.post('remove', function (next) {

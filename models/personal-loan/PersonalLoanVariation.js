@@ -53,6 +53,8 @@ PersonalLoanVariation.add({
 	comparisonRateCarManual: { type: Types.Number, initial: true },
 })
 
+PersonalLoanVariation.relationship({ path: 'ChangeLogs', ref: 'ChangeLog', refPath: 'model', many: true })
+
 PersonalLoanVariation.schema.pre('validate', function (next) {
 	if (this.maxRate < this.minRate) {
 		next(Error('Max Rate can not be lower than Min Rate'))

@@ -23,6 +23,8 @@ Branch.add({
   openingHoursSun: {type: Types.Text},
 })
 
+Branch.relationship({ path: 'ChangeLogs', ref: 'ChangeLog', refPath: 'model', many: true })
+
 Branch.schema.pre('save', async function (next) {
   await changeLogService(this)
   next()

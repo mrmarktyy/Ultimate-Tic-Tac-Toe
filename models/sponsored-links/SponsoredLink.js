@@ -37,6 +37,8 @@ SponsoredLink.add({
   image: imageStorage('sponsoredLink'),
 })
 
+SponsoredLink.relationship({ path: 'ChangeLogs', ref: 'ChangeLog', refPath: 'model', many: true })
+
 SponsoredLink.schema.pre('validate', function (next) {
   if ((this.dateEnd !== undefined) && (this.dateEnd < this.dateStart)) {
     next(Error('End date has to be greater than start date'))

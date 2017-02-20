@@ -30,6 +30,8 @@ PartnerConversion.add({
   conversionRate: { type: Types.Number, min: 0, initial: true, required: true },
 })
 
+PartnerConversion.relationship({ path: 'ChangeLogs', ref: 'ChangeLog', refPath: 'model', many: true })
+
 PartnerConversion.schema.index({ rewardProgram: 1, partnerProgram: 1 }, { unique: true })
 
 PartnerConversion.schema.pre('save', async function (next) {

@@ -35,6 +35,8 @@ Redemption.add({
 	pointsRequired: {type: Types.Number, min: 0, initial: true, required: true},
 })
 
+Redemption.relationship({ path: 'ChangeLogs', ref: 'ChangeLog', refPath: 'model', many: true })
+
 Redemption.schema.index({program: 1, redemptionType: 1, redemptionName: 1}, {unique: true})
 
 Redemption.schema.pre('save', async function (next) {
