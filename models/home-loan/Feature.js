@@ -45,6 +45,13 @@ Feature.add({
 	minAmount: {type: Types.Number, initial: true}
 })
 
+Feature.schema.pre('validate', function (next) {
+	if (this.minAmount > this.maxAmount) {
+		next(Error('Max Amount can not less than Min Amount'))
+	}
+	next()
+})
+
 Feature.defaultColumns = 'product, company, featureBand, featureType, isAffectComparisonRate'
 Feature.register()
 

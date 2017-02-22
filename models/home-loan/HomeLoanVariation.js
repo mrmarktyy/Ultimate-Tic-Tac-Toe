@@ -40,6 +40,25 @@ HomeLoanVariation.add({
 	isStandardVariable: {type: Types.Boolean, indent: true, default: false},
 })
 
+HomeLoanVariation.schema.pre('validate', function (next) {
+	if (this.minTotalLoanAmount > this.maxTotalLoanAmount) {
+		next(Error('Max Total LoanAmount can not less than Min Total Loan Amount'))
+	}
+	if (this.minLVR < 0 || this.minLVR > 100){
+		next(Error('Min LVR need to between 0 and 100 inclusive'))
+	}
+	if (this.maxLVR < 0 || this.maxLVR > 100){
+		next(Error('Max LVR need to between 0 and 100 inclusive'))
+	}
+	if (this.minLVR > this.maxLVR) {
+		next(Error('Max LVR can not less than Min LVR'))
+	}
+	if (this.introductoryRate > this.rate) {
+		next(Error('Introductory Rate need to less or equal than Rate'))
+	}
+	next()
+})
+
 HomeLoanVariation.defaultColumns = 'product, company, neo4jId, fixMonth, minLVR, maxLVR, minTotalLoanAmount, maxTotalLoanAmount, rate, comparisonRate'
 HomeLoanVariation.register()
 

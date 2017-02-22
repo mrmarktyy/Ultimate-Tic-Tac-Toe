@@ -45,6 +45,25 @@ Condition.add({
 	endAt: {type: Types.Number, initial: true},
 })
 
+Condition.schema.pre('validate', function (next) {
+	if (this.minAmount > this.maxAmount) {
+		next(Error('Max Amount can not less than Min Amount'))
+	}
+	if (this.minPercentage < 0 || this.minPercentage > 100){
+		next(Error('Min Percentage need to between 0 and 100 inclusive'))
+	}
+	if (this.maxPercentage < 0 || this.maxPercentage > 100){
+		next(Error('Max Percentage need to between 0 and 100 inclusive'))
+	}
+	if (this.minPercentage > this.maxPercentage) {
+		next(Error('Max Percentage can not less than Min Percentage'))
+	}
+	if (this.startFrom > this.endAt) {
+		next(Error('Start From can not less than End At'))
+	}
+	next()
+})
+
 Condition.defaultColumns = 'product, company, fixAmount, minAmount, maxAmount'
 Condition.register()
 

@@ -62,8 +62,6 @@ HomeLoan.add({
 	otherBenefits: { type: Types.Text },
 	otherRestrictions: { type: Types.Text },
 	adminNotes: { type: Types.Text },
-
-
 })
 
 HomeLoan.relationship({ path: 'homeLoanVariations', ref: 'HomeLoanVariation', refPath: 'product' })
