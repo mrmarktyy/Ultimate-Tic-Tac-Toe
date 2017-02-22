@@ -24,6 +24,7 @@ HomeLoanVariation.add({
 		noedit: true,
 		filters: {company: ':company'},
 	},
+	name: { type: Types.Text, required: true, initial: true, index: true },
 	neo4jId: {type: Types.Number},
 	fixMonth: {type: Types.Number, initial: true},
 	minTotalLoanAmount: {type: Types.Number, initial: true},
