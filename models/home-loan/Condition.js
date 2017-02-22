@@ -32,7 +32,7 @@ Condition.add({
 		required: true,
 		emptyOption: false
 	},
-	frequency: {type: Types.Select, options: frequency, required: true, initial: true },
+	frequency: {type: Types.Select, options: frequency, initial: true },
 	isWhicheverLower: {type: Types.Boolean, indent: true, default: false},
 	maxAmount: {type: Types.Number, initial: true},
 	minAmount: {type: Types.Number, initial: true},
