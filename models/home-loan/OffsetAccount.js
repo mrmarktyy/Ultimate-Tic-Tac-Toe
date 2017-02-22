@@ -31,6 +31,13 @@ OffsetAccount.add({
 	fee: { type: Types.Number, initial: true},
 })
 
+OffsetAccount.schema.pre('validate', function (next) {
+	if (this.offsetPercentage < 0 || this.offsetPercentage > 100){
+		next(Error('Offset Percentage need to between 0 and 100 inclusive'))
+	}
+	next()
+})
+
 OffsetAccount.defaultColumns = 'name, product, company, duringPeriod, offsetPercentage, fee'
 OffsetAccount.register()
 

@@ -33,6 +33,13 @@ RedrawFacility.add({
 	feeToActivateRedraw: { type: Types.Number, initial: true},
 })
 
+RedrawFacility.schema.pre('validate', function (next) {
+	if (this.minRedrawAmount > this.maxRedrawAmount) {
+		next(Error('Max Redraw Amount can not less than Min Redraw Amount'))
+	}
+	next()
+})
+
 RedrawFacility.defaultColumns = 'name, product, company, duringPeriod, isUnlimitedRedraw'
 RedrawFacility.register()
 

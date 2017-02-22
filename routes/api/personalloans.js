@@ -18,12 +18,16 @@ exports.list = function (req, res) {
 	promise.then((personalLoans) => {
 		personalLoans.forEach((personalLoan) => {
 			// change the value to titleCase
-			['repaymentType', 'securedType'].map((attribute) => {
+			['repaymentType', 'securedType'].forEach((attribute) => {
 				personalLoan[attribute] = changeCase.titleCase(personalLoan[attribute])
 			})
 			personalLoan.company = CompanyService.fixLogoUrl(personalLoan.company)
 			// this make sure API always return promotedOrder for all products
-			personalLoan.promotedOrder = 100 - parseInt(personalLoan.promotedOrder)
+			if (personalLoan.promotedOrder === '0') {
+				personalLoan.promotedOrder = null
+			} else {
+				personalLoan.promotedOrder = 100 - parseInt(personalLoan.promotedOrder)
+			}
 
 			let promise = PersonalLoanVariation.model.find({ product: personalLoan._id }).lean().exec((err, variations) => {
 				if (err) {
