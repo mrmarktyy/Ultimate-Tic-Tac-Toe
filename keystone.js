@@ -76,8 +76,8 @@ keystone.set('nav', {
 	sponsoredLinks: 'SponsoredLink',
 	featuredProducts: 'FeaturedProduct',
 	feeds: ['ProductFeedInclusion', 'ProductFeed', 'WidgetImage'],
-	users: ['users', 'ApiKey'],
-	utilites: ['ChangeLog'],
+	users: 'users',
+	utilites: ['ApiKey', 'Monetize', 'ChangeLog'],
 })
 
 keystone.set('cors allow origin', true)
