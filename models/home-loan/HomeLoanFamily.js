@@ -14,7 +14,7 @@ HomeLoanFamily.add({
 		index: true,
 		noedit: true,
 	},
-	neo4jId: {type: Types.Number},
+	neo4jId: {type: Types.Number, noedit: true},
 	name: {type: Types.Text, required: true, initial: true}
 })
 

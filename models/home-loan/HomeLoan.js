@@ -26,7 +26,7 @@ HomeLoan.add({
 		index: true,
 		filters: { company: ':company' },
 	},
-	neo4jId: {type: Types.Number},
+	neo4jId: {type: Types.Number, noedit: true},
 	homeLoanType: { type: Types.Select, initial: true, required: true, options: ['VARIABLE', 'FIXED'], emptyOption: false},
 	isPackage: { type: Types.Boolean, indent: true, default: false },
 	isBasicVariable: { type: Types.Boolean, indent: true, default: false },

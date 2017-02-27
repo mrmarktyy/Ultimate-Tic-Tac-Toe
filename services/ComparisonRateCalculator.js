@@ -1,4 +1,5 @@
 var personalLoanConstant = require('../models/constants/PersonalLoanConstant')
+var homeLoanConstant = require('../models/constants/HomeLoanConstant')
 
 function calculateComparisonRate (monthlyRate, loanAmount, loanTermInMonth, monthlyIntroRate, introTermInMonth, totalUpfrontFees, totalMonthlyFees, totalYearlyFees, totalEndOfLoanFees) {
 	let cashflow = []
@@ -39,6 +40,25 @@ function calculateComparisonRate (monthlyRate, loanAmount, loanTermInMonth, mont
 
 function toTwoDecimal (number) {
 	return Number(Math.round(parseFloat(number) + 'e2') + 'e-2')
+}
+
+exports.calculateHomeLoanComparisonRate = function (data = {}) {
+	let {
+		yearlyRate = 0,
+		yearlyIntroRate = 0,
+		introTermInMonth = 0,
+		totalUpfrontFees = 0,
+		totalMonthlyFees = 0,
+		totalYearlyFees = 0,
+		totalEndOfLoanFees = 0,
+	} = data
+
+	let monthlyRate = yearlyRate / 100 / 12
+	let monthlyIntroRate = yearlyIntroRate / 100 / 12
+	let loanAmount = homeLoanConstant.HOME_LOAN_DEFAULT_LOAN_AMOUNT
+	let loanTermInMonth = homeLoanConstant.HOME_LOAN_DEFAULT_LOAN_TERM
+
+	return calculateComparisonRate(monthlyRate, loanAmount, loanTermInMonth, monthlyIntroRate, introTermInMonth, totalUpfrontFees, totalMonthlyFees, totalYearlyFees, totalEndOfLoanFees)
 }
 
 exports.calculatePersonalLoanComparisonRate = function (data = {}) {
