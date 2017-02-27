@@ -1,13 +1,27 @@
-var mongoose = require('mongoose')
-var Schema = mongoose.Schema
+var keystone = require('keystone')
+var Types = keystone.Field.Types
 
-var monetizeSchema = new Schema({
-	uuid: String,
-	vertical: String,
-	applyUrl: String,
-	enabled: Schema.Types.Boolean,
-	product: Schema.Types.ObjectId,
+var Monetize = new keystone.List('Monetize', {
+    track: true,
+    nocreate: true,
+    nodelete: true,
 })
 
-monetizeSchema.index({ uuid: 1 }, { unique: true })
-module.exports = mongoose.model('Monetize', monetizeSchema)
+Monetize.add({
+  uuid: { type: Types.Text, noedit: true },
+  vertical: { type: Types.Text, noedit: true },
+  applyUrl: { type: Types.Text, noedit: true },
+  enabled: { type: Types.Boolean, indent: true, noedit: true },
+  product: {
+    type: Types.Relationship,
+    ref: 'PersonalLoan',
+    required: false,
+    noedit: true,
+    hidden: true,
+  },
+})
+
+Monetize.defaultColumns = 'uuid, vertical, enabled, applyUrl'
+Monetize.defaultSort = '-enabled, vertical, uuid'
+Monetize.schema.index({ uuid: 1 }, { unique: true })
+Monetize.register()

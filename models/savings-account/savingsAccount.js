@@ -76,7 +76,7 @@ SavingsAccount.schema.pre('save', async function (next) {
   next()
 })
 
-SavingsAccount.defaultColumns = 'name, company'
+SavingsAccount.defaultColumns = 'name, company, isMonetized'
 SavingsAccount.searchFields = 'name, legacyCode'
 SavingsAccount.drilldown = 'company'
 SavingsAccount.register()

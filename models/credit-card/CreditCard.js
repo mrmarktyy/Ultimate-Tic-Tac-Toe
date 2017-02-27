@@ -196,5 +196,5 @@ CreditCard.schema.pre('save', async function (next) {
   next()
 })
 
-CreditCard.defaultColumns = 'name, company, uuid'
+CreditCard.defaultColumns = 'name, company, uuid, isMonetized'
 CreditCard.register()

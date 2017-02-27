@@ -197,7 +197,7 @@ PersonalLoan.schema.methods.remove = function (callback) {
   return this.save(callback)
 }
 
-PersonalLoan.defaultColumns = 'name, company, isCarLoan, isPersonalLoan, applicationFeesDollar, applicationFeesPercent'
+PersonalLoan.defaultColumns = 'name, company, isCarLoan, isPersonalLoan, isMonetized, applicationFeesDollar, applicationFeesPercent'
 PersonalLoan.defaultSort = 'isDiscontinued'
 PersonalLoan.searchFields = 'name, legacyCode'
 PersonalLoan.drilldown = 'company'
