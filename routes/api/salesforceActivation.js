@@ -47,8 +47,8 @@ exports.monetize = function (req, res) {
             new: true,
           }, (err) => {
             if (err) {
-              logger.error('database error on salesforce monetize display on product uuid ' + uuid + ' ' + err)
-              return 'database error'
+              let comment = 'database error on salesforce monetize display on product uuid ' + uuid + ' ' + err
+              throw comment
             }
             Monetize.findOneAndUpdate(
             {
@@ -66,8 +66,8 @@ exports.monetize = function (req, res) {
               upsert: true,
             }, (err) => {
               if (err) {
-                logger.error('database error on salesforce monetize update on uuid ' + uuid + ' ' + err)
-                return 'database error'
+                let comment = 'database error on salesforce monetize update on uuid ' + uuid + ' ' + err
+                throw comment
               }
             }
             )
