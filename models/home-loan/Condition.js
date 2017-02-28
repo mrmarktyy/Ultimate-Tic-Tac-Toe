@@ -64,6 +64,6 @@ Condition.schema.pre('validate', function (next) {
 	next()
 })
 
-Condition.defaultColumns = 'product, company, fixAmount, minAmount, maxAmount'
+Condition.defaultColumns = 'product, company, conditionType, fixAmount, minAmount, maxAmount'
 Condition.register()
 

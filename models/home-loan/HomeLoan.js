@@ -52,12 +52,6 @@ HomeLoan.add({
 		required: true,
 		initial: true,
 	},
-	states: {
-		type: Types.MultiSelect,
-		options: ['NSW', 'VIC', 'QLD', 'SA', 'WA', 'TAS', 'NT', 'ACT'],
-		required: true,
-		initial: true,
-	},
 	description: { type: Types.Text },
 	otherBenefits: { type: Types.Text },
 	otherRestrictions: { type: Types.Text },

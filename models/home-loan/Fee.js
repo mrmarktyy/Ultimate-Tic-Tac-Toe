@@ -43,6 +43,13 @@ Fee.add({
 	description: {type: Types.Text},
 })
 
+Fee.schema.pre('validate', function (next) {
+	if (this.fixedPercentage < 0 || this.fixedPercentage > 100){
+		next(Error('Fixed Percentage need to between 0 and 100 inclusive'))
+	}
+	next()
+})
+
 Fee.defaultColumns = 'product, company, feeType, frequency, fixedCost'
 Fee.register()
 

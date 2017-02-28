@@ -24,7 +24,7 @@ OffsetAccount.add({
 		noedit: true,
 		filters: { company: ':company' },
 	},
-	name: {type: Types.Text, required: true, initial: true},
+	name: {type: Types.Text, initial: true},
 	description: {type: Types.Text, initial: true},
 	duringPeriod: { type: Types.MultiSelect, initial: true, required: true, options: ['VARIABLE', 'FIXED'], emptyOption: false},
 	offsetPercentage: { type: Types.Number, initial: true},

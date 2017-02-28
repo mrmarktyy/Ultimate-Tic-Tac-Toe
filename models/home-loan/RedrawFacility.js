@@ -24,7 +24,7 @@ RedrawFacility.add({
 		noedit: true,
 		filters: { company: ':company' },
 	},
-	name: {type: Types.Text, required: true, initial: true},
+	name: {type: Types.Text, initial: true},
 	description: {type: Types.Text, initial: true},
 	duringPeriod: { type: Types.Select, initial: true, required: true, options: ['VARIABLE', 'FIXED'], emptyOption: false},
 	isUnlimitedRedraw: { type: Types.Boolean, indent: true, default: false },

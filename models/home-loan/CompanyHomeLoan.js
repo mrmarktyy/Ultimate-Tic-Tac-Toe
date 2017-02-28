@@ -15,8 +15,14 @@ CompanyHomeLoan.add({
 		index: true,
 		noedit: true,
 	},
+	states: {
+		type: Types.MultiSelect,
+		options: ['NSW', 'VIC', 'QLD', 'SA', 'WA', 'TAS', 'NT', 'ACT'],
+		required: true,
+		initial: true,
+	},
 	homeLoanBlurb: {type: Types.Code, height: 250, language: 'html'},
 })
 
-CompanyHomeLoan.defaultColumns = 'company'
+CompanyHomeLoan.defaultColumns = 'company, states'
 CompanyHomeLoan.register()

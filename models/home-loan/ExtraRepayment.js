@@ -24,10 +24,10 @@ ExtraRepayment.add({
 		noedit: true,
 		filters: { company: ':company' },
 	},
-	name: {type: Types.Text, required: true, initial: true},
+	name: {type: Types.Text, initial: true},
 	description: {type: Types.Text, initial: true},
 	duringPeriod: { type: Types.MultiSelect, initial: true, required: true, options: ['VARIABLE', 'FIXED'], emptyOption: false},
-	isExtraRepaymentAllow: { type: Types.Boolean, indent: true, default: false },
+	isExtraRepaymentAllow: { type: Types.Boolean, indent: true, default: true },
 	feeForExtraRepayment: { type: Types.Number, initial: true},
 	maxAmountOfExtraRepaymentInDollar: {type: Types.Text, initial: true},
 	maxAmountOfExtraRepaymentInPercentage: {type: Types.Text, initial: true},
@@ -36,6 +36,13 @@ ExtraRepayment.add({
 		options: ['PER_YEAR', 'DURING_FIXED_PERIOD'],
 	},
 	penaltyFeeIfMaxAmountExceeded: {type: Types.Text, initial: true},
+})
+
+ExtraRepayment.schema.pre('validate', function (next) {
+	if (this.maxAmountOfExtraRepaymentInPercentage < 0 || this.maxAmountOfExtraRepaymentInPercentage > 100){
+		next(Error('Max Amount of Extra Repayment In Percentage need to between 0 and 100 inclusive'))
+	}
+	next()
 })
 
 ExtraRepayment.defaultColumns = 'name, product, company, duringPeriod, isExtraRepaymentAllow, feeForExtraRepayment'
