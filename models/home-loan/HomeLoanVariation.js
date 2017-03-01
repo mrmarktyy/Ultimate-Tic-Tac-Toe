@@ -1,11 +1,14 @@
 var keystone = require('keystone')
 var Types = keystone.Field.Types
 var Fee = keystone.list('Fee')
+var productCommonAttributes = require('../common/ProductCommonAttributes')
 var ComparisonRateCalculator = require('../../services/ComparisonRateCalculator')
 
 var HomeLoanVariation = new keystone.List('HomeLoanVariation', {
 	track: true,
 })
+
+HomeLoanVariation.add(productCommonAttributes)
 
 HomeLoanVariation.add({
 	company: {
