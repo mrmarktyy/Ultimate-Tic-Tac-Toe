@@ -1,4 +1,5 @@
 var keystone = require('keystone')
+var uuid = require('node-uuid')
 var frequency = require('./paymentFrequencies')
 var availableOptions = require('../attributes/availableOptions')
 var productCommonAttributes = require('../common/ProductCommonAttributes')
@@ -65,6 +66,15 @@ HomeLoan.relationship({ path: 'redrawFacilities', ref: 'RedrawFacility', refPath
 HomeLoan.relationship({ path: 'fees', ref: 'Fee', refPath: 'product' })
 HomeLoan.relationship({ path: 'features', ref: 'Feature', refPath: 'product' })
 HomeLoan.relationship({ path: 'conditions', ref: 'Condition', refPath: 'product' })
+
+
+HomeLoan.schema.pre('save', async function (next) {
+	if (!this.uuid) {
+		this.uuid = uuid.v4()
+	}
+
+	next()
+})
 
 HomeLoan.defaultColumns = 'name, company, homeLoanType, propertyPurposeTypes, repaymentTypes'
 HomeLoan.register()
