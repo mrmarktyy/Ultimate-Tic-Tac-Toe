@@ -1,8 +1,10 @@
 var keystone = require('keystone')
+var uuid = require('node-uuid')
 var Types = keystone.Field.Types
 var Fee = keystone.list('Fee')
 var productCommonAttributes = require('../common/ProductCommonAttributes')
 var ComparisonRateCalculator = require('../../services/ComparisonRateCalculator')
+var utils = keystone.utils
 
 var HomeLoanVariation = new keystone.List('HomeLoanVariation', {
 	track: true,
@@ -45,7 +47,7 @@ HomeLoanVariation.add({
 		type: Types.Relationship,
 		ref: 'HomeLoanVariation',
 		initial: true,
-		filters: { company: ':company'},
+		filters: {company: ':company'},
 	},
 	isStandardVariable: {type: Types.Boolean, indent: true, default: false},
 })
@@ -76,27 +78,36 @@ HomeLoanVariation.schema.pre('validate', function (next) {
 })
 
 HomeLoanVariation.schema.pre('save', function (next) {
+	if (!this.uuid) {
+		this.uuid = uuid.v4()
+	}
+
+	if (!this.slug) {
+    let slug = utils.slug(this.name.toLowerCase())
+    this.slug = slug
+  }
 	let thiz = this
+
 	let promise = Fee.model.find({product: this.product}).exec()
 	promise.then((fees) => {
 		let loan = {}
-		loan.totalYearlyFees = 0;
-		loan.totalMonthlyFees = 0;
-		loan.totalUpfrontFees = 0;
-		loan.totalEndOfLoanFees = 0;
-		fees.forEach(function (fee) {
+		loan.totalYearlyFees = 0
+		loan.totalMonthlyFees = 0
+		loan.totalUpfrontFees = 0
+		loan.totalEndOfLoanFees = 0
+		fees.forEach((fee) => {
 			if (fee.feeType === 'SETTLEMENT_FEE' || fee.feeType === 'VALUATION_FEE' || fee.feeType === 'LEGAL_FEE'
 				|| fee.feeType === 'APPLICATION_FEE' || fee.feeType === 'MANDATORY_RATE_LOCK_FEE') {
-				loan.totalUpfrontFees += fee.fixedCost;
+				loan.totalUpfrontFees += fee.fixedCost
 			}
 			if (fee.feeType === 'DISCHARGE_FEE') {
-				loan.totalEndOfLoanFees += fee.fixedCost;
+				loan.totalEndOfLoanFees += fee.fixedCost
 			}
 			if (fee.feeType === 'ONGOING_FEE' && fee.frequency ==='ANNUALLY') {
-				loan.totalYearlyFees += fee.fixedCost;
+				loan.totalYearlyFees += fee.fixedCost
 			}
 			if (fee.feeType === 'ONGOING_FEE' && fee.frequency ==='MONTHLY') {
-				loan.totalMonthlyFees  += fee.fixedCost;
+				loan.totalMonthlyFees  += fee.fixedCost
 			}
 		})
 
@@ -130,4 +141,3 @@ HomeLoanVariation.schema.pre('save', function (next) {
 
 HomeLoanVariation.defaultColumns = 'product, company, neo4jId, fixMonth, minLVR, maxLVR, minTotalLoanAmount, maxTotalLoanAmount, rate, comparisonRate'
 HomeLoanVariation.register()
-
