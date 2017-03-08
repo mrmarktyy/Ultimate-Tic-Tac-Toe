@@ -10,61 +10,62 @@ var config = require('./webpack.config.dev')
 var compiler = webpack(config)
 
 keystone.init({
-	'name': 'RateCity Ultimate',
-	'brand': 'RateCity Ultimate',
+  'name': 'RateCity Ultimate',
+  'brand': 'RateCity Ultimate',
 
-	'sass': 'public',
-	'static': 'public',
-	'favicon': 'public/favicon.ico',
-	'views': 'templates/views',
-	'view engine': 'jade',
+  'sass': 'public',
+  'static': 'public',
+  'favicon': 'public/favicon.ico',
+  'views': 'templates/views',
+  'view engine': 'jade',
 
-	'emails': 'templates/emails',
+  'emails': 'templates/emails',
 
-	'auto update': true,
-	'session': true,
-	'auth': true,
-	'user model': 'User',
-	'port': '4000',
-	'session store': 'mongo',
-	'mongo': process.env.MONGO_URI,
+  'auto update': true,
+  'logger': 'combined',
+  'session': true,
+  'auth': true,
+  'user model': 'User',
+  'port': '4000',
+  'session store': 'mongo',
+  'mongo': process.env.MONGO_URI,
 })
 
 if (process.env.NODE_ENV === 'development') {
-	keystone.pre('routes', devMiddleware(compiler, {
-		noInfo: true,
-		publicPath: config.output.publicPath,
-	}))
+  keystone.pre('routes', devMiddleware(compiler, {
+    noInfo: true,
+    publicPath: config.output.publicPath,
+  }))
 
-	keystone.pre('routes', hotMiddleware(compiler))
+  keystone.pre('routes', hotMiddleware(compiler))
 }
 
 if (process.env.CLOUDINARY_URL) {
-	keystone.set('cloudinary config', process.env.CLOUDINARY_URL)
-	keystone.set('cloudinary folders', true)
+  keystone.set('cloudinary config', process.env.CLOUDINARY_URL)
+  keystone.set('cloudinary folders', true)
 }
 
 keystone.import('models')
 keystone.set('locals', {
-	_: require('lodash'),
-	env: keystone.get('env'),
-	utils: keystone.utils,
-	editable: keystone.content.editable,
+  _: require('lodash'),
+  env: keystone.get('env'),
+  utils: keystone.utils,
+  editable: keystone.content.editable,
 })
 keystone.set('routes', require('./routes'))
 keystone.set('email locals', {
-	logo_src: '/images/logo-email.gif',
-	logo_width: 194,
-	logo_height: 76,
-	theme: {
-		email_bg: '#f9f9f9',
-		link_color: '#2697de',
-		buttons: {
-			color: '#fff',
-			background_color: '#2697de',
-			border_color: '#1a7cb7',
-		},
-	},
+  logo_src: '/images/logo-email.gif',
+  logo_width: 194,
+  logo_height: 76,
+  theme: {
+    email_bg: '#f9f9f9',
+    link_color: '#2697de',
+    buttons: {
+      color: '#fff',
+      background_color: '#2697de',
+      border_color: '#1a7cb7',
+    },
+  },
 })
 
 keystone.set('nav', {
