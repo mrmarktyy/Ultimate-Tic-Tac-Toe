@@ -26,9 +26,8 @@ OffsetAccount.add({
 	},
 	name: {type: Types.Text, initial: true},
 	description: {type: Types.Text, initial: true},
-	duringPeriod: { type: Types.MultiSelect, initial: true, required: true, options: ['VARIABLE', 'FIXED'], emptyOption: false},
-	offsetPercentage: { type: Types.Number, initial: true},
-	fee: { type: Types.Number, initial: true},
+	duringPeriod: {type: Types.MultiSelect, initial: true, required: true, options: ['VARIABLE', 'FIXED'], emptyOption: false},
+	offsetPercentage: {type: Types.Number, initial: true},
 })
 
 OffsetAccount.schema.pre('validate', function (next) {
@@ -38,6 +37,6 @@ OffsetAccount.schema.pre('validate', function (next) {
 	next()
 })
 
-OffsetAccount.defaultColumns = 'name, product, company, duringPeriod, offsetPercentage, fee'
+OffsetAccount.defaultColumns = 'name, product, company, duringPeriod, offsetPercentage'
 OffsetAccount.register()
 
