@@ -32,6 +32,7 @@ HomeLoanVariation.add({
 	},
 	name: {type: Types.Text, required: true, initial: true, index: true},
 	neo4jId: {type: Types.Number, noedit: true},
+	legacyCode: { type: Types.Text, noedit: true },
 	fixMonth: {type: Types.Number, initial: true},
 	minTotalLoanAmount: {type: Types.Number, initial: true},
 	maxTotalLoanAmount: {type: Types.Number, initial: true},
