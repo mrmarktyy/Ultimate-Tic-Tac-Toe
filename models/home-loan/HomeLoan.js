@@ -28,16 +28,16 @@ HomeLoan.add({
 		filters: { company: ':company' },
 	},
 	neo4jId: {type: Types.Number, noedit: true},
-	homeLoanType: { type: Types.Select, initial: true, required: true, options: ['VARIABLE', 'FIXED'], emptyOption: false},
+	homeLoanType: { type: Types.Select, initial: true, required: true, options: ['VARIABLE', 'FIXED'], emptyOption: false },
 	isPackage: { type: Types.Boolean, indent: true, default: false },
 	isBasicVariable: { type: Types.Boolean, indent: true, default: false },
 	isRCSpecial: { type: Types.Select, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown },
 	availableTo457VisaHolders: { type: Types.Select, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown },
 	isCombinationLoan: { type: Types.Select, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown },
-	repaymentFrequencies: {type: Types.MultiSelect, options: frequency, required: true, initial: true },
+	repaymentFrequencies: { type: Types.MultiSelect, options: frequency, required: true, initial: true },
 	applicationOptions: {
 		type: Types.MultiSelect,
-		options: ['ONILNE', 'IN_BRANCH', 'PHONE', 'MOBILE_BROKER', 'BROKER'],
+		options: ['ONLINE', 'IN_BRANCH', 'PHONE', 'MOBILE_BROKER', 'BROKER'],
 		required: true,
 		initial: true,
 	},
@@ -66,7 +66,6 @@ HomeLoan.relationship({ path: 'redrawFacilities', ref: 'RedrawFacility', refPath
 HomeLoan.relationship({ path: 'fees', ref: 'Fee', refPath: 'product' })
 HomeLoan.relationship({ path: 'features', ref: 'Feature', refPath: 'product' })
 HomeLoan.relationship({ path: 'conditions', ref: 'Condition', refPath: 'product' })
-
 
 HomeLoan.schema.pre('save', async function (next) {
 	if (!this.uuid) {

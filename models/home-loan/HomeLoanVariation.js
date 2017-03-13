@@ -33,6 +33,7 @@ HomeLoanVariation.add({
 	name: {type: Types.Text, required: true, initial: true, index: true},
 	neo4jId: {type: Types.Number, noedit: true},
 	legacyCode: { type: Types.Text, noedit: true },
+	ecpc: { type: Types.Number, noedit: true },
 	fixMonth: {type: Types.Number, initial: true},
 	minTotalLoanAmount: {type: Types.Number, initial: true},
 	maxTotalLoanAmount: {type: Types.Number, initial: true},
@@ -97,9 +98,9 @@ HomeLoanVariation.schema.pre('save', function (next) {
 		loan.totalUpfrontFees = 0
 		loan.totalEndOfLoanFees = 0
 		fees.forEach((fee) => {
-			if (fee.feeType === 'SETTLEMENT_FEE' || fee.feeType === 'VALUATION_FEE' || fee.feeType === 'LEGAL_FEE'
-				|| fee.feeType === 'APPLICATION_FEE' || fee.feeType === 'MANDATORY_RATE_LOCK_FEE') {
-				loan.totalUpfrontFees += fee.fixedCost
+			if (fee.feeType === 'SETTLEMENT_FEE' || fee.feeType === 'VALUATION_FEE' || fee.feeType === 'LEGAL_FEE' ||
+				fee.feeType === 'APPLICATION_FEE' || fee.feeType === 'MANDATORY_RATE_LOCK_FEE') {
+					loan.totalUpfrontFees += fee.fixedCost
 			}
 			if (fee.feeType === 'DISCHARGE_FEE') {
 				loan.totalEndOfLoanFees += fee.fixedCost
@@ -140,5 +141,5 @@ HomeLoanVariation.schema.pre('save', function (next) {
 	})
 })
 
-HomeLoanVariation.defaultColumns = 'product, company, neo4jId, fixMonth, minLVR, maxLVR, minTotalLoanAmount, maxTotalLoanAmount, rate, comparisonRate'
+HomeLoanVariation.defaultColumns = 'product, company, neo4jId, isMonetized, fixMonth, minLVR, maxLVR, minTotalLoanAmount, maxTotalLoanAmount, rate, comparisonRate'
 HomeLoanVariation.register()
