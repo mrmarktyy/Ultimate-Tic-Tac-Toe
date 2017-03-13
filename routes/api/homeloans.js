@@ -13,12 +13,12 @@ var Monetize = keystone.list('Monetize')
 var CompanyService = require('../../services/CompanyService')
 var logger = require('../../utils/logger')
 
-exports.list = function (req, res) {
+exports.list = async function (req, res) {
 
   let promise = HomeLoan.model.find({ $or: [ { isDiscontinued: false }, { isDiscontinued: {$exists: false} } ] }).populate('company homeLoanFamily').lean().exec()
-//  let promise = HomeLoan.model.find({}).populate('company homeLoanFamily').lean().exec()
   let response = {}
   let relationshipPromises = []
+  let monetizedVariations = await monetizedCollection()
 
   promise.then((homeLoans) => {
     homeLoans.forEach((homeLoan) => {
@@ -45,9 +45,16 @@ exports.list = function (req, res) {
         }
         variations = variations.map((v) => {
           v.revertRate = null
+          v.gotoSiteUrl = null
+          v.gotoSiteEnabled = false
           if (v.revertVariation) {
             v.revertRate = v.revertVariation.rate
             delete v.revertVariation
+          }
+          let monetize = monetizedVariations[v._id]
+          if (monetize) {
+            v.gotoSiteUrl = monetize.applyUrl
+            v.gotoSiteEnabled = monetize.enabled
           }
           return v
         })
@@ -108,22 +115,6 @@ exports.list = function (req, res) {
         response[homeLoan._id] = Object.assign({}, homeLoan, response[homeLoan._id], { extraRepayments: extraRepayments })
       })
       relationshipPromises.push(extraRepaymentPromise)
-
-      let mntzPromise = Monetize.model.find({ product: homeLoan._id }).lean().exec((err, monetize) => {
-        if (err) {
-          logger.error('database error on find monetize by product id')
-          return 'database error'
-        }
-        monetize = monetize[0]
-        let applyUrl = null
-        let enabled = false
-        if (monetize !== undefined) {
-          applyUrl = monetize.applyUrl
-          enabled = monetize.enabled
-        }
-        response[homeLoan._id] = Object.assign({}, homeLoan, response[homeLoan._id], { gotoSiteUrl: applyUrl, gotoSiteEnabled: enabled })
-      })
-      relationshipPromises.push(mntzPromise)
     })
     Promise.all(relationshipPromises).then(() => {
       let result = []
@@ -133,4 +124,20 @@ exports.list = function (req, res) {
       res.jsonp(result)
     })
   })
+}
+
+async function monetizedCollection () {
+  var obj = {}
+  await Monetize.model.find({vertical: 'Home Loans'})
+  .lean()
+  .exec((err, monetizes) => {
+    if (err) {
+      logger.error('database error on home loan api fetching monetized events')
+      return 'database error'
+    }
+    monetizes.forEach((record) => {
+      obj[record.product] = record
+    })
+  })
+  return obj
 }
