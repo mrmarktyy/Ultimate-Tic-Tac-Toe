@@ -23,11 +23,6 @@ exports.list = async function (req, res) {
   promise.then((homeLoans) => {
     homeLoans.forEach((homeLoan) => {
       homeLoan.company = CompanyService.fixLogoUrl(homeLoan.company)
-      if (homeLoan.promotedOrder === '0') {
-        homeLoan.promotedOrder = null
-      } else {
-        homeLoan.promotedOrder = 100 - parseInt(homeLoan.promotedOrder)
-      }
 
       let companyPromise = CompanyHomeLoan.model.find({ company: homeLoan.company._id }).lean().exec((err, company) => {
         if (err) {
@@ -47,6 +42,12 @@ exports.list = async function (req, res) {
           v.revertRate = null
           v.gotoSiteUrl = null
           v.gotoSiteEnabled = false
+          if (v.promotedOrder === '0') {
+            v.promotedOrder = null
+          } else {
+            v.promotedOrder = 100 - parseInt(v.promotedOrder)
+          }
+
           if (v.revertVariation) {
             v.revertRate = v.revertVariation.rate
             delete v.revertVariation
