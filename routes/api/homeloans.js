@@ -22,7 +22,12 @@ exports.list = async function (req, res) {
 
   promise.then((homeLoans) => {
     homeLoans.forEach((homeLoan) => {
-      homeLoan.company = CompanyService.fixLogoUrl(homeLoan.company)
+      let company = CompanyService.fixLogoUrl(homeLoan.company)
+      company = CompanyService.isBank(company)
+      if (company.logo && company.logo.url) {
+        company.logo = company.logo.url.replace(/(^\w+:|^)\/\//, '')
+      }
+      homeLoan.company = company
 
       let companyPromise = CompanyHomeLoan.model.find({ company: homeLoan.company._id }).lean().exec((err, company) => {
         if (err) {
