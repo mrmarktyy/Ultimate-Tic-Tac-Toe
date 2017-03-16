@@ -1,5 +1,5 @@
-var keystone = require('keystone')
-var Types = keystone.Field.Types
+const keystone = require('keystone')
+const Types = keystone.Field.Types
 
 module.exports = {
 	name: { type: Types.Text, required: true, initial: true, index: true },

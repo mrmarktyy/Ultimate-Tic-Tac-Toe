@@ -52,6 +52,7 @@ SavingsAccount.add({
 
 SavingsAccount.relationship({ path: 'savingsAccountTiers', ref: 'SavingsAccountTier', refPath: 'product' })
 SavingsAccount.relationship({ path: 'ChangeLogs', ref: 'ChangeLog', refPath: 'model', many: true })
+SavingsAccount.relationship({ path: 'savingsAccountSpecial', ref: 'SavingsAccountSpecial', refPath: 'product' })
 
 SavingsAccount.schema.index({ company: 1, name: 1 }, { unique: true })
 SavingsAccount.schema.index({ company: 1, slug: 1 }, { unique: true })
