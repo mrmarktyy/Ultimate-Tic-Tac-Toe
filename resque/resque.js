@@ -24,6 +24,18 @@ const jobs = {
       }
     },
   },
+  'homeloanVariationsMonthlyClickCount': {
+    plugins: ['queueLock'],
+    perform: async (done) => {
+      try {
+        var homeloanVariationsMonthlyClickCount = require('../redshift/homeloanVariationsMonthlyClickCount')
+        await homeloanVariationsMonthlyClickCount()
+        done()
+      } catch (error) {
+        done(error.message)
+      }
+    },
+  },
 }
 
 let scheduler = new Resque.scheduler({connection: connectionDetails})
@@ -55,6 +67,11 @@ queue.connect(() => {
   schedule.scheduleJob('45 16 * * *', () => {
     if (scheduler.master) {
       queue.enqueue('ultimate', 'loadPersonalLoansToRedshift')
+    }
+  })
+  schedule.scheduleJob('00 7 * * *', () => {
+    if (scheduler.master) {
+      queue.enqueue('ultimate', 'homeloanVariationsMonthlyClickCount')
     }
   })
 })
