@@ -1,0 +1,27 @@
+{
+  "apps": [
+    {
+      "name": "Ultimate",
+      "script": "keystone.js",
+      "cwd": "/home/dev/ultimate/current",
+      "exec_mode": "cluster",
+      "node_args": [
+        "--harmony_async_await"
+      ],
+      "instances": "max",
+      "error_file": "/home/dev/ultimate/shared/logs/app.err.log",
+      "out_file": "/home/dev/ultimate/shared/logs/app.out.log"
+    },
+    {
+      "name": "Ultimate Resque",
+      "script": "resque/resque.js",
+      "cwd": "/home/dev/resque/current",
+      "node_args": [
+        "--harmony_async_await"
+      ],
+      "error_file": "/home/dev/ultimate/shared/logs/resque.err.log",
+      "out_file": "/home/dev/ultimate/shared/logs/resque.out.log"
+    }
+  ]
+}
+
