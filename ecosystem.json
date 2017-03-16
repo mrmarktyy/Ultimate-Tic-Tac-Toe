@@ -15,7 +15,7 @@
     {
       "name": "Ultimate Resque",
       "script": "resque/resque.js",
-      "cwd": "/home/dev/resque/current",
+      "cwd": "/home/dev/ultimate/current",
       "node_args": [
         "--harmony_async_await"
       ],
