@@ -69,16 +69,16 @@ keystone.set('email locals', {
 })
 
 keystone.set('nav', {
-	companies: ['Company', 'Branch', 'ATM'],
-	homeLoans: ['CompanyHomeLoan', 'HomeLoanFamily', 'HomeLoan', 'HomeLoanVariation', 'ExtraRepayment', 'OffsetAccount', 'RedrawFacility', 'Fee', 'Feature', 'Condition'],
-	creditCards: ['CompanyCreditCard', 'CreditCard', 'Redemption', 'PartnerConversion', 'Program', 'RedemptionType', 'RedemptionName'],
-	personalLoans: ['CompanyPersonalLoan', 'PersonalLoan', 'PersonalLoanVariation'],
-	savingsAccounts: ['CompanySavingsAccount', 'SavingsAccount', 'SavingsAccountTier'],
-	sponsoredLinks: 'SponsoredLink',
-	featuredProducts: 'FeaturedProduct',
-	feeds: ['ProductFeedInclusion', 'ProductFeed', 'WidgetImage'],
-	users: 'users',
-	utilites: ['ApiKey', 'Monetize', 'ChangeLog'],
+  companies: ['Company', 'Branch', 'ATM'],
+  homeLoans: ['CompanyHomeLoan', 'HomeLoanFamily', 'HomeLoan', 'HomeLoanVariation', 'HomeLoanSpecial', 'ExtraRepayment', 'OffsetAccount', 'RedrawFacility', 'Fee', 'Feature', 'Condition'],
+  creditCards: ['CompanyCreditCard', 'CreditCard', 'CreditCardSpecial', 'Redemption', 'PartnerConversion', 'Program', 'RedemptionType', 'RedemptionName'],
+  personalLoans: ['CompanyPersonalLoan', 'PersonalLoan', 'PersonalLoanSpecial', 'PersonalLoanVariation'],
+  savingsAccounts: ['CompanySavingsAccount', 'SavingsAccount', 'SavingsAccountSpecial', 'SavingsAccountTier'],
+  sponsoredLinks: 'SponsoredLink',
+  featuredProducts: 'FeaturedProduct',
+  feeds: ['ProductFeedInclusion', 'ProductFeed', 'WidgetImage'],
+  users: 'users',
+  utilites: ['ApiKey', 'Monetize', 'ChangeLog'],
 })
 
 keystone.set('cors allow origin', true)

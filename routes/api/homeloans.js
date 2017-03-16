@@ -47,6 +47,8 @@ exports.list = async function (req, res) {
           v.revertRate = null
           v.gotoSiteUrl = null
           v.gotoSiteEnabled = false
+          v.recommendScore = (v.monthlyClicks ? v.monthlyClicks * 5.32 : 0)
+          delete v.monthlyClicks
           if (v.promotedOrder === '0') {
             v.promotedOrder = null
           } else {

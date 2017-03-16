@@ -159,6 +159,7 @@ CreditCard.add({
 })
 
 CreditCard.relationship({ path: 'ChangeLogs', ref: 'ChangeLog', refPath: 'model', many: true })
+CreditCard.relationship({ path: 'creditCardSpecial', ref: 'CreditCardSpecial', refPath: 'product' })
 
 CreditCard.schema.pre('validate', function (next) {
 	if (([undefined, null].indexOf(this.offerExpires) < 0) && (this.offerExpires <= new Date())) {
