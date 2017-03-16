@@ -50,7 +50,7 @@ module.exports = function (shipit) {
     shipit.start('post-update')
   })
 
-  shipit.task('post-update', ['slack', 'env-symlink', 'newrelic-log-symlink', 'nodemodules-symlink', 'npm-install'])
+  shipit.task('post-update', ['slack', 'env-symlink', 'newrelic-log-symlink', 'npm-install'])
   shipit.task('post-publish', ['pm2-reload', 'pm2-save'])
 
   shipit.blTask('slack', function (cb) {
@@ -82,10 +82,6 @@ module.exports = function (shipit) {
 
   shipit.blTask('newrelic-log-symlink', function () {
     return shipit.remote('ln -sf ' + deployBase + '/shared/newrelic_agent.log ' + currentRelease + '/newrelic_agent.log')
-  })
-
-  shipit.blTask('nodemodules-symlink', function () {
-    return shipit.remote('ln -sf ' + deployBase + '/shared/node_modules ' + currentRelease + '/node_modules')
   })
 
   shipit.blTask('npm-install', function () {
