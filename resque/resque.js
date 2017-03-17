@@ -4,6 +4,9 @@ const Resque = require('node-resque')
 const schedule = require('node-schedule')
 const logger = require('../utils/logger')
 
+var importHomeloansMonthlyClickCount = require('../redshift/importHomeloansMonthlyClickCount')
+var loadPersonalLoansToRedshift = require('../redshift/personalloans')
+
 const connectionDetails = {
   pkg: 'ioredis',
   host: process.env.REDIS_HOST,
@@ -16,7 +19,6 @@ const jobs = {
     plugins: ['queueLock'],
     perform: async (done) => {
       try {
-        var loadPersonalLoansToRedshift = require('../redshift/personalloans')
         await loadPersonalLoansToRedshift()
         done()
       } catch (error) {
@@ -24,12 +26,10 @@ const jobs = {
       }
     },
   },
-  'homeloanVariationsMonthlyClickCount': {
-    plugins: ['queueLock'],
+  'importHomeloansMonthlyClickCount': {
     perform: async (done) => {
       try {
-        var homeloanVariationsMonthlyClickCount = require('../redshift/homeloanVariationsMonthlyClickCount')
-        await homeloanVariationsMonthlyClickCount()
+        await importHomeloansMonthlyClickCount()
         done()
       } catch (error) {
         done(error.message)
@@ -71,7 +71,7 @@ queue.connect(() => {
   })
   schedule.scheduleJob('00 7 * * *', () => {
     if (scheduler.master) {
-      queue.enqueue('ultimate', 'homeloanVariationsMonthlyClickCount')
+      queue.enqueue('ultimate', 'importHomeloansMonthlyClickCount')
     }
   })
 })
