@@ -30,7 +30,7 @@ Fee.add({
 		options: feeTypes,
 		initial: true,
 		required: true,
-		emptyOption: false
+		emptyOption: false,
 	},
 	frequency: {
 		type: Types.Select,
@@ -38,6 +38,7 @@ Fee.add({
 		required: true,
 		initial: true,
 	},
+	atCost: {type: Types.Boolean, indent: true, default: false},
 	fixedCost: {type: Types.Number, initial: true},
 	fixedPercentage: {type: Types.Number, initial: true},
 	description: {type: Types.Text},
