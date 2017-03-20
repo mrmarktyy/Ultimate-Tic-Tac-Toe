@@ -63,6 +63,7 @@ exports.list = async function (req, res) {
           if (monetize) {
             v.gotoSiteUrl = monetize.applyUrl
             v.gotoSiteEnabled = monetize.enabled
+            v.paymentType = monetize.paymentType
           }
           return v
         })

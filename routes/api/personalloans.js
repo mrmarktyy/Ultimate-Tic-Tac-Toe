@@ -57,11 +57,13 @@ exports.list = function (req, res) {
 				}
 				let applyUrl = null
 				let enabled = false
+        let paymentType = null
 				if (monetize !== null) {
 					applyUrl = monetize.applyUrl
 					enabled = monetize.enabled
+          paymentType = monetize.paymentType
 				}
-				response[personalLoan._id] = Object.assign({}, personalLoan, response[personalLoan._id], { gotoSiteUrl: applyUrl, gotoSiteEnabled: enabled })
+				response[personalLoan._id] = Object.assign({}, personalLoan, response[personalLoan._id], { gotoSiteUrl: applyUrl, gotoSiteEnabled: enabled, paymentType: paymentType })
 			})
 			variationPromises.push(mntzPromise)
 		})
