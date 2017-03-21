@@ -5,6 +5,7 @@ const schedule = require('node-schedule')
 const logger = require('../utils/logger')
 
 var importHomeloansMonthlyClickCount = require('../redshift/importHomeloansMonthlyClickCount')
+var importPaymentMonetizationTypes = require('../redshift/importPaymentMonetizationTypes')
 var loadPersonalLoansToRedshift = require('../redshift/personalloans')
 
 const connectionDetails = {
@@ -29,6 +30,7 @@ const jobs = {
   'importHomeloansMonthlyClickCount': {
     perform: async (done) => {
       try {
+        console.log('resque importHomeloansMonthlyClickCount')
         await importHomeloansMonthlyClickCount()
         done()
       } catch (error) {
@@ -36,6 +38,16 @@ const jobs = {
       }
     },
   },
+  'importPaymentMonetizationTypes': {
+    perform: async (done) => {
+      try {
+        await importPaymentMonetizationTypes()
+        done()
+      } catch (error) {
+        done(error.message)
+      }
+    },
+  }
 }
 
 let scheduler = new Resque.scheduler({connection: connectionDetails})
@@ -72,6 +84,11 @@ queue.connect(() => {
   schedule.scheduleJob('00 7 * * *', () => {
     if (scheduler.master) {
       queue.enqueue('ultimate', 'importHomeloansMonthlyClickCount')
+    }
+  })
+  schedule.scheduleJob('15 7 * * *', () => {
+    if (scheduler.master) {
+      queue.enqueue('ultimate', 'importPaymentMonetizationTypes')
     }
   })
 })

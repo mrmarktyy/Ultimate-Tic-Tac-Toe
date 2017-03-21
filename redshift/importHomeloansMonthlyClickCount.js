@@ -21,6 +21,7 @@ async function importMonthyClicks (uuidsWithClicks = []) {
     try {
       await clearHomeLoanMonthlyClickCounts()
       await updateHomeLoanMonthlyClickCounts(uuidsWithClicks)
+      connection.close()
     } catch (error) {
       logger.error(error)
       connection.close()
@@ -37,15 +38,18 @@ async function clearHomeLoanMonthlyClickCounts () {
 }
 
 async function updateHomeLoanMonthlyClickCounts (uuidsWithClicks) {
-  await uuidsWithClicks.forEach(async (record) => {
-    await HomeLoanVariation.model.findOneAndUpdate(
+  let promises = []
+  uuidsWithClicks.forEach((record) => {
+    promises.push(HomeLoanVariation.model.findOneAndUpdate(
       {uuid: record.uuid},
       {$set: {monthlyClicks: record.clicks}},
       {upsert: false})
-    .exec((error) => {
-      if (error) {
-        logger.error(error)
-      }
-    })
+    )
   })
+  try {
+    await Promise.all(promises)
+  } catch (error) {
+    /* If something fails, log the error, but don't fail the entire job */
+    logger.error(error)
+  }
 }

@@ -12,6 +12,7 @@ Monetize.add({
   vertical: { type: Types.Text, noedit: true },
   applyUrl: { type: Types.Text, noedit: true },
   enabled: { type: Types.Boolean, indent: true, noedit: true },
+  paymentType: { type: Types.Text, noedit: true },
   product: {
     type: Types.Relationship,
     ref: 'PersonalLoan',
@@ -21,7 +22,7 @@ Monetize.add({
   },
 })
 
-Monetize.defaultColumns = 'uuid, vertical, enabled, applyUrl'
+Monetize.defaultColumns = 'uuid, vertical, enabled, applyUrl, paymentType'
 Monetize.defaultSort = '-enabled, vertical, uuid'
 Monetize.schema.index({ uuid: 1 }, { unique: true })
 Monetize.register()
