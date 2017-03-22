@@ -94,6 +94,13 @@ exports.list = async function (req, res) {
           logger.error('database error on find homeloan loan fees by product id')
           return 'database error'
         }
+        fees = fees.map((fee) => {
+          if (fee.frequency === 'SEMIANNUALLY') {
+            fee.frequency = 'SEMI ANNUALLY'
+          }
+          return fee
+        })
+
         response[homeLoan._id] = Object.assign({}, homeLoan, response[homeLoan._id], { fees: fees })
       })
       relationshipPromises.push(feePromise)
