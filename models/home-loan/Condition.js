@@ -2,6 +2,7 @@ var keystone = require('keystone')
 var Types = keystone.Field.Types
 var frequency = require('./paymentFrequencies')
 var conditionTypes = require('./conditionTypes')
+var changeLogService = require('../../services/changeLogService')
 
 var Condition = new keystone.List('Condition', {
 	track: true,
@@ -30,9 +31,9 @@ Condition.add({
 		options: conditionTypes,
 		initial: true,
 		required: true,
-		emptyOption: false
+		emptyOption: false,
 	},
-	frequency: {type: Types.Select, options: frequency, initial: true },
+	frequency: {type: Types.Select, options: frequency, initial: true},
 	isWhicheverLower: {type: Types.Boolean, indent: true, default: false},
 	maxAmount: {type: Types.Number, initial: true},
 	minAmount: {type: Types.Number, initial: true},
@@ -45,7 +46,7 @@ Condition.add({
 	endAt: {type: Types.Number, initial: true},
 })
 
-Condition.schema.pre('validate', function (next) {
+Condition.schema.pre('validate', async function (next) {
 	if (this.minAmount > this.maxAmount) {
 		next(Error('Max Amount can not less than Min Amount'))
 	}
@@ -61,6 +62,11 @@ Condition.schema.pre('validate', function (next) {
 	if (this.startFrom > this.endAt) {
 		next(Error('Start From can not less than End At'))
 	}
+	next()
+})
+
+Condition.schema.pre('save', async function (next) {
+	await changeLogService(this)
 	next()
 })
 

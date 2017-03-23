@@ -3,6 +3,8 @@ var uuid = require('node-uuid')
 var frequency = require('./paymentFrequencies')
 var availableOptions = require('../attributes/availableOptions')
 var productCommonAttributes = require('../common/ProductCommonAttributes')
+var changeLogService = require('../../services/changeLogService')
+
 var Types = keystone.Field.Types
 
 var HomeLoan = new keystone.List('HomeLoan', {
@@ -73,6 +75,7 @@ HomeLoan.schema.pre('save', async function (next) {
     this.uuid = uuid.v4()
   }
 
+  await changeLogService(this)
   next()
 })
 

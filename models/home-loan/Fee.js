@@ -2,6 +2,7 @@ var keystone = require('keystone')
 var Types = keystone.Field.Types
 var feeTypes = require('./feeTypes')
 var frequency = require('./paymentFrequencies')
+var changeLogService = require('../../services/changeLogService')
 
 var Fee = new keystone.List('Fee', {
 	track: true,
@@ -48,6 +49,11 @@ Fee.schema.pre('validate', function (next) {
 	if (this.fixedPercentage < 0 || this.fixedPercentage > 100){
 		next(Error('Fixed Percentage need to between 0 and 100 inclusive'))
 	}
+	next()
+})
+
+Fee.schema.pre('save', async function (next) {
+	await changeLogService(this)
 	next()
 })
 

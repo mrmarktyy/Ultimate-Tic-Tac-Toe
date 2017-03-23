@@ -1,4 +1,5 @@
 var keystone = require('keystone')
+var changeLogService = require('../../services/changeLogService')
 var Types = keystone.Field.Types
 
 var CompanyHomeLoan = new keystone.List('CompanyHomeLoan', {
@@ -22,6 +23,11 @@ CompanyHomeLoan.add({
 		initial: true,
 	},
 	homeLoanBlurb: {type: Types.Code, height: 250, language: 'html'},
+})
+
+CompanyHomeLoan.schema.pre('save', async function (next) {
+	await changeLogService(this)
+	next()
 })
 
 CompanyHomeLoan.defaultColumns = 'company, states'

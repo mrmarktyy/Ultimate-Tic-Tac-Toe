@@ -14,12 +14,10 @@ module.exports = function (currentRecord, options = {}) {
   Model.findOne({ _id: currentRecord._id }).lean().exec((err, oldRecord) => {
     if (oldRecord !== null) {
       let keysToLog = loggedDocumentKeys(currentRecord.list.fields, dontLogKeys)
-
       for (let key of keysToLog) {
         if (!_.isEqual(currentRecord[key], oldRecord[key])) {
           let newValue = currentRecord[key] == undefined ? null : currentRecord[key]
           let oldValue = oldRecord[key] == undefined ? null : oldRecord[key]
-
           let changeLog = new ChangeLog.model({
             model: oldRecord._id,
             collectionName: collectionName,
@@ -50,7 +48,10 @@ function loggedDocumentKeys (record, removeKeys = []) {
 
   for (let i = 0; i < removeKeys.length; i++) {
     let keyIndex = keys.indexOf(removeKeys[i])
-    keys.splice(keyIndex, 1)
+    if (keyIndex >= 0) {
+      keys.splice(keyIndex, 1)
+    }
   }
+
   return keys
 }
