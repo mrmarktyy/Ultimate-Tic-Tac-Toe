@@ -4,6 +4,7 @@ var Types = keystone.Field.Types
 var Fee = keystone.list('Fee')
 var productCommonAttributes = require('../common/ProductCommonAttributes')
 var ComparisonRateCalculator = require('../../services/ComparisonRateCalculator')
+var changeLogService = require('../../services/changeLogService')
 var utils = keystone.utils
 
 var HomeLoanVariation = new keystone.List('HomeLoanVariation', {
@@ -80,7 +81,7 @@ HomeLoanVariation.schema.pre('validate', function (next) {
   next()
 })
 
-HomeLoanVariation.schema.pre('save', function (next) {
+HomeLoanVariation.schema.pre('save', async function (next) {
   if (!this.uuid) {
     this.uuid = uuid.v4()
   }
@@ -89,8 +90,9 @@ HomeLoanVariation.schema.pre('save', function (next) {
     let slug = utils.slug(this.name.toLowerCase())
     this.slug = slug
   }
-  let thiz = this
+  await changeLogService(this)
 
+  let thiz = this
   let promise = Fee.model.find({product: this.product}).exec()
   promise.then((fees) => {
     let loan = {}
@@ -142,5 +144,6 @@ HomeLoanVariation.schema.pre('save', function (next) {
   })
 })
 
+HomeLoanVariation.defaultSort = 'isDiscontinued'
 HomeLoanVariation.defaultColumns = 'product, company, neo4jId, isMonetized, fixMonth, minLVR, maxLVR, minTotalLoanAmount, maxTotalLoanAmount, rate, comparisonRate'
 HomeLoanVariation.register()

@@ -1,4 +1,5 @@
 var keystone = require('keystone')
+var changeLogService = require('../../services/changeLogService')
 var Types = keystone.Field.Types
 
 var RedrawFacility = new keystone.List('RedrawFacility', {
@@ -24,19 +25,20 @@ RedrawFacility.add({
 		noedit: true,
 		filters: { company: ':company' },
 	},
-	name: {type: Types.Text, initial: true},
-	description: {type: Types.Text, initial: true},
-	duringPeriod: { type: Types.Select, initial: true, required: true, options: ['VARIABLE', 'FIXED'], emptyOption: false},
+	name: { type: Types.Text, initial: true },
+	description: { type: Types.Text, initial: true },
+	duringPeriod: { type: Types.Select, initial: true, required: true, options: ['VARIABLE', 'FIXED'], emptyOption: false },
 	isUnlimitedRedraw: { type: Types.Boolean, indent: true, default: false },
-	minRedrawAmount: { type: Types.Number, initial: true},
-	maxRedrawAmount: { type: Types.Number, initial: true},
-	feeToActivateRedraw: { type: Types.Number, initial: true},
+	minRedrawAmount: { type: Types.Number, initial: true },
+	maxRedrawAmount: { type: Types.Number, initial: true },
+	feeToActivateRedraw: { type: Types.Number, initial: true },
 })
 
-RedrawFacility.schema.pre('validate', function (next) {
+RedrawFacility.schema.pre('validate', async function (next) {
 	if (this.minRedrawAmount > this.maxRedrawAmount) {
 		next(Error('Max Redraw Amount can not less than Min Redraw Amount'))
 	}
+	await changeLogService(this)
 	next()
 })
 

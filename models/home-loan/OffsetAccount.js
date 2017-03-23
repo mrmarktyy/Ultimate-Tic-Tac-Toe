@@ -1,4 +1,5 @@
 var keystone = require('keystone')
+var changeLogService = require('../../services/changeLogService')
 var Types = keystone.Field.Types
 
 var OffsetAccount = new keystone.List('OffsetAccount', {
@@ -30,10 +31,12 @@ OffsetAccount.add({
 	offsetPercentage: {type: Types.Number, initial: true},
 })
 
-OffsetAccount.schema.pre('validate', function (next) {
+OffsetAccount.schema.pre('validate', async function (next) {
 	if (this.offsetPercentage < 0 || this.offsetPercentage > 100){
 		next(Error('Offset Percentage need to between 0 and 100 inclusive'))
 	}
+
+	await changeLogService(this)
 	next()
 })
 

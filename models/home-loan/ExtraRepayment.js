@@ -1,5 +1,6 @@
 var keystone = require('keystone')
 var Types = keystone.Field.Types
+var changeLogService = require('../../services/changeLogService')
 
 var ExtraRepayment = new keystone.List('ExtraRepayment', {
 	track: true,
@@ -42,6 +43,11 @@ ExtraRepayment.schema.pre('validate', function (next) {
 	if (this.maxAmountOfExtraRepaymentInPercentage < 0 || this.maxAmountOfExtraRepaymentInPercentage > 100){
 		next(Error('Max Amount of Extra Repayment In Percentage need to between 0 and 100 inclusive'))
 	}
+	next()
+})
+
+ExtraRepayment.schema.pre('save', async function (next) {
+	await changeLogService(this)
 	next()
 })
 
