@@ -144,7 +144,7 @@ exports.list = async function (req, res) {
 
 async function monetizedCollection () {
   var obj = {}
-  await Monetize.model.find({vertical: 'Home Loans'})
+  await Monetize.model.find({vertical: 'Home Loans', enabled: true})
   .lean()
   .exec((err, monetizes) => {
     if (err) {
