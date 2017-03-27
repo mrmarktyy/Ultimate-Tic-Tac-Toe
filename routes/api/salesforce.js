@@ -26,12 +26,12 @@ exports.pushProducts = async function (req, res) {
 
 var salesforceProductFactory = async function (vertical, loanTypeQuery) {
   let ProductVertical = keystone.list(salesforceVerticals[vertical])
-
   let products = await (ProductVertical.model.find(loanTypeQuery).populate('company').lean())
+
   for (var i = 0; i < products.length; i++) {
     products[i].applyUrl = null
     products[i].goToSite = false
-    let monetize = await (Monetize.findOne({ id: products[i].product }).lean()) // eslint-disable-line babel/no-await-in-loop
+    let monetize = await (Monetize.findOne({ product: mongoose.Types.ObjectId(products[i]._id) }).lean()) // eslint-disable-line babel/no-await-in-loop
     if (monetize) {
       products[i].applyUrl = monetize.applyUrl
       products[i].goToSite = monetize.enabled
