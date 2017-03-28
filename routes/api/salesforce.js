@@ -17,9 +17,12 @@ exports.pushProducts = async function (req, res) {
   let productsStatus = 'ok'
   for (let vertical in salesforceVerticals) {
     let status = await salesforceProductFactory(vertical, loanTypeObject(vertical))  // eslint-disable-line babel/no-await-in-loop
-    if (status !== 200) {
+    if (status !== 'ok') {
       productsStatus = status
     }
+  }
+  if (productsStatus === 'ok') {
+    res.status(200)
   }
   return res.jsonp({ text: productsStatus })
 }
