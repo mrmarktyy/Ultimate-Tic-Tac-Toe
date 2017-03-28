@@ -1,5 +1,5 @@
 var keystone = require('keystone')
-
+var _ = require('lodash')
 var HomeLoan = keystone.list('HomeLoan')
 var HomeLoanVariation = keystone.list('HomeLoanVariation')
 var OffsetAccount = keystone.list('OffsetAccount')
@@ -13,133 +13,57 @@ var Monetize = keystone.list('Monetize')
 var CompanyService = require('../../services/CompanyService')
 var logger = require('../../utils/logger')
 
-exports.list = async function (req, res) {
+function removeUneededFields (obj) {
+  return _.omit(obj, ['product', '_id', 'company', 'createdAt', 'createdBy', 'updatedBy', 'updatedAt'])
+}
 
-  let promise = HomeLoan.model.find({ $or: [ { isDiscontinued: false }, { isDiscontinued: {$exists: false} } ] }).populate('company homeLoanFamily').lean().exec()
-  let response = {}
-  let relationshipPromises = []
-  let monetizedVariations = await monetizedCollection()
+function spawnVariation (variation, monetizedVariations) {
+  variation.revertRate = null
+  variation.gotoSiteUrl = null
+  variation.gotoSiteEnabled = false
+  variation.recommendScore = (variation.monthlyClicks ? variation.monthlyClicks * 5.32 : 0)
+  delete variation.monthlyClicks
+  if (variation.promotedOrder === '0') {
+    variation.promotedOrder = null
+  } else {
+    variation.promotedOrder = 100 - parseInt(variation.promotedOrder)
+  }
 
-  promise.then((homeLoans) => {
-    homeLoans.forEach((homeLoan) => {
-      let company = CompanyService.fixLogoUrl(homeLoan.company)
-      company = CompanyService.isBank(company)
-      if (company.logo && company.logo.url) {
-        company.logo = company.logo.url.replace(/(^\w+:|^)\/\//, '')
-      }
-      homeLoan.company = company
+  if (variation.revertVariation) {
+    variation.revertRate = variation.revertVariation.rate
+    delete variation.revertVariation
+  }
+  let monetize = monetizedVariations[variation._id]
+  if (monetize) {
+    variation.gotoSiteUrl = monetize.applyUrl
+    variation.gotoSiteEnabled = monetize.enabled
+    variation.paymentType = monetize.paymentType
+  }
+  return removeUneededFields(variation)
+}
 
-      let companyPromise = CompanyHomeLoan.model.find({ company: homeLoan.company._id }).lean().exec((err, company) => {
-        if (err) {
-          logger.error('database error on find company personal loan vertical by company id')
-          return 'database error'
-        }
-        response[homeLoan._id] = Object.assign({}, homeLoan, response[homeLoan._id], { companyVertical: company })
-      })
-      relationshipPromises.push(companyPromise)
+function spawnFee (fee) {
+ if (fee.frequency === 'SEMIANNUALLY') {
+    fee.frequency = 'SEMI ANNUALLY'
+  }
+  return removeUneededFields(fee)
+}
 
-      let variationPromise = HomeLoanVariation.model.find({ product: homeLoan._id }).populate('revertVariation').lean().exec((err, variations) => {
-        if (err) {
-          logger.error('database error on find homeloan loan variation by product id')
-          return 'database error'
-        }
-        variations = variations.map((v) => {
-          v.revertRate = null
-          v.gotoSiteUrl = null
-          v.gotoSiteEnabled = false
-          v.recommendScore = (v.monthlyClicks ? v.monthlyClicks * 5.32 : 0)
-          delete v.monthlyClicks
-          if (v.promotedOrder === '0') {
-            v.promotedOrder = null
-          } else {
-            v.promotedOrder = 100 - parseInt(v.promotedOrder)
-          }
-
-          if (v.revertVariation) {
-            v.revertRate = v.revertVariation.rate
-            delete v.revertVariation
-          }
-          let monetize = monetizedVariations[v._id]
-          if (monetize) {
-            v.gotoSiteUrl = monetize.applyUrl
-            v.gotoSiteEnabled = monetize.enabled
-            v.paymentType = monetize.paymentType
-          }
-          return v
-        })
-        response[homeLoan._id] = Object.assign({}, homeLoan, response[homeLoan._id], { variations: variations })
-      })
-      relationshipPromises.push(variationPromise)
-
-      let offsetPromise = OffsetAccount.model.find({ product: homeLoan._id }).lean().exec((err, offsetAccounts) => {
-        if (err) {
-          logger.error('database error on find homeloan loan offset account by product id')
-          return 'database error'
-        }
-        response[homeLoan._id] = Object.assign({}, homeLoan, response[homeLoan._id], { offsetAccounts: offsetAccounts })
-      })
-      relationshipPromises.push(offsetPromise)
-
-      let redrawPromise = RedrawFacility.model.find({ product: homeLoan._id }).lean().exec((err, redraws) => {
-        if (err) {
-          logger.error('database error on find homeloan loan redraw facility by product id')
-          return 'database error'
-        }
-        response[homeLoan._id] = Object.assign({}, homeLoan, response[homeLoan._id], { redrawfacilities: redraws })
-      })
-      relationshipPromises.push(redrawPromise)
-
-      let feePromise = Fee.model.find({ product: homeLoan._id }).lean().exec((err, fees) => {
-        if (err) {
-          logger.error('database error on find homeloan loan fees by product id')
-          return 'database error'
-        }
-        fees = fees.map((fee) => {
-          if (fee.frequency === 'SEMIANNUALLY') {
-            fee.frequency = 'SEMI ANNUALLY'
-          }
-          return fee
-        })
-
-        response[homeLoan._id] = Object.assign({}, homeLoan, response[homeLoan._id], { fees: fees })
-      })
-      relationshipPromises.push(feePromise)
-
-      let featurePromise = Feature.model.find({ product: homeLoan._id }).lean().exec((err, features) => {
-        if (err) {
-          logger.error('database error on find homeloan loan feature by product id')
-          return 'database error'
-        }
-        response[homeLoan._id] = Object.assign({}, homeLoan, response[homeLoan._id], { features: features })
-      })
-      relationshipPromises.push(featurePromise)
-
-      let conditionPromise = Condition.model.find({ product: homeLoan._id }).lean().exec((err, conditions) => {
-        if (err) {
-          logger.error('database error on find homeloan loan condition by product id')
-          return 'database error'
-        }
-        response[homeLoan._id] = Object.assign({}, homeLoan, response[homeLoan._id], { conditions: conditions })
-      })
-      relationshipPromises.push(conditionPromise)
-
-      let extraRepaymentPromise = ExtraRepayment.model.find({ product: homeLoan._id }).lean().exec((err, extraRepayments) => {
-        if (err) {
-          logger.error('database error on find homeloan loan extra repayment by product id')
-          return 'database error'
-        }
-        response[homeLoan._id] = Object.assign({}, homeLoan, response[homeLoan._id], { extraRepayments: extraRepayments })
-      })
-      relationshipPromises.push(extraRepaymentPromise)
-    })
-    Promise.all(relationshipPromises).then(() => {
-      let result = []
-      for (let key in response) {
-        result.push(response[key])
-      }
-      res.jsonp(result)
+async function getHomeLoanModel (model) {
+  var obj = {}
+  await model.find({})
+  .lean()
+  .exec((err, data) => {
+    if (err) {
+      logger.error('database error on home loan api fetching monetized events')
+      return 'database error'
+    }
+    data.forEach((datum) => {
+      obj[datum.product] = obj[datum.product] || []
+      obj[datum.product].push(datum)
     })
   })
+  return obj
 }
 
 async function monetizedCollection () {
@@ -156,4 +80,43 @@ async function monetizedCollection () {
     })
   })
   return obj
+}
+
+exports.list = async function (req, res) {
+  let homeLoans = await HomeLoan.model.find({ $or: [ { isDiscontinued: false }, { isDiscontinued: {$exists: false} } ] }).populate('company homeLoanFamily').lean().exec()
+  let monetizedVariations = await monetizedCollection()
+  let offsetAccounts = await getHomeLoanModel(OffsetAccount.model)
+  let redrawFacilities = await getHomeLoanModel(RedrawFacility.model)
+  let fees = await getHomeLoanModel(Fee.model)
+  let features = await getHomeLoanModel(Feature.model)
+  let conditions = await getHomeLoanModel(Condition.model)
+  let extraRepayments = await getHomeLoanModel(ExtraRepayment.model)
+  let companyVerticals = await getHomeLoanModel(CompanyHomeLoan.model)
+  let variations = await getHomeLoanModel(HomeLoanVariation.model)
+  let response = {}
+
+  homeLoans.forEach((homeLoan) => {
+    let company = CompanyService.fixLogoUrl(homeLoan.company)
+    company = CompanyService.isBank(company)
+    if (company.logo && company.logo.url) {
+      company.logo = company.logo.url.replace(/(^\w+:|^)\/\//, '')
+    }
+    homeLoan.company = company
+
+    response[homeLoan._id] = Object.assign({}, homeLoan)
+    response[homeLoan._id] = Object.assign({}, response[homeLoan._id], { variations: (variations[homeLoan._id] || []).map((v) => spawnVariation(v, monetizedVariations)) })
+    response[homeLoan._id] = Object.assign({}, response[homeLoan._id], { offsetAccounts: (offsetAccounts[homeLoan._id] || []).map(removeUneededFields) })
+    response[homeLoan._id] = Object.assign({}, response[homeLoan._id], { redrawfacilities: (redrawFacilities[homeLoan._id] || []).map(removeUneededFields) })
+    response[homeLoan._id] = Object.assign({}, response[homeLoan._id], { fees: (fees[homeLoan._id] || []).map(spawnFee) })
+    response[homeLoan._id] = Object.assign({}, response[homeLoan._id], { features: (features[homeLoan._id] || []).map(removeUneededFields) })
+    response[homeLoan._id] = Object.assign({}, response[homeLoan._id], { conditions: (conditions[homeLoan._id] || []).map(removeUneededFields) })
+    response[homeLoan._id] = Object.assign({}, response[homeLoan._id], { extraRepayments: (extraRepayments[homeLoan._id] || []).map(removeUneededFields) })
+    response[homeLoan._id] = Object.assign({}, response[homeLoan._id], { companyVertical: (companyVerticals[homeLoan._id] || []).map(removeUneededFields) })
+  })
+
+  let result = []
+  for (let key in response) {
+    result.push(response[key])
+  }
+  res.jsonp(result)
 }
