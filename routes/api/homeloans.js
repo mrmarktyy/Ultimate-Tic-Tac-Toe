@@ -49,7 +49,7 @@ function spawnFee (fee) {
   return removeUneededFields(fee)
 }
 
-async function getHomeLoanModel (model) {
+async function getHomeLoanModel (model, attribute = 'product') {
   var obj = {}
   await model.find({})
   .lean()
@@ -59,8 +59,8 @@ async function getHomeLoanModel (model) {
       return 'database error'
     }
     data.forEach((datum) => {
-      obj[datum.product] = obj[datum.product] || []
-      obj[datum.product].push(datum)
+      obj[datum[attribute]] = obj[datum[attribute]] || []
+      obj[datum[attribute]].push(datum)
     })
   })
   return obj
@@ -91,7 +91,7 @@ exports.list = async function (req, res) {
   let features = await getHomeLoanModel(Feature.model)
   let conditions = await getHomeLoanModel(Condition.model)
   let extraRepayments = await getHomeLoanModel(ExtraRepayment.model)
-  let companyVerticals = await getHomeLoanModel(CompanyHomeLoan.model)
+  let companyVerticals = await getHomeLoanModel(CompanyHomeLoan.model, 'company')
   let variations = await getHomeLoanModel(HomeLoanVariation.model)
   let response = {}
 
@@ -111,7 +111,7 @@ exports.list = async function (req, res) {
     response[homeLoan._id] = Object.assign({}, response[homeLoan._id], { features: (features[homeLoan._id] || []).map(removeUneededFields) })
     response[homeLoan._id] = Object.assign({}, response[homeLoan._id], { conditions: (conditions[homeLoan._id] || []).map(removeUneededFields) })
     response[homeLoan._id] = Object.assign({}, response[homeLoan._id], { extraRepayments: (extraRepayments[homeLoan._id] || []).map(removeUneededFields) })
-    response[homeLoan._id] = Object.assign({}, response[homeLoan._id], { companyVertical: (companyVerticals[homeLoan._id] || []).map(removeUneededFields) })
+    response[homeLoan._id] = Object.assign({}, response[homeLoan._id], { companyVertical: (companyVerticals[homeLoan.company._id] || []).map(removeUneededFields) })
   })
 
   let result = []
