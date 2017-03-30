@@ -46,4 +46,8 @@ exports = module.exports = function (app) {
 
   // Featured Product
   app.get('/api/featured-products', keystone.middleware.api, routes.api.featuredProducts.list)
+
+  app.get('/api/reporting', keystone.middleware.api, routes.api.reporting.json)
+  app.get('/api/reporting.json', keystone.middleware.api, routes.api.reporting.json)
+  app.get('/api/reporting.csv', keystone.middleware.api, routes.api.reporting.csv)
 }

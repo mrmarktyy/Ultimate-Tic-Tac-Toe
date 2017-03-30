@@ -11,7 +11,7 @@
     "dotenv": "^2.0.0",
     "flake-idgen": "1.1.0",
     "jade": "^1.11.0",
-    "json2csv": "3.7.3",
+    "json2csv": "^3.7.3",
     "keystone": "git+https://github.com/ratecity/keystone.git#3dbb022",
     "keystone-storage-adapter-s3": "^1.1.0",
     "keystone-utils": "^0.4.0",
