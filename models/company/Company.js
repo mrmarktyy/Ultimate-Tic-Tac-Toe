@@ -46,6 +46,6 @@ Company.schema.pre('save', async function (next) {
 })
 
 Company.defaultSort = 'name'
-Company.defaultColumns = 'name, url, displayName, code, searchKeyword, createdAt'
-Company.searchFields = 'name, url, displayName, code, searchKeyword'
+Company.defaultColumns = 'name, url, displayName, searchKeyword, createdAt'
+Company.searchFields = 'name, url, displayName, searchKeyword'
 Company.register()

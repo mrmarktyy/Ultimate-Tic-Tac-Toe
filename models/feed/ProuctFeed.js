@@ -10,5 +10,5 @@ ProductFeed.add({
 
 ProductFeed.relationship({ path: 'product-feed-inclusions', ref: 'ProductFeedInclusion', refPath: 'feed' })
 
-ProductFeed.defaultColumns = 'name, slug, vertical'
+ProductFeed.defaultColumns = 'name, slug'
 ProductFeed.register()
