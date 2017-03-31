@@ -1,7 +1,7 @@
 var keystone = require('keystone')
 var salesforceVerticals = require('../../models/helpers/salesforceVerticals')
 var mongoose = require('mongoose')
-var Monetize = mongoose.model('Monetize')
+var Monetize = keystone.list('Monetize').model
 var Log = keystone.list('Log')
 var logger = require('../../utils/logger')
 

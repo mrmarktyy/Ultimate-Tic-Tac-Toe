@@ -5,7 +5,7 @@ var changeCase = require('change-case')
 var PersonalLoan = keystone.list('PersonalLoan')
 var PersonalLoanVariation = keystone.list('PersonalLoanVariation')
 var CompanyPersonalLoan = keystone.list('CompanyPersonalLoan')
-var Monetize = mongoose.model('Monetize')
+var Monetize = keystone.list('Monetize').model
 var CompanyService = require('../../services/CompanyService')
 var logger = require('../../utils/logger')
 
