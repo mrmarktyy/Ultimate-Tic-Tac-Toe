@@ -145,5 +145,5 @@ HomeLoanVariation.schema.pre('save', async function (next) {
 })
 
 HomeLoanVariation.defaultSort = 'isDiscontinued'
-HomeLoanVariation.defaultColumns = 'name, company, rate, revertRate, introductoryRate'
+HomeLoanVariation.defaultColumns = 'name|40%, company, rate, revertRate, introductoryRate'
 HomeLoanVariation.register()
