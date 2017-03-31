@@ -145,5 +145,5 @@ HomeLoanVariation.schema.pre('save', async function (next) {
 })
 
 HomeLoanVariation.defaultSort = 'isDiscontinued'
-HomeLoanVariation.defaultColumns = 'product, company, neo4jId, isMonetized, fixMonth, minLVR, maxLVR, minTotalLoanAmount, maxTotalLoanAmount, rate, comparisonRate'
+HomeLoanVariation.defaultColumns = 'name, company, rate, revertRate, introductoryRate'
 HomeLoanVariation.register()

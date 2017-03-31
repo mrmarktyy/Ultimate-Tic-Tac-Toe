@@ -3,7 +3,7 @@ var SalesforceClient = require('../../services/salesforceClient')
 var salesforceVerticals = require('../../models/helpers/salesforceVerticals')
 var Company = keystone.list('Company')
 var mongoose = require('mongoose')
-var Monetize = mongoose.model('Monetize')
+var Monetize = keystone.list('Monetize').model
 
 var client = new SalesforceClient()
 
