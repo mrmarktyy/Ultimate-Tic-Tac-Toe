@@ -44,5 +44,5 @@ Redemption.schema.pre('save', async function (next) {
   next()
 })
 
-Redemption.defaultColumns = 'program, type, redemptionName, pointsRequired'
+Redemption.defaultColumns = 'program, redemptionName, pointsRequired'
 Redemption.register()

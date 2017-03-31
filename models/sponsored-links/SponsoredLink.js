@@ -54,7 +54,7 @@ SponsoredLink.schema.pre('save', async function (next) {
 
 SponsoredLink.schema.index({ company: 1, vertical: 1, title: 1 }, { unique: true })
 
-SponsoredLink.defaultColumns = 'vertical, company, title, description, uuid, dateStart, dateEnd'
+SponsoredLink.defaultColumns = 'vertical, company, title, description, dateStart, dateEnd'
 SponsoredLink.drilldown = 'company'
 SponsoredLink.register()
 

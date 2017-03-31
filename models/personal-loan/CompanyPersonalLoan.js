@@ -52,6 +52,6 @@ CompanyPersonalLoan.schema.pre('save', async function (next) {
 	next()
 })
 
-CompanyPersonalLoan.defaultColumns = 'company, availableStates, applyInBranch, applyOnline, applyByMobileLender, applyByPhone, applyByBroker'
+CompanyPersonalLoan.defaultColumns = 'company, applyInBranch, applyOnline, applyByMobileLender, applyByPhone, applyByBroker'
 CompanyPersonalLoan.drilldown = 'company'
 CompanyPersonalLoan.register()
