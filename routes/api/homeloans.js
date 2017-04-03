@@ -10,6 +10,7 @@ var Condition = keystone.list('Condition')
 var ExtraRepayment = keystone.list('ExtraRepayment')
 var CompanyHomeLoan = keystone.list('CompanyHomeLoan')
 var Monetize = keystone.list('Monetize')
+var HomeLoanSpecial = keystone.list('HomeLoanSpecial')
 var CompanyService = require('../../services/CompanyService')
 var logger = require('../../utils/logger')
 
@@ -93,6 +94,8 @@ exports.list = async function (req, res) {
   let extraRepayments = await getHomeLoanModel(ExtraRepayment.model)
   let companyVerticals = await getHomeLoanModel(CompanyHomeLoan.model, 'company')
   let variations = await getHomeLoanModel(HomeLoanVariation.model)
+  let homeLoanSpecials = await getHomeLoanModel(HomeLoanSpecial.model)
+
   let response = {}
 
   homeLoans.forEach((homeLoan) => {
@@ -103,15 +106,21 @@ exports.list = async function (req, res) {
     }
     homeLoan.company = company
 
-    response[homeLoan._id] = Object.assign({}, homeLoan)
-    response[homeLoan._id] = Object.assign({}, response[homeLoan._id], { variations: (variations[homeLoan._id] || []).map((v) => spawnVariation(v, monetizedVariations)) })
-    response[homeLoan._id] = Object.assign({}, response[homeLoan._id], { offsetAccounts: (offsetAccounts[homeLoan._id] || []).map(removeUneededFields) })
-    response[homeLoan._id] = Object.assign({}, response[homeLoan._id], { redrawfacilities: (redrawFacilities[homeLoan._id] || []).map(removeUneededFields) })
-    response[homeLoan._id] = Object.assign({}, response[homeLoan._id], { fees: (fees[homeLoan._id] || []).map(spawnFee) })
-    response[homeLoan._id] = Object.assign({}, response[homeLoan._id], { features: (features[homeLoan._id] || []).map(removeUneededFields) })
-    response[homeLoan._id] = Object.assign({}, response[homeLoan._id], { conditions: (conditions[homeLoan._id] || []).map(removeUneededFields) })
-    response[homeLoan._id] = Object.assign({}, response[homeLoan._id], { extraRepayments: (extraRepayments[homeLoan._id] || []).map(removeUneededFields) })
-    response[homeLoan._id] = Object.assign({}, response[homeLoan._id], { companyVertical: (companyVerticals[homeLoan.company._id] || []).map(removeUneededFields) })
+    response[homeLoan._id] = Object.assign(
+      {},
+      homeLoan,
+      {
+        variations: (variations[homeLoan._id] || []).map((v) => spawnVariation(v, monetizedVariations)),
+        offsetAccounts: (offsetAccounts[homeLoan._id] || []).map(removeUneededFields),
+        redrawfacilities: (redrawFacilities[homeLoan._id] || []).map(removeUneededFields),
+        fees: (fees[homeLoan._id] || []).map(spawnFee),
+        features: (features[homeLoan._id] || []).map(removeUneededFields),
+        conditions: (conditions[homeLoan._id] || []).map(removeUneededFields),
+        extraRepayments: (extraRepayments[homeLoan._id] || []).map(removeUneededFields),
+        companyVertical: (companyVerticals[homeLoan.company._id] || []).map(removeUneededFields),
+        homeLoanSpecials: (homeLoanSpecials[homeLoan._id] || []).map(removeUneededFields),
+      }
+    )
   })
 
   let result = []
