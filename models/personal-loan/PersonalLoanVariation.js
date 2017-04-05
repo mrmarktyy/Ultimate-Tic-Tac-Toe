@@ -51,6 +51,8 @@ PersonalLoanVariation.add({
 	comparisonRatePersonalManual: { type: Types.Number, initial: true },
 	comparisonRateCar: { type: Types.Number, noedit: true },
 	comparisonRateCarManual: { type: Types.Number, initial: true },
+  applicationFeesDollar: { type: Types.Number, initial: true, min: 0 },
+  applicationFeesPercent: { type: Types.Number, initial: true, min: 0, max: 100 },
 })
 
 PersonalLoanVariation.relationship({ path: 'ChangeLogs', ref: 'ChangeLog', refPath: 'model', many: true })
@@ -68,6 +70,9 @@ PersonalLoanVariation.schema.pre('validate', function (next) {
 	if (this.introRate > this.minRate) {
 		next(Error('Intro Rate can not be higher than Min Rate'))
 	}
+  if ((this.applicationFeesDollar === undefined) && (this.applicationFeesPercent === undefined)) {
+    next(Error('Application Fee need to fill in either Dollar or Percent'))
+  }
 	let thiz = this
 	let promise = PersonalLoan.model.find({ _id: this.product }).lean().exec()
 	promise.then((personalLoans) => {

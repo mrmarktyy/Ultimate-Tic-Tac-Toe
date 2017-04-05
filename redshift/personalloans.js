@@ -163,6 +163,8 @@ async function prepDataAndPushToRedshift (date, personalLoans, personalLoanVaria
       variation.maxRate = cVariation.maxRate
       variation.comparisonRatePersonal = cVariation.comparisonRatePersonal
       variation.comparisonRateCar = cVariation.comparisonRateCar
+      variation.applicationFeesPercent = cVariation.applicationFeesPercent
+      variation.applicationFeesDollar = cVariation.applicationFeesDollar
 
       personalLoanProductVariations.push(variation)
     })
@@ -202,6 +204,8 @@ async function prepDataAndPushToRedshift (date, personalLoans, personalLoanVaria
     'maxRate',
     'comparisonRatePersonal',
     'comparisonRateCar',
+    'applicationFeesPercent',
+    'applicationFeesDollar',
   ]
 
   await insertIntoRedshift(personalLoanProducts, headers, filename, 'personal_loans_history')
