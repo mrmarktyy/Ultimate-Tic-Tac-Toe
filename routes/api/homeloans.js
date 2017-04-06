@@ -13,6 +13,7 @@ var Monetize = keystone.list('Monetize')
 var HomeLoanSpecial = keystone.list('HomeLoanSpecial')
 var CompanyService = require('../../services/CompanyService')
 var logger = require('../../utils/logger')
+const recommendedMultiplier = require('../../utils/recommendedMultiplier').multiplier
 
 function removeUneededFields (obj) {
   return _.omit(obj, ['product', '_id', 'company', 'createdAt', 'createdBy', 'updatedBy', 'updatedAt'])
@@ -22,7 +23,7 @@ function spawnVariation (variation, monetizedVariations) {
   variation.revertRate = null
   variation.gotoSiteUrl = null
   variation.gotoSiteEnabled = false
-  variation.recommendScore = (variation.monthlyClicks ? variation.monthlyClicks * 5.32 : 0)
+  variation.recommendScore = (variation.monthlyClicks ? variation.monthlyClicks * recommendedMultiplier : 0)
   delete variation.monthlyClicks
   if (variation.promotedOrder === '0') {
     variation.promotedOrder = null
@@ -40,7 +41,7 @@ function spawnVariation (variation, monetizedVariations) {
     variation.gotoSiteEnabled = monetize.enabled
     variation.paymentType = monetize.paymentType
   }
-  return removeUneededFields(variation)
+  return _.omit(variation, ['product', '_id', 'company', 'createdBy', 'updatedBy'])
 }
 
 function spawnFee (fee) {
@@ -85,6 +86,17 @@ async function monetizedCollection () {
 
 exports.list = async function (req, res) {
   let homeLoans = await HomeLoan.model.find({ $or: [ { isDiscontinued: false }, { isDiscontinued: {$exists: false} } ] }).populate('company homeLoanFamily').lean().exec()
+  let results = await getHomeLoansObjects(homeLoans)
+  res.jsonp(results)
+}
+
+exports.listWIthExtraData = async function (req, res) {
+  let homeLoans = await HomeLoan.model.find({}).populate('company homeLoanFamily').lean().exec()
+  let result = await getHomeLoansObjects(homeLoans)
+  res.jsonp(result)
+}
+
+async function getHomeLoansObjects (homeLoans) {
   let monetizedVariations = await monetizedCollection()
   let offsetAccounts = await getHomeLoanModel(OffsetAccount.model)
   let redrawFacilities = await getHomeLoanModel(RedrawFacility.model)
@@ -127,5 +139,5 @@ exports.list = async function (req, res) {
   for (let key in response) {
     result.push(response[key])
   }
-  res.jsonp(result)
+  return result
 }
