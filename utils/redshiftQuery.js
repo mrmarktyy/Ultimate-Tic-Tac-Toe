@@ -1,7 +1,7 @@
 const Pool = require('pg').Pool
 const logger = require('../utils/logger')
 
-module.exports = async function (sqlCommand, paramArray) {
+module.exports = async function (sqlCommand, paramArray = []) {
   const config = {
     user: process.env.REDSHIFT_USERNAME,
     database: process.env.REDSHIFT_DATABASE,
