@@ -70,9 +70,6 @@ PersonalLoanVariation.schema.pre('validate', function (next) {
 	if (this.introRate > this.minRate) {
 		next(Error('Intro Rate can not be higher than Min Rate'))
 	}
-  if ((this.applicationFeesDollar === undefined) && (this.applicationFeesPercent === undefined)) {
-    next(Error('Application Fee need to fill in either Dollar or Percent'))
-  }
 	let thiz = this
 	let promise = PersonalLoan.model.find({ _id: this.product }).lean().exec()
 	promise.then((personalLoans) => {
