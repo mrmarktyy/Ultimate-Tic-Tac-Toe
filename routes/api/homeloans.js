@@ -20,7 +20,6 @@ function removeUneededFields (obj) {
 }
 
 function spawnVariation (variation, monetizedVariations) {
-  variation.revertRate = null
   variation.gotoSiteUrl = null
   variation.gotoSiteEnabled = false
   variation.recommendScore = (variation.monthlyClicks ? variation.monthlyClicks * recommendedMultiplier : 0)
@@ -35,6 +34,7 @@ function spawnVariation (variation, monetizedVariations) {
     variation.revertRate = variation.revertVariation.rate
     delete variation.revertVariation
   }
+
   let monetize = monetizedVariations[variation._id]
   if (monetize) {
     variation.gotoSiteUrl = monetize.applyUrl
@@ -51,9 +51,10 @@ function spawnFee (fee) {
   return removeUneededFields(fee)
 }
 
-async function getHomeLoanModel (model, attribute = 'product') {
+async function getHomeLoanModel (model, attribute = 'product', populate = '') {
   var obj = {}
   await model.find({})
+  .populate(populate)
   .lean()
   .exec((err, data) => {
     if (err) {
@@ -105,7 +106,7 @@ async function getHomeLoansObjects (homeLoans) {
   let conditions = await getHomeLoanModel(Condition.model)
   let extraRepayments = await getHomeLoanModel(ExtraRepayment.model)
   let companyVerticals = await getHomeLoanModel(CompanyHomeLoan.model, 'company')
-  let variations = await getHomeLoanModel(HomeLoanVariation.model)
+  let variations = await getHomeLoanModel(HomeLoanVariation.model, 'product', 'revertVariation')
   let homeLoanSpecials = await getHomeLoanModel(HomeLoanSpecial.model)
 
   let response = {}
