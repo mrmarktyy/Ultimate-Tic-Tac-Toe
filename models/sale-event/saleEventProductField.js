@@ -1,6 +1,6 @@
 const keystone = require('keystone')
 const Types = keystone.Field.Types
-const saleEventCommonAttributes = require('../common/saleEventCommonAttributes')
+const saleEventCommonAttributes = require('../common/SaleEventCommonAttributes')
 
 const SaleEventProductField = new keystone.List('SaleEventProductField', {
   track: true,
