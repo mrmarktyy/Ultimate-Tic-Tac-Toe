@@ -21,6 +21,7 @@ Company.add({
 		options: 'Major bank, Regional bank, Foreign bank, Mutual bank, Credit union, Building society, Peer to Peer,  Online lender, Non-bank Lender, Other',
 	},
 	abnOrAcn: { type: Types.Number },
+	phoneNumber: { type: Types.Text },
 	acl: { type: Types.Number },
 	afsl: { type: Types.Number },
 	uuid: { type: Types.Text, initial: true, noedit: true }, // this should be unique, however, team don't have the data yet. will make this unique once all data loaded.
@@ -35,6 +36,13 @@ Company.add({
 Company.relationship({ path: 'ATMs', ref: 'ATM', refPath: 'company' })
 Company.relationship({ path: 'Branches', ref: 'Branch', refPath: 'company' })
 Company.relationship({ path: 'ChangeLogs', ref: 'ChangeLog', refPath: 'model', many: true })
+
+Company.schema.pre('validate', function (next) {
+	if (this.phoneNumber && !/^[0-9 ()]+$/.test(this.phoneNumber)) {
+		next(Error('Phone number can only have spaces, numbers and parenthesis'))
+	}
+	next()
+})
 
 Company.schema.pre('save', async function (next) {
 	if (!this.uuid) {
