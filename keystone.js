@@ -76,6 +76,7 @@ keystone.set('nav', {
   savingsAccounts: ['CompanySavingsAccount', 'SavingsAccount', 'SavingsAccountSpecial', 'SavingsAccountTier'],
   sponsoredLinks: 'SponsoredLink',
   featuredProducts: 'FeaturedProduct',
+  saleEventProducts: ['SaleEventProduct', 'SaleEventProductField'],
   feeds: ['ProductFeedInclusion', 'ProductFeed', 'WidgetImage'],
   users: 'users',
   utilites: ['ApiKey', 'Monetize', 'ChangeLog'],
