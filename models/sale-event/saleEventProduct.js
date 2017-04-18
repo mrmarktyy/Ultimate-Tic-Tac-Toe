@@ -8,6 +8,7 @@ var SaleEventProduct = new keystone.List('SaleEventProduct', {
 })
 
 SaleEventProduct.add({
+  uuid: {type: Types.Text, initial: true},
 	vertical: {type: Types.Select, required: true, options: verticals, initial: true},
 	name: {type: Types.Text, required: true, initial: true, index: true},
 	description: {type: Types.Text, required: true, initial: true},
@@ -25,5 +26,5 @@ SaleEventProduct.schema.pre('save', async function (next) {
   next()
 })
 
-SaleEventProduct.defaultColumns = 'vertical, name, description, notes, sortOrder'
+SaleEventProduct.defaultColumns = 'uuid, vertical, name, description, notes, sortOrder'
 SaleEventProduct.register()
