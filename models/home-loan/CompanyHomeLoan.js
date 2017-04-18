@@ -22,7 +22,8 @@ CompanyHomeLoan.add({
 		required: true,
 		initial: true,
 	},
-	homeLoanBlurb: {type: Types.Code, height: 250, language: 'html'},
+	howToApplyBlurb: {type: Types.Code, height: 250, language: 'html'},
+	eligibilityBlurb: {type: Types.Code, height: 150, language: 'html'},
 })
 
 CompanyHomeLoan.schema.pre('save', async function (next) {
