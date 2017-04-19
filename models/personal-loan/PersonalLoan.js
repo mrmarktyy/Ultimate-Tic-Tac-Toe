@@ -16,6 +16,8 @@ var PersonalLoan = new keystone.List('PersonalLoan', {
 PersonalLoan.add(productCommonAttributes)
 
 PersonalLoan.add({
+  isPersonalLoanPromoted: { type: Types.Boolean, indent: true, default: false },
+  isCarLoanPromoted: { type: Types.Boolean, indent: true, default: false },
   hookEnabled: { type: Types.Boolean, default: true },
   existsOnSorbet: { type: Types.Boolean, indent: true, default: false },
   company: {
