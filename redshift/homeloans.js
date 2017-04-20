@@ -76,7 +76,6 @@ async function prepareDataForRedshift (homeloans) {
       product.productname = name
       product.variationname = variation.name
       product.gotositeenabled = variation.gotoSiteEnabled
-      product.gotositeurl = variation.gotoSiteUrl
       product.companyuuid = company.uuid
       product.companyname = company.name
       product.ecpc = variation.ecpc
@@ -172,6 +171,7 @@ async function prepareDataForRedshift (homeloans) {
       product.saapplicable = stateApplicable(states, 'SA')
       product.actapplicable = stateApplicable(states, 'ACT')
       product.filename = filename
+      product.gotositeurl = variation.gotoSiteUrl
 
       homeLoanProducts.push(product)
     })
