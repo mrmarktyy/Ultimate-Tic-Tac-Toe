@@ -8,6 +8,8 @@ var importHomeloansMonthlyClickCount = require('../redshift/importHomeloansMonth
 var importPaymentMonetizationTypes = require('../redshift/importPaymentMonetizationTypes')
 var loadPersonalLoansToRedshift = require('../redshift/personalloans')
 var loadHomeLoanstoRedshift = require('../redshift/homeloans')
+var salesforcePushCompanies = require('../services/salesforcePush').pushCompanies
+var salesforcePushProducts = require('../services/salesforcePush').pushProducts
 
 const connectionDetails = {
   pkg: 'ioredis',
@@ -54,6 +56,28 @@ const jobs = {
     perform: async (done) => {
       try {
         await importPaymentMonetizationTypes()
+        done()
+      } catch (error) {
+        done(error.message)
+      }
+    },
+  },
+  'salesforcePushCompanies': {
+    perform: async (done) => {
+      try {
+        console.log('resque salesforcePushCompanies')
+        await salesforcePushCompanies()
+        done()
+      } catch (error) {
+        done(error.message)
+      }
+    },
+  },
+  'salesforcePushProducts': {
+    perform: async (done) => {
+      try {
+        console.log('resque salesforcePushProducts')
+        await salesforcePushProducts()
         done()
       } catch (error) {
         done(error.message)
@@ -108,6 +132,17 @@ queue.connect(() => {
       queue.enqueue('ultimate', 'loadHomeLoanstoRedshift')
     }
   })
+  schedule.scheduleJob('25 * * * *', () => {
+    if (scheduler.master) {
+      queue.enqueue('ultimate', 'salesforcePushCompanies')
+    }
+  })
+  schedule.scheduleJob('28 * * * *', () => {
+    if (scheduler.master) {
+      queue.enqueue('ultimate', 'salesforcePushProducts')
+    }
+  })
+
 })
 
 const shutdown = () => {
