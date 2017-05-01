@@ -11,9 +11,7 @@ SaleEventProduct.add({
   uuid: {type: Types.Text, initial: true},
 	vertical: {type: Types.Select, required: true, options: verticals, initial: true},
 	name: {type: Types.Text, required: true, initial: true, index: true},
-	description: {type: Types.Text, required: true, initial: true},
-	sortOrder: {type: Types.Number, default: 1, initial: true},
-	notes: {type: Types.Text, required: false, initial: true},
+	description: {type: Types.Text, required: false, initial: true},
 })
 
 SaleEventProduct.relationship({ path: 'ChangeLogs', ref: 'ChangeLog', refPath: 'model', many: true })
@@ -26,5 +24,5 @@ SaleEventProduct.schema.pre('save', async function (next) {
   next()
 })
 
-SaleEventProduct.defaultColumns = 'uuid, vertical, name, description, notes, sortOrder'
+SaleEventProduct.defaultColumns = 'uuid, vertical, name, notes'
 SaleEventProduct.register()
