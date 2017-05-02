@@ -52,8 +52,8 @@ Fee.schema.pre('validate', function (next) {
 	if (!(['VALUATION_FEE', 'LEGAL_FEE'].indexOf(this.feeType) >= 0) && this.atCost) {
 		next(Error('Only Valuation fee or Legal fee can have at cost set to true'))
 	}
-	if (this.atCost && this.fixedCost > 0) {
-		next(Error(`Can only have at cost or a fixed cost, not both on a ${this.feeType}`))
+	if (this.atCost && (this.fixedCost > 0 || this.fixedPercentage > 0)) {
+		next(Error(`Can only have at cost or a either a fixed cost or percentage, not both on a ${this.feeType}`))
 	}
 	next()
 })
