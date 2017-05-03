@@ -51,6 +51,7 @@ HomeLoanVariation.add({
 		type: Types.Relationship,
 		ref: 'HomeLoanVariation',
 		initial: true,
+    noedit: false,
 		filters: {company: ':company'},
 	},
 	isStandardVariable: {type: Types.Boolean, indent: true, default: false},
