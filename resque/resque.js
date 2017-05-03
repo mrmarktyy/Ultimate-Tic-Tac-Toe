@@ -31,9 +31,9 @@ const jobs = {
     },
   },
   'loadPersonalLoansToRedshift': {
-    plugins: ['queueLock'],
     perform: async (done) => {
       try {
+        console.log('resque loadPersonalLoansToRedshift')
         await loadPersonalLoansToRedshift()
         done()
       } catch (error) {
@@ -55,6 +55,7 @@ const jobs = {
   'importPaymentMonetizationTypes': {
     perform: async (done) => {
       try {
+        console.log('resque importPaymentMonetizationTypes')
         await importPaymentMonetizationTypes()
         done()
       } catch (error) {
