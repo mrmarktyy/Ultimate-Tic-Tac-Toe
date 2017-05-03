@@ -79,7 +79,7 @@ keystone.set('nav', {
   saleEventProducts: ['SaleEventProduct', 'SaleEventProductField'],
   feeds: ['ProductFeedInclusion', 'ProductFeed', 'WidgetImage'],
   users: 'users',
-  utilites: ['ApiKey', 'Monetize', 'ChangeLog'],
+  utilites: ['ApiKey', 'Monetize', 'ChangeLog', 'Log'],
 })
 
 keystone.set('cors allow origin', true)
