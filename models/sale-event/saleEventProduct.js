@@ -12,6 +12,7 @@ SaleEventProduct.add({
 	vertical: {type: Types.Select, required: true, options: verticals, initial: true},
 	name: {type: Types.Text, required: true, initial: true, index: true},
 	description: {type: Types.Text, required: false, initial: true},
+  sortOrder: {type: Types.Number, default: 0, initial: true},
 })
 
 SaleEventProduct.relationship({ path: 'ChangeLogs', ref: 'ChangeLog', refPath: 'model', many: true })
