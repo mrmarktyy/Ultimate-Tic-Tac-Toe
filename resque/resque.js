@@ -112,7 +112,7 @@ queue.connect(() => {
     }
   })
 
-  Daily
+  // Daily
   schedule.scheduleJob('45 16 * * *', () => {
     if (scheduler.master) {
       queue.enqueue('ultimate', 'loadPersonalLoansToRedshift')
