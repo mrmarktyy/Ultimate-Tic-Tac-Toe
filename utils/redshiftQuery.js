@@ -10,12 +10,14 @@ module.exports = async function (sqlCommand, paramArray = []) {
     port: process.env.REDSHIFT_PORT,
   }
   const pool = new Pool(config)
-
+  var client = await pool.connect()
   try {
-    let result =  await pool.query(sqlCommand, paramArray)
+    let result =  await client.query(sqlCommand, paramArray)
+    client.release()
     return result.rows
   } catch (err) {
     logger.error(err)
+    client.release()
     return err
   }
 }

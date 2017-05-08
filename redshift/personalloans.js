@@ -1,13 +1,9 @@
 require('dotenv').config()
 
-const logger = require('../utils/logger')
-const Pool = require('pg').Pool
 const json2csv = require('json2csv')
 const moment = require('moment')
-const FlakeIdGen = require('flake-idgen')
-const intformat = require('biguint-format')
-const AWS = require('aws-sdk')
-AWS.config.update({region: process.env.S3_REGION, accessKeyId: process.env.S3_KEY, secretAccessKey: process.env.S3_SECRET})
+const awsUploadToS3 = require('../utils/awsUploadToS3')
+const redshiftQuery = require('../utils/redshiftQuery')
 
 const mongoose = require('mongoose')
 const keystone = require('keystone')
@@ -45,6 +41,8 @@ async function prepDataAndPushToRedshift (date, personalLoans, personalLoanVaria
 
   const personalLoanProducts = []
   const personalLoanProductVariations = []
+  const filename = `personal-loans-${collectionDate}`
+  const filenameVar = `personal-loan-variations-${collectionDate}`
 
   const defaultPersonalLoan = {
     productId: '',
@@ -106,6 +104,7 @@ async function prepDataAndPushToRedshift (date, personalLoans, personalLoanVaria
     hasEarlyExitPenaltyFeesVaries: 'UNKNOWN',
     otherFees: 0.0,
     isDiscontinued: false,
+    filename: filename,
   }
 
   personalLoans.forEach((loan) => {
@@ -165,17 +164,10 @@ async function prepDataAndPushToRedshift (date, personalLoans, personalLoanVaria
       variation.comparisonRateCar = cVariation.comparisonRateCar
       variation.applicationFeesPercent = cVariation.applicationFeesPercent
       variation.applicationFeesDollar = cVariation.applicationFeesDollar
-
+      variation.filename = filenameVar
       personalLoanProductVariations.push(variation)
     })
   })
-
-  const generator = new FlakeIdGen
-  const id = generator.next()
-  const _id = intformat(id, 'dec')
-
-  const filename = `personal-loans-${collectionDate}-${_id}`
-  const filenameVar = `personal-loan-variations-${collectionDate}-${_id}`
 
   const headers = [
     'collectionDate', 'productId', 'uuid', 'description', 'companyCode', 'companyName', 'companyId', 'isCarLoan',
@@ -188,7 +180,7 @@ async function prepDataAndPushToRedshift (date, personalLoans, personalLoanVaria
     'isMotorcycleAllowed', 'isBoatAllowed', 'isStudentAllowed', 'isDebtConsolidationAllowed', 'isRenovationAllowed',
     'isSharesAllowed', 'isHolidaysAllowed', 'isMedicalBillAllowed', 'isWeddingAllowed', 'otherPurposes', 'encumbranceCheckFees',
     'redrawActivationFee', 'minRedrawAmount', 'hasEarlyExitPenalty', 'missedPaymentPenalty', 'earlyExitPenaltyFee',
-    'earlyExitPenaltyFeePeriod', 'hasEarlyExitPenaltyFeesVaries', 'otherFees', 'isDiscontinued',
+    'earlyExitPenaltyFeePeriod', 'hasEarlyExitPenaltyFeesVaries', 'otherFees', 'isDiscontinued', 'filename',
   ]
 
   const variationHeaders = [
@@ -206,60 +198,21 @@ async function prepDataAndPushToRedshift (date, personalLoans, personalLoanVaria
     'comparisonRateCar',
     'applicationFeesPercent',
     'applicationFeesDollar',
+    'filename',
   ]
 
   await insertIntoRedshift(personalLoanProducts, headers, filename, 'personal_loans_history')
   await insertIntoRedshift(personalLoanProductVariations, variationHeaders, filenameVar, 'personal_loans_variations_history')
 }
 
-function uploadToS3 (filename, content) {
-  const s3 = new AWS.S3()
-
-  return new Promise((resolve, reject) => {
-    let params = {
-      Bucket: 'ratecity-redshift',
-      Key: filename,
-      ACL: 'bucket-owner-full-control',
-      Body: content,
-    }
-    s3.putObject(params, (error, data) => {
-      if (error) {
-        logger.error(error.stack)
-        reject(error)
-      }
-      if (data) {
-        resolve()
-        logger.info(data)
-      }
-    })
-  })
-}
-
 async function insertIntoRedshift (rows, headers, filename, table) {
-  const config = {
-    user: process.env.REDSHIFT_USERNAME,
-    database: process.env.REDSHIFT_DATABASE,
-    password: process.env.REDSHIFT_PASSWORD,
-    host: process.env.REDSHIFT_HOST,
-    port: process.env.REDSHIFT_PORT,
-  }
-  const pool = new Pool(config)
-
   if (rows.length > 0) {
     let csv = json2csv({data: rows, fields: headers, hasCSVColumnTitle: false})
-    await uploadToS3(`personal-loans-history/${filename}`, csv)
+    await awsUploadToS3(`personal-loans-history/${process.env.REDSHIFT_DATABASE}/${filename}`, csv, 'ratecity-redshift')
 
-    const command = `copy ${table} from 's3://ratecity-redshift/personal-loans-history/${filename}' credentials 'aws_access_key_id=${process.env.S3_KEY};aws_secret_access_key=${process.env.S3_SECRET}' EMPTYASNULL CSV ACCEPTINVCHARS TRUNCATECOLUMNS`
-    await new Promise((resolve, reject) => {
-      pool.query(command, [], (error, result) => {
-        if (error) {
-          logger.error(error)
-          reject(error)
-        } else {
-          logger.info('inserted into redshift')
-          resolve()
-        }
-      })
-    })
+    let command = `delete from ${table} where filename = $1`
+    redshiftQuery(command, [filename])
+    command = `copy ${table} from 's3://ratecity-redshift/personal-loans-history/${process.env.REDSHIFT_DATABASE}/${filename}' credentials 'aws_access_key_id=${process.env.S3_KEY};aws_secret_access_key=${process.env.S3_SECRET}' EMPTYASNULL CSV ACCEPTINVCHARS TRUNCATECOLUMNS`
+    redshiftQuery(command)
   }
 }
