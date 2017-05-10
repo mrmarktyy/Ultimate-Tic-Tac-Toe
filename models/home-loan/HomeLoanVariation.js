@@ -76,6 +76,10 @@ HomeLoanVariation.schema.pre('validate', function (next) {
     next(Error('This is a Variation for Fix HomeLoan. Need either a revertRate or revertVariation'))
   }
   if (this.fixMonth && this.revertRate && this.revertVariation) {
+    console.log('Inside revertVariation')
+    console.log(this.fixMonth)
+    console.log(this.revertRate)
+    console.log(this.revertVariation)
     next(Error('Only one revert info needed. Either a revertRate or a revertVariation'))
   }
   next()
