@@ -54,7 +54,6 @@ HomeLoanVariation.add({
     noedit: false,
 		filters: {company: ':company'},
 	},
-	isStandardVariable: {type: Types.Boolean, indent: true, default: false},
 })
 
 HomeLoanVariation.schema.pre('validate', function (next) {
