@@ -58,7 +58,7 @@ HomeLoanVariation.add({
 })
 
 HomeLoanVariation.schema.pre('validate', function (next) {
-  if (this.minTotalLoanAmount > this.maxTotalLoanAmount) {
+  if ((this.minTotalLoanAmount > this.maxTotalLoanAmount) && this.maxTotalLoanAmount != null) {
     next(Error('Max Total LoanAmount can not less than Min Total Loan Amount'))
   }
   if (this.minLVR < 0 || this.minLVR > 100) {
@@ -67,7 +67,7 @@ HomeLoanVariation.schema.pre('validate', function (next) {
   if (this.maxLVR < 0 || this.maxLVR > 100) {
     next(Error('Max LVR need to between 0 and 100 inclusive'))
   }
-  if (this.minLVR > this.maxLVR) {
+  if ((this.minLVR > this.maxLVR) && this.maxLVR != null) {
     next(Error('Max LVR can not less than Min LVR'))
   }
   if (this.introductoryRate > this.rate) {
