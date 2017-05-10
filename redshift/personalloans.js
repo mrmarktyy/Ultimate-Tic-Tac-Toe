@@ -211,8 +211,8 @@ async function insertIntoRedshift (rows, headers, filename, table) {
     await awsUploadToS3(`personal-loans-history/${process.env.REDSHIFT_DATABASE}/${filename}`, csv, 'ratecity-redshift')
 
     let command = `delete from ${table} where filename = $1`
-    redshiftQuery(command, [filename])
+    await redshiftQuery(command, [filename])
     command = `copy ${table} from 's3://ratecity-redshift/personal-loans-history/${process.env.REDSHIFT_DATABASE}/${filename}' credentials 'aws_access_key_id=${process.env.S3_KEY};aws_secret_access_key=${process.env.S3_SECRET}' EMPTYASNULL CSV ACCEPTINVCHARS TRUNCATECOLUMNS`
-    redshiftQuery(command)
+    await redshiftQuery(command)
   }
 }
