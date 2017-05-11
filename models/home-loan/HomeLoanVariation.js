@@ -54,6 +54,7 @@ HomeLoanVariation.add({
     noedit: false,
 		filters: {company: ':company'},
 	},
+  removeRevertVariation: {type: Types.Boolean, indent: true, initial: false}
 })
 
 HomeLoanVariation.schema.pre('validate', function (next) {
@@ -75,17 +76,17 @@ HomeLoanVariation.schema.pre('validate', function (next) {
   if (this.fixMonth && !this.revertRate && !this.revertVariation) {
     next(Error('This is a Variation for Fix HomeLoan. Need either a revertRate or revertVariation'))
   }
-  if (this.fixMonth && this.revertRate && this.revertVariation) {
-    console.log('Inside revertVariation')
-    console.log(this.fixMonth)
-    console.log(this.revertRate)
-    console.log(this.revertVariation)
+  if (this.fixMonth && this.revertRate && this.revertVariation && !this.removeRevertVariation) {
     next(Error('Only one revert info needed. Either a revertRate or a revertVariation'))
   }
   next()
 })
 
 HomeLoanVariation.schema.pre('save', async function (next) {
+  if (this.removeRevertVariation) {
+    this.revertVariation = null
+  }
+  this.removeRevertVariation = undefined
   if (!this.uuid) {
     this.uuid = uuid.v4()
   }
