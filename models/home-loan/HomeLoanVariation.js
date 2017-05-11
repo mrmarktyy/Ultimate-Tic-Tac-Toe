@@ -73,7 +73,7 @@ HomeLoanVariation.schema.pre('validate', function (next) {
   if (this.introductoryRate > this.rate) {
     next(Error('Introductory Rate need to less or equal than Rate'))
   }
-  if (this.fixMonth && !this.revertRate && !this.revertVariation) {
+  if (this.fixMonth && !this.revertRate && (!this.revertVariation || (this.revertVariation && this.removeRevertVariation))) {
     next(Error('This is a Variation for Fix HomeLoan. Need either a revertRate or revertVariation'))
   }
   if (this.fixMonth && this.revertRate && this.revertVariation && !this.removeRevertVariation) {
