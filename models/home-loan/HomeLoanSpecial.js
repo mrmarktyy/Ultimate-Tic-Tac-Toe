@@ -18,7 +18,7 @@ HomeLoanSpecial.add({
 	product: {
 		type: Types.Relationship,
 		ref: 'HomeLoan',
-		required: true,
+		required: false,
 		initial: true,
 		index: true,
 		filters: { company: ':company' },
@@ -26,5 +26,13 @@ HomeLoanSpecial.add({
 })
 
 HomeLoanSpecial.defaultColumns = 'name, type, introText, blurb'
+
+HomeLoanSpecial.schema.pre('validate', function (next) {
+  if (this.startDate > this.endDate) {
+    next(Error('Start date cannot be past the end date.'))
+  }
+  next()
+})
+
 HomeLoanSpecial.searchFields = 'name, type, introText, blurb'
 HomeLoanSpecial.register()

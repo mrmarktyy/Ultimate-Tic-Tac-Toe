@@ -17,12 +17,19 @@ SavingsAccountSpecial.add({
   },
   product: {
     type: Types.Relationship,
-    ref: 'HomeLoan',
-    required: true,
+    ref: 'SavingsAccount',
+    required: false,
     initial: true,
     index: true,
     filters: { company: ':company' },
   },
+})
+
+SavingsAccountSpecial.schema.pre('validate', function (next) {
+  if (this.startDate > this.endDate) {
+    next(Error('Start date cannot be past the end date.'))
+  }
+  next()
 })
 
 SavingsAccountSpecial.defaultColumns = 'name, type, introText, blurb'

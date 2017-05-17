@@ -17,12 +17,19 @@ PersonalLoanSpecial.add({
   },
   product: {
     type: Types.Relationship,
-    ref: 'HomeLoan',
-    required: true,
+    ref: 'PersonalLoan',
+    required: false,
     initial: true,
     index: true,
     filters: { company: ':company' },
   },
+})
+
+PersonalLoanSpecial.schema.pre('validate', function (next) {
+  if (this.startDate > this.endDate) {
+    next(Error('Start date cannot be past the end date.'))
+  }
+  next()
 })
 
 PersonalLoanSpecial.defaultColumns = 'name, type, introText, blurb'

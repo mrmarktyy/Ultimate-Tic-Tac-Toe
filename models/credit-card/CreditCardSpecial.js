@@ -17,12 +17,19 @@ CreditCardSpecial.add({
   },
   product: {
     type: Types.Relationship,
-    ref: 'HomeLoan',
-    required: true,
+    ref: 'CreditCard',
+    required: false,
     initial: true,
     index: true,
     filters: { company: ':company' },
   },
+})
+
+CreditCardSpecial.schema.pre('validate', function (next) {
+  if (this.startDate > this.endDate) {
+    next(Error('Start date cannot be past the end date.'))
+  }
+  next()
 })
 
 CreditCardSpecial.defaultColumns = 'name, type, introText, blurb'
