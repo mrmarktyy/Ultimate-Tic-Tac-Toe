@@ -10,7 +10,6 @@ var Condition = keystone.list('Condition')
 var ExtraRepayment = keystone.list('ExtraRepayment')
 var CompanyHomeLoan = keystone.list('CompanyHomeLoan')
 var Monetize = keystone.list('Monetize')
-var HomeLoanSpecial = keystone.list('HomeLoanSpecial')
 var CompanyService = require('../../services/CompanyService')
 var logger = require('../../utils/logger')
 const recommendedMultiplier = require('../../utils/recommendedMultiplier').multiplier
@@ -107,7 +106,6 @@ async function getHomeLoansObjects (homeLoans) {
   let extraRepayments = await getHomeLoanModel(ExtraRepayment.model)
   let companyVerticals = await getHomeLoanModel(CompanyHomeLoan.model, 'company')
   let variations = await getHomeLoanModel(HomeLoanVariation.model, 'product', 'revertVariation')
-  let homeLoanSpecials = await getHomeLoanModel(HomeLoanSpecial.model)
 
   let response = {}
 
@@ -131,7 +129,6 @@ async function getHomeLoansObjects (homeLoans) {
         conditions: (conditions[homeLoan._id] || []).map(removeUneededFields),
         extraRepayments: (extraRepayments[homeLoan._id] || []).map(removeUneededFields),
         companyVertical: (companyVerticals[homeLoan.company._id] || []).map(removeUneededFields),
-        homeLoanSpecials: (homeLoanSpecials[homeLoan._id] || []).map(removeUneededFields),
       }
     )
   })
