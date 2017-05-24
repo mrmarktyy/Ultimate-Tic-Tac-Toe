@@ -10,6 +10,35 @@ const allSpecials = [
 
 exports.list = async function (req, res) {
   let specials = await getSpecials()
+
+  for (let special in specials) {
+    specials[special] = specials[special].map((item) => {
+      let specialObj = {}
+
+      specialObj.id = item._id
+
+      if (item.product) {
+        specialObj.productUUID = item.product.uuid
+      }
+
+      if (item.company) {
+        specialObj.companyUUID = item.company.uuid
+      }
+
+      if (item.variation) {
+        specialObj.variationUUID = item.variation.uuid
+      }
+
+      specialObj.SpecialsUrl = item.SpecialsUrl
+      specialObj.blurb = item.blurb
+      specialObj.introText = item.introText
+      specialObj.type = item.type
+      specialObj.name = item.name
+
+      return specialObj
+    })
+  }
+
   res.json(specials)
 }
 
