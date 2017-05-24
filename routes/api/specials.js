@@ -18,8 +18,7 @@ async function getSpecials () {
   for (let special of allSpecials) {
     let model = keystone.list(special + 'Special').model
     await model.find({startDate: {$lte: new Date()}, endDate: {$gte: new Date()}}, {updatedBy: 0, updatedAt: 0, createdBy: 0, createdAt: 0, startDate: 0, endDate: 0}) //eslint-disable-line
-    .populate('company')
-    .populate('product')
+    .populate('company product variation')
     .lean()
     .exec((err, data) => {
       if (err) {

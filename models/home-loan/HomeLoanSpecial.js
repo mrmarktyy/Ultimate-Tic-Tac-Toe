@@ -23,6 +23,15 @@ HomeLoanSpecial.add({
 		index: true,
 		filters: { company: ':company' },
 	},
+  variation: {
+    type: Types.Relationship,
+    ref: 'HomeLoanVariation',
+    required: false,
+    initial: true,
+    index: true,
+    filters: { company: ':company' },
+  },
+
 })
 
 HomeLoanSpecial.defaultColumns = 'name, type, introText, blurb'
