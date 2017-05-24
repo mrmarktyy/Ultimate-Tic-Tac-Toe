@@ -8,7 +8,7 @@ class SalesforceClient {
 		this.password = password
 		this.clientId = clientId
 		this.secret = secret
-		this.maxRequestSize = 200
+		this.maxRequestSize = 1000
 		this.authorization = null
 	}
 	getMax () {
