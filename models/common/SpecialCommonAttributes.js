@@ -8,5 +8,5 @@ module.exports = {
   blurb: {type: Types.Code, height: 250, language: 'html', initial: true},
   startDate: {type: Types.Datetime, required: true, initial: true},
   endDate: {type: Types.Datetime, required: true, initial: true},
-  SpecialsUrl: {type: Types.Text, initial: true},
+  SpecialsUrl: {type: Types.Url, initial: true},
 }

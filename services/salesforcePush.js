@@ -44,9 +44,12 @@ exports.pushProducts = async function () {
 
 var salesforceProductFactory = async function (vertical, loanTypeQuery) {
   let ProductVertical = keystoneShell.list(salesforceVerticals[vertical])
-  let products = await (ProductVertical.model.find(loanTypeQuery).populate('company').lean())
+  let products = await (ProductVertical.model.find(loanTypeQuery).populate('company product').lean())
 
   for (var i = 0; i < products.length; i++) {
+    if (vertical == 'Home Loans' && !products[i].isDiscontinued && products[i].product.isDiscontinued) {
+      products[i].isDiscontinued = products[i].product.isDiscontinued
+    }
     products[i].applyUrl = null
     products[i].goToSite = false
     let monetize = await (Monetize.findOne({ product: mongoose.Types.ObjectId(products[i]._id) }).lean()) // eslint-disable-line babel/no-await-in-loop

@@ -79,6 +79,9 @@ HomeLoanVariation.schema.pre('validate', function (next) {
   if (this.fixMonth && this.revertRate && this.revertVariation && !this.removeRevertVariation) {
     next(Error('Only one revert info needed. Either a revertRate or a revertVariation'))
   }
+  if (this.isMonetized && this.isDiscontinued) {
+     next(Error('You cannot discontinue a variation that is monetized.'))
+  }
   next()
 })
 
@@ -149,6 +152,11 @@ HomeLoanVariation.schema.pre('save', async function (next) {
   })
 })
 
+HomeLoanVariation.schema.methods.remove = function (callback) {
+  this.isDiscontinued = true
+  return this.save(callback)
+}
+
 HomeLoanVariation.defaultSort = 'isDiscontinued'
-HomeLoanVariation.defaultColumns = 'name|40%, company, rate, revertRate, introductoryRate'
+HomeLoanVariation.defaultColumns = 'name|40%, company, rate, revertRate, introductoryRate isDiscontinued'
 HomeLoanVariation.register()

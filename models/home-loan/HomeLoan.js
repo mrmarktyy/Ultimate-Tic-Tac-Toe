@@ -72,6 +72,14 @@ HomeLoan.relationship({ path: 'features', ref: 'Feature', refPath: 'product' })
 HomeLoan.relationship({ path: 'conditions', ref: 'Condition', refPath: 'product' })
 HomeLoan.relationship({ path: 'homeLoanSpecial', ref: 'HomeLoanSpecial', refPath: 'product' })
 
+HomeLoan.schema.pre('validate', async function (next) {
+  let variation = await keystone.list('HomeLoanVariation').model.findOne({product: this._id, isDiscontinued: false, isMonetized: true}).lean().exec()
+  if (variation && Object.keys(variation).length > 0 && variation.isMonetized && this.isDiscontinued) {
+    next(Error('Cannot discontinue a product with an active variation that is monetized. UUID ' + variation.uuid))
+  }
+  next()
+})
+
 HomeLoan.schema.pre('save', async function (next) {
   if (!this.uuid) {
     this.uuid = uuid.v4()
@@ -82,4 +90,5 @@ HomeLoan.schema.pre('save', async function (next) {
 })
 
 HomeLoan.defaultColumns = 'name, company, homeLoanType, propertyPurposeTypes, repaymentTypes'
+HomeLoan.defaultSort = 'isDiscontinued'
 HomeLoan.register()
