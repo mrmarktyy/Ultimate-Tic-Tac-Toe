@@ -50,9 +50,9 @@ function spawnFee (fee) {
   return removeUneededFields(fee)
 }
 
-async function getHomeLoanModel (model, attribute = 'product', populate = '') {
+async function getHomeLoanModel (model, attribute = 'product', populate = '', findFilter = {}) {
   var obj = {}
-  await model.find({})
+  await model.find(findFilter)
   .populate(populate)
   .lean()
   .exec((err, data) => {
@@ -105,32 +105,35 @@ async function getHomeLoansObjects (homeLoans) {
   let conditions = await getHomeLoanModel(Condition.model)
   let extraRepayments = await getHomeLoanModel(ExtraRepayment.model)
   let companyVerticals = await getHomeLoanModel(CompanyHomeLoan.model, 'company')
-  let variations = await getHomeLoanModel(HomeLoanVariation.model, 'product', 'revertVariation')
+  let isDiscontinuedFilter = { $or: [ { isDiscontinued: false }, { isDiscontinued: {$exists: false} } ] }
+  let variations = await getHomeLoanModel(HomeLoanVariation.model, 'product', 'revertVariation', isDiscontinuedFilter)
 
   let response = {}
 
   homeLoans.forEach((homeLoan) => {
-    let company = CompanyService.fixLogoUrl(homeLoan.company)
-    company = CompanyService.isBank(company)
-    if (company.logo && company.logo.url) {
-      company.logo = company.logo.url.replace(/(^\w+:|^)\/\//, '')
-    }
-    homeLoan.company = company
-
-    response[homeLoan._id] = Object.assign(
-      {},
-      homeLoan,
-      {
-        variations: (variations[homeLoan._id] || []).map((v) => spawnVariation(v, monetizedVariations)),
-        offsetAccounts: (offsetAccounts[homeLoan._id] || []).map(removeUneededFields),
-        redrawfacilities: (redrawFacilities[homeLoan._id] || []).map(removeUneededFields),
-        fees: (fees[homeLoan._id] || []).map(spawnFee),
-        features: (features[homeLoan._id] || []).map(removeUneededFields),
-        conditions: (conditions[homeLoan._id] || []).map(removeUneededFields),
-        extraRepayments: (extraRepayments[homeLoan._id] || []).map(removeUneededFields),
-        companyVertical: (companyVerticals[homeLoan.company._id] || []).map(removeUneededFields),
+    if (variations[homeLoan._id]) {
+      let company = CompanyService.fixLogoUrl(homeLoan.company)
+      company = CompanyService.isBank(company)
+      if (company.logo && company.logo.url) {
+        company.logo = company.logo.url.replace(/(^\w+:|^)\/\//, '')
       }
-    )
+      homeLoan.company = company
+
+      response[homeLoan._id] = Object.assign(
+        {},
+        homeLoan,
+        {
+          variations: (variations[homeLoan._id] || []).map((v) => spawnVariation(v, monetizedVariations)),
+          offsetAccounts: (offsetAccounts[homeLoan._id] || []).map(removeUneededFields),
+          redrawfacilities: (redrawFacilities[homeLoan._id] || []).map(removeUneededFields),
+          fees: (fees[homeLoan._id] || []).map(spawnFee),
+          features: (features[homeLoan._id] || []).map(removeUneededFields),
+          conditions: (conditions[homeLoan._id] || []).map(removeUneededFields),
+          extraRepayments: (extraRepayments[homeLoan._id] || []).map(removeUneededFields),
+          companyVertical: (companyVerticals[homeLoan.company._id] || []).map(removeUneededFields),
+        }
+      )
+    }
   })
 
   let result = []

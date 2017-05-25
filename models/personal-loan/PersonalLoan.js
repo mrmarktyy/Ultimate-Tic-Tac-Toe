@@ -139,6 +139,9 @@ PersonalLoan.schema.pre('validate', function (next) {
   if ((this.extraRepaymentPercentageLimits === undefined) !== (this.extraRepaymentPercentageLimitsPeriod === undefined)) {
     next(Error('Extra Repayments Percentage limits and Extra Repayment Percentage Limits Period must both empty or not empty'))
   }
+  if (this.isMonetized && this.isDiscontinued) {
+     next(Error('You cannot discontinue a variation that is monetized.'))
+  }
   next()
 })
 
