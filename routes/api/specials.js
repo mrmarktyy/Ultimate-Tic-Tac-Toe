@@ -34,6 +34,8 @@ exports.list = async function (req, res) {
       specialObj.introText = item.introText
       specialObj.type = item.type
       specialObj.name = item.name
+      specialObj.startDate = item.startDate
+      specialObj.endDate = item.endDate
 
       return specialObj
     })
@@ -46,7 +48,7 @@ async function getSpecials () {
   var obj = {}
   for (let special of allSpecials) {
     let model = keystone.list(special + 'Special').model
-    await model.find({startDate: {$lte: new Date()}, endDate: {$gte: new Date()}}, {updatedBy: 0, updatedAt: 0, createdBy: 0, createdAt: 0, startDate: 0, endDate: 0}) //eslint-disable-line
+    await model.find({startDate: {$lte: new Date()}, endDate: {$gte: new Date()}}, {updatedBy: 0, updatedAt: 0, createdBy: 0, createdAt: 0}) //eslint-disable-line
     .populate('company product variation')
     .lean()
     .exec((err, data) => {
