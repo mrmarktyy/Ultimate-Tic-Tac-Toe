@@ -93,6 +93,7 @@ async function prepareDataForRedshift (homeloans) {
       product.annualfees = getFeeCostsWithFreq(fees, 'ONGOING_FEE', 'ANNUALLY')
       product.monthlyfees = getFeeCostsWithFreq(fees, 'ONGOING_FEE', 'MONTHLY')
       product.applicationfees = upfrontFeesObj.applicationFee
+      product.legalfee = upfrontFeesObj.legalFee
       product.maxlvr = variation.maxLVR || null
       product.minlvr = variation.minLVR || null
       product.introductoryrate = featureExists(features, 'HAS_INTRODUCTORY_RATE') ? variation.introductoryRate : 0
@@ -102,6 +103,7 @@ async function prepareDataForRedshift (homeloans) {
       product.introongoingfeesfrequency = ongoingFeeObj.introOngoingFeeFreq || null
       product.revertongoingfees = ongoingFeeObj.revertOngoingFee || 0
       product.revertongoingfeefreqency = ongoingFeeObj.revertOngoingFeeFreq ? ongoingFeeObj.revertOngoingFeeFreq : null
+      product.fixmonth = variation.fixMonth || null
       product.endfees = getFeeCosts(fees, 'END_FEE').cost ? getFeeCosts(fees, 'END_FEE').cost : 0
       product.extrarepaymentsallowed = repaymentObj.extraRepaymentsAllowed
       product.allowslowdoc = featureExists(features, 'ALLOW_LOW_DOC')
