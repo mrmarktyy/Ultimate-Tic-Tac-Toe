@@ -73,7 +73,7 @@ class SalesforceClient {
 					RC_Product_Type__c: vertical,
 					RC_Company_ID__c: productsLot[lot].company.uuid,
 					RC_Product_Name__c: productsLot[lot].name.substring(0, 80),
-					RC_Product_Visible__c: productsLot[lot].goToSite,
+					RC_Product_Visible__c: !productsLot[lot].isDiscontinued,
 					RC_Product_Archived__c: productsLot[lot].isDiscontinued,
 					RC_Product_Active__c: productsLot[lot].goToSite,
 					RC_Product_Url__c: productsLot[lot].applyUrl,
