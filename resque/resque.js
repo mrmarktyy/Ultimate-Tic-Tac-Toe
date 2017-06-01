@@ -22,66 +22,66 @@ const jobs = {
   'loadHomeLoanstoRedshift': {
     perform: async (done) => {
       try {
-        console.log('resque loadHomeLoanstoRedshift')
+        console.log(new Date() + ' resque loadHomeLoanstoRedshift')
         await loadHomeLoanstoRedshift()
         done()
       } catch (error) {
-        done(error.message)
+        done(new Date() + ' loadHomeLoanstoRedshift ' + error.message)
       }
     },
   },
   'loadPersonalLoansToRedshift': {
     perform: async (done) => {
       try {
-        console.log('resque loadPersonalLoansToRedshift')
+        console.log(new Date() + ' resque loadPersonalLoansToRedshift')
         await loadPersonalLoansToRedshift()
         done()
       } catch (error) {
-        done(error.message)
+        done(new Date() + ' loadPersonalLoansToRedshift ' + error.message)
       }
     },
   },
   'importHomeloansMonthlyClickCount': {
     perform: async (done) => {
       try {
-        console.log('resque importHomeloansMonthlyClickCount')
+        console.log(new Date() + ' resque importHomeloansMonthlyClickCount')
         await importHomeloansMonthlyClickCount()
         done()
       } catch (error) {
-        done(error.message)
+        done(new Date() + ' importHomeloansMonthlyClickCount ' + error.message)
       }
     },
   },
   'importPaymentMonetizationTypes': {
     perform: async (done) => {
       try {
-        console.log('resque importPaymentMonetizationTypes')
+        console.log(new Date() + ' resque importPaymentMonetizationTypes')
         await importPaymentMonetizationTypes()
         done()
       } catch (error) {
-        done(error.message)
+        done(new Date() + ' importPaymentMonetizationTypes ' + error.message)
       }
     },
   },
   'salesforcePushCompanies': {
     perform: async (done) => {
       try {
-        console.log('resque salesforcePushCompanies')
+        console.log(new Date() + ' resque salesforcePushCompanies')
         await salesforcePushCompanies()
         done()
       } catch (error) {
-        done(error.message)
+        done(new Date() + ' salesforcePushCompanies ' + error.message)
       }
     },
   },
   'salesforcePushProducts': {
     perform: async (done) => {
       try {
-        console.log('resque salesforcePushProducts')
+        console.log(new Date() + ' resque salesforcePushProducts')
         await salesforcePushProducts()
         done()
       } catch (error) {
-        done(error.message)
+        done(new Date() + ' salesforcePushProducts ' + error.message)
       }
     },
   },
