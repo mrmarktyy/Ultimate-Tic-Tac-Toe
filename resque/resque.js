@@ -113,7 +113,7 @@ queue.connect(() => {
   })
 
   // Daily
-  schedule.scheduleJob('45 16 * * *', () => {
+  schedule.scheduleJob('47 18 * * *', () => {
     if (scheduler.master) {
       queue.enqueue('ultimate', 'loadPersonalLoansToRedshift')
     }
@@ -128,7 +128,7 @@ queue.connect(() => {
       queue.enqueue('ultimate', 'importPaymentMonetizationTypes')
     }
   })
-  schedule.scheduleJob('45 21 * * *', () => {
+  schedule.scheduleJob('52 18 * * *', () => {
    if (scheduler.master) {
       queue.enqueue('ultimate', 'loadHomeLoanstoRedshift')
     }
