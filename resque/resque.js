@@ -133,12 +133,12 @@ queue.connect(() => {
       queue.enqueue('ultimate', 'loadHomeLoanstoRedshift')
     }
   })
-  schedule.scheduleJob('25 * * * *', () => {
+  schedule.scheduleJob('25 1-18,21-23 * * *', () => {
     if (scheduler.master) {
       queue.enqueue('ultimate', 'salesforcePushCompanies')
     }
   })
-  schedule.scheduleJob('28 * * * *', () => {
+  schedule.scheduleJob('28 1-18,21-23 * * *', () => {
     if (scheduler.master) {
       queue.enqueue('ultimate', 'salesforcePushProducts')
     }
