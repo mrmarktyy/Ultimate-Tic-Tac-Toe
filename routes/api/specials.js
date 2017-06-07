@@ -36,6 +36,7 @@ exports.list = async function (req, res) {
       specialObj.name = item.name
       specialObj.startDate = item.startDate
       specialObj.endDate = item.endDate
+			specialObj.promotedOrder = item.promotedOrder
 
       return specialObj
     })

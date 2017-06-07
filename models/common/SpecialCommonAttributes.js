@@ -9,4 +9,5 @@ module.exports = {
   startDate: {type: Types.Datetime, required: true, initial: true},
   endDate: {type: Types.Datetime, required: true, initial: true},
   SpecialsUrl: {type: Types.Url, initial: true},
+	promotedOrder: { type: Types.Select, options: [{ value: '0', label: 'None' }, { value: '1', label: '1 - First' }, 2, 3, 4, 5, 6, 7, 8, 9, 10], default: '0', initial: true },
 }
