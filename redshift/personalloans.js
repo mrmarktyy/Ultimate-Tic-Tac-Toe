@@ -1,39 +1,31 @@
 require('dotenv').config()
 
+var keystoneShell = require('../utils/keystoneShell')
+var mongoosePromise = require('../utils/mongoosePromise')
+var logger = require('../utils/logger')
 const json2csv = require('json2csv')
 const moment = require('moment')
 const awsUploadToS3 = require('../utils/awsUploadToS3')
 const redshiftQuery = require('../utils/redshiftQuery')
 
-const mongoose = require('mongoose')
-const keystone = require('keystone')
+var PersonalLoan = keystoneShell.list('PersonalLoan')
+var PersonalLoanVariation = keystoneShell.list('PersonalLoanVariation')
 
-keystone.init({
-  'auto update': true,
-  'session': true,
-  'auth': true,
-  'user model': 'User',
-  'session store': 'mongo',
-  'mongo': process.env.MONGO_URI,
-})
-
-keystone.import('../models')
-
-module.exports = function () {
-  mongoose.connect(process.env.MONGO_URI)
-
-  mongoose.connection.on('open', async () => {
-    const PersonalLoan = keystone.list('PersonalLoan')
-    const PersonalLoanVariation = keystone.list('PersonalLoanVariation')
-
+module.exports = async function () {
+  let connection = await mongoosePromise.connect()
+  try {
     const personalLoans = await PersonalLoan.model.find({}).populate('company personalloan').lean().exec()
     const personalLoanVariations = await PersonalLoanVariation.model.find({}).populate('product').lean().exec()
 
     const date = moment()
     await prepDataAndPushToRedshift(date, personalLoans, personalLoanVariations)
 
-    mongoose.connection.close()
-  })
+    connection.close()
+  } catch (error) {
+    logger.error(error)
+    connection.close()
+    return error
+  }
 }
 
 async function prepDataAndPushToRedshift (date, personalLoans, personalLoanVariations) {
