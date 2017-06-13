@@ -84,6 +84,10 @@ HomeLoan.schema.pre('save', async function (next) {
   if (!this.uuid) {
     this.uuid = uuid.v4()
   }
+  let product = await keystone.list('HomeLoan').model.findOne({uuid: this.uuid}).lean().exec()
+  if (product && product.isDiscontinued != this.isDiscontinued) {
+    await keystone.list('HomeLoanVariation').model.update({product: this._id}, {$set: {isDiscontinued: this.isDiscontinued}}, {multi: true})
+  }
 
   await changeLogService(this)
   next()

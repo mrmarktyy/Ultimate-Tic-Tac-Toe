@@ -54,10 +54,14 @@ HomeLoanVariation.add({
     noedit: false,
 		filters: {company: ':company'},
 	},
-  removeRevertVariation: {type: Types.Boolean, indent: true, initial: false}
+  removeRevertVariation: {type: Types.Boolean, indent: true, initial: false},
 })
 
-HomeLoanVariation.schema.pre('validate', function (next) {
+HomeLoanVariation.schema.pre('validate', async function (next) {
+  let homeloan = await keystone.list('HomeLoan').model.findOne({_id: this.product}).lean().exec()
+  if (homeloan.isDiscontinued) {
+    next(Error('A variation can only be created on an active product'))
+  }
   if ((this.minTotalLoanAmount > this.maxTotalLoanAmount) && this.maxTotalLoanAmount != null) {
     next(Error('Max Total LoanAmount can not less than Min Total Loan Amount'))
   }
