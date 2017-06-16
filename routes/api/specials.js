@@ -17,19 +17,32 @@ exports.list = async function (req, res) {
 
       specialObj.id = item._id
 
-      if (item.product) {
-        specialObj.productUUID = item.product.uuid
-      }
+			if (item.company) {
+				specialObj.company = {
+					uuid: item.company.uuid,
+					name: item.company.name,
+					logo: item.company.logo.url,
+					slug: item.company.slug
+				}
+			}
 
-      if (item.company) {
-        specialObj.companyUUID = item.company.uuid
+      if (item.product) {
+				specialObj.product = {
+					uuid: item.product.uuid,
+					name: item.product.name,
+					slug: item.product.slug,
+				}
       }
 
       if (item.variation) {
-        specialObj.variationUUID = item.variation.uuid
+				specialObj.variation = {
+					uuid: item.variation.uuid,
+					name: item.variation.name,
+					slug: item.variation.slug
+				}
       }
 
-      specialObj.SpecialsUrl = item.SpecialsUrl
+      specialObj.specialsUrl = item.SpecialsUrl
       specialObj.blurb = item.blurb
       specialObj.introText = item.introText
       specialObj.type = item.type
