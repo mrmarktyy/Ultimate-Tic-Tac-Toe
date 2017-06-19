@@ -1,0 +1,26 @@
+extends ../layouts/default
+
+block content
+  .container
+    h1 Home Loan Rates
+    p Find a company, click button to download a csv of homeloan rates
+    .row
+      .col-sm-8
+        form(action='/import/homeloan-download-rates', method='post')
+          .form-group
+            label Company
+            select(name='companyName').form-control
+              each company in companies
+                option(value=company.uuid) #{company.name}
+
+          button.btn.btn-large.btn-primary(type="submit") Export Rates
+
+    .row
+      .col-sm-8
+        .uploadfileform
+          p make changes to the csv and reload them.
+          form(action='/import/homeloan-upload-rates', method='post', enctype='multipart/form-data')
+            .form-group
+              label Input File
+              input(type='file', name='variationfileUpload')
+            button.btn.btn-large.btn-primary(type="submit") Upload File
