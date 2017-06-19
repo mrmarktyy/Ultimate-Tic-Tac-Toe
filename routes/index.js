@@ -11,6 +11,7 @@ keystone.pre('render', middleware.flashMessages)
 var routes = {
   views: importRoutes('./views'),
   api: importRoutes('./api'),
+  import: importRoutes('./import'),
 }
 
 function checkAPIKey (req, res, next) {
@@ -24,9 +25,15 @@ function checkAPIKey (req, res, next) {
 // Setup Route Bindings
 exports = module.exports = function (app) {
   app.all('/api*', checkAPIKey)
+  app.all('/import*', middleware.requireUser)
 
   // Views
   app.get('/', routes.views.index)
+  app.get('/import-rates', middleware.requireUser, routes.views.importRates)
+
+  //downloads
+  app.post('/import/homeloan-download-rates', routes.import.homeloanRates.downloadCsv)
+  app.post('/import/homeloan-upload-rates', routes.import.homeloanRates.uploadCsv)
 
   // APIs
   // salesforce turn on and off products

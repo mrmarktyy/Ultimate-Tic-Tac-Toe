@@ -5834,3 +5834,8 @@ button.close {
   display: block;
   max-width: 100%;
   height: auto; }
+
+.uploadfileform {
+  margin-top: 40px;
+  padding-top: 10px;
+  border-top: 1px solid #eeeeee; }
