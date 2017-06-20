@@ -72,7 +72,7 @@ keystone.set('nav', {
   companies: ['Company', 'Branch', 'ATM'],
   homeLoans: ['CompanyHomeLoan', 'HomeLoanFamily', 'HomeLoan', 'HomeLoanVariation', 'HomeLoanSpecial', 'ExtraRepayment', 'OffsetAccount', 'RedrawFacility', 'Fee', 'Feature', 'Condition'],
   creditCards: ['CompanyCreditCard', 'CreditCard', 'CreditCardSpecial', 'Redemption', 'PartnerConversion', 'Program', 'RedemptionType', 'RedemptionName'],
-  personalLoans: ['CompanyPersonalLoan', 'PersonalLoan', 'PersonalLoanSpecial', 'PersonalLoanVariation', 'PersonalLoanCreditScore'],
+  personalLoans: ['CompanyPersonalLoan', 'PersonalLoan', 'PersonalLoanSpecial', 'PersonalLoanVariation', 'PersonalLoanQualification'],
   savingsAccounts: ['CompanySavingsAccount', 'SavingsAccount', 'SavingsAccountSpecial', 'SavingsAccountTier'],
   sponsoredLinks: 'SponsoredLink',
   featuredProducts: 'FeaturedProduct',
