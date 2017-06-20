@@ -9,7 +9,7 @@ module.exports = {
     initial: true,
   },
   employmentStatus: {
-    type: Types.Select,
+    type: Types.MultiSelect,
     options: ['Full Time', 'Part Time', 'Contract', 'Self Employed', 'Sole Trader'],
     required: true,
     initial: true,
