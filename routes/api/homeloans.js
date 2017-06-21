@@ -9,10 +9,10 @@ var Feature = keystone.list('Feature')
 var Condition = keystone.list('Condition')
 var ExtraRepayment = keystone.list('ExtraRepayment')
 var CompanyHomeLoan = keystone.list('CompanyHomeLoan')
-var Monetize = keystone.list('Monetize')
 var CompanyService = require('../../services/CompanyService')
 var logger = require('../../utils/logger')
 const recommendedMultiplier = require('../../utils/recommendedMultiplier').multiplier
+var monetizedCollection = require('./monetizedCollection')
 
 function removeUneededFields (obj) {
   return _.omit(obj, ['product', '_id', 'company', 'createdAt', 'createdBy', 'updatedBy', 'updatedAt'])
@@ -68,22 +68,6 @@ async function getHomeLoanModel (model, attribute = 'product', populate = '', fi
   return obj
 }
 
-async function monetizedCollection () {
-  var obj = {}
-  await Monetize.model.find({vertical: 'Home Loans', enabled: true})
-  .lean()
-  .exec((err, monetizes) => {
-    if (err) {
-      logger.error('database error on home loan api fetching monetized events')
-      return 'database error'
-    }
-    monetizes.forEach((record) => {
-      obj[record.product] = record
-    })
-  })
-  return obj
-}
-
 exports.list = async function (req, res) {
   let homeLoans = await HomeLoan.model.find({ $or: [ { isDiscontinued: false }, { isDiscontinued: {$exists: false} } ] }).populate('company homeLoanFamily').lean().exec()
   let results = await getHomeLoansObjects(homeLoans)
@@ -97,7 +81,7 @@ exports.listWIthExtraData = async function (req, res) {
 }
 
 async function getHomeLoansObjects (homeLoans) {
-  let monetizedVariations = await monetizedCollection()
+  let monetizedVariations = await monetizedCollection('Home Loans')
   let offsetAccounts = await getHomeLoanModel(OffsetAccount.model)
   let redrawFacilities = await getHomeLoanModel(RedrawFacility.model)
   let fees = await getHomeLoanModel(Fee.model)
