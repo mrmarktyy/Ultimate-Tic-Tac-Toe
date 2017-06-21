@@ -9,7 +9,7 @@ exports.list = async function (req, res) {
   let results = []
   try {
     let saleEventProductFields = await SaleEventProductField.model.find({}).lean().exec()
-    saleEventProductFields = saleEventProductFields.map((item) => removeUneededFields(item, ['_id', 'createdAt', 'createdBy', 'updatedBy', 'updatedAt', '__v']))
+    saleEventProductFields = saleEventProductFields.map((item) => removeUneededFields(item))
 
     const products = await SaleEventProduct.model.find({}).lean().exec()
 

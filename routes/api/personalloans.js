@@ -1,85 +1,90 @@
 var keystone = require('keystone')
-var mongoose = require('mongoose')
 var changeCase = require('change-case')
+var _ = require('lodash')
 
 var PersonalLoan = keystone.list('PersonalLoan')
 var PersonalLoanVariation = keystone.list('PersonalLoanVariation')
 var CompanyPersonalLoan = keystone.list('CompanyPersonalLoan')
-var Monetize = keystone.list('Monetize').model
+var PersonalLoanQualification = keystone.list('PersonalLoanQualification')
 var CompanyService = require('../../services/CompanyService')
 var logger = require('../../utils/logger')
+var monetizedCollection = require('./monetizedCollection')
+var removeUneededFields = require('../../utils/removeUneededFields')
 
-exports.list = function (req, res) {
+exports.list = async function (req, res) {
+	let personalLoans = await PersonalLoan.model.find({ isDiscontinued: false }).populate('company').lean().exec()
+	let result = await getPersonalLoanObjects(personalLoans)
+	res.jsonp(result)
+}
 
-	let promise = PersonalLoan.model.find({ isDiscontinued: false }).populate('company').lean().exec()
+async function getPersonalLoanObjects (loans) {
+	const variations = await PersonalLoanVariation.model.find().populate('product').lean().exec()
+	const companyVerticalData = await CompanyPersonalLoan.model.find().populate('company').lean().exec()
+	const monetizeCarLoans = await monetizedCollection('Car Loans')
+	const monetizePersonalLoans = await monetizedCollection('Personal Loans')
+	const qualifications = await PersonalLoanQualification.model.find().populate('company product').lean().exec()
 
-	let response = {}
-	let variationPromises = []
-	promise.then((personalLoans) => {
-		personalLoans.forEach((personalLoan) => {
-			// change the value to titleCase
-			['repaymentType', 'securedType'].forEach((attribute) => {
-				personalLoan[attribute] = changeCase.titleCase(personalLoan[attribute])
-			})
-			personalLoan.company = CompanyService.fixLogoUrl(personalLoan.company)
-			// this make sure API always return promotedOrder for all products
-			if (personalLoan.promotedOrder === '0') {
-				personalLoan.promotedOrder = null
+	const monetizedList = _.merge({}, monetizeCarLoans, monetizePersonalLoans)
+
+	let result = loans.map((loan) => {
+		// variations
+		loan.variations = variations
+		.filter((variation) => variation.product.uuid === loan.uuid)
+		.map((variation) => {
+			variation = removeUneededFields(variation, ['product', 'company'])
+
+			return handleComparisonRate(variation)
+		})
+
+		// company vertical data
+		loan.companyVertical = companyVerticalData
+		.filter((verticalData) => verticalData.company.uuid === loan.company.uuid)
+		.map((verticalData) => {
+			verticalData = removeUneededFields(verticalData, ['company'])
+
+			return verticalData
+		})
+
+		// monetize data
+		let monetize = monetizedList[loan._id]
+
+		loan.gotoSiteUrl = monetize ? monetize.applyUrl : null
+		loan.gotoSiteEnabled = monetize ? monetize.enabled : false
+		loan.paymentType = monetize ? monetize.paymentType : null
+
+		// enrich data
+		loan.repaymentType = changeCase.titleCase(loan.repaymentType)
+		loan.securedType = changeCase.titleCase(loan.securedType)
+		loan.company = CompanyService.fixLogoUrl(loan.company)
+
+		if (loan.promotedOrder === '0') {
+			loan.promotedOrder = null
+		} else {
+			loan.promotedOrder = 100 - parseInt(loan.promotedOrder)
+		}
+
+		// qualification data
+		loan.qualifications = qualifications.filter((qualification) => {
+			if (qualification.product) {
+				return qualification.product.uuid === loan.uuid
+			} else if (qualification.company) {
+				return qualification.company.uuid === loan.company.uuid
 			} else {
-				personalLoan.promotedOrder = 100 - parseInt(personalLoan.promotedOrder)
+				return false
 			}
+		}).map((qualification) => {
+			qualification = removeUneededFields(qualification, ['company', 'product'])
 
-			let promise = PersonalLoanVariation.model.find({ product: personalLoan._id }).lean().exec((err, variations) => {
-				if (err) {
-					logger.error('database error on find personal loan variation by product id')
-					return 'database error'
-				}
-				let variationObjects = variations.map((v) => {
-					return handleComparisonRate(v)
-				})
-				response[personalLoan._id] = Object.assign({}, personalLoan, response[personalLoan._id], { variations: variationObjects })
-			})
-			variationPromises.push(promise)
-
-			let plcPromise = CompanyPersonalLoan.model.find({ company: personalLoan.company._id }).lean().exec((err, plc) => {
-				if (err) {
-					logger.error('database error on find company personal loan vertical by company id')
-					return 'database error'
-				}
-				response[personalLoan._id] = Object.assign({}, personalLoan, response[personalLoan._id], { companyVertical: plc })
-			})
-			variationPromises.push(plcPromise)
-
-			let mntzPromise = Monetize.findOne({ product: personalLoan._id }).lean().exec((err, monetize) => {
-				if (err) {
-					logger.error('database error on find monetize by product id')
-					return 'database error'
-				}
-				let applyUrl = null
-				let enabled = false
-        let paymentType = null
-				if (monetize !== null) {
-					applyUrl = monetize.applyUrl
-					enabled = monetize.enabled
-          paymentType = monetize.paymentType
-				}
-				response[personalLoan._id] = Object.assign({}, personalLoan, response[personalLoan._id], { gotoSiteUrl: applyUrl, gotoSiteEnabled: enabled, paymentType: paymentType })
-			})
-			variationPromises.push(mntzPromise)
+			return qualification
 		})
 
-		Promise.all(variationPromises).then(() => {
-			let result = []
-			for (let key in response) {
-				result.push(response[key])
-			}
-			res.jsonp(result)
-		})
+		return loan
 	})
+
+	return result
 }
 
 exports.one = function (req, res) {
-
 	let id = req.params.id
 	let promise = PersonalLoan.model.findById(id).populate('company').lean().exec()
 
