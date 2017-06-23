@@ -7,7 +7,7 @@ var SavingsAccountTier = keystone.list('SavingsAccountTier')
 exports.list = async function (req, res) {
   let savingsAccounts = await SavingsAccount.model.find().populate('company').lean().exec()
   let result = await getSavingAccounts(savingsAccounts)
-	res.jsonp(result)
+  res.jsonp(result)
 }
 
 async function getSavingAccounts (accounts) {
