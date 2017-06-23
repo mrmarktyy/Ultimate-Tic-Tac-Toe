@@ -36,6 +36,7 @@ Company.add({
 Company.relationship({ path: 'ATMs', ref: 'ATM', refPath: 'company' })
 Company.relationship({ path: 'Branches', ref: 'Branch', refPath: 'company' })
 Company.relationship({ path: 'ChangeLogs', ref: 'ChangeLog', refPath: 'model', many: true })
+Company.relationship({ path: 'brokers', ref: 'Broker', refPath: 'companies'  });
 
 Company.schema.pre('validate', function (next) {
 	if (this.phoneNumber && !/^[0-9 ()]+$/.test(this.phoneNumber)) {
