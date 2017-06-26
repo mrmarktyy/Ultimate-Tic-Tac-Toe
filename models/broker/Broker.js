@@ -11,9 +11,9 @@ var Broker = new keystone.List('Broker').add({
 	displayName: {type: Types.Text, required: true, initial: true},
 	acl: {type: Types.Text},
 	abn: {type: Types.Text},
-	ccid: {type: Types.Text},
-	about: {type: Types.Code, height: 250, language: 'html' },
-	disclaimer: {type: Types.Code, height: 250, language: 'html' },
+	cid: {type: Types.Text},
+	about: {type: Types.Code, height: 250, language: 'html'},
+	disclaimer: {type: Types.Code, height: 250, language: 'html'},
 	email: {type: Types.TextArray},
 	logo: imageStorage('Broker'),
 	phone: {type: Types.Text},
@@ -22,7 +22,7 @@ var Broker = new keystone.List('Broker').add({
 	vertical: {type: Types.Select, required: true, options: verticals, initial: true},
 	tiles: {type: Types.Relationship, ref: 'Tile', many: true},
 	testimonials: {type: Types.Relationship, ref: 'Testimonial', many: true},
-	companies: {type: Types.Relationship, ref: 'Company', many: true}
+	companies: {type: Types.Relationship, ref: 'Company', many: true},
 })
 
 Broker.schema.pre('save', async function (next) {
@@ -34,5 +34,4 @@ Broker.schema.pre('save', async function (next) {
 
 Broker.defaultColumns = 'uuid, name, displayName, slug, acl, abn'
 Broker.register()
-
 
