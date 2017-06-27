@@ -21,7 +21,7 @@ PersonalLoanQualification.add({
     required: false,
     initial: true,
     index: true,
-    filters: { Company: ':company' },
+    filters: { company: ':company' },
   },
 })
 
