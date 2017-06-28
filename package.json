@@ -28,6 +28,7 @@
     "node-sass-middleware": "^0.10.0",
     "node-schedule": "1.2.0",
     "node-uuid": "^1.4.7",
+    "nodemailer": "^4.0.1",
     "pg": "6.1.2",
     "pretty-error": "^2.0.2",
     "randomstring": "^1.1.5",
