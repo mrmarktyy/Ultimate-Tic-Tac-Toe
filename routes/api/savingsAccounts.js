@@ -11,16 +11,16 @@ exports.list = async function (req, res) {
 }
 
 async function getSavingAccounts (accounts) {
-  const tiers = await SavingsAccountTier.model.find().populate('product').lean().exec()
+  const variations = await SavingsAccountTier.model.find().populate('product').lean().exec()
 
-  // tiers
+  // variations
   let result = accounts.map((account) => {
-    account.tiers = tiers
-    .filter((tier) => tier.product.uuid === account.uuid)
-    .map((tier) => {
-      tier = removeUneededFields(tier, ['product', 'company'])
+    account.variations = variations
+    .filter((variation) => variation.product.uuid === account.uuid)
+    .map((variation) => {
+      variation = removeUneededFields(variation, ['product', 'company'])
 
-      return tier
+      return variation
     })
 
     return removeUneededFields(account)
