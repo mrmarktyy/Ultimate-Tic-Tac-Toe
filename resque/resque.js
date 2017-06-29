@@ -3,6 +3,7 @@ require('dotenv').config()
 const Resque = require('node-resque')
 const schedule = require('node-schedule')
 const logger = require('../utils/logger')
+const moment = require('moment')
 
 var importHomeloansMonthlyClickCount = require('../redshift/importHomeloansMonthlyClickCount')
 var importPaymentMonetizationTypes = require('../redshift/importPaymentMonetizationTypes')
@@ -10,6 +11,7 @@ var loadPersonalLoansToRedshift = require('../redshift/personalloans')
 var loadHomeLoanstoRedshift = require('../redshift/homeloans')
 var salesforcePushCompanies = require('../services/salesforcePush').pushCompanies
 var salesforcePushProducts = require('../services/salesforcePush').pushProducts
+var financeMonthEnd = require('../redshift/financeMonthEnd')
 
 const connectionDetails = {
   pkg: 'ioredis',
@@ -38,6 +40,18 @@ const jobs = {
         done()
       } catch (error) {
         done(new Date() + ' loadPersonalLoansToRedshift ' + error.message)
+      }
+    },
+  },
+  'financeMonthEnd': {
+    perform: async (done) => {
+      try {
+        console.log(new Date() + ' resque financeMonthEnd')
+        let dt = moment().subtract(1, 'months')
+        await financeMonthEnd({month: dt.format('MMM'), year: dt.format('YYYY')})
+        done()
+      } catch (error) {
+        done(new Date() + ' financeMonthEnd ' + error.message)
       }
     },
   },
@@ -141,6 +155,12 @@ queue.connect(() => {
   schedule.scheduleJob('28 * * * *', () => {
     if (scheduler.master) {
       queue.enqueue('ultimate', 'salesforcePushProducts')
+    }
+  })
+  // monthy
+  schedule.scheduleJob('* 6 * 1 *', () => {
+    if (scheduler.master) {
+      queue.enqueue('ultimate', 'financeMonthEnd')
     }
   })
 })
