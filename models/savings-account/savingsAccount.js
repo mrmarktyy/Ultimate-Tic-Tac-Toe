@@ -26,7 +26,7 @@ SavingsAccount.add({
   legacyCode: { type: Types.Text },
   isSpecial: { type: Types.Select, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown },
   isRCSpecial: { type: Types.Select, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown },
-  offerExpires: { type: Types.Select, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown },
+  offerExpires: { type: Types.Select, options: availableOptions.all, default: availableOptions.unknown },
   otherBenefits: { type: Types.Text },
   otherRestrictions: { type: Types.Text },
   minimumAgeRestrictions: { type: Types.Number, min: 0 },
