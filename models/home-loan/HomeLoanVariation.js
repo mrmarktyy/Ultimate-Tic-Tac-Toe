@@ -97,63 +97,52 @@ HomeLoanVariation.schema.pre('save', async function (next) {
   if (!this.uuid) {
     this.uuid = uuid.v4()
   }
-
   if (!this.slug) {
-    let slug = utils.slug(this.name.toLowerCase())
-    this.slug = slug
+    this.slug = utils.slug(this.name.toLowerCase())
   }
+
   await changeLogService(this)
 
-  let thiz = this
-  let promise = Fee.model.find({product: this.product}).exec()
-  promise.then((fees) => {
-    let loan = {}
-    loan.totalYearlyFees = 0
-    loan.totalMonthlyFees = 0
-    loan.totalUpfrontFees = 0
-    loan.totalEndOfLoanFees = 0
-    fees.forEach((fee) => {
-      if (fee.feeType === 'SETTLEMENT_FEE' || fee.feeType === 'VALUATION_FEE' || fee.feeType === 'LEGAL_FEE' ||
-          fee.feeType === 'APPLICATION_FEE' || fee.feeType === 'MANDATORY_RATE_LOCK_FEE') {
-        loan.totalUpfrontFees += fee.fixedCost
-      }
-      if (fee.feeType === 'DISCHARGE_FEE') {
-        loan.totalEndOfLoanFees += fee.fixedCost
-      }
-      if (fee.feeType === 'ONGOING_FEE' && fee.frequency ==='ANNUALLY') {
-        loan.totalYearlyFees += fee.fixedCost
-      }
-      if (fee.feeType === 'ONGOING_FEE' && fee.frequency ==='MONTHLY') {
-        loan.totalMonthlyFees  += fee.fixedCost
-      }
-    })
-
-    let revertVariationPromise
-    if (thiz.fixMonth) { // Fix product
-      loan.yearlyIntroRate = thiz.rate
-      loan.introTermInMonth = thiz.fixMonth
-      if (thiz.revertRate) {
-        loan.yearlyRate = thiz.revertRate
-      } else {
-        revertVariationPromise = HomeLoanVariation.model.findOne({'_id': thiz.revertVariation}).exec()
-      }
-    } else { // Variable product
-      loan.yearlyRate = thiz.rate
-      loan.yearlyIntroRate = thiz.introductoryRate
-      loan.introTermInMonth = thiz.introductoryTerm
+  let loan = {
+    totalYearlyFees: 0,
+    totalMonthlyFees: 0,
+    totalUpfrontFees: 0,
+    totalEndOfLoanFees: 0,
+  }
+  let fees = await Fee.model.find({product: this.product}).exec()
+  fees.forEach((fee) => {
+    if (['SETTLEMENT_FEE', 'VALUATION_FEE', 'LEGAL_FEE', 'APPLICATION_FEE',
+        'MANDATORY_RATE_LOCK_FEE'].indexOf(fee.feeType) >= 0) {
+      loan.totalUpfrontFees += fee.fixedCost
     }
-
-    if (revertVariationPromise) {
-      revertVariationPromise.then((variation) => {
-        loan.yearlyRate = variation.rate
-        thiz.calculatedComparisonRate = ComparisonRateCalculator.calculateHomeLoanComparisonRate(loan)
-        next()
-      })
-    } else {
-      thiz.calculatedComparisonRate = ComparisonRateCalculator.calculateHomeLoanComparisonRate(loan)
-      next()
+    if (fee.feeType === 'DISCHARGE_FEE') {
+      loan.totalEndOfLoanFees += fee.fixedCost
+    }
+    if (fee.feeType === 'ONGOING_FEE' && fee.frequency ==='ANNUALLY') {
+      loan.totalYearlyFees += fee.fixedCost
+    }
+    if (fee.feeType === 'ONGOING_FEE' && fee.frequency ==='MONTHLY') {
+      loan.totalMonthlyFees  += fee.fixedCost
     }
   })
+
+  if (this.fixMonth) { // Fix product
+    loan.yearlyIntroRate = this.rate
+    loan.introTermInMonth = this.fixMonth
+    if (this.revertRate) {
+      loan.yearlyRate = this.revertRate
+    } else {
+      let variation = await HomeLoanVariation.model.findOne({'_id': this.revertVariation}).exec()
+      loan.yearlyRate = variation.rate
+    }
+  } else { // Variable product
+    loan.yearlyRate = this.rate
+    loan.yearlyIntroRate = this.introductoryRate
+    loan.introTermInMonth = this.introductoryTerm
+  }
+  this.calculatedComparisonRate = ComparisonRateCalculator.calculateHomeLoanComparisonRate(loan)
+
+  next()
 })
 
 HomeLoanVariation.schema.methods.remove = function (callback) {
