@@ -109,6 +109,7 @@ exports.one = function (req, res) {
 }
 
 function handleComparisonRate (variation) {
+	variation.comparisonRatePersonal5Years = variation.comparisonRatePersonal5Years
 	if (variation.comparisonRatePersonalManual) {
 		variation.personalLoanComparisonRate = variation.comparisonRatePersonalManual
 	} else {
