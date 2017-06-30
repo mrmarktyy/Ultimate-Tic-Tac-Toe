@@ -109,7 +109,12 @@ exports.one = function (req, res) {
 }
 
 function handleComparisonRate (variation) {
-	variation.comparisonRatePersonal5Years = variation.comparisonRatePersonal5Years
+	if (variation.comparisonRatePersonalManual5Years) {
+		variation.personalLoanComparisonRate5Years = variation.comparisonRatePersonalManual5Years
+	} else {
+		variation.comparisonRatePersonalManual5Years = null
+		variation.personalLoanComparisonRate5Years = variation.comparisonRatePersonal5Years
+	}
 	if (variation.comparisonRatePersonalManual) {
 		variation.personalLoanComparisonRate = variation.comparisonRatePersonalManual
 	} else {
