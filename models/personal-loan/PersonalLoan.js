@@ -157,6 +157,18 @@ PersonalLoan.schema.virtual('personalLoanTotalUpfrontFee').get(function () {
   }
 })
 
+PersonalLoan.schema.virtual('personalLoanTotalUpfrontFee30000').get(function () {
+  if (this.isPersonalLoan === availableOptions.yes) {
+    if (this.applicationFeesDollar != null) {
+      return this.applicationFeesDollar
+    } else if (this.applicationFeesPercent != null) {
+      return this.applicationFeesPercent * personalLoanConstant.PERSONAL_LOAN_30000_LOAN_AMOUNT * 0.01
+    }
+  } else {
+    return null
+  }
+})
+
 PersonalLoan.schema.virtual('carLoanTotalUpfrontFee').get(function () {
   if (this.isCarLoan === availableOptions.yes) {
     if (this.applicationFeesDollar != null) {

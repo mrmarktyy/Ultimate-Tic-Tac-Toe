@@ -70,12 +70,18 @@ exports.calculatePersonalLoanComparisonRate = function (data = {}) {
 		totalMonthlyFees = 0,
 		totalYearlyFees = 0,
 		totalEndOfLoanFees = 0,
+		loanAmount = 0,
+		loanTermInMonth = 0,
 	} = data
 
 	let monthlyRate = yearlyRate / 100 / 12
 	let monthlyIntroRate = yearlyIntroRate / 100 / 12
-	let loanAmount = personalLoanConstant.PERSONAL_LOAN_DEFAULT_LOAN_AMOUNT
-	let loanTermInMonth = personalLoanConstant.PERSONAL_LOAN_DEFAULT_LOAN_TERM
+	if (!loanAmount) {
+		loanAmount = personalLoanConstant.PERSONAL_LOAN_DEFAULT_LOAN_AMOUNT
+	}
+	if (!loanTermInMonth) {
+		loanTermInMonth = personalLoanConstant.PERSONAL_LOAN_DEFAULT_LOAN_TERM
+	}
 
 	return calculateComparisonRate(monthlyRate, loanAmount, loanTermInMonth, monthlyIntroRate, introTermInMonth, totalUpfrontFees, totalMonthlyFees, totalYearlyFees, totalEndOfLoanFees)
 }
