@@ -158,7 +158,7 @@ queue.connect(() => {
     }
   })
   // monthy
-  schedule.scheduleJob('* 6 * 1 *', () => {
+  schedule.scheduleJob('0 6 1 * *', () => {
     if (scheduler.master) {
       queue.enqueue('ultimate', 'financeMonthEnd')
     }
