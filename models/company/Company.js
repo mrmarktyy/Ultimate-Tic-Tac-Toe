@@ -4,6 +4,8 @@ var Types = keystone.Field.Types
 var { imageStorage } = require('../helpers/fileStorage')
 var changeLogService = require('../../services/changeLogService')
 
+var utils = keystone.utils
+
 var Company = new keystone.List('Company', {
     track: true,
 })
@@ -36,7 +38,7 @@ Company.add({
 Company.relationship({ path: 'ATMs', ref: 'ATM', refPath: 'company' })
 Company.relationship({ path: 'Branches', ref: 'Branch', refPath: 'company' })
 Company.relationship({ path: 'ChangeLogs', ref: 'ChangeLog', refPath: 'model', many: true })
-Company.relationship({ path: 'brokers', ref: 'Broker', refPath: 'companies'  });
+Company.relationship({ path: 'brokers', ref: 'Broker', refPath: 'companies' })
 
 Company.schema.pre('validate', function (next) {
 	if (this.phoneNumber && !/^[0-9 ()]+$/.test(this.phoneNumber)) {
@@ -50,6 +52,9 @@ Company.schema.pre('save', async function (next) {
 		this.uuid = uuid.v4()
 	}
 
+  if (!this.slug) {
+    this.slug = utils.slug(this.name.toLowerCase())
+  }
 	await changeLogService(this)
 	next()
 })
