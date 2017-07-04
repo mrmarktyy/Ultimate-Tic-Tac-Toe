@@ -13,7 +13,7 @@
     "flake-idgen": "1.1.0",
     "jade": "^1.11.0",
     "json2csv": "^3.7.3",
-    "keystone": "git+https://github.com/ratecity/keystone.git#0445f661e6baefd9042212b72f13a91fab89fb42",
+    "keystone": "git+https://github.com/ratecity/keystone.git#36cff868085a7aeafce049c671def07b736f021f",
     "keystone-storage-adapter-s3": "^1.1.0",
     "keystone-utils": "^0.4.0",
     "lodash": "^4.13.1",
