@@ -29,7 +29,7 @@ exports.monetize = function (req, res) {
     let uuid = changeRequest.RC_Product_ID
 
     let product = keystone.list(salesforceVerticals[changeRequest.RC_Product_Type])
-    promise = product.model.findOne({ uuid: uuid })
+    promise = product.model.findOne({ uuid: uuid }).populate('company')
     .exec()
     .then((product) => {
       if (product === null) {
@@ -58,6 +58,8 @@ exports.monetize = function (req, res) {
               vertical: changeRequest.RC_Product_Type,
               applyUrl: changeRequest.RC_Url,
               product: product._id,
+              productName: product.name,
+              companyName: product.company.name,
               enabled: changeRequest.RC_Active,
               updatedAt: new Date().toISOString(),
             },

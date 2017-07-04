@@ -20,9 +20,11 @@ Monetize.add({
     noedit: true,
     hidden: true,
   },
+  productName: { type: Types.Text, noedit: true },
+  companyName: { type: Types.Text, noedit: true },
 })
 
-Monetize.defaultColumns = 'uuid, vertical, enabled, applyUrl, paymentType'
+Monetize.defaultColumns = 'uuid, vertical, productName, companyName, enabled, applyUrl, paymentType'
 Monetize.defaultSort = '-enabled, vertical, uuid'
 Monetize.schema.index({ uuid: 1 }, { unique: true })
 Monetize.register()
