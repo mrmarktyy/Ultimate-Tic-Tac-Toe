@@ -47,6 +47,12 @@ Condition.add({
 })
 
 Condition.schema.pre('validate', async function (next) {
+	if (this.conditionType === 'LOAN_TERM' && this.minAmount && this.minAmount % 12 !== 0) {
+		next(Error('Min Amount for Loan Term can only be multiples of 12'))
+	}
+	if (this.conditionType === 'LOAN_TERM' && this.maxAmount && this.maxAmount % 12 !== 0) {
+		next(Error('Max Amount for Loan Term can only be multiples of 12'))
+	}
 	if (this.minAmount > this.maxAmount) {
 		next(Error('Max Amount can not less than Min Amount'))
 	}
