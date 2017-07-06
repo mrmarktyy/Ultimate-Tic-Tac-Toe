@@ -26,9 +26,14 @@ FeaturedProduct.relationship({ path: 'ChangeLogs', ref: 'ChangeLog', refPath: 'm
 FeaturedProduct.schema.pre('validate', function (next) {
 	if ((this.dateEnd !== null) && (this.dateEnd < this.dateStart)) {
 		next(Error('End date has to be greater than start date'))
-	} else {
-		next()
 	}
+	if (this.title.length >= 30) {
+		next(Error('Title has maximum of 30 characters'))
+	}
+	if (this.description.length >= 135) {
+		next(Error('Title has maximum of 135 characters'))
+	}
+	next()
 })
 
 FeaturedProduct.schema.index({uuid: 1, vertical: 1}, {unique: true})
