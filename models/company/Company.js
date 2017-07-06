@@ -28,6 +28,7 @@ Company.add({
 	afsl: { type: Types.Number },
 	uuid: { type: Types.Text, initial: true, noedit: true }, // this should be unique, however, team don't have the data yet. will make this unique once all data loaded.
 	slug: { type: Types.Text, unique: true, required: true, initial: true },
+	hasBig4Comparison: { type: Types.Boolean, default: false, indent: true },
 	legacyCode: { type: Types.Text, noedit: true },
 	url: { type: Types.Url, required: true, index: true, initial: true },
 	searchKeyword: { type: Types.TextArray },
