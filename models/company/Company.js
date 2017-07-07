@@ -11,7 +11,7 @@ var Company = new keystone.List('Company', {
 })
 
 Company.add({
-	name: { type: Types.Text, required: true, index: true },
+	name: { type: Types.Text, required: true, index: true, unique: true },
 	displayName: { type: Types.Text, required: true, initial: true },
 	shortName: { type: Types.Text },
 	parentCompany: { type: Types.Relationship, ref: 'Company' },
@@ -26,7 +26,7 @@ Company.add({
 	phoneNumber: { type: Types.Text },
 	acl: { type: Types.Number },
 	afsl: { type: Types.Number },
-	uuid: { type: Types.Text, initial: true, noedit: true }, // this should be unique, however, team don't have the data yet. will make this unique once all data loaded.
+	uuid: { type: Types.Text, initial: true, noedit: true, unique: true },
 	slug: { type: Types.Text, unique: true, required: true, initial: true },
 	hasBig4Comparison: { type: Types.Boolean, default: false, indent: true },
 	legacyCode: { type: Types.Text, noedit: true },
