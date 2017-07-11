@@ -27,6 +27,10 @@ See [confluence page](https://ratecityconfluence.atlassian.net/wiki/display/IN/K
 
   - get password from the admin
 
+* URI for users database
+
+  `mongodump --host "users-production-shard-00-00-rmvom.mongodb.net:27017,users-production-shard-00-01-rmvom.mongodb.net:27017,users-production-shard-00-02-rmvom.mongodb.net:27017" --ssl --username admin --password password --out tmp/dump`
+
 * Restore the dump to your local or remote
 
   `mongorestore --db ratecity-data tmp/dump/ratecity-data`
