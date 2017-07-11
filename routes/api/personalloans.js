@@ -19,7 +19,11 @@ exports.list = async function (req, res) {
 
 async function getPersonalLoanObjects (loans) {
 	const variations = await PersonalLoanVariation.model.find().populate('product').lean().exec()
-	const companyVerticalData = await CompanyPersonalLoan.model.find().populate('company').lean().exec()
+	const companyVerticalData = await CompanyPersonalLoan.model.find().populate('company big4ComparisonProduct').lean().exec()
+	companyVerticalData.forEach((obj) => {
+     obj.big4ComparisonProductUuid = obj.big4ComparisonProduct ? obj.big4ComparisonProduct.uuid : null
+  })
+
 	const monetizeCarLoans = await monetizedCollection('Car Loans')
 	const monetizePersonalLoans = await monetizedCollection('Personal Loans')
 	const qualifications = await PersonalLoanQualification.model.find().populate('company product').lean().exec()
@@ -40,7 +44,7 @@ async function getPersonalLoanObjects (loans) {
 		loan.companyVertical = companyVerticalData
 		.filter((verticalData) => verticalData.company.uuid === loan.company.uuid)
 		.map((verticalData) => {
-			verticalData = removeUneededFields(verticalData, ['company'])
+			verticalData = removeUneededFields(verticalData, ['company', 'big4ComparisonProduct'])
 
 			return verticalData
 		})

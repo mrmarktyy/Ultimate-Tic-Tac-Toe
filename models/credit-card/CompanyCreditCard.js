@@ -23,12 +23,24 @@ CompanyCreditCard.add({
 		required: true,
 		initial: true,
 	},
+	big4ComparisonProduct: {
+		type: Types.Relationship,
+		ref: 'CreditCard',
+		required: false,
+		filters: {company: ':company'},
+	},
+	removeBig4ComparisonProduct: {type: Types.Boolean, indent: true, default: false},
+	hasRepaymentWidget: {type: Types.Boolean, indent: true, default: false},
 	blurb: { type: Types.Code, height: 250, language: 'html' },
 })
 
 CompanyCreditCard.relationship({ path: 'ChangeLogs', ref: 'ChangeLog', refPath: 'model', many: true })
 
 CompanyCreditCard.schema.pre('save', async function (next) {
+	if (this.removeBig4ComparisonUuid) {
+    this.big4ComparisonUuid = null
+  }
+  this.removeBig4ComparisonUuid = undefined
   await changeLogService(this)
   next()
 })

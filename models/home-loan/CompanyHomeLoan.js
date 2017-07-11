@@ -22,11 +22,23 @@ CompanyHomeLoan.add({
 		required: true,
 		initial: true,
 	},
+	big4ComparisonProduct: {
+		type: Types.Relationship,
+		ref: 'HomeLoanVariation',
+		required: false,
+		filters: {company: ':company'},
+	},
+	removeBig4ComparisonProduct: {type: Types.Boolean, indent: true, default: false},
+	hasRepaymentWidget: {type: Types.Boolean, indent: true, default: false},
 	howToApplyBlurb: {type: Types.Code, height: 250, language: 'html'},
 	eligibilityBlurb: {type: Types.Code, height: 150, language: 'html'},
 })
 
 CompanyHomeLoan.schema.pre('save', async function (next) {
+	if (this.removeBig4ComparisonUuid) {
+    this.big4ComparisonUuid = null
+  }
+  this.removeBig4ComparisonUuid = undefined
 	await changeLogService(this)
 	next()
 })

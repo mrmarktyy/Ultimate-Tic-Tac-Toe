@@ -15,7 +15,7 @@ const recommendedMultiplier = require('../../utils/recommendedMultiplier').multi
 var monetizedCollection = require('./monetizedCollection')
 
 function removeUneededFields (obj) {
-  return _.omit(obj, ['product', '_id', 'company', 'createdAt', 'createdBy', 'updatedBy', 'updatedAt'])
+  return _.omit(obj, ['product', '_id', 'company', 'big4ComparisonProduct', 'createdAt', 'createdBy', 'updatedBy', 'updatedAt'])
 }
 
 function spawnVariation (variation, monetizedVariations) {
@@ -88,7 +88,13 @@ async function getHomeLoansObjects (homeLoans) {
   let features = await getHomeLoanModel(Feature.model)
   let conditions = await getHomeLoanModel(Condition.model)
   let extraRepayments = await getHomeLoanModel(ExtraRepayment.model)
-  let companyVerticals = await getHomeLoanModel(CompanyHomeLoan.model, 'company')
+  let companyVerticals = await getHomeLoanModel(CompanyHomeLoan.model, 'company', 'big4ComparisonProduct')
+  Object.keys(companyVerticals).forEach((_id) => {
+    companyVerticals[_id].forEach((obj) => {
+      obj.big4ComparisonProductUuid = obj.big4ComparisonProduct ? obj.big4ComparisonProduct.uuid : null
+    })
+  })
+
   let isDiscontinuedFilter = { $or: [ { isDiscontinued: false }, { isDiscontinued: {$exists: false} } ] }
   let variations = await getHomeLoanModel(HomeLoanVariation.model, 'product', 'revertVariation', isDiscontinuedFilter)
 
