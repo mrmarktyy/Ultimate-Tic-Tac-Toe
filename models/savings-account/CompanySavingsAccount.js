@@ -21,6 +21,14 @@ CompanySavingsAccount.add({
     required: true,
     initial: true,
   },
+  big4ComparisonProduct: {
+    type: Types.Relationship,
+    ref: 'SavingsAccount',
+    required: false,
+    filters: {company: ':company'},
+  },
+  removeBig4ComparisonProduct: {type: Types.Boolean, indent: true, default: false},
+  hasRepaymentWidget: {type: Types.Boolean, indent: true, default: false},
   blurb: { type: Types.Code, height: 250, language: 'html' },
 })
 
@@ -38,6 +46,10 @@ CompanySavingsAccount.schema.pre('validate', function (next) {
 })
 
 CompanySavingsAccount.schema.pre('save', async function (next) {
+  if (this.removeBig4ComparisonProduct) {
+    this.big4ComparisonProduct = null
+  }
+  this.removeBig4ComparisonProduct = undefined
   await changeLogService(this)
   next()
 })

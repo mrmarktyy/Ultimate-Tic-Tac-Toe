@@ -30,6 +30,14 @@ CompanyPersonalLoan.add({
 	applyByBroker: { type: Types.Select, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown },
 	availableTo457VisaHolders: { type: Types.Select, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown },
 	approvalTime: { type: Types.Number },
+	big4ComparisonProduct: {
+    type: Types.Relationship,
+    ref: 'PersonalLoan',
+    required: false,
+    filters: {company: ':company'},
+  },
+  removeBig4ComparisonProduct: {type: Types.Boolean, indent: true, default: false},
+  hasRepaymentWidget: {type: Types.Boolean, indent: true, default: false},
 	personalLoanBlurb: { type: Types.Code, height: 250, language: 'html' },
 	carLoanBlurb: { type: Types.Code, height: 250, language: 'html' },
 })
@@ -48,6 +56,10 @@ CompanyPersonalLoan.schema.pre('validate', function (next) {
 })
 
 CompanyPersonalLoan.schema.pre('save', async function (next) {
+	if (this.removeBig4ComparisonUuid) {
+    this.big4ComparisonUuid = null
+  }
+  this.removeBig4ComparisonUuid = undefined
 	await changeLogService(this)
 	next()
 })
