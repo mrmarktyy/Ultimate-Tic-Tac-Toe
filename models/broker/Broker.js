@@ -27,27 +27,26 @@ var Broker = new keystone.List('Broker').add({
 })
 
 Broker.schema.pre('validate', async function (next) {
-	let products = await keystone.list('Broker').model.find().lean().exec()
-	let defaultCount = 0
-	products.forEach((product) => {
-		if (product.default && product.uuid !== this.uuid) {
-			defaultCount++
+		if (!this.default) {
+			let defaultBroker = await keystone.list('Broker').model.findOne({
+				default: true,
+				uuid: {$ne: this.uuid}
+			}).lean().exec()
+			if (!defaultBroker) {
+				next(Error('Their should be at least one default broker'))
+			}
 		}
-	})
-	if (!this.default && defaultCount === 0) {
-		next(Error('Their should be at least one default broker'))
+		next()
 	}
-	next()
-})
+)
 
 Broker.schema.pre('save', async function (next) {
 	if (!this.uuid) {
 		this.uuid = uuid.v4()
 	}
 
-	let product = await keystone.list('Broker').model.findOne({uuid: this.uuid}).lean().exec()
-	if (this.default && !product.default) {
-		await keystone.list('Broker').model.update({uuid: {$ne: this.uuid}}, {$set: {default: false}}, {multi: true})
+	if (this.default) {
+		await keystone.list('Broker').model.update({default: true}, {$set: {default: false}}, {multi: true})
 	}
 	next()
 })
