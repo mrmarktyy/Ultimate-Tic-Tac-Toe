@@ -17,6 +17,7 @@ var Broker = new keystone.List('Broker').add({
 	email: {type: Types.TextArray},
 	logo: imageStorage('Broker'),
 	phone: {type: Types.Text},
+	default: {type: Types.Boolean},
 	pros: {type: Types.TextArray},
 	lender: {type: Types.Boolean},
 	vertical: {type: Types.Select, required: true, options: verticals, initial: true},
@@ -25,13 +26,31 @@ var Broker = new keystone.List('Broker').add({
 	companies: {type: Types.Relationship, ref: 'Company', many: true},
 })
 
+Broker.schema.pre('validate', async function (next) {
+		if (!this.default) {
+			let defaultBroker = await keystone.list('Broker').model.findOne({
+				default: true,
+				uuid: {$ne: this.uuid}
+			}).lean().exec()
+			if (!defaultBroker) {
+				next(Error('Their should be at least one default broker'))
+			}
+		}
+		next()
+	}
+)
+
 Broker.schema.pre('save', async function (next) {
 	if (!this.uuid) {
 		this.uuid = uuid.v4()
 	}
+
+	if (this.default) {
+		await keystone.list('Broker').model.update({default: true}, {$set: {default: false}}, {multi: true})
+	}
 	next()
 })
 
-Broker.defaultColumns = 'uuid, name, displayName, slug, acl, abn'
+Broker.defaultColumns = 'uuid, name, displayName, default, slug, vertical, acl, abn'
 Broker.register()
 
