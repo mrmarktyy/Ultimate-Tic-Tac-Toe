@@ -30,6 +30,8 @@ exports = module.exports = function (app) {
   // Views
   app.get('/', routes.views.index)
   app.get('/import-rates', middleware.requireUser, routes.views.importRates)
+  app.get('/monthly-clicks-export', middleware.requireUser, routes.views.monthlyClicks.screen)
+  app.post('/monthly-clicks-download', middleware.requireUser, routes.views.monthlyClicks.download)
 
   //downloads
   app.post('/import/homeloan-download-rates', routes.import.homeloanRates.downloadCsv)

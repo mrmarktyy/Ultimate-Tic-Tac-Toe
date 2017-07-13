@@ -6,7 +6,22 @@ const json2csv = require('json2csv')
 const fs = require('fs')
 const filePath = '/tmp/'
 
-module.exports = async function ({month, year}) {
+exports.monthlyClicksMail = async function ({month, year}) {
+  let csv = await monthlyClicksCsv(month, year)
+  let fileName = `monthly-clicks-${month}-${year}.csv`
+  fs.writeFileSync(filePath + fileName, csv)
+  let attachment = {path: `${filePath}${fileName}`}
+  let mailer = new Mailer({
+    to: 'rochelle.dicristo@ratecity.com.au',
+    attachment: attachment,
+    subject: `Finance Month End Clicks Report for ${month} ${year}`,
+    cc: 'ian.fletcher@ratecity.com.au',
+  })
+
+  await mailer.sendEmail()
+}
+
+var monthlyClicksCsv = exports.monthlyClicksCsv = async function (month, year) {
   let dt = moment(`1-${month}-${year}`, 'DD-MMM-YYYY')
   let startdate = dt.format('YYYY-MM-DD')
   let enddate = dt.add(1, 'months').format('YYYY-MM-DD')
@@ -24,17 +39,6 @@ module.exports = async function ({month, year}) {
   `
   let rows = await redshiftQuery(command, [startdate, enddate])
 
-  let csv = json2csv({data: rows})
-  let fileName = `monthly-clicks-${month}-${year}.csv`
-  fs.writeFileSync(filePath + fileName, csv)
-  let attachment = {path: `${filePath}${fileName}`}
-  let mailer = new Mailer({
-    to: 'rochelle.dicristo@ratecity.com.au',
-    attachment: attachment,
-    subject: `Finance Month End Clicks Report for ${month} ${year}`,
-    cc: 'ian.fletcher@ratecity.com.au',
-  })
-
-  await mailer.sendEmail()
+  return json2csv({data: rows})
 }
 
