@@ -1,0 +1,20 @@
+extends ../layouts/default
+
+block content
+  .container
+    h1 Export Monthly Clicks
+    p Select a month and year to extract
+    .row
+      .col-sm-8
+        form(class='form-inline', action='/monthly-clicks-download', method='post')
+          .form-group
+            label Month
+            select(name='month').form-control
+              each month in months
+                option(value=month selected=month == currentMonth) #{month}
+            label Year
+            select(name='year').form-control
+              each year in years
+                option(value=month selected=year == currentMonth) #{year}
+
+          button.btn.btn-large.btn-primary(type="submit") Export ECPC

@@ -4,7 +4,10 @@ var _ = require('lodash')
 	Initialises the standard view locals
 */
 exports.initLocals = function (req, res, next) {
-	res.locals.navLinks = [{ label: 'Import Rates', key: 'importRates', href: '/import-rates' }]
+	res.locals.navLinks = [
+		{ label: 'Import Rates', key: 'importRates', href: '/import-rates' },
+		{ label: 'Monthly Clicks', key: 'monthlyClicks', href: '/monthly-clicks-export' },
+	]
 	res.locals.user = req.user
 	next()
 }

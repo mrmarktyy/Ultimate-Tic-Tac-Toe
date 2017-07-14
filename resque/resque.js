@@ -11,7 +11,7 @@ var loadPersonalLoansToRedshift = require('../redshift/personalloans')
 var loadHomeLoanstoRedshift = require('../redshift/homeloans')
 var salesforcePushCompanies = require('../services/salesforcePush').pushCompanies
 var salesforcePushProducts = require('../services/salesforcePush').pushProducts
-var financeMonthEnd = require('../redshift/financeMonthEnd')
+var monthlyClicks = require('../redshift/financeMonthEnd').monthlyClicksMail
 
 const connectionDetails = {
   pkg: 'ioredis',
@@ -43,15 +43,15 @@ const jobs = {
       }
     },
   },
-  'financeMonthEnd': {
+  'monthlyClicks': {
     perform: async (done) => {
       try {
-        console.log(new Date() + ' resque financeMonthEnd')
+        console.log(new Date() + ' resque monthlyClicks')
         let dt = moment().subtract(1, 'months')
-        await financeMonthEnd({month: dt.format('MMM'), year: dt.format('YYYY')})
+        await monthlyClicks({month: dt.format('MMM'), year: dt.format('YYYY')})
         done()
       } catch (error) {
-        done(new Date() + ' financeMonthEnd ' + error.message)
+        done(new Date() + ' monthlyClicks ' + error.message)
       }
     },
   },
@@ -160,7 +160,7 @@ queue.connect(() => {
   // monthy
   schedule.scheduleJob('0 6 1 * *', () => {
     if (scheduler.master) {
-      queue.enqueue('ultimate', 'financeMonthEnd')
+      queue.enqueue('ultimate', 'monthlyClicks')
     }
   })
 })
