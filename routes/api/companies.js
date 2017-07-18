@@ -2,6 +2,7 @@ var keystone = require('keystone')
 
 var Company = keystone.list('Company')
 var HomeLoanVariaiton = keystone.list('HomeLoanVariation')
+var CompanyHomeLoan = keystone.list('CompanyHomeLoan')
 var PersonalLoan = keystone.list('PersonalLoan')
 var CompanyPersonalLoan = keystone.list('CompanyPersonalLoan')
 var CreditCard = keystone.list('CreditCard')
@@ -35,6 +36,17 @@ exports.list = function (req, res) {
 			})
 			countPromises.push(hlPromise)
 
+			let companyHlPromise = CompanyHomeLoan.model.findOne({
+				company: company._id,
+				}).populate('big4ComparisonProduct').lean().exec((err, comp) => {
+					if (err) return 'database error'
+					if (comp) {
+						response[company._id].verticals.homeLoans.hasRepaymentWidget = comp.hasRepaymentWidget
+						response[company._id].verticals.homeLoans.big4ComparisonProductUuid = comp.big4ComparisonProduct && comp.big4ComparisonProduct.uuid
+					}
+				})
+			countPromises.push(companyHlPromise)
+
 			let hlccPromise = HomeLoanVariaiton.model
 				.find({company: company._id, monthlyClicks: {$gt: 0}})
 				.exec((err, results) => {
@@ -45,7 +57,6 @@ exports.list = function (req, res) {
 
 					response[company._id].verticals.homeLoans.popularityScore = totalClicks * MULTIPLIER
 				})
-
 			countPromises.push(hlccPromise)
 
 			let plPromise = PersonalLoan.model.count({
@@ -66,13 +77,18 @@ exports.list = function (req, res) {
 			})
 			countPromises.push(clPromise)
 
-			let plbPromise = CompanyPersonalLoan.model.find({
+			let plbPromise = CompanyPersonalLoan.model.findOne({
 				company: company._id,
-			}).lean().exec((err, cp) => {
+			}).populate('big4ComparisonProduct').lean().exec((err, comp) => {
 				if (err) return 'database error'
-				if (cp.length > 0) {
-					response[company._id].verticals.personalLoans.blurb = cp[0].personalLoanBlurb || ''
-					response[company._id].verticals.carLoans.blurb = cp[0].carLoanBlurb || ''
+				if (comp) {
+					response[company._id].verticals.personalLoans.blurb = comp.personalLoanBlurb || ''
+					response[company._id].verticals.personalLoans.big4ComparisonProductUuid = comp.big4ComparisonProduct && comp.big4ComparisonProduct.uuid
+					response[company._id].verticals.personalLoans.hasRepaymentWidget = comp.hasRepaymentWidget
+					response[company._id].verticals.carLoans.big4ComparisonProductUuid = comp.big4ComparisonProduct && comp.big4ComparisonProduct.uuid
+					response[company._id].verticals.carLoans.hasRepaymentWidget = comp.hasRepaymentWidget
+					response[company._id].verticals.carLoans.blurb = comp.carLoanBlurb || ''
+
 				}
 			})
 			countPromises.push(plbPromise)
