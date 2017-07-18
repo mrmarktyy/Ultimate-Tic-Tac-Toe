@@ -20,9 +20,7 @@ class Mailer {
       to: mailOptions.to,
       subject: mailOptions.subject,
       html: '<p>Please see attached</p>',
-      attachments: [
-        mailOptions.attachment,
-      ],
+      attachments: mailOptions.attachments,
     }
     if (mailOptions.cc) {
       this.options.cc = mailOptions.cc
