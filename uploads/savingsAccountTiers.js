@@ -20,7 +20,7 @@ module.exports = async function () {
       obj.product = item.product
       obj.name = item.name
       obj.repVariation = item.repVariation === '' ? 'UNKNOWN' : item.repVariation
-      obj.minimumDeposit = item.minimumDeposit
+      obj.minimumAmount = item.minimumAmount
       obj.maximumAmount = item.maximumAmount
       obj.maximumRate = item.maximumRate
       obj.baseRate = item.baseRate

@@ -36,7 +36,7 @@ SavingsAccountTier.add({
     emptyOption: false,
     default: availableOptions.unknown,
   },
-  minimumDeposit: { type: Types.Number, min: 0, initial: true },
+	minimumAmount: { type: Types.Number, min: 0, initial: true },
   maximumAmount: { type: Types.Number, min: 0 },
   maximumRate: { type: Types.Number, required: true, initial: true },
   baseRate: { type: Types.Number, min: 0, required: true, initial: true },
