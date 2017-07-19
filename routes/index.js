@@ -74,6 +74,9 @@ exports = module.exports = function (app) {
   //Brokers
   app.get('/api/brokers', keystone.middleware.api, routes.api.brokers.list)
 
+	//GenericProducts
+	app.get('/api/generic-products', keystone.middleware.api, routes.api.genericProducts.list)
+
   // Savings Account
   app.get('/api/savings-accounts', keystone.middleware.api, routes.api.savingsAccounts.list)
 }
