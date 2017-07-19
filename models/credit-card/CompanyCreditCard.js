@@ -37,10 +37,10 @@ CompanyCreditCard.add({
 CompanyCreditCard.relationship({ path: 'ChangeLogs', ref: 'ChangeLog', refPath: 'model', many: true })
 
 CompanyCreditCard.schema.pre('save', async function (next) {
-	if (this.removeBig4ComparisonUuid) {
-    this.big4ComparisonUuid = null
+	if (this.removeBig4ComparisonProduct) {
+    this.big4ComparisonProduct = null
   }
-  this.removeBig4ComparisonUuid = undefined
+  this.removeBig4Comparisonproduct = undefined
   await changeLogService(this)
   next()
 })
