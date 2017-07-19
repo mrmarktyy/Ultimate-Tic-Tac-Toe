@@ -56,10 +56,10 @@ CompanyPersonalLoan.schema.pre('validate', function (next) {
 })
 
 CompanyPersonalLoan.schema.pre('save', async function (next) {
-	if (this.removeBig4ComparisonUuid) {
-    this.big4ComparisonUuid = null
+	if (this.removeBig4ComparisonProduct) {
+    this.big4ComparisonProduct = null
   }
-  this.removeBig4ComparisonUuid = undefined
+  this.removeBig4ComparisonProduct = undefined
 	await changeLogService(this)
 	next()
 })
