@@ -16,6 +16,7 @@ var Broker = new keystone.List('Broker').add({
 	disclaimer: {type: Types.Code, height: 250, language: 'html'},
 	email: {type: Types.TextArray},
 	logo: imageStorage('Broker'),
+	imageHeader: imageStorage('brokerHeader'),
 	phone: {type: Types.Text},
 	default: {type: Types.Boolean},
 	pros: {type: Types.TextArray},
@@ -30,7 +31,7 @@ Broker.schema.pre('validate', async function (next) {
 		if (!this.default) {
 			let defaultBroker = await keystone.list('Broker').model.findOne({
 				default: true,
-				uuid: {$ne: this.uuid}
+				uuid: {$ne: this.uuid},
 			}).lean().exec()
 			if (!defaultBroker) {
 				next(Error('Their should be at least one default broker'))
