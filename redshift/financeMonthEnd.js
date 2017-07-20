@@ -27,7 +27,7 @@ var monthlyClicksCsv = exports.monthlyClicksCsv = async function (month, year) {
   let startdate = dt.format('YYYY-MM-DD')
   let enddate = dt.add(1, 'months').format('YYYY-MM-DD')
   let command = `
-    select a.channel, a.utm_source, a.vertical, a.product_uuid as uuid, sf.name, sf.company_name, count(1)
+    select substring((a.datetime::date), 1, 10) as click_date, a.channel, a.utm_source, a.vertical, a.product_uuid as uuid, sf.name, sf.company_name, count(1)
     from apply_clicks a
     LEFT JOIN
       (SELECT * from salesforce_products sales where sales.date_start >= $1 and sales.date_end < $2 and inserted_at =
@@ -35,8 +35,8 @@ var monthlyClicksCsv = exports.monthlyClicksCsv = async function (month, year) {
           and innersales.date_start >= $1 and innersales.date_end < $2)) as sf ON
       sf.uuid = a.product_uuid
     where a.datetime >= $1 and a.datetime < $2
-    group by a.channel, a.utm_source, a.vertical, a.product_uuid, sf.name, sf.company_name
-    order by a.product_uuid
+    group by click_date, a.channel, a.utm_source, a.vertical, a.product_uuid, sf.name, sf.company_name
+    order by click_date, a.product_uuid
   `
   let rows = await redshiftQuery(command, [startdate, enddate])
 
