@@ -27,8 +27,8 @@ FeaturedProduct.schema.pre('validate', function (next) {
 	if ((this.dateEnd !== null) && (this.dateEnd < this.dateStart)) {
 		next(Error('End date has to be greater than start date'))
 	}
-	if (this.title.length >= 30) {
-		next(Error('Title has maximum of 30 characters'))
+	if (this.title.length >= 45) {
+		next(Error('Title has maximum of 45 characters'))
 	}
 	if (this.description.length >= 135) {
 		next(Error('Title has maximum of 135 characters'))
