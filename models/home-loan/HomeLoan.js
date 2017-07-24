@@ -93,6 +93,11 @@ HomeLoan.schema.pre('save', async function (next) {
   next()
 })
 
+HomeLoan.schema.methods.remove = function (callback) {
+  this.isDiscontinued = true
+  return this.save(callback)
+}
+
 HomeLoan.defaultColumns = 'name, company, homeLoanType, propertyPurposeTypes, repaymentTypes'
 HomeLoan.defaultSort = 'isDiscontinued'
 HomeLoan.register()
