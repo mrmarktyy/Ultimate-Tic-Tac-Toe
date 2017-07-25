@@ -25,6 +25,7 @@ async function getSavingAccounts (accounts) {
     let companyVertical = companySavingsAccounts.filter((companyAccount) => {
       return String(companyAccount.company) === String(account.company._id)
     })[0]
+	  account.company.logo = account.company.logo && account.company.logo.url
     account.company.big4ComparisonProductUuid = companyVertical ? companyVertical.big4ComparisonProduct.uuid : null
     account.company.hasRepaymentWidget = companyVertical ? companyVertical.hasRepaymentWidget : false
 

@@ -7,6 +7,12 @@ var changeLogService = require('../../services/changeLogService')
 var utils = keystone.utils
 var Types = keystone.Field.Types
 
+var accountTypes = [
+	{ value: 'Bonus Saver', label: 'Bonus Saver' },
+	{ value: 'Junior Saver', label: 'Junior Saver' },
+	{ value: 'Other', label: 'Other' },
+]
+
 var SavingsAccount = new keystone.List('SavingsAccount', {
     track: true,
 })
@@ -41,6 +47,7 @@ SavingsAccount.add({
   hasBranchAccess: { type: Types.Select, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown },
   accountKeepingFees: { type: Types.Number, min: 0 },
   accountKeepingFeesFrequency: { type: Types.Select, options: frequency },
+  accountType: { type: Types.Select, options: accountTypes },
   internetTransactionFee: { type: Types.Number, min: 0 },
   phoneTransactionFee: { type: Types.Number, min: 0 },
   eftposFee: { type: Types.Number, min: 0 },
