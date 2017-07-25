@@ -18,7 +18,7 @@ GenericProduct.add({
 	description: {type: Types.Text, initial: true},
 	features: {type: Types.TextArray},
 	company: {type: Types.Relationship, ref: 'Company', required: true, many: false, initial: true},
-	url: {type: Types.Text, initial: true, initial: true},
+	url: {type: Types.Text, initial: true},
 	promotedOrder: { type: Types.Select, options: [{ value: '0', label: 'None' }, { value: '1', label: '1 - First' }, 2, 3, 4, 5, 6, 7, 8, 9, 10], default: '0' },
 })
 
