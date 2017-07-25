@@ -3,7 +3,7 @@ var mongoosePromise = require('../utils/mongoosePromise')
 var mongoose = require('mongoose')
 var logger = require('../utils/logger')
 var SalesforceClient = require('./salesforceClient')
-var salesforceVerticals = require('../models/helpers/salesforceVerticals')
+const salesforceVerticals = require('../models/helpers/salesforceVerticals')
 var Company = keystoneShell.list('Company')
 var Monetize = keystoneShell.list('Monetize').model
 var client = new SalesforceClient()
@@ -26,7 +26,7 @@ exports.pushProducts = async function () {
   let connection = await mongoosePromise.connect()
   try {
     for (let vertical in salesforceVerticals) {
-      let status = await salesforceProductFactory(vertical, loanTypeObject(vertical))  // eslint-disable-line babel/no-await-in-loop
+      let status = await salesforceProductFactory(vertical)  // eslint-disable-line babel/no-await-in-loop
       if (status !== 'ok') {
         productsStatus = status
       }
@@ -42,9 +42,10 @@ exports.pushProducts = async function () {
   }
 }
 
-var salesforceProductFactory = async function (vertical, loanTypeQuery) {
-  let ProductVertical = keystoneShell.list(salesforceVerticals[vertical])
-  let products = await (ProductVertical.model.find(loanTypeQuery).populate('company product').lean())
+var salesforceProductFactory = async function (vertical) {
+	const { collection, findClause } = salesforceVerticals[vertical]
+  let ProductVertical = keystoneShell.list(collection)
+  let products = await (ProductVertical.model.find(findClause).populate('company product').lean())
 
   for (var i = 0; i < products.length; i++) {
     if (vertical == 'Home Loans' && !products[i].isDiscontinued && products[i].product.isDiscontinued) {
@@ -60,19 +61,4 @@ var salesforceProductFactory = async function (vertical, loanTypeQuery) {
   }
   let productsStatus = await (client.pushProducts(vertical, products))
   return productsStatus
-}
-
-var loanTypeObject = function (vertical) {
-  let result
-  switch (vertical) {
-    case 'Personal Loans':
-      result = { isPersonalLoan: 'YES' }
-      break
-    case 'Car Loans':
-      result = { isCarLoan: 'YES' }
-      break
-    default:
-      result = {}
-  }
-  return result
 }

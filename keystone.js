@@ -80,7 +80,8 @@ keystone.set('nav', {
   feeds: ['ProductFeedInclusion', 'ProductFeed', 'WidgetImage'],
   users: 'users',
   utilites: ['ApiKey', 'Monetize', 'ChangeLog', 'Log'],
-	brokers: ['Broker', 'Tile', 'Testimonial']
+	brokers: ['Broker', 'Tile', 'Testimonial'],
+	genericProducts: ['GenericProduct']
 })
 
 keystone.set('cors allow origin', true)

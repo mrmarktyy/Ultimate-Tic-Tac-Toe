@@ -28,14 +28,14 @@ exports.monetize = function (req, res) {
     }
     let uuid = changeRequest.RC_Product_ID
 
-    let product = keystone.list(salesforceVerticals[changeRequest.RC_Product_Type])
+    let product = keystone.list(salesforceVerticals[changeRequest.RC_Product_Type].collection)
     promise = product.model.findOne({ uuid: uuid }).populate('company')
     .exec()
     .then((product) => {
       if (product === null) {
         missingUUIDs.push(uuid)
       } else {
-        let ProductModel = mongoose.model(salesforceVerticals[changeRequest.RC_Product_Type])
+        let ProductModel = mongoose.model(salesforceVerticals[changeRequest.RC_Product_Type].collection)
         return(ProductModel.findOneAndUpdate(
           {
             uuid: uuid,
