@@ -1,4 +1,6 @@
-module.exports = [
+const genericVerticals = require('./genericVerticals')
+
+var verticals = [
   { value: 'home-loans', label: 'Home Loans' },
   { value: 'credit-cards', label: 'Credit Cards' },
   { value: 'savings-accounts', label: 'Savings Accounts' },
@@ -9,3 +11,9 @@ module.exports = [
   { value: 'pension', label: 'Pension' },
   { value: 'managed-funds', label: 'Managed Funds' },
 ]
+
+Object.entries(genericVerticals).forEach(([key, value]) => {
+  verticals.push({ value: value['findClause']['vertical'], label: key })
+})
+
+module.exports = verticals
