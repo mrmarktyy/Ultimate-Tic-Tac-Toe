@@ -57,6 +57,8 @@ HomeLoanVariation.add({
   removeRevertVariation: {type: Types.Boolean, indent: true, initial: false},
 })
 
+HomeLoanVariation.schema.index({ company: 1, slug: 1 }, { unique: true })
+
 HomeLoanVariation.schema.pre('validate', async function (next) {
   let homeloan = await keystone.list('HomeLoan').model.findOne({_id: this.product}).lean().exec()
   if (homeloan.isDiscontinued && !this.isDiscontinued) {
@@ -85,6 +87,9 @@ HomeLoanVariation.schema.pre('validate', async function (next) {
   }
   if (this.isMonetized && this.isDiscontinued) {
      next(Error('You cannot discontinue a variation that is monetized.'))
+  }
+  if (!this.slug) {
+    next(Error('The Slug must have a value'))
   }
   next()
 })
