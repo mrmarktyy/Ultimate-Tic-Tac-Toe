@@ -15,7 +15,8 @@ async function getSavingAccounts (accounts) {
   const variations = await SavingsAccountTier.model.find().populate('product').lean().exec()
   const companySavingsAccounts = await CompanySavingsAccount.model.find().populate('big4ComparisonProduct').lean().exec()
 
-  let result = accounts.map((account) => {
+  let result = accounts.map((account, index) => {
+	let company = Object.assign({}, account.company)
     account.variations = variations
       .filter((variation) => variation.product.uuid === account.uuid)
       .map((variation) => {
@@ -25,7 +26,9 @@ async function getSavingAccounts (accounts) {
     let companyVertical = companySavingsAccounts.filter((companyAccount) => {
       return String(companyAccount.company) === String(account.company._id)
     })[0]
-	  account.company.logo = account.company.logo && account.company.logo.url
+
+	  company.logo = company.logo && company.logo.url
+	  account.company = company
     account.company.big4ComparisonProductUuid = companyVertical ? companyVertical.big4ComparisonProduct.uuid : null
     account.company.hasRepaymentWidget = companyVertical ? companyVertical.hasRepaymentWidget : false
 
