@@ -1,6 +1,6 @@
 const keystone = require('keystone')
 const json2csv = require('json2csv')
-const csvtojson = require('../../utils/csvtojson')
+const csvtojson = require('../../utils/csvToJson')
 const _ = require('lodash')
 
 const HomeLoanVariation = keystone.list('HomeLoanVariation')
