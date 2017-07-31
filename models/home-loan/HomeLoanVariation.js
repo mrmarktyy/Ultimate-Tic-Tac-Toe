@@ -83,7 +83,7 @@ HomeLoanVariation.schema.pre('validate', async function (next) {
     next(Error('This is a Variation for Fix HomeLoan. Need either a revertRate or revertVariation'))
   }
   if (this.fixMonth && this.revertRate && this.revertVariation && !this.removeRevertVariation) {
-    next(Error('Only one revert info needed. Either a revertRate or a revertVariation'))
+    next(Error('Pick either a revertRate or a revertVariation not both'))
   }
   if (this.isMonetized && this.isDiscontinued) {
      next(Error('You cannot discontinue a variation that is monetized.'))
