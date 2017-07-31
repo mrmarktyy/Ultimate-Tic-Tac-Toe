@@ -1,6 +1,6 @@
 const keystone = require('keystone')
 const json2csv = require('json2csv')
-const csvtojson = require('csvtojson')
+const csvtojson = require('../../utils/csvtojson')
 const _ = require('lodash')
 
 const HomeLoanVariation = keystone.list('HomeLoanVariation')
@@ -22,12 +22,15 @@ const headings = [
   {label: 'FixMonth', value: 'fixMonth', update: true},
   {label: 'IntroductoryRate', value: 'introductoryRate', update: true},
   {label: 'IntroductoryTerm', value: 'introductoryTerm', update: true},
+  {label: 'RevertRate', value: 'revertRate', update: true},
+  {label: 'RevertVariationUUID', value: 'revertVariation.uuid', update: false},
+  {label: 'IsMonetized', value: 'isMonetized', update: false},
 ]
 
 exports.downloadCsv = async (req, res) => {
   let companyUuid = req.body.companyName
   let companyId = await Company.model.findOne({uuid: companyUuid}, {_id: 1})
-  let variations = await HomeLoanVariation.model.find({isDiscontinued: false, company: companyId}).populate('company product').lean().exec()
+  let variations = await HomeLoanVariation.model.find({isDiscontinued: false, company: companyId}).populate('company product revertVariation').lean().exec()
   let csv = json2csv({data: variations, fields: headings})
 
   res.set({'Content-Disposition': 'attachment; filename=homeloanvariations.csv'})
@@ -40,7 +43,7 @@ exports.uploadCsv = async (req, res) => {
     if (Object.keys(req.files).length === 0) {
       throw 'No upload file is specified'
     }
-    let variationList = await csvToJsonConversion(req.files.variationfileUpload.path)
+    let variationList = await csvtojson(req.files.variationfileUpload.path)
     let company = await checkCompany(variationList)
     let variationCount = await updateVariations(variationList, req)
     req.flash('success', 'Variations for ' + company.name + ' saved ' + variationCount)
@@ -56,7 +59,8 @@ async function updateVariations (list, req) {
     for (let i=0; i < list.length; i++) {
       let item = list[i]
       let variation = await HomeLoanVariation.model.findOne({uuid: item.VariationUUID}).exec() // eslint-disable-line babel/no-await-in-loop
-      variation.set(updateFields(item))
+      let updateItem = await updateFields(item) // eslint-disable-line babel/no-await-in-loop
+      variation.set(updateItem)
       await keystoneUpdateHandler(variation, req) // eslint-disable-line babel/no-await-in-loop
     }
     return list.length
@@ -78,32 +82,50 @@ function keystoneUpdateHandler (variation, req) {
   })
 }
 
-function updateFields (item) {
-  let itemKeys = Object.keys(item)
-  let nameConversion = {}
-  headings.forEach((item) => nameConversion[item.label] = item.value)
-  let updateablekeys =  headings.filter((field) => field.update).map((field) => field.label)
-  let selectedKeys = updateablekeys.filter((e) => itemKeys.indexOf(e) > 0)
-  let update = {}
-  selectedKeys.forEach((key) =>{
-    let value = item[key] === '' ? null : parseFloat(item[key])
-    update[nameConversion[key]] = value
-  })
-  return update
+async function updateFields (item) {
+  try {
+    let itemKeys = Object.keys(item)
+    let nameConversion = {}
+    headings.forEach((item) => nameConversion[item.label] = item.value)
+    let updateablekeys =  headings.filter((field) => field.update).map((field) => field.label)
+    let selectedKeys = updateablekeys.filter((e) => itemKeys.indexOf(e) > 0)
+    let update = {}
+    selectedKeys.forEach((key) =>{
+      let value = item[key] === '' ? null : parseFloat(item[key])
+      update[nameConversion[key]] = value
+    })
+    if (itemKeys.indexOf('RevertVariationUUID') >= 0) {
+      update.revertVariation = await findRevertVariation(item)
+      if (!update.revertVariation) {
+        update.removeRevertVariation = true
+      }
+    }
+    return update
+  } catch (error) {
+    throw error
+  }
 }
 
-async function csvToJsonConversion (csvFilePath) {
-  let list = []
-  return new Promise((resolve) => {
-    csvtojson()
-      .fromFile(csvFilePath)
-      .on('end_parsed', (jsonArray) => {
-          list = jsonArray
-      })
-      .on('done', (error) => {
-        resolve(list)
-      })
-  })
+async function findRevertVariation (item) {
+  try {
+    let { VariationUUID, RevertVariationUUID: uuid, CompanyName } = item
+    if (!uuid) {
+      return null
+    }
+    let variation = await HomeLoanVariation.model.findOne({uuid: uuid}).populate('company').lean().exec()
+    if (variation === null) {
+      throw('Cannot find revert variation. variationUUID ' + VariationUUID)
+    }
+    if (variation.isDiscontinued) {
+      throw('You cannot assign a discontinued variation to a revertVariation. VariationUUID ' + VariationUUID)
+    }
+    if (variation.company.name !== CompanyName) {
+      throw('You cannot associate a different company variation to a revertVariation. VariationUUID ' + VariationUUID)
+    }
+    return variation._id
+  } catch (error) {
+    throw error
+  }
 }
 
 async function checkCompany (list) {
