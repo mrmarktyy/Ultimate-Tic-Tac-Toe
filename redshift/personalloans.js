@@ -140,8 +140,9 @@ async function prepDataAndPushToRedshift (date, personalLoans, personalLoanVaria
     personalLoanProducts.push(product)
 
     let variations = personalLoanVariations.filter((item) => item.product.uuid === loan.uuid)
-    let variation = {}
+
     variations.forEach((cVariation) => {
+      let variation = {}
       variation.collectionDate = collectionDate
       variation.productId = product.productId
       variation.uuid = product.uuid
@@ -157,6 +158,7 @@ async function prepDataAndPushToRedshift (date, personalLoans, personalLoanVaria
       variation.applicationFeesPercent = cVariation.applicationFeesPercent
       variation.applicationFeesDollar = cVariation.applicationFeesDollar
       variation.filename = filenameVar
+
       personalLoanProductVariations.push(variation)
     })
   })
