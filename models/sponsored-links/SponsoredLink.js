@@ -18,7 +18,6 @@ SponsoredLink.add({
     noedit: false,
   },
   title: { type: Types.Text, required: true, initial: true, index: true },
-  description: { type: Types.Text, required: true, initial: true },
   legacyCode: { type: Types.Text },
   sorbetId: { type: Types.Number },
   vertical: { type: Types.Select, required: true, options: verticals, initial: true },
@@ -34,17 +33,19 @@ SponsoredLink.add({
   enabled: { type: Types.Boolean, required: true, default: true, initial: true },
   applyUrl: { type: Types.Url, required: true, initial: true },
   messages: { type: Types.Text },
-  image: imageStorage('sponsoredLink'),
+	imageUrl: imageStorage('sponsoredLink'),
 })
 
 SponsoredLink.relationship({ path: 'ChangeLogs', ref: 'ChangeLog', refPath: 'model', many: true })
 
 SponsoredLink.schema.pre('validate', function (next) {
-  if ((this.dateEnd !== undefined) && (this.dateEnd < this.dateStart)) {
-    next(Error('End date has to be greater than start date'))
-  } else {
-    next()
-  }
+	if ((this.dateEnd !== undefined) && (this.dateEnd < this.dateStart)) {
+		next(Error('End date has to be greater than start date'))
+	} else if (this.title.length > 35) {
+		next(Error('Title has maximum of 35 characters'))
+	} else {
+		next()
+	}
 })
 
 SponsoredLink.schema.pre('save', async function (next) {
