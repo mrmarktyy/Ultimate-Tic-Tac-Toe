@@ -6,6 +6,7 @@ var CompanyHomeLoan = keystone.list('CompanyHomeLoan')
 var PersonalLoan = keystone.list('PersonalLoan')
 var CompanyPersonalLoan = keystone.list('CompanyPersonalLoan')
 var CreditCard = keystone.list('CreditCard')
+var SavingsAccounts = keystone.list('CompanySavingsAccount')
 var CompanyService = require('../../services/CompanyService')
 const MULTIPLIER = 5.32
 
@@ -25,6 +26,7 @@ exports.list = function (req, res) {
 					personalLoans: {},
 					carLoans: {},
 					creditCards: {},
+					savingsAccounts: {}
 				},
 			})
 
@@ -99,7 +101,14 @@ exports.list = function (req, res) {
 				if (err) return 'database error'
 				response[company._id].verticals.creditCards.count = count
 			})
-			countPromises.push(ccPromise)
+
+			let saPromise = SavingsAccounts.model.count({
+				company: company._id,
+			}).exec((err, count) => {
+				if (err) return 'database error'
+				response[company._id].verticals.savingsAccounts.count = count
+			})
+			countPromises.push(saPromise)
 
 		})
 
