@@ -3,6 +3,7 @@ var { imageStorage } = require('../helpers/fileStorage')
 var verticals = require('../helpers/verticals')
 var Types = keystone.Field.Types
 var changeLogService = require('../../services/changeLogService')
+var shareOfVoiceAttributes = require('../common/ShareOfVoiceCommonAttributes')
 
 var SponsoredLink = new keystone.List('SponsoredLink', {
     track: true,
@@ -36,6 +37,8 @@ SponsoredLink.add({
   messages: { type: Types.Text },
   image: imageStorage('sponsoredLink'),
 })
+
+SponsoredLink.add(shareOfVoiceAttributes)
 
 SponsoredLink.relationship({ path: 'ChangeLogs', ref: 'ChangeLog', refPath: 'model', many: true })
 

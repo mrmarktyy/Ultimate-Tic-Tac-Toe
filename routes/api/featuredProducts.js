@@ -10,7 +10,7 @@ exports.list = function (req, res) {
         { dateStart: { $lte: datenow }, enabled: true, dateEnd: null },
         { dateStart: { $lte: datenow }, enabled: true, dateEnd: { $gte: datenow } },
       ] },
-      { uuid: 1, vertical: 1, title: 1, description: 1, sortOrder: 1, image: 1 }
+      { uuid: 1, vertical: 1, title: 1, description: 1, sortOrder: 1, image: 1, shareOfVoiceMatrix: 1, shareOfVoiceType: 1, shareOfVoiceValue: 1 }
     )
     .lean()
     .exec()
