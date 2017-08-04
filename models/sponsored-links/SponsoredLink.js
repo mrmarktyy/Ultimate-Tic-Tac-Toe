@@ -17,7 +17,7 @@ SponsoredLink.add({
     index: true,
     noedit: false,
   },
-  title: { type: Types.Text, required: true, initial: true, index: true },
+  name: { type: Types.Text, required: true, initial: true, index: true },
   legacyCode: { type: Types.Text },
   sorbetId: { type: Types.Number },
   vertical: { type: Types.Select, required: true, options: verticals, initial: true },
@@ -55,7 +55,7 @@ SponsoredLink.schema.pre('save', async function (next) {
 
 SponsoredLink.schema.index({ company: 1, vertical: 1, title: 1 }, { unique: true })
 
-SponsoredLink.defaultColumns = 'vertical, company, title, description, dateStart, dateEnd'
+SponsoredLink.defaultColumns = 'name vertical, company, title, description, dateStart, dateEnd'
 SponsoredLink.drilldown = 'company'
 SponsoredLink.register()
 
