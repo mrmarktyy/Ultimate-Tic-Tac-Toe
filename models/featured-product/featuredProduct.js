@@ -2,6 +2,7 @@ var keystone = require('keystone')
 var {imageStorage} = require('../helpers/fileStorage')
 var verticals = require('../helpers/verticals')
 var changeLogService = require('../../services/changeLogService')
+var shareOfVoiceAttributes = require('../common/ShareOfVoiceCommonAttributes')
 var Types = keystone.Field.Types
 
 var FeaturedProduct = new keystone.List('FeaturedProduct', {
@@ -20,6 +21,8 @@ FeaturedProduct.add({
 	notes: {type: Types.Text, required: false, initial: true},
 	image: imageStorage('featuredProduct'),
 })
+
+FeaturedProduct.add(shareOfVoiceAttributes)
 
 FeaturedProduct.relationship({ path: 'ChangeLogs', ref: 'ChangeLog', refPath: 'model', many: true })
 

@@ -3,6 +3,7 @@ var uuid = require('node-uuid')
 var Types = keystone.Field.Types
 var verticals = require('../helpers/verticals')
 var {imageStorage} = require('../helpers/fileStorage')
+var shareOfVoiceAttributes = require('../common/ShareOfVoiceCommonAttributes')
 
 var Broker = new keystone.List('Broker').add({
 	uuid: {type: Types.Text, initial: true, noedit: true, unique: true},
@@ -26,6 +27,8 @@ var Broker = new keystone.List('Broker').add({
 	testimonials: {type: Types.Relationship, ref: 'Testimonial', many: true},
 	companies: {type: Types.Relationship, ref: 'Company', many: true},
 })
+
+Broker.add(shareOfVoiceAttributes)
 
 Broker.schema.pre('validate', async function (next) {
 		if (!this.default) {
