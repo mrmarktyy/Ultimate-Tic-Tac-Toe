@@ -31,7 +31,7 @@ SponsoredLink.add({
   capRemain: { type: Types.Number },
   revenue: { type: Types.Money },
   enabled: { type: Types.Boolean, required: true, default: true, initial: true },
-  applyUrl: { type: Types.Url, required: true, initial: true },
+  url: { type: Types.Url, required: true, initial: true },
   messages: { type: Types.Text },
 	imageUrl: imageStorage('sponsoredLink'),
 })
