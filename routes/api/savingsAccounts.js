@@ -12,28 +12,31 @@ exports.list = async function (req, res) {
 }
 
 async function getSavingAccounts (accounts) {
-  const variations = await SavingsAccountTier.model.find().populate('product').lean().exec()
-  const companySavingsAccounts = await CompanySavingsAccount.model.find().populate('big4ComparisonProduct').lean().exec()
+	const variations = await SavingsAccountTier.model.find().populate('product').lean().exec()
+	const companySavingsAccounts = await CompanySavingsAccount.model.find().populate('big4ComparisonProduct').lean().exec()
 
-  let result = accounts.map((account, index) => {
-	let company = Object.assign({}, account.company)
-    account.variations = variations
-      .filter((variation) => variation.product.uuid === account.uuid)
-      .map((variation) => {
-        variation = removeUneededFields(variation, ['product', 'company'])
-        return variation
-      })
-    let companyVertical = companySavingsAccounts.filter((companyAccount) => {
-      return String(companyAccount.company) === String(account.company._id)
-    })[0]
+	let result = accounts.map((account, index) => {
+		let company = Object.assign({}, account.company)
+		account.variations = variations
+			.filter((variation) => variation.product.uuid === account.uuid)
+			.map((variation) => {
+				variation = removeUneededFields(variation, ['product', 'company'])
+				return variation
+			})
+		let companyVertical = companySavingsAccounts.filter((companyAccount) => {
+			return String(companyAccount.company) === String(account.company._id)
+		})[0]
 
-	  company.logo = company.logo && company.logo.url
-	  account.company = company
-    account.company.big4ComparisonProductUuid = companyVertical ? companyVertical.big4ComparisonProduct.uuid : null
-    account.company.hasRepaymentWidget = companyVertical ? companyVertical.hasRepaymentWidget : false
+		company.logo = company.logo && company.logo.url
+		account.company = company
+		account.company.big4ComparisonProductUuid = null
+		if (companyVertical && companyVertical.big4ComparisonProduct) {
+			account.company.big4ComparisonProductUuid = companyVertical.big4ComparisonProduct.uuid
+		}
+		account.company.hasRepaymentWidget = companyVertical ? companyVertical.hasRepaymentWidget : false
 
-    return removeUneededFields(account)
-  })
+		return removeUneededFields(account)
+	})
 
-  return result
+	return result
 }
