@@ -8,7 +8,7 @@ exports.list = async function (req, res) {
 		link.title = link.name
 		company.logo = company.logo && company.logo.url
 		link.company = company
-		link.imageUrl = link.imageUrl && link.imageUrl.filename
+		link.imageUrl = link.imageUrl && link.imageUrl.url
 		return link
 	})
 	res.jsonp(sponsoredLinks)
