@@ -44,7 +44,7 @@ SponsoredLink.relationship({ path: 'ChangeLogs', ref: 'ChangeLog', refPath: 'mod
 SponsoredLink.schema.pre('validate', function (next) {
 	if ((this.dateEnd !== undefined) && (this.dateEnd < this.dateStart)) {
 		next(Error('End date has to be greater than start date'))
-	} else if (this.title.length > 35) {
+	} else if (this.name.length > 35) {
 		next(Error('Title has maximum of 35 characters'))
 	} else {
 		next()
@@ -58,7 +58,7 @@ SponsoredLink.schema.pre('save', async function (next) {
 
 SponsoredLink.schema.index({ company: 1, vertical: 1, title: 1 }, { unique: true })
 
-SponsoredLink.defaultColumns = 'name vertical, company, title, description, dateStart, dateEnd'
+SponsoredLink.defaultColumns = 'name, vertical, company, title, description, dateStart, dateEnd'
 SponsoredLink.drilldown = 'company'
 SponsoredLink.register()
 
