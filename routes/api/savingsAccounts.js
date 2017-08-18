@@ -1,5 +1,6 @@
 var keystone = require('keystone')
 var removeUneededFields = require('../../utils/removeUneededFields')
+var setPromotedOrder = require('../../utils/helperFunctions').setPromotedOrder
 
 var SavingsAccount = keystone.list('SavingsAccount')
 var SavingsAccountTier = keystone.list('SavingsAccountTier')
@@ -34,7 +35,7 @@ async function getSavingAccounts (accounts) {
 			account.company.big4ComparisonProductUuid = companyVertical.big4ComparisonProduct.uuid
 		}
 		account.company.hasRepaymentWidget = companyVertical ? companyVertical.hasRepaymentWidget : false
-
+		setPromotedOrder(account)
 		return removeUneededFields(account)
 	})
 

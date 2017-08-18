@@ -10,6 +10,7 @@ var CompanyService = require('../../services/CompanyService')
 var logger = require('../../utils/logger')
 var monetizedCollection = require('./monetizedCollection')
 var removeUneededFields = require('../../utils/removeUneededFields')
+var setPromotedOrder = require('../../utils/helperFunctions').setPromotedOrder
 
 exports.list = async function (req, res) {
 	let personalLoans = await PersonalLoan.model.find({ isDiscontinued: false }).populate('company').lean().exec()
@@ -60,12 +61,7 @@ async function getPersonalLoanObjects (loans) {
 		loan.repaymentType = changeCase.titleCase(loan.repaymentType)
 		loan.securedType = changeCase.titleCase(loan.securedType)
 		loan.company = CompanyService.fixLogoUrl(loan.company)
-
-		if (loan.promotedOrder === '0') {
-			loan.promotedOrder = null
-		} else {
-			loan.promotedOrder = 100 - parseInt(loan.promotedOrder)
-		}
+		setPromotedOrder(loan)
 
 		// qualification data
 		loan.qualifications = qualifications.filter((qualification) => {

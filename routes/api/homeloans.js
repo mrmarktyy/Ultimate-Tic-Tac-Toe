@@ -13,6 +13,7 @@ var CompanyService = require('../../services/CompanyService')
 var logger = require('../../utils/logger')
 const recommendedMultiplier = require('../../utils/recommendedMultiplier').multiplier
 var monetizedCollection = require('./monetizedCollection')
+var setPromotedOrder = require('../../utils/helperFunctions').setPromotedOrder
 
 function removeUneededFields (obj) {
   return _.omit(obj, ['product', '_id', 'company', 'big4ComparisonProduct', 'createdAt', 'createdBy', 'updatedBy', 'updatedAt'])
@@ -23,11 +24,7 @@ function spawnVariation (variation, monetizedVariations) {
   variation.gotoSiteEnabled = false
   variation.recommendScore = (variation.monthlyClicks ? variation.monthlyClicks * recommendedMultiplier : 0)
   delete variation.monthlyClicks
-  if (variation.promotedOrder === '0') {
-    variation.promotedOrder = null
-  } else {
-    variation.promotedOrder = 100 - parseInt(variation.promotedOrder)
-  }
+	setPromotedOrder(variation)
 
   if (variation.revertVariation) {
     variation.revertRate = variation.revertVariation.rate
