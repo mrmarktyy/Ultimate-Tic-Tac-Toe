@@ -19,7 +19,7 @@ var Broker = new keystone.List('Broker').add({
 	logo: imageStorage('Broker'),
 	imageHeader: imageStorage('brokerHeader'),
 	phone: {type: Types.Text},
-	default: {type: Types.Boolean},
+	default: {type: Types.Boolean, initial: true, require: true},
 	pros: {type: Types.TextArray},
 	lender: {type: Types.Boolean},
 	vertical: {type: Types.Select, required: true, options: verticals, initial: true},
@@ -34,10 +34,11 @@ Broker.schema.pre('validate', async function (next) {
 		if (!this.default) {
 			let defaultBroker = await keystone.list('Broker').model.findOne({
 				default: true,
+				vertical: this.vertical,
 				uuid: {$ne: this.uuid},
 			}).lean().exec()
 			if (!defaultBroker) {
-				next(Error('Their should be at least one default broker'))
+				next(Error('Their should be at least one default broker per vertical'))
 			}
 		}
 		next()
@@ -50,7 +51,7 @@ Broker.schema.pre('save', async function (next) {
 	}
 
 	if (this.default) {
-		await keystone.list('Broker').model.update({default: true}, {$set: {default: false}}, {multi: true})
+		await keystone.list('Broker').model.update({default: true, vertical: this.vertical, uuid: {$ne: this.uuid}}, {$set: {default: false}}, {multi: true})
 	}
 	next()
 })
