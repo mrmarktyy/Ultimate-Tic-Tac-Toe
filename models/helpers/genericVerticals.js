@@ -4,4 +4,5 @@ module.exports = {
 	'Online Share Trading': { collection: 'GenericProduct', findClause: { vertical: 'online-trading' }, slug: 'online-trading' },
 	'Home Insurance': { collection: 'GenericProduct', findClause: { vertical: 'home-insurance' }, slug: 'home-insurance' },
 	'Bad Credit': { collection: 'GenericProduct', findClause: { vertical: 'bad-credit' }, slug: 'bad-credit' },
+	'Display': { collection: 'GenericProduct', findClause: { vertical: 'display' }, slug: 'display' },
 }
