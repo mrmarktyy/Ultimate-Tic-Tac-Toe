@@ -1,4 +1,5 @@
 var keystone = require('keystone')
+var uuid = require('node-uuid')
 var { imageStorage } = require('../helpers/fileStorage')
 var verticals = require('../helpers/verticals')
 var Types = keystone.Field.Types
@@ -18,6 +19,7 @@ SponsoredLink.add({
     index: true,
     noedit: false,
   },
+	uuid: {type: Types.Text, initial: true, noedit: true, unique: true},
   name: { type: Types.Text, required: true, initial: true, index: true },
   legacyCode: { type: Types.Text },
   sorbetId: { type: Types.Number },
@@ -52,13 +54,17 @@ SponsoredLink.schema.pre('validate', function (next) {
 })
 
 SponsoredLink.schema.pre('save', async function (next) {
+	if (!this.uuid) {
+		this.uuid = uuid.v4()
+	}
+
   await changeLogService(this)
   next()
 })
 
 SponsoredLink.schema.index({ company: 1, vertical: 1, name: 1 }, { unique: true })
 
-SponsoredLink.defaultColumns = 'name, vertical, company, description, dateStart, dateEnd'
+SponsoredLink.defaultColumns = 'uuid, name, vertical, company, description, dateStart, dateEnd'
 SponsoredLink.drilldown = 'company'
 SponsoredLink.register()
 
