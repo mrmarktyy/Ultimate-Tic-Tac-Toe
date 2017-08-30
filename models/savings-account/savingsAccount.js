@@ -48,6 +48,7 @@ SavingsAccount.add({
   overTheCounterDepositFee: { type: Types.Number, min: 0 },
   overTheCounterWithdrawalFee: { type: Types.Number, min: 0 },
   atmWithdrawalFee: { type: Types.Number, min: 0 },
+	jointApplicationAvailable: { type: Types.Select, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.yes },
 })
 
 SavingsAccount.relationship({ path: 'savingsAccountTiers', ref: 'SavingsAccountTier', refPath: 'product' })

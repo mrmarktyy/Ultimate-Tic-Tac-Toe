@@ -44,6 +44,7 @@ SavingsAccountTier.add({
   bonusRateCondition: { type: Types.Text },
   introductoryRate: { type: Types.Number, min: 0 },
   introductoryRateTerm: { type: Types.Number, min: 0 },
+	minimumMonthlyDeposit: { type: Types.Number, min: 0 },
 })
 
 SavingsAccountTier.relationship({ path: 'ChangeLogs', ref: 'ChangeLog', refPath: 'model', many: true })
