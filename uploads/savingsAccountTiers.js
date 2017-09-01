@@ -28,6 +28,7 @@ module.exports = async function () {
       obj.bonusRateCondition = item.bonusRateCondition
       obj.introductoryRate = item.introductoryRate
       obj.introductoryRateTerm = item.introductoryRateTerm
+			obj.minimumMonthlyDeposit = item.minimumMonthlyDeposit
 
       list.push(obj)
     })

@@ -60,6 +60,8 @@ module.exports = async function () {
       obj.overTheCounterDepositFee = item.overTheCounterDepositFee
       obj.overTheCounterWithdrawalFee = item.overTheCounterWithdrawalFee
       obj.atmWithdrawalFee = item.atmWithdrawalFee
+      obj.jointApplicationAvailable = item.jointApplicationAvailable
+      obj.unlimitedWithdrawals = item.unlimitedWithdrawals
 
       list.push(obj)
     })
