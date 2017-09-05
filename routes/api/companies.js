@@ -6,7 +6,8 @@ var CompanyHomeLoan = keystone.list('CompanyHomeLoan')
 var PersonalLoan = keystone.list('PersonalLoan')
 var CompanyPersonalLoan = keystone.list('CompanyPersonalLoan')
 var CreditCard = keystone.list('CreditCard')
-var SavingsAccounts = keystone.list('CompanySavingsAccount')
+var SavingsAccounts = keystone.list('SavingsAccount')
+var CompanySavingsAccounts = keystone.list('CompanySavingsAccount')
 var CompanyService = require('../../services/CompanyService')
 const MULTIPLIER = 5.32
 
@@ -109,6 +110,19 @@ exports.list = function (req, res) {
 				response[company._id].verticals.savingsAccounts.count = count
 			})
 			countPromises.push(saPromise)
+
+			let saCompanyPromise = CompanySavingsAccounts.model.findOne({
+				company: company._id,
+			}).populate('big4ComparisonProduct').lean().exec((err, comp) => {
+				if (err) return 'database error'
+				if (comp) {
+					response[company._id].verticals.savingsAccounts.blurb = comp.blurb || ''
+					response[company._id].verticals.savingsAccounts.big4ComparisonProductUuid = comp.big4ComparisonProduct && comp.big4ComparisonProduct.uuid
+					response[company._id].verticals.savingsAccounts.hasRepaymentWidget = comp.hasRepaymentWidget
+
+				}
+			})
+			countPromises.push(saCompanyPromise)
 
 		})
 
