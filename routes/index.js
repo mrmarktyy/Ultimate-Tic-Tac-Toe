@@ -32,6 +32,9 @@ exports = module.exports = function (app) {
   app.get('/import-rates', middleware.requireUser, routes.views.importRates)
   app.get('/monthly-clicks-export', middleware.requireUser, routes.views.monthlyClicks.screen)
   app.post('/monthly-clicks-download', middleware.requireUser, routes.views.monthlyClicks.download)
+  app.post('/salesforce-push/company', middleware.requireUser, routes.views.salesforcePush.pushCompanies)
+  app.post('/salesforce-push/product', middleware.requireUser, routes.views.salesforcePush.pushProducts)
+  app.get('/salesforce-push', middleware.requireUser, routes.views.salesforcePush.screen)
 
   //downloads
   app.post('/import/homeloan-download-rates', routes.import.homeloanRates.downloadCsv)
@@ -40,8 +43,6 @@ exports = module.exports = function (app) {
   // APIs
   // salesforce turn on and off products
   app.post('/api/v1/salesforce/product_monetize', keystone.middleware.api, routes.api.salesforceActivation.monetize)
-  app.post('/api/v1/salesforce/push_companies', keystone.middleware.api, routes.api.salesforce.pushCompanies)
-  app.post('/api/v1/salesforce/push_products', keystone.middleware.api, routes.api.salesforce.pushProducts)
 
   // Company
   app.get('/api/companies', keystone.middleware.api, routes.api.companies.list)

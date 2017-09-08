@@ -9,6 +9,4 @@ keystone.init({
   'mongo': process.env.MONGO_URI,
 })
 
-keystone.import('../models')
-
 module.exports = keystone

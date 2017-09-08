@@ -8,7 +8,7 @@ var Company = keystoneShell.list('Company')
 var Monetize = keystoneShell.list('Monetize').model
 var client = new SalesforceClient()
 
-exports.pushCompanies = async function () {
+var pushCompanies = async function () {
   let connection = await mongoosePromise.connect()
   try {
     let companies = await Company.model.find().lean()
@@ -21,7 +21,7 @@ exports.pushCompanies = async function () {
   }
 }
 
-exports.pushProducts = async function () {
+var pushProducts = async function () {
   let productsStatus = 'ok'
   let connection = await mongoosePromise.connect()
   try {
@@ -61,4 +61,10 @@ var salesforceProductFactory = async function (vertical) {
   }
   let productsStatus = await (client.pushProducts(vertical, products))
   return productsStatus
+}
+
+module.exports = {
+  pushCompanies: pushCompanies,
+  pushProducts: pushProducts,
+  salesforceProductFactory: salesforceProductFactory,
 }

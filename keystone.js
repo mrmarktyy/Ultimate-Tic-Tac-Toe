@@ -81,7 +81,7 @@ keystone.set('nav', {
   users: 'users',
   utilites: ['ApiKey', 'Monetize', 'ChangeLog', 'Log'],
 	brokers: ['Broker', 'Tile', 'Testimonial'],
-	genericProducts: ['GenericProduct']
+	genericProducts: ['GenericProduct'],
 })
 
 keystone.set('cors allow origin', true)
