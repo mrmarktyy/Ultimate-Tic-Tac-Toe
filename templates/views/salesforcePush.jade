@@ -1,0 +1,17 @@
+extends ../layouts/default
+
+block content
+  .container
+    h1 Salesforce Push
+    p Manually push companies and products
+    .row
+      .col-sm-8
+        form(action='/salesforce-push/company', method='post')
+          .form-group
+            button.btn.btn-large.btn-primary(type='submit') Company Push
+    .row
+      .col-sm-8
+
+        form(action='/salesforce-push/product', method='post')
+          .form-group
+            button.btn.btn-large.btn-primary(type='submit') Product Push
