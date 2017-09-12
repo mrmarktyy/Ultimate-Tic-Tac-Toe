@@ -1,0 +1,14 @@
+extends ../layouts/default
+
+block content
+  .container
+    h1 Upload ECPC
+    p Upload a csv file containing 2 fields with headers uuid and ecpc to Ulimate.
+    .row
+      .col-sm-8
+        .uploadfileform
+          form(action='/import-ecpc/upload', method='post', enctype='multipart/form-data')
+            .form-group
+              label Input File
+              input(type='file', name='ecpcUpload')
+            button.btn.btn-large.btn-primary(type="submit") Upload File

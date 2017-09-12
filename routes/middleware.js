@@ -8,7 +8,7 @@ exports.initLocals = function (req, res, next) {
 		{ label: 'Import Rates', key: 'importRates', href: '/import-rates' },
 		{ label: 'Monthly Clicks', key: 'monthlyClicks', href: '/monthly-clicks-export' },
 		{ label: 'Salesforce Push', key: 'salesforcePush', href: '/salesforce-push' },
-
+		{ label: 'Import ECPC', key: 'importEcpc', href: '/import-ecpc' },
 	]
 	res.locals.user = req.user
 	next()
@@ -35,6 +35,16 @@ exports.requireUser = function (req, res, next) {
 	if (!req.user) {
 		req.flash('error', 'Please sign in to access this page.')
 		res.redirect('/keystone/signin')
+	} else {
+		next()
+	}
+}
+
+exports.financeUser = function (req, res, next) {
+	const KEY_PEOPLE = ['ian.fletcher@ratecity.com.au', 'rochelle.dicristo@ratecity.com.au', 'pravin.mahajan@ratecity.com.au', 'matthew.halpin@ratecity.com.au']
+	if (KEY_PEOPLE.includes(req.user.email) === false) {
+		req.flash('error', 'Only key people have access to this page.')
+		res.redirect('/')
 	} else {
 		next()
 	}
