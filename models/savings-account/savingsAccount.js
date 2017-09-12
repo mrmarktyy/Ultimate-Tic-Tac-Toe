@@ -27,6 +27,7 @@ SavingsAccount.add({
   isSpecial: { type: Types.Select, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown },
   isRCSpecial: { type: Types.Select, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown },
   offerExpires: { type: Types.Select, options: availableOptions.all, default: availableOptions.unknown },
+  ecpc: {type: Types.Number, noedit: true},
   otherBenefits: { type: Types.Text },
   otherRestrictions: { type: Types.Text },
   minimumAgeRestrictions: { type: Types.Number, min: 0 },
