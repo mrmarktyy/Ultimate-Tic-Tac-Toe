@@ -9,4 +9,10 @@ keystone.init({
   'mongo': process.env.MONGO_URI,
 })
 
+try {
+  keystone.import('../models')
+} catch (error) {
+  keystone.import('models')
+}
+
 module.exports = keystone
