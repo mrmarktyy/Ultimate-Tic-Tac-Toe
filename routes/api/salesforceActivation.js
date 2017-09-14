@@ -23,19 +23,20 @@ exports.monetize = function (req, res) {
 
   for (var i = 0; i < products.length; i++) {
     let changeRequest = products[i]
-    if (typeof (salesforceVerticals[changeRequest.RC_Product_Type]) === 'undefined') {
+    let [ultimateVertical, collection] = translateSalesforceVertical(changeRequest.RC_Product_Type)
+    if (ultimateVertical === false) {
       continue
     }
     let uuid = changeRequest.RC_Product_ID
 
-    let product = keystone.list(salesforceVerticals[changeRequest.RC_Product_Type].collection)
+    let product = keystone.list(collection)
     promise = product.model.findOne({ uuid: uuid }).populate('company')
     .exec()
     .then((product) => {
       if (product === null) {
         missingUUIDs.push(uuid)
       } else {
-        let ProductModel = mongoose.model(salesforceVerticals[changeRequest.RC_Product_Type].collection)
+        let ProductModel = mongoose.model(collection)
         return(ProductModel.findOneAndUpdate(
           {
             uuid: uuid,
@@ -55,7 +56,7 @@ exports.monetize = function (req, res) {
               uuid: uuid,
             },
             {
-              vertical: changeRequest.RC_Product_Type,
+              vertical: ultimateVertical,
               applyUrl: changeRequest.RC_Url,
               product: product._id,
               productName: product.name,
@@ -99,3 +100,14 @@ exports.monetize = function (req, res) {
     }
   })
 }
+
+function translateSalesforceVertical (vertical) {
+  let ultimateVertical = Object.keys(salesforceVerticals).filter((key) => {
+    return salesforceVerticals[key].salesforceVertical === vertical
+  })[0]
+  if (typeof ultimateVertical === 'undefined'){
+    return [false, false]
+  }
+  return [ultimateVertical, salesforceVerticals[ultimateVertical].collection]
+}
+

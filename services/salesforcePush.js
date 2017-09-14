@@ -43,7 +43,7 @@ var pushProducts = async function () {
 }
 
 var salesforceProductFactory = async function (vertical) {
-	const { collection, findClause } = salesforceVerticals[vertical]
+	const { collection, findClause, salesforceVertical } = salesforceVerticals[vertical]
   let ProductVertical = keystoneShell.list(collection)
   let products = await (ProductVertical.model.find(findClause).populate('company product').lean())
 
@@ -59,7 +59,7 @@ var salesforceProductFactory = async function (vertical) {
       products[i].goToSite = monetize.enabled
     }
   }
-  let productsStatus = await (client.pushProducts(vertical, products))
+  let productsStatus = await (client.pushProducts(salesforceVertical, products))
   return productsStatus
 }
 
