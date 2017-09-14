@@ -14,7 +14,7 @@ PromotedProduct.add({
 	order: {type: Types.Number, default: 1, initial: true},
 	dateStart: {type: Types.Datetime, required: true, initial: true},
 	dateEnd: {type: Types.Datetime, initial: true, required: true},
-	pages: {type: Types.Text, required: false, initial: true},
+	pages: {type: Types.TextArray, initial: true},
 	company: {
 		type: Types.Relationship,
 		ref: 'Company',
