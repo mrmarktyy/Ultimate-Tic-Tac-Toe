@@ -68,6 +68,9 @@ class SalesforceClient {
 			let productsLot = productsChunk[chunk]
 			let productsBlock = []
 			for (var lot = 0; lot < productsLot.length; lot++) {
+				if (typeof productsLot[lot].isDiscontinued === 'undefined') {
+					productsLot[lot].isDiscontinued = false
+				}
 				productsBlock.push({
 					RC_Product_ID__c: productsLot[lot].uuid,
 					RC_Product_Type__c: vertical,
