@@ -6,7 +6,7 @@ var logger = require('../../utils/logger')
 exports.list = function (req, res) {
   let datenow = new Date()
   Notifications.model.find(
-    { dateEnd: { $gt: datenow } }
+    { dateEnd: { $gte: datenow }, dateStart: { $lte: datenow } }
   )
   .exec()
   .then((notifications) => {
