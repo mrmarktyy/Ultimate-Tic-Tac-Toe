@@ -9,6 +9,7 @@ exports.initLocals = function (req, res, next) {
 		{ label: 'Monthly Clicks', key: 'monthlyClicks', href: '/monthly-clicks-export' },
 		{ label: 'Salesforce Push', key: 'salesforcePush', href: '/salesforce-push' },
 		{ label: 'Import ECPC', key: 'importEcpc', href: '/import-ecpc' },
+		{ label: 'Export Leads', key: 'exportLeads', href: '/monthly-leads-export' },
 	]
 	res.locals.user = req.user
 	next()

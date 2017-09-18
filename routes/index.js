@@ -37,7 +37,9 @@ exports = module.exports = function (app) {
   app.get('/salesforce-push', middleware.requireUser, routes.views.salesforcePush.screen)
   app.post('/import-ecpc/upload', middleware.requireUser, middleware.financeUser, routes.views.importEcpc.uploadCsv)
   app.get('/import-ecpc', middleware.requireUser, middleware.financeUser, routes.views.importEcpc.screen)
-  //downloads
+	app.get('/monthly-leads-export', middleware.requireUser, routes.views.exportLeads.screen)
+	app.post('/monthly-leads-download', middleware.requireUser, routes.views.exportLeads.download)
+	//downloads
   app.post('/import/homeloan-download-rates', routes.import.homeloanRates.downloadCsv)
   app.post('/import/homeloan-upload-rates', routes.import.homeloanRates.uploadCsv)
 

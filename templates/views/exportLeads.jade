@@ -1,0 +1,27 @@
+extends ../layouts/default
+
+block content
+	.container
+		h1 Export Leads
+		p Select a Broker and a month
+		.row
+			.col-sm-12
+				form(class='form-inline', action='/monthly-leads-download', method='post')
+					.form-group
+						label Broker
+						select(name='broker').form-control
+							each broker in brokers
+								option(value=broker.slug) #{broker.name}
+						label Month
+						select(name='month').form-control
+							each month in months
+								option(value=month selected=month == currentMonth) #{month}
+						label Year
+						select(name='year').form-control
+							each year in years
+								option(value=month selected=year == currentMonth) #{year}
+						.row
+						.col-sm-12
+								&nbsp;
+							button.btn.btn-large.btn-primary(type="submit") Export Leads
+
