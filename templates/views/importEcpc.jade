@@ -9,6 +9,9 @@ block content
         .uploadfileform
           form(action='/import-ecpc/upload', method='post', enctype='multipart/form-data')
             .form-group
+              label Zero any products not in ecpc upload
+                input(type="checkbox", name="ecpcReset", value='reset' checked).form-control
+            .formgroup
               label Input File
-              input(type='file', name='ecpcUpload')
-            button.btn.btn-large.btn-primary(type="submit") Upload File
+                input(type='file', name='ecpcUpload').form-control-file
+            button(type="submit").btn.btn-large.btn-primary Upload File

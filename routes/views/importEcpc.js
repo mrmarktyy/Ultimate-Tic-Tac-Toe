@@ -12,9 +12,10 @@ exports.uploadCsv = async (req, res) => {
     if (Object.keys(req.files).length === 0) {
       throw 'No upload file is specified'
     }
+    let reset = (req.body.ecpcReset === 'reset')
     let list = await csvtojson(req.files.ecpcUpload.path)
     list = validation(list)
-    await updateProducts(list)
+    await updateProducts(list, reset)
     req.flash('success', 'ecpc has been uploaded')
     return res.redirect('/import-ecpc')
   } catch (error) {
@@ -23,13 +24,15 @@ exports.uploadCsv = async (req, res) => {
   }
 }
 
-async function updateProducts (records) {
+async function updateProducts (records, reset) {
   try {
     let collections = ecpcCollections()
     for (let i = 0; i < collections.length; i++) {
       let collection = collections[i]
       let Product = await keystone.list(collection) // eslint-disable-line babel/no-await-in-loop
-      await Product.model.update({}, {$set: {ecpc: 0}}, {multi: true}) // eslint-disable-line babel/no-await-in-loop
+      if (reset) {
+        await Product.model.update({}, {$set: {ecpc: 0}}, {multi: true}) // eslint-disable-line babel/no-await-in-loop
+      }
       for (let rec = 0; rec < records.length; rec++) {
         await Product.model.update({uuid: records[rec].uuid}, {$set: {ecpc: records[rec].ecpc}}, {}).exec() // eslint-disable-line babel/no-await-in-loop
       }
