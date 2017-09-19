@@ -82,6 +82,7 @@ keystone.set('nav', {
   utilites: ['ApiKey', 'Monetize', 'ChangeLog', 'Log'],
 	brokers: ['Broker', 'Tile', 'Testimonial'],
 	genericProducts: ['GenericProduct'],
+  notifications: 'Notifications',
 	promotedProducts: ['PromotedProduct']
 })
 

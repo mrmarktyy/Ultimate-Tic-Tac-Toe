@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.com/ratecity/ultimate.svg?token=m7geA81NzfGVx94z9ujy&branch=master)](https://travis-ci.com/ratecity/ultimate)
+
 # RateCity Data CMS
 
 ## Prerequisites

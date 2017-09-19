@@ -22,7 +22,7 @@ exports.list = async function (req, res) {
 					uuid: item.company.uuid,
 					name: item.company.name,
 					logo: item.company.logo.url,
-					slug: item.company.slug
+					slug: item.company.slug,
 				}
 			}
 
@@ -38,7 +38,7 @@ exports.list = async function (req, res) {
 				specialObj.variation = {
 					uuid: item.variation.uuid,
 					name: item.variation.name,
-					slug: item.variation.slug
+					slug: item.variation.slug,
 				}
       }
 
@@ -62,7 +62,12 @@ async function getSpecials () {
   var obj = {}
   for (let special of allSpecials) {
     let model = keystone.list(special + 'Special').model
-    await model.find({startDate: {$lte: new Date()}, endDate: {$gte: new Date()}}, {updatedBy: 0, updatedAt: 0, createdBy: 0, createdAt: 0}) //eslint-disable-line
+    await model.find({
+			$or: [
+				{startDate: {$lte: new Date()}, $and: [{endDate: {$exists: true}}, {endDate: {$gte: new Date()}}]},
+				{startDate: {$lte: new Date()}, endDate: {$exists: false}},
+			],
+		}, {updatedBy: 0, updatedAt: 0, createdBy: 0, createdAt: 0}) //eslint-disable-line
     .populate('company product variation')
     .lean()
     .exec((err, data) => {

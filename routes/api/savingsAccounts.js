@@ -5,6 +5,7 @@ var setPromotedOrder = require('../../utils/helperFunctions').setPromotedOrder
 var SavingsAccount = keystone.list('SavingsAccount')
 var SavingsAccountTier = keystone.list('SavingsAccountTier')
 var CompanySavingsAccount = keystone.list('CompanySavingsAccount')
+var monetizedCollection = require('./monetizedCollection')
 
 exports.list = async function (req, res) {
   let savingsAccounts = await SavingsAccount.model.find().populate('company').lean().exec()
@@ -15,6 +16,7 @@ exports.list = async function (req, res) {
 async function getSavingAccounts (accounts) {
 	const variations = await SavingsAccountTier.model.find().populate('product').lean().exec()
 	const companySavingsAccounts = await CompanySavingsAccount.model.find().populate('big4ComparisonProduct').lean().exec()
+	const monetizedList = await monetizedCollection('Savings Accounts')
 
 	let result = accounts.map((account, index) => {
 		let company = Object.assign({}, account.company)
@@ -34,6 +36,12 @@ async function getSavingAccounts (accounts) {
 		if (companyVertical && companyVertical.big4ComparisonProduct) {
 			account.company.big4ComparisonProductUuid = companyVertical.big4ComparisonProduct.uuid
 		}
+				// monetize data
+		let monetize = monetizedList[account._id]
+		account.gotoSiteUrl = monetize ? monetize.applyUrl : null
+		account.gotoSiteEnabled = monetize ? monetize.enabled : false
+		account.paymentType = monetize ? monetize.paymentType : null
+
 		account.company.hasRepaymentWidget = companyVertical ? companyVertical.hasRepaymentWidget : false
 		setPromotedOrder(account)
 		return removeUneededFields(account)
