@@ -24,6 +24,12 @@ async function getSavingAccounts (accounts) {
 			.filter((variation) => variation.product.uuid === account.uuid)
 			.map((variation) => {
 				variation = removeUneededFields(variation, ['product', 'company'])
+				if(typeof variation.minimumAmount === 'undefined' || variation.minimumAmount === null) {
+					variation.minimumAmount = 0
+				}
+				if(typeof variation.maximumAmount === 'undefined' || variation.maximumAmount === null) {
+					variation.maximumAmount = 99999999
+				}
 				return variation
 			})
 		let companyVertical = companySavingsAccounts.filter((companyAccount) => {
