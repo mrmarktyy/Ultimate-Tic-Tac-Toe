@@ -34,7 +34,7 @@ HomeLoanVariation.add({
 	name: {type: Types.Text, required: true, initial: true, index: true},
 	neo4jId: {type: Types.Number, noedit: true},
 	legacyCode: {type: Types.Text, noedit: true},
-	ecpc: {type: Types.Number, noedit: true},
+	ecpc: {type: Types.Number, noedit: true, default: 0},
 	monthlyClicks: {type: Types.Number, noedit: true, min: 0, default: 0},
 	fixMonth: {type: Types.Number, initial: true},
 	minTotalLoanAmount: {type: Types.Number, initial: true},

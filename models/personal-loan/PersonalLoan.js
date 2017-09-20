@@ -45,7 +45,7 @@ PersonalLoan.add({
     initial: true,
   },
   legacyCode: { type: Types.Text },
-  ecpc: { type: Types.Number, noedit: true },
+  ecpc: { type: Types.Number, noedit: true, default: 0 },
   docReleaseFees: { type: Types.Number, min: 0, initial: true, required: true },
   isSecuredByVehicle: { type: Types.Select, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown },
   isSecuredByProperty: { type: Types.Select, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown },
