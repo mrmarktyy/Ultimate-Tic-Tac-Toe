@@ -1,4 +1,5 @@
 var keystone = require('keystone')
+var uuid = require('node-uuid')
 var verticals = require('../helpers/verticals')
 var changeLogService = require('../../services/changeLogService')
 var Types = keystone.Field.Types
@@ -9,12 +10,6 @@ var PromotedProduct = new keystone.List('PromotedProduct', {
 
 PromotedProduct.add({
 	uuid: {type: Types.Text, initial: true},
-	vertical: {type: Types.Select, required: true, options: verticals, initial: true},
-	title: {type: Types.Text, required: true, initial: true, index: true},
-	order: {type: Types.Number, default: 1, initial: true},
-	dateStart: {type: Types.Datetime, required: true, initial: true},
-	dateEnd: {type: Types.Datetime, initial: true, required: true},
-	pages: {type: Types.TextArray, initial: true},
 	company: {
 		type: Types.Relationship,
 		ref: 'Company',
@@ -23,6 +18,12 @@ PromotedProduct.add({
 		index: true,
 		noedit: true,
 	},
+	vertical: {type: Types.Select, required: true, options: verticals, initial: true},
+	title: {type: Types.Text, required: true, initial: true, index: true},
+	order: {type: Types.Number, default: 1, initial: true},
+	dateStart: {type: Types.Datetime, required: true, initial: true},
+	dateEnd: {type: Types.Datetime, initial: true},
+	pages: {type: Types.TextArray, initial: true},
 })
 
 
