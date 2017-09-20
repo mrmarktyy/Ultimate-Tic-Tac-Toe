@@ -42,7 +42,7 @@ CreditCard.add({
 	isReward: { type: Types.Boolean, indent: true, noedit: true },
 	isSpecial: { type: Types.Boolean, indent: true, default: false },
 	isRateCitySpecial: { type: Types.Boolean, indent: true, default: false },
-	ecpc: {type: Types.Number, noedit: true},
+	ecpc: {type: Types.Number, noedit: true, default: 0},
 	offerExpires: { type: Types.Date },
 	interestFreeDays: { type: Types.Number, min: 0 },
 	minimumRepaymentDollars: { type: Types.Number, min: 0, label: 'Min Rpymnt Dllrs' },
