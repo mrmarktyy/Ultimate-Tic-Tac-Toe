@@ -59,7 +59,7 @@ module.exports = function (shipit) {
     shipit.local('git rev-parse HEAD', {cwd: workspace}).then(function (res) {
       request({
         method: 'POST',
-        uri: 'https://hooks.slack.com/services/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',
+        uri: 'https://hooks.slack.com/services/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',
         json: true,
         body: {
           username: 'Ultimate',
