@@ -46,8 +46,8 @@ SponsoredLink.relationship({ path: 'ChangeLogs', ref: 'ChangeLog', refPath: 'mod
 SponsoredLink.schema.pre('validate', function (next) {
 	if ((this.dateEnd !== undefined) && (this.dateEnd < this.dateStart)) {
 		next(Error('End date has to be greater than start date'))
-	} else if (this.name.length > 35) {
-		next(Error('Name has maximum of 35 characters'))
+	} else if (this.name.length > 60) {
+		next(Error('Name has maximum of 60 characters'))
 	} else {
 		next()
 	}
