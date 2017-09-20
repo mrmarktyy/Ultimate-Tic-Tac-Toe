@@ -87,6 +87,9 @@ exports = module.exports = function (app) {
 	// Sponsored Link
 	app.get('/api/sponsored-link', keystone.middleware.api, routes.api.sponsoredLinks.list)
 
-  // Notifications
-  app.get('/api/notifications', keystone.middleware.api, routes.api.notifications.list)
+	// Promoted Products
+	app.get('/api/promoted-products', keystone.middleware.api, routes.api.promotedProducts.list)
+
+	// Notifications
+	app.get('/api/notifications', keystone.middleware.api, routes.api.notifications.list)
 }
