@@ -7,7 +7,7 @@ var Notifications = new keystone.List('Notifications', {
 })
 
 Notifications.add({
-  type: {
+  notificationType: {
     type: Types.Select,
     required: true,
     initial: true,
@@ -32,6 +32,6 @@ Notifications.schema.pre('save', async function (next) {
   next()
 })
 
-Notifications.defaultColumns = 'type, text, link, dateStart, dateEnd, appliedToUrl'
+Notifications.defaultColumns = 'notificationType, text, link, dateStart, dateEnd, appliedToUrl'
 Notifications.defaultSort = 'appliedToUrl'
 Notifications.register()
