@@ -6,7 +6,7 @@ module.exports = {
 	shareOfVoiceValue: {type: Types.Text, index: true},
 	shareOfVoiceMatrix: {type: Types.Select, index: true, options: [
 		{value: 'impression', label: 'Impressions'},
-		{value: 'click', label: 'Clicks'},
+		{value: 'interactions', label: 'Interactions'},
 		{value: 'lead', label: 'Leads'},
 		{value: 'app', label: 'Apps'},
 		{value: 'yield', label: 'Yield'},

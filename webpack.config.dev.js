@@ -14,7 +14,7 @@ module.exports = {
     publicPath: '/',
   },
   resolve: {
-    extensions: ['', '.coffee', '.js', '.css'],
+    extensions: ['', '.coffee', '.js', '.css', '.json'],
   },
   plugins: [
     new webpack.HotModuleReplacementPlugin(),

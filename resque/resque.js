@@ -1,111 +1,12 @@
 require('dotenv').config()
 
-const Resque = require('node-resque')
 const schedule = require('node-schedule')
 const logger = require('../utils/logger')
-const moment = require('moment')
+const resqueUtil = require('./util')
 
-var importHomeloansMonthlyClickCount = require('../redshift/importHomeloansMonthlyClickCount')
-var importPaymentMonetizationTypes = require('../redshift/importPaymentMonetizationTypes')
-var loadPersonalLoansToRedshift = require('../redshift/personalloans')
-var loadHomeLoanstoRedshift = require('../redshift/homeloans')
-var salesforcePushCompanies = require('../services/salesforcePush').pushCompanies
-var salesforcePushProducts = require('../services/salesforcePush').pushProducts
-var monthlyClicks = require('../redshift/financeMonthEnd').monthlyClicksMail
-
-const connectionDetails = {
-  pkg: 'ioredis',
-  host: process.env.REDIS_HOST,
-  port: 6379,
-  database: 5,
-}
-
-const jobs = {
-  'loadHomeLoanstoRedshift': {
-    perform: async (done) => {
-      try {
-        console.log(new Date() + ' resque loadHomeLoanstoRedshift')
-        await loadHomeLoanstoRedshift()
-        done()
-      } catch (error) {
-        done(new Date() + ' loadHomeLoanstoRedshift ' + error.message)
-      }
-    },
-  },
-  'loadPersonalLoansToRedshift': {
-    perform: async (done) => {
-      try {
-        console.log(new Date() + ' resque loadPersonalLoansToRedshift')
-        await loadPersonalLoansToRedshift()
-        done()
-      } catch (error) {
-        done(new Date() + ' loadPersonalLoansToRedshift ' + error.message)
-      }
-    },
-  },
-  'monthlyClicks': {
-    perform: async (done) => {
-      try {
-        console.log(new Date() + ' resque monthlyClicks')
-        let dt = moment().subtract(1, 'months')
-        await monthlyClicks({month: dt.format('MMM'), year: dt.format('YYYY')})
-        done()
-      } catch (error) {
-        done(new Date() + ' monthlyClicks ' + error.message)
-      }
-    },
-  },
-  'importHomeloansMonthlyClickCount': {
-    perform: async (done) => {
-      try {
-        console.log(new Date() + ' resque importHomeloansMonthlyClickCount')
-        await importHomeloansMonthlyClickCount()
-        done()
-      } catch (error) {
-        done(new Date() + ' importHomeloansMonthlyClickCount ' + error.message)
-      }
-    },
-  },
-  'importPaymentMonetizationTypes': {
-    perform: async (done) => {
-      try {
-        console.log(new Date() + ' resque importPaymentMonetizationTypes')
-        await importPaymentMonetizationTypes()
-        done()
-      } catch (error) {
-        done(new Date() + ' importPaymentMonetizationTypes ' + error.message)
-      }
-    },
-  },
-  'salesforcePushCompanies': {
-    perform: async (done) => {
-      try {
-        console.log(new Date() + ' resque salesforcePushCompanies')
-        await salesforcePushCompanies()
-        done()
-      } catch (error) {
-        done(new Date() + ' salesforcePushCompanies ' + error.message)
-      }
-    },
-  },
-  'salesforcePushProducts': {
-    perform: async (done) => {
-      try {
-        console.log(new Date() + ' resque salesforcePushProducts')
-        await salesforcePushProducts()
-        done()
-      } catch (error) {
-        done(new Date() + ' salesforcePushProducts ' + error.message)
-      }
-    },
-  },
-}
-
-let scheduler = new Resque.scheduler({connection: connectionDetails})
-let queue = new Resque.queue({connection: connectionDetails}, jobs)
-let worker = new Resque.worker({connection: connectionDetails, queues: ['ultimate']}, jobs)
-
-scheduler.on('master', (state) => { logger.info('scheduler became master') })
+const scheduler = resqueUtil.scheduler
+const worker = resqueUtil.worker
+const queue = resqueUtil.queue
 
 scheduler.connect(() => {
   scheduler.start()
@@ -129,38 +30,44 @@ queue.connect(() => {
   // Daily
   schedule.scheduleJob('47 18 * * *', () => {
     if (scheduler.master) {
-      queue.enqueue('ultimate', 'loadPersonalLoansToRedshift')
+      queue.enqueue('ultimate', 'personalLoansToRedshift')
     }
   })
   schedule.scheduleJob('00 7 * * *', () => {
     if (scheduler.master) {
-      queue.enqueue('ultimate', 'importHomeloansMonthlyClickCount')
+      queue.enqueue('ultimate', 'homeLoansMonthlyClickCount')
     }
   })
   schedule.scheduleJob('15 7 * * *', () => {
     if (scheduler.master) {
-      queue.enqueue('ultimate', 'importPaymentMonetizationTypes')
+      queue.enqueue('ultimate', 'paymentMonetizationTypes')
     }
   })
   schedule.scheduleJob('52 18 * * *', () => {
    if (scheduler.master) {
-      queue.enqueue('ultimate', 'loadHomeLoanstoRedshift')
+      queue.enqueue('ultimate', 'homeLoansToRedshift')
     }
   })
   schedule.scheduleJob('25 * * * *', () => {
     if (scheduler.master) {
-      queue.enqueue('ultimate', 'salesforcePushCompanies')
+      queue.enqueue('ultimate', 'salesforceCompanies')
     }
   })
   schedule.scheduleJob('28 * * * *', () => {
     if (scheduler.master) {
-      queue.enqueue('ultimate', 'salesforcePushProducts')
+      queue.enqueue('ultimate', 'salesforceProducts')
     }
   })
   // monthy
   schedule.scheduleJob('0 6 1 * *', () => {
     if (scheduler.master) {
-      queue.enqueue('ultimate', 'monthlyClicks')
+      queue.enqueue('ultimate', 'emailMonthlyClicks')
+    }
+  })
+
+  schedule.scheduleJob('39 15 * * *', () => {
+    if (scheduler.master) {
+      queue.enqueue('ultimate', 'blazePages')
     }
   })
 })
