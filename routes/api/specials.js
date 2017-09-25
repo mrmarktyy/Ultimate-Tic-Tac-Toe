@@ -26,14 +26,17 @@ exports.list = async function (req, res) {
 				}
 			}
 
-      if (item.product) {
+			if (item.product) {
 				specialObj.product = {
 					uuid: item.product.uuid,
 					name: item.product.name,
 					slug: item.product.slug,
 				}
-      }
-
+				if (special === 'PersonalLoans') {
+					specialObj.product.isPersonalLoan = item.product.isPersonalLoan === 'YES'
+					specialObj.product.isCarLoan = item.product.isCarLoan === 'YES'
+				}
+			}
       if (item.variation) {
 				specialObj.variation = {
 					uuid: item.variation.uuid,
