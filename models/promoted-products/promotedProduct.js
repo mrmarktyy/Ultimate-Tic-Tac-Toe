@@ -3,6 +3,8 @@ var uuid = require('node-uuid')
 var verticals = require('../helpers/verticals')
 var changeLogService = require('../../services/changeLogService')
 var Types = keystone.Field.Types
+var blazePages = require('../../data/blazePages')
+var shareOfVoiceAttributes = require('../common/ShareOfVoiceCommonAttributes')
 
 var PromotedProduct = new keystone.List('PromotedProduct', {
     track: true,
@@ -19,13 +21,16 @@ PromotedProduct.add({
 		noedit: true,
 	},
 	vertical: {type: Types.Select, required: true, options: verticals, initial: true},
-	title: {type: Types.Text, required: true, initial: true, index: true},
+	title: {type: Types.Text, initial: true, index: true},
 	order: {type: Types.Number, default: 1, initial: true},
 	dateStart: {type: Types.Datetime, required: true, initial: true},
 	dateEnd: {type: Types.Datetime, initial: true},
-	pages: {type: Types.TextArray, initial: true},
+	pages: {type: Types.MultiSelect, required: true, options: [], initial: true},
 })
 
+PromotedProduct.add(shareOfVoiceAttributes)
+
+PromotedProduct.fields.pages.ops = blazePages
 
 PromotedProduct.schema.pre('validate', function (next) {
 	if ((this.dateEnd !== null) && (this.dateEnd < this.dateStart)) {
