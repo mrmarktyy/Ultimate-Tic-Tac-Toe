@@ -4,7 +4,7 @@ var salesforcePushCompanies = require('../services/salesforcePush').pushCompanie
 const salesforceCompanies = {
   perform: async (done) => {
     try {
-      logger(new Date() + ' resque salesforcePushCompanies')
+      logger.info(new Date() + ' resque salesforcePushCompanies')
       await salesforcePushCompanies()
       done()
     } catch (error) {
