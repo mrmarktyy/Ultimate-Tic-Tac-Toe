@@ -5,7 +5,7 @@ var logger = require('../utils/logger')
 
 var homeLoansMonthlyClickCount = require('../resqueJobs/importHomeloansMonthlyClickCount')
 var paymentMonetizationTypes = require('../resqueJobs/importPaymentMonetizationTypes')
-var homeLoansToRedshift = require('../resqueJobs/loadHomeLoanstoRedshift')
+var homeLoansToRedshift = require('../resqueJobs/loadHomeLoansToRedshift')
 var personalLoansToRedshift = require('../resqueJobs/loadPersonalLoansToRedshift')
 var emailMonthlyClicks = require('../resqueJobs/monthlyClicks')
 var salesforceProducts = require('../resqueJobs/salesforcePushProducts')
