@@ -4,7 +4,7 @@ var importHomeloansMonthlyClickCount = require('../redshift/importHomeloansMonth
 module.exports = {
   perform: async (done) => {
     try {
-      logger(new Date() + ' resque importHomeloansMonthlyClickCount')
+      logger.info(new Date() + ' resque importHomeloansMonthlyClickCount')
       await importHomeloansMonthlyClickCount()
       done()
     } catch (error) {
