@@ -5,7 +5,7 @@ var moment = require('moment')
 const emailMonthlyClicks = {
   perform: async (done) => {
     try {
-      logger(new Date() + ' resque monthlyClicks')
+      logger.info(new Date() + ' resque monthlyClicks')
       let dt = moment().subtract(1, 'months')
       await monthlyClicks({month: dt.format('MMM'), year: dt.format('YYYY')})
       done()

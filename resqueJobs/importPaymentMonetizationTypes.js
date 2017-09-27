@@ -4,7 +4,7 @@ var importPaymentMonetizationTypes = require('../redshift/importPaymentMonetizat
 const paymentMonetizationTypes = {
   perform: async (done) => {
     try {
-      logger(new Date() + ' resque importPaymentMonetizationTypes')
+      logger.info(new Date() + ' resque importPaymentMonetizationTypes')
       await importPaymentMonetizationTypes()
       done()
     } catch (error) {
