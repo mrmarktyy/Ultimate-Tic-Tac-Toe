@@ -15,6 +15,7 @@ exports.screen = async (req, res) => {
 	view.on('init', async (next) => {
 		let brokers = await Broker.model.find().exec()
 		locals.brokers = brokers
+		locals.brokers.unshift({name: 'All', slug: 'All'})
 		next()
 	})
 	view.render('exportLeads')
