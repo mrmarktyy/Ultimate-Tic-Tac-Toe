@@ -43,5 +43,13 @@ HomeLoanSpecial.schema.pre('validate', function (next) {
   next()
 })
 
+HomeLoanSpecial.schema.pre('save', function (next) {
+	if (this.removeSpecialsEndDate) {
+    this.endDate = null
+  }
+	this.removeSpecialsEndDate = undefined
+  next()
+})
+
 HomeLoanSpecial.searchFields = 'name, type, introText, blurb'
 HomeLoanSpecial.register()
