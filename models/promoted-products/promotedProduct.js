@@ -25,7 +25,7 @@ PromotedProduct.add({
 	order: {type: Types.Number, default: 1, initial: true},
 	dateStart: {type: Types.Datetime, required: true, initial: true},
 	dateEnd: {type: Types.Datetime, initial: true},
-	pages: {type: Types.MultiSelect, required: true, options: [], initial: true},
+	pages: {type: Types.MultiSelect, options: [], initial: true},
 })
 
 PromotedProduct.add(shareOfVoiceAttributes)

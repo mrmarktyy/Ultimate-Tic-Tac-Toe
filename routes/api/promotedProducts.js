@@ -11,6 +11,15 @@ exports.list = async function (req, res) {
 		]
 	}).populate('company').lean().exec()
 
-	products = products.map((product) => removeUneededFields(product))
+	products = products.map((product) => {
+		product.company = {
+			uuid: product.company.uuid,
+			name: product.company.name,
+			slug: product.company.slug,
+			logo: product.company.logo.url
+		}
+
+		return removeUneededFields(product)
+	})
 	res.jsonp(products)
 }
