@@ -32,6 +32,14 @@ SavingsAccountSpecial.schema.pre('validate', function (next) {
   next()
 })
 
+SavingsAccountSpecial.schema.pre('save', function (next) {
+	if (this.removeSpecialsEndDate) {
+    this.endDate = null
+  }
+	this.removeSpecialsEndDate = undefined
+  next()
+})
+
 SavingsAccountSpecial.defaultColumns = 'name, type, introText, blurb'
 SavingsAccountSpecial.searchFields = 'name, type, introText, blurb'
 SavingsAccountSpecial.register()
