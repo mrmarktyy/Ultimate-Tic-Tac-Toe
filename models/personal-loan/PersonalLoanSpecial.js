@@ -32,6 +32,14 @@ PersonalLoanSpecial.schema.pre('validate', function (next) {
   next()
 })
 
+PersonalLoanSpecial.schema.pre('save', function (next) {
+	if (this.removeSpecialsEndDate) {
+    this.endDate = null
+  }
+	this.removeSpecialsEndDate = undefined
+  next()
+})
+
 PersonalLoanSpecial.defaultColumns = 'name, type, introText, blurb'
 PersonalLoanSpecial.searchFields = 'name, type, introText, blurb'
 PersonalLoanSpecial.register()
