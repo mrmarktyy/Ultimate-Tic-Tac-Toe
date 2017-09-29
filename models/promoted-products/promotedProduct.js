@@ -39,7 +39,7 @@ PromotedProduct.schema.pre('validate', function (next) {
 	next()
 })
 
-PromotedProduct.schema.index({uuid: 1, vertical: 1}, {unique: true})
+PromotedProduct.schema.index({uuid: 1, vertical: 1, dateStart: 1}, {unique: true})
 
 PromotedProduct.schema.pre('save', async function (next) {
 	if (!this.uuid) {
