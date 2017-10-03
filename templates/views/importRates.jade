@@ -24,3 +24,13 @@ block content
               label Input File
               input(type='file', name='variationfileUpload')
             button.btn.btn-large.btn-primary(type="submit") Upload File
+    h1 Superannuation Rates
+    .row
+      .col-sm-8
+        .uploadfileform
+          form(action='/import/superannuation-upload-rates', method='post', enctype='multipart/form-data')
+            .form-group
+              label Input File
+              input(type='file', name='superannuationFileUpload')
+            button.btn.btn-large.btn-primary(type="submit") Upload File
+

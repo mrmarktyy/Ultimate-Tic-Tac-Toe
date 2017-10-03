@@ -42,6 +42,7 @@ exports = module.exports = function (app) {
 	//downloads
   app.post('/import/homeloan-download-rates', routes.import.homeloanRates.downloadCsv)
   app.post('/import/homeloan-upload-rates', routes.import.homeloanRates.uploadCsv)
+  app.post('/import/superannuation-upload-rates', routes.import.superannuationRates.uploadCsv)
 
   // APIs
   // salesforce turn on and off products
@@ -92,4 +93,7 @@ exports = module.exports = function (app) {
 
 	// Notifications
 	app.get('/api/notifications', keystone.middleware.api, routes.api.notifications.list)
+
+	// Superannuation
+	app.get('/api/superannuations', keystone.middleware.api, routes.api.superannuations.list)
 }
