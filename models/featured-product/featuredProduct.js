@@ -34,7 +34,7 @@ FeaturedProduct.schema.pre('validate', function (next) {
 		next(Error('Title has maximum of 45 characters'))
 	}
 	if (this.description.length >= 135) {
-		next(Error('Title has maximum of 135 characters'))
+		next(Error('Description has maximum of 135 characters'))
 	}
 	next()
 })
