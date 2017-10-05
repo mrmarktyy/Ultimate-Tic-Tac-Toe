@@ -3,6 +3,7 @@ var {imageStorage} = require('../helpers/fileStorage')
 var verticals = require('../helpers/verticals')
 var changeLogService = require('../../services/changeLogService')
 var shareOfVoiceAttributes = require('../common/ShareOfVoiceCommonAttributes')
+var blazePages = require('../../data/blazePages')
 var Types = keystone.Field.Types
 
 var FeaturedProduct = new keystone.List('FeaturedProduct', {
@@ -17,12 +18,14 @@ FeaturedProduct.add({
 	sortOrder: {type: Types.Number, default: 1, required: true, initial: true},
 	dateStart: {type: Types.Datetime, required: true, initial: true},
 	dateEnd: {type: Types.Datetime, initial: true},
+  pages: {type: Types.MultiSelect, options: [], initial: true},
 	enabled: {type: Types.Boolean, indent: true, required: true, default: true, initial: true},
 	notes: {type: Types.Text, required: false, initial: true},
 	image: imageStorage('featuredProduct'),
 })
 
 FeaturedProduct.add(shareOfVoiceAttributes)
+FeaturedProduct.fields.pages.ops = blazePages
 
 FeaturedProduct.relationship({ path: 'ChangeLogs', ref: 'ChangeLog', refPath: 'model', many: true })
 
