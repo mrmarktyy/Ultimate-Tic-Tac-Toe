@@ -83,7 +83,8 @@ keystone.set('nav', {
 	brokers: ['Broker', 'Tile', 'Testimonial'],
 	genericProducts: ['GenericProduct'],
   notifications: 'Notifications',
-	promotedProducts: ['PromotedProduct']
+	promotedProducts: ['PromotedProduct'],
+	superannuations: ['FundGroup', 'Superannuation'],
 })
 
 keystone.set('cors allow origin', true)
