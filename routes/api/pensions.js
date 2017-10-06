@@ -8,7 +8,8 @@ const CompanyService = require('../../services/CompanyService')
 const { years, ratings, segments, purposes } = require('../../models/superannuation/constants')
 
 exports.list = async function (req, res) {
-  const superannuations = await Superannuation.model.find().populate('company').lean().exec()
+  const superannuations = await Superannuation.model.find({ pension: true }).populate('company').lean().exec()
+
   const result = await getSuperannuationObjects(superannuations)
   res.jsonp(result)
 }
@@ -17,7 +18,7 @@ async function getSuperannuationObjects (superannuations) {
   const monetizeSuperannuations = await monetizedCollection('Superannuations')
   const today = new Date()
 
-  return _.filter(superannuations, (o) => { return o.isPension }).map((superannuation) => {
+  return superannuations.map((superannuation) => {
     const product = {}
     const monetize = monetizeSuperannuations[superannuation._id]
     if (monetize) {
@@ -70,8 +71,6 @@ async function getSuperannuationObjects (superannuations) {
     product.antiDetriment = superannuation.anti_detriment === 'Yes'
     product.ltip = superannuation.ltip === 'Yes'
     product.validDate = superannuation.valid_date
-
-    product.isPension = superannuation.isPension
 
     return product
   })
