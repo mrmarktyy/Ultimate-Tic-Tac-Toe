@@ -85,6 +85,7 @@ keystone.set('nav', {
   notifications: 'Notifications',
 	promotedProducts: ['PromotedProduct'],
 	superannuations: ['FundGroup', 'Superannuation'],
+	pages: 'Pages',
 })
 
 keystone.set('cors allow origin', true)

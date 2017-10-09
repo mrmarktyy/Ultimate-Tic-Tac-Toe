@@ -1,0 +1,14 @@
+extends ../layouts/default
+
+block content
+  .container
+    h1 Import pages
+    p Upload file to bulk update pages information
+    .row
+      .col-sm-8
+        .uploadfileform
+          form(action='/import-page/uploads', method='post', enctype='multipart/form-data')
+            .form-group
+              label Input File
+              input(type='file', name='pageUpload')
+            button.btn.btn-large.btn-primary(type="submit") Upload File
