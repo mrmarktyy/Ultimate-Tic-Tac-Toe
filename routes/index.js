@@ -39,6 +39,8 @@ exports = module.exports = function (app) {
   app.get('/import-ecpc', middleware.requireUser, middleware.financeUser, routes.views.importEcpc.screen)
 	app.get('/monthly-leads-export', middleware.requireUser, routes.views.exportLeads.screen)
 	app.post('/monthly-leads-download', middleware.requireUser, routes.views.exportLeads.download)
+	app.get('/import-pages', middleware.requireUser, routes.views.importPages.screen)
+	app.post('/import-page/uploads', middleware.requireUser, routes.views.importPages.uploadFile)
 	//downloads
   app.post('/import/homeloan-download-rates', routes.import.homeloanRates.downloadCsv)
   app.post('/import/homeloan-upload-rates', routes.import.homeloanRates.uploadCsv)
@@ -96,4 +98,8 @@ exports = module.exports = function (app) {
 
 	// Superannuation
 	app.get('/api/superannuations', keystone.middleware.api, routes.api.superannuations.list)
+
+	// Pages
+	app.get('/api/pages', keystone.middleware.api, routes.api.pages.list)
+
 }
