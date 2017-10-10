@@ -4,7 +4,7 @@ var Types = keystone.Field.Types
 var verticals = require('../helpers/verticals')
 var {imageStorage} = require('../helpers/fileStorage')
 
-const Pages = new keystone.List('Pages').add({
+const Pages = new keystone.List('Pages', {track: true}).add({
 	url: {type: Types.Text, initial: true, unique: true},
 	header: {type: Types.Text, initial: true},
 	tagline: {type: Types.Text, initial: true},
@@ -16,8 +16,6 @@ const Pages = new keystone.List('Pages').add({
 	canonical: {type: Types.Text},
 	category: {type: Types.Text},
 	userJourneyStage: {type: Types.Text},
-	faq_type: {type: Types.Text},
-	faq_url: {type: Types.Text},
 	og: {
 		id: {type: Types.Text},
 		title: {type: Types.Text},
