@@ -2,9 +2,9 @@ var keystone = require('keystone')
 var uuid = require('node-uuid')
 var Types = keystone.Field.Types
 var verticals = require('../helpers/verticals')
-var {imageStorage} = require('../helpers/fileStorage')
 
 const Pages = new keystone.List('Pages', {track: true}).add({
+	uuid: {type: Types.Text, initial: true, unique: true},
 	url: {type: Types.Text, initial: true, unique: true},
 	header: {type: Types.Text, initial: true},
 	tagline: {type: Types.Text, initial: true},
@@ -33,8 +33,7 @@ const Pages = new keystone.List('Pages', {track: true}).add({
 		description: {type: Types.Text},
 		image: {type: Types.Text},
 	},
-	featuredImage: imageStorage('featuredImage')
-
+	featuredImage: { type: Types.Url },
 })
 Pages.schema.pre('save', async function (next) {
 	if (!this.uuid) {

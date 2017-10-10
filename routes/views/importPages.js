@@ -1,5 +1,6 @@
 const keystone = require('keystone')
 const csvtojson = require('../../utils/csvToJson')
+const keystoneUpdate = require('../../utils/helperFunctions').keystoneUpdate
 
 exports.screen =  (req, res) => {
 	let view = new keystone.View(req, res)
@@ -14,7 +15,7 @@ exports.uploadFile =  async (req, res) => {
 			throw 'No upload file is specified'
 		}
 		let pages = await csvtojson(req.files.pageUpload.path)
-		await updatePages(pages)
+		await updatePages(pages, req)
 		req.flash('success', 'Pages has been updated successfully')
 		return res.redirect('/import-pages')
 	} catch (error) {
@@ -23,12 +24,17 @@ exports.uploadFile =  async (req, res) => {
 	}
 }
 
-async function updatePages(pages) {
+async function updatePages(pages, req) {
 	try {
 		const pagesModel = keystone.list('Pages')
 		pages.forEach(async(page) => {
 			if (page.url) {
-				await pagesModel.model.update({'url': page.url}, {$set: page}, {upsert: true});
+				let pageData = await pagesModel.model.findOne({'url': page.url}).exec()
+				if(!pageData){
+					pageData = new pagesModel.model()
+				}
+				pageData.set(page)
+				await keystoneUpdate(pageData, req)
 			}
 		})
 	} catch (error) {
