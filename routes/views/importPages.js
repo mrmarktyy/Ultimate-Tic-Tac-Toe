@@ -1,6 +1,7 @@
 const keystone = require('keystone')
 const csvtojson = require('../../utils/csvToJson')
 const keystoneUpdate = require('../../utils/helperFunctions').keystoneUpdate
+const extractWordpressMetadata = require('../../utils/extractWordPressMeta').extractWordpressMetadata
 
 exports.screen =  (req, res) => {
 	let view = new keystone.View(req, res)
@@ -28,6 +29,10 @@ async function updatePages(pages, req) {
 	try {
 		const pagesModel = keystone.list('Pages')
 		pages.forEach(async(page) => {
+			page = extractWordpressMetadata(page)
+			try {
+				page.category = JSON.parse(page.category)
+			}catch (e){}
 			if (page.url) {
 				let pageData = await pagesModel.model.findOne({'url': page.url}).exec()
 				if(!pageData){
