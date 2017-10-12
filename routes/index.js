@@ -102,4 +102,6 @@ exports = module.exports = function (app) {
 	// Pages
 	app.get('/api/pages', keystone.middleware.api, routes.api.pages.list)
 
+  // Famies
+  app.get('/api/familes', keystone.middleware.api, routes.api.familes.list)
 }
