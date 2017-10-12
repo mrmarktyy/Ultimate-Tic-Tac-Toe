@@ -22,6 +22,7 @@ Company.add({
 		initial: true,
 		options: 'Major bank, Regional bank, Foreign bank, Mutual bank, Credit union, Building society, Peer to Peer,  Online lender, Non-bank Lender, Other',
 	},
+	isDiscontinued: { type: Types.Boolean, indent: true, default: false },
 	abnOrAcn: { type: Types.Number },
 	phoneNumber: { type: Types.Text },
 	acl: { type: Types.Number },
@@ -60,7 +61,12 @@ Company.schema.pre('save', async function (next) {
 	next()
 })
 
-Company.defaultSort = 'name'
+Company.schema.methods.remove = function (callback) {
+  this.isDiscontinued = true
+  return this.save(callback)
+}
+
+Company.defaultSort = 'isDiscontinued, name'
 Company.defaultColumns = 'name, url, displayName, searchKeyword, createdAt'
 Company.searchFields = 'name, url, displayName, searchKeyword'
 Company.register()
