@@ -9,7 +9,7 @@ const Monetize = keystoneShell.list('Monetize')
 module.exports = async function () {
   let connection = await mongoosePromise.connect()
   try {
-    let sqlCommand = 'select s1.uuid, s1.cpc_price, s1.cpa_price, s1.cpaa_price, s1.cpl_price FROM salesforce_products s1 JOIN (SELECT uuid, MAX(date_start) date_start FROM salesforce_products GROUP BY uuid) s2 on s1.uuid = s2.uuid AND s1.date_start = s2.date_start'
+    let sqlCommand = 'select s1.product_uuid, s1.CPC_price, s1.CPA_price, s1.CPAA_price, s1.CPL_price FROM orders s1 JOIN (SELECT product_uuid, MAX(date_start) date_start FROM orders GROUP BY product_uuid) s2 on s1.product_uuid = s2.product_uuid AND s1.date_start = s2.date_start'
     let products = await redshiftQuery(sqlCommand, [])
     promises = []
     products.forEach((product) => {
