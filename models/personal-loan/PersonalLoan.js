@@ -19,6 +19,7 @@ PersonalLoan.add({
   isPersonalLoanPromoted: { type: Types.Boolean, indent: true, default: false },
   isCarLoanPromoted: { type: Types.Boolean, indent: true, default: false },
   hookEnabled: { type: Types.Boolean, default: true },
+  isRentalBondAllowed: { type: Types.Boolean, indent: true, default: true },
   existsOnSorbet: { type: Types.Boolean, indent: true, default: false },
   company: {
     type: Types.Relationship,
@@ -51,7 +52,6 @@ PersonalLoan.add({
   isSecuredByProperty: { type: Types.Select, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown },
   isSecuredByDeposit: { type: Types.Select, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown },
   securedByOthers: { type: Types.Text },
-  isRentalBondAllowed: { type: Types.Boolean, indent: true, default: true },
   isSpecial: { type: Types.Select, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown },
   isRCSpecial: { type: Types.Select, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown },
   specialConditions: { type: Types.Text },
