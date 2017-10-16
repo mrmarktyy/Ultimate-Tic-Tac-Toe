@@ -87,6 +87,9 @@ exports = module.exports = function (app) {
   // Savings Account
   app.get('/api/savings-accounts', keystone.middleware.api, routes.api.savingsAccounts.list)
 
+	// Bank Accounts
+	app.get('/api/bank-accounts', keystone.middleware.api, routes.api.bankAccounts.list)
+
 	// Sponsored Link
 	app.get('/api/sponsored-link', keystone.middleware.api, routes.api.sponsoredLinks.list)
 
