@@ -33,6 +33,7 @@ HomeLoan.add({
   homeLoanType: { type: Types.Select, initial: true, required: true, options: ['VARIABLE', 'FIXED'], emptyOption: false },
   isPackage: { type: Types.Boolean, indent: true, default: false },
   isBasicVariable: { type: Types.Boolean, indent: true, default: false },
+  isRentalBondAllowed: { type: Types.Boolean, indent: true, default: true },
   isRCSpecial: { type: Types.Select, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown },
   availableTo457VisaHolders: { type: Types.Select, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown },
   isCombinationLoan: { type: Types.Select, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown },
