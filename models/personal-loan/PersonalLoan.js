@@ -51,6 +51,7 @@ PersonalLoan.add({
   isSecuredByProperty: { type: Types.Select, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown },
   isSecuredByDeposit: { type: Types.Select, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown },
   securedByOthers: { type: Types.Text },
+  isRentalBondAllowed: { type: Types.Boolean, indent: true, default: true },
   isSpecial: { type: Types.Select, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown },
   isRCSpecial: { type: Types.Select, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown },
   specialConditions: { type: Types.Text },
