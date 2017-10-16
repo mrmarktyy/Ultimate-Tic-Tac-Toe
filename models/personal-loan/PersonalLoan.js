@@ -19,6 +19,7 @@ PersonalLoan.add({
   isPersonalLoanPromoted: { type: Types.Boolean, indent: true, default: false },
   isCarLoanPromoted: { type: Types.Boolean, indent: true, default: false },
   hookEnabled: { type: Types.Boolean, default: true },
+  isRentalBondAllowed: { type: Types.Boolean, indent: true, default: true },
   existsOnSorbet: { type: Types.Boolean, indent: true, default: false },
   company: {
     type: Types.Relationship,
