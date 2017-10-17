@@ -8,7 +8,8 @@ const CompanyService = require('../../services/CompanyService')
 const { years, ratings, segments, purposes } = require('../../models/superannuation/constants')
 
 exports.list = async function (req, res) {
-  const superannuations = await Superannuation.model.find({ superannuation: true }).populate('company').lean().exec()
+  const superannuations = await Superannuation.model.find({ pension: true }).populate('company').lean().exec()
+
   const result = await getSuperannuationObjects(superannuations)
   res.jsonp(result)
 }
@@ -31,7 +32,7 @@ async function getSuperannuationObjects (superannuations) {
     product.segment = getMatchedElment(segments, superannuation.fund_type).name
     product.purpose = getMatchedElment(purposes, superannuation.fund_type).name
     const company = CompanyService.fixLogoUrl(superannuation.company)
-    product.logo =  (company.logo && company.logo.url) || superannuation.fenixLogo
+    product.logo = company.logo && company.logo.url
     product.memberFee = parseFloat(superannuation.member_fee || 0)
     product['5YearAnnualisedPerformance'] = parseFloat(superannuation['5_year_annualised_performance'] || 0)
     product.basicFee = parseFloat(superannuation.basic_fee || 0)

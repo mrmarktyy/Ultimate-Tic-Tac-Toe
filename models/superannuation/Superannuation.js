@@ -14,13 +14,15 @@ const Superannuation = new keystone.List('Superannuation', {
 
 const schema = {
 	fenixLogo: { type: Types.Text },
-	company: {
-		type: Types.Relationship,
-		ref: 'FundGroup',
-		initial: true,
-		index: true,
-		noedit: true,
-	},
+  pension: {type: Types.Boolean, indent: true, noedit: true},
+  superannuation: {type: Types.Boolean, indent: true, noedit: true},
+  company: {
+    type: Types.Relationship,
+    ref: 'FundGroup',
+    initial: true,
+    index: true,
+    noedit: true,
+  },
 }
 _.forEach(_.values(fields), (attribute) => {
 	schema[attribute] = { type: Types.Text }
@@ -38,7 +40,7 @@ Superannuation.schema.pre('save', async function (next) {
 	next()
 })
 
-Superannuation.defaultColumns = 'product_name, group_name, company'
+Superannuation.defaultColumns = 'product_name, group_name, company, superannuation'
 Superannuation.searchFields = 'group_code, group_name, product_id, product_name'
 Superannuation.drilldown = 'company'
 Superannuation.register()

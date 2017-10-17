@@ -107,4 +107,7 @@ exports = module.exports = function (app) {
 
   // Famies
   app.get('/api/familes', keystone.middleware.api, routes.api.familes.list)
+
+  // Pension
+  app.get('/api/pensions', keystone.middleware.api, routes.api.pensions.list)
 }
