@@ -14,7 +14,7 @@ const MULTIPLIER = 5.32
 
 exports.list = function (req, res) {
 
-	let promise = Company.model.find().lean().exec()
+	let promise = Company.model.find({ $or: [ { isDiscontinued: false }, { isDiscontinued: {$exists: false} } ] }).lean().exec()
 	let response = {}
 	let countPromises = []
 
