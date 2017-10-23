@@ -14,7 +14,7 @@ exports.list = async function (req, res) {
 }
 
 async function getSuperannuationObjects (superannuations) {
-	const monetizeSuperannuations = await monetizedCollection('Superannuations')
+	const monetizeSuperannuations = await monetizedCollection('Superannuation')
 	const today = new Date()
 
 	return superannuations.map((superannuation) => {
