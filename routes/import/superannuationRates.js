@@ -42,16 +42,15 @@ async function upsertSuperannuation (list, fenixProducts, modelType) {
 				_.merge(superannuation, product)
 			} else {
 				superannuation = new Superannuation.model(product)
+				superannuation.uuid = fenixProduct.uuid
+				superannuation.name = product.product_name
+				superannuation.slug = fenixProduct.product_slug
+				superannuation.fenixLogo = fenixProduct.logo
+				superannuation.pension = modelType === 'Pension'
+				superannuation.superannuation = modelType === 'Superannuation'
 			}
 
-			superannuation.name = product.product_name
-			superannuation.slug = fenixProduct.product_slug
-			superannuation.fenixLogo = fenixProduct.logo
-
-			superannuation.pension = modelType === 'Pension'
-			superannuation.superannuation = modelType === 'Superannuation'
-
-			let fundGroup = await FundGroup.model.findOne({groupCode: superannuation.group_code}, '_id')
+			let fundGroup = await FundGroup.model.findOne({groupCode: superannuation.group_code}, '_id').exec()
 			if (!fundGroup) {
 				await new FundGroup.model({
 					uuid: fenixProduct.company.company_uuid,
@@ -73,7 +72,7 @@ async function upsertSuperannuation (list, fenixProducts, modelType) {
 			}
 
 			if (fundGroup) {
-				superannuation.company = fundGroup._id
+				superannuation.fundgroup = fundGroup._id
 			}
 
 			promises.push(
