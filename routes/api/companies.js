@@ -13,7 +13,7 @@ var CompanyService = require('../../services/CompanyService')
 const MULTIPLIER = 5.32
 
 exports.list = async function (req, res) {
-	let companies = await Company.model.find().lean().exec()
+	let companies = await Company.model.find({ $or: [ { isDiscontinued: false }, { isDiscontinued: {$exists: false} } ] }).lean().exec()
 	let response = {}
 	let countPromises = []
 
