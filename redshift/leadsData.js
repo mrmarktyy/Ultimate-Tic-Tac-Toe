@@ -23,6 +23,11 @@ exports.leadsCsv = async (broker, month, year) => {
 		params = [startDate, endDate, broker]
 	}
 	rows = await redshiftQuery(command, params)
-
-	return json2csv({data: rows})
+	let data
+	if (rows.length) {
+		data = json2csv({data: rows})
+	} else {
+		data = `No records for ${broker} in between ${startDate} and ${endDate}`
+	}
+	return data
 }
