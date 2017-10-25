@@ -45,6 +45,7 @@ exports = module.exports = function (app) {
   app.post('/import/homeloan-download-rates', routes.import.homeloanRates.downloadCsv)
   app.post('/import/homeloan-upload-rates', routes.import.homeloanRates.uploadCsv)
   app.post('/import/superannuation-upload-rates', routes.import.superannuationRates.uploadCsv)
+  app.post('/import/bank-accounts-upload-rates', routes.import.bankAccountsRates.uploadCsv)
 
   // APIs
   // salesforce turn on and off products
