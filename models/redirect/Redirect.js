@@ -14,6 +14,7 @@ Redirect.add({
     required: true,
     initial: true,
   },
+  notes: { type: Types.Text },
 })
 
 Redirect.defaultColumns = 'from, to, status'
