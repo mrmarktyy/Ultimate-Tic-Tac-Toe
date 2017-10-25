@@ -46,6 +46,7 @@ async function upsertSuperannuation (list, fenixProducts, modelType) {
 				superannuation.name = product.product_name
 				superannuation.slug = fenixProduct.product_slug
 				superannuation.fenixLogo = fenixProduct.logo
+				superannuation.productUrl = (fenixProduct.product_url || '').replace('http://www.ratecity.com.au', '')
 				superannuation.pension = modelType === 'Pension'
 				superannuation.superannuation = modelType === 'Superannuation'
 			}
