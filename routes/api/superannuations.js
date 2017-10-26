@@ -8,7 +8,7 @@ const CompanyService = require('../../services/CompanyService')
 const { years, ratings, segments, purposes, options } = require('../../models/superannuation/constants')
 
 exports.list = async function (req, res) {
-  const superannuations = await Superannuation.model.find({ superannuation: true }).populate('fundgroup').lean().exec()
+  const superannuations = await Superannuation.model.find({ superannuation: true }).populate({path: 'fundgroup', populate: {path: 'company'}}).lean().exec()
   const result = await getSuperannuationObjects(superannuations)
   res.jsonp(result)
 }
@@ -25,13 +25,13 @@ async function getSuperannuationObjects (superannuations) {
 			superannuation.gotoSiteEnabled = monetize.enabled
 			superannuation.paymentType = monetize.paymentType
 		}
-
 		product.uuid = superannuation.uuid
 		product.name = superannuation.product_name
 		product.segment = getMatchedElment(segments, superannuation.fund_type).name
 		product.purpose = getMatchedElment(purposes, superannuation.fund_type).name
-		const fundgroup = CompanyService.fixLogoUrl(superannuation.fundgroup)
-		product.logo =  (fundgroup.logo && fundgroup.logo.url) || superannuation.fenixLogo
+		superannuation.fundgroup.company = Object.assign({}, superannuation.fundgroup.company)
+		product.company = Object.assign({}, CompanyService.fixLogoUrl(superannuation.fundgroup.company))
+		product.company.logo = product.company.logo && product.company.logo.url
 		product.memberFee = parseFloat(superannuation.member_fee || 0)
 		product['5YearAnnualisedPerformance'] = parseFloat(superannuation['5_year_annualised_performance'] || 0)
 		product['5YearAnnualisedPerformanceAvg'] = parseFloat(superannuation['5_year_annualised_performance_avg'] || 0)
@@ -56,9 +56,6 @@ async function getSuperannuationObjects (superannuations) {
 		})
 		product.performance.balanced.fytd = product['5YearAnnualisedPerformance']
 		product.performanceAvg.balanced.fytd = product['5YearAnnualisedPerformanceAvg']
-		product.company = {
-			name: superannuation.group_name,
-		}
 		product.basicFee5k = parseFloat(superannuation.basic_fee_5k || 0)
 		product.basicFee50k = parseFloat(superannuation.basic_fee || 0)
 		product.basicFee100k = parseFloat(superannuation.basic_fee_100k || 0)
