@@ -47,3 +47,17 @@ block content
                 p
 
               button.btn.btn-large.btn-primary(type="submit") import Rates
+    .row
+      h1 Bank Accounts Rates
+      .row
+        .col-sm-8
+          p
+          form(action="/import/bank-accounts-upload-rates", method="post", enctype="multipart/form-data")
+            .form-group
+              div
+              br
+              div
+                input(type='file', name='bankAccountsFileUpload')
+              br
+
+              button.btn.btn-large.btn-primary(type="submit") import Rates
