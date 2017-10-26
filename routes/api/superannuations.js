@@ -34,26 +34,28 @@ async function getSuperannuationObjects (superannuations) {
 		product.logo =  (fundgroup.logo && fundgroup.logo.url) || superannuation.fenixLogo
 		product.memberFee = parseFloat(superannuation.member_fee || 0)
 		product['5YearAnnualisedPerformance'] = parseFloat(superannuation['5_year_annualised_performance'] || 0)
+		product['5YearAnnualisedPerformanceAvg'] = parseFloat(superannuation['5_year_annualised_performance_avg'] || 0)
 		product.basicFee = parseFloat(superannuation.basic_fee || 0)
 		const rating = getMatchedElment(ratings, superannuation.rating_image)
 		product.rating = rating.name || null
 		product.ratingScore = rating.score ? (100 - (rating.score - 1) * 5) : null
-		product.productUrl = `/superannuation/${changeCase.paramCase(superannuation.group_name)}/${changeCase.paramCase(superannuation.product_name)}`
+		product.productUrl = superannuation.productUrl || `/superannuation/${superannuation.fundgroup.slug}/${superannuation.slug}`
 		// product.applyUrl = ~~(Math.random() * 100) % 2 ? '/' : ''
 		// product.featured = null
-		product.newFund =  superannuation.startdate ? (today.getFullYear() - superannuation.startdate <= 5) : false
+		product.newFund =  superannuation.startdate ? (today.getFullYear() - parseInt(superannuation.startdate) <= 5) : false
 		product.performance = {}
-		product.performanceIndustryAvg = {}
-		product.investmentOptions = {}
+		product.performanceAvg = {}
 		years.forEach((year) => {
-			product.performance[year] = parseFloat(superannuation[`performance_${year}`] || 0) || null
-			product.performanceIndustryAvg[year] = parseFloat(superannuation[`performance_${year}_industry_average`] || 0) || null
 			options.forEach((option) => {
 				const key = changeCase.camelCase(option)
-				product.investmentOptions[key] = product.investmentOptions[key] || {}
-				product.investmentOptions[key][year] = parseFloat(superannuation[`performance_${option}_${year}`] || 0)
+				product.performance[key] = product.performance[key] || {}
+				product.performanceAvg[key] = product.performanceAvg[key] || {}
+				product.performance[key][year] = parseFloat(superannuation[`performance_${option}_${year}`] || 0)
+				product.performanceAvg[key][year] = parseFloat(superannuation[`performance_${option}_${year}_avg`] || 0)
 			})
 		})
+		product.performance.balanced.fytd = product['5YearAnnualisedPerformance']
+		product.performanceAvg.balanced.fytd = product['5YearAnnualisedPerformanceAvg']
 		product.company = {
 			name: superannuation.group_name,
 		}
