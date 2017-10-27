@@ -87,7 +87,7 @@ keystone.set('nav', {
 	promotedProducts: ['PromotedProduct'],
 	superannuations: ['FundGroup', 'Superannuation'],
 	pages: 'Pages',
-	termDeposits: ['TermDepositCompany', 'TermDeposit', 'TermDepositTier'],
+	termDeposits: ['TermDepositCompany', 'TermDeposit', 'TermDepositTier', 'TermDepositSpecial'],
 })
 
 keystone.set('cors allow origin', true)

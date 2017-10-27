@@ -1,6 +1,6 @@
 var keystone = require('keystone')
 var removeUneededFields = require('../../utils/removeUneededFields')
-
+var setPromotedOrder = require('../../utils/helperFunctions').setPromotedOrder
 var TermDeposit = keystone.list('TermDeposit')
 var TermDepositTier = keystone.list('TermDepositTier')
 var TermDepositCompany = keystone.list('TermDepositCompany')
@@ -17,7 +17,7 @@ async function customizeTermDeposit (termDeposits) {
 	const termDepositsCompanies = await TermDepositCompany.model.find().populate('big4ComparisonProduct').lean().exec()
 	const monetizedList = await monetizedCollection('Term Deposits')
 
-	let result = termDeposits.map((termDeposit, index) => {
+	let result = termDeposits.map((termDeposit) => {
 		let company = Object.assign({}, termDeposit.company)
 		termDeposit.variations = variations
 			.filter((variation) => variation.product.uuid === termDeposit.uuid)
@@ -46,6 +46,7 @@ async function customizeTermDeposit (termDeposits) {
 
 		termDeposit.company.hasRepaymentWidget = companyVertical ? companyVertical.hasRepaymentWidget : false
 		termDeposit.company.removeBig4ComparisonProduct = companyVertical ? companyVertical.removeBig4ComparisonProduct : false
+		setPromotedOrder(termDeposit)
 		return removeUneededFields(termDeposit)
 	})
 

@@ -8,6 +8,8 @@ var CompanyPersonalLoan = keystone.list('CompanyPersonalLoan')
 var CreditCard = keystone.list('CreditCard')
 var SavingsAccounts = keystone.list('SavingsAccount')
 var CompanySavingsAccounts = keystone.list('CompanySavingsAccount')
+var TermDeposits = keystone.list('TermDeposit')
+var TermDepositsCompany = keystone.list('TermDepositCompany')
 var Superannuation = keystone.list('Superannuation')
 var CompanyService = require('../../services/CompanyService')
 const MULTIPLIER = 5.32
@@ -28,6 +30,7 @@ exports.list = async function (req, res) {
 				creditCards: {},
 				savingsAccounts: {},
 				superannuation: {},
+				termDeposits: {},
 			},
 		})
 
@@ -131,6 +134,26 @@ exports.list = async function (req, res) {
 			response[company._id].verticals.superannuation.count = count
 		})
 		countPromises.push(superPromise)
+
+		let tdPromise = TermDeposits.model.count({
+			company: company._id,
+		}).exec((err, count) => {
+			if (err) return 'database error'
+			response[company._id].verticals.termDeposits.count = count
+		})
+		countPromises.push(tdPromise)
+
+		let tdCompanyPromise = TermDepositsCompany.model.findOne({
+			company: company._id,
+		}).lean().exec((err, comp) => {
+			if (err) return 'database error'
+			if (comp) {
+				response[company._id].verticals.termDeposits.blurb = comp.blurb || ''
+				response[company._id].verticals.termDeposits.hasRepaymentWidget = comp.hasRepaymentWidget
+
+			}
+		})
+		countPromises.push(tdCompanyPromise)
 	})
 
 	Promise.all(countPromises).then(() => {

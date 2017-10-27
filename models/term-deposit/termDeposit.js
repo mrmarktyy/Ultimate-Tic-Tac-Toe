@@ -1,7 +1,6 @@
 var keystone = require('keystone')
 var uuid = require('node-uuid')
 var productCommonAttributes = require('../common/ProductCommonAttributes')
-var frequency = require('../attributes/frequency')
 var availableOptions = require('../attributes/availableOptions')
 var changeLogService = require('../../services/changeLogService')
 var utils = keystone.utils
@@ -19,22 +18,21 @@ var TermDeposit = new keystone.List('TermDeposit', {track: true}).add(productCom
 	legacyID: { type: Types.Text, index: true },
 	accountKeepingFee: { type: Types.Text },
 	earlyWithdrawalPenalty: { type: Types.Text },
-	coveredByGovernmentGuarantee: { type: Types.Text },
 	otherBenefits: { type: Types.Text },
 	otherRestrictions: { type: Types.Text },
 	minimumAgeRequirement: { type: Types.Number, default: 0 },
 	noticePeriodToWithdraw: { type: Types.Number, default: 0 },
-	jointApplicationAvailable: { type: Types.Select, options: availableOptions.boolean, default: availableOptions.yes },
-	maturityAlertByEmail: { type: Types.Select, options: availableOptions.boolean, default: availableOptions.yes },
-	maturityAlertByPhone: { type: Types.Select, options: availableOptions.boolean, default: availableOptions.yes },
-	automaticMaturityRollover: { type: Types.Select, options: availableOptions.boolean, default: availableOptions.yes },
-	interestPaymentViaOtherInstitution: { type: Types.Select, options: availableOptions.boolean, default: availableOptions.yes },
-	earlyWithdrawalAvailable: { type: Types.Select, options: availableOptions.boolean, default: availableOptions.yes },
-	isCoveredByGovernmentGuarantee: { type: Types.Select, options: availableOptions.boolean, default: availableOptions.yes },
+	jointApplicationAvailable: { type: Types.Select, options: availableOptions.all, default: availableOptions.yes },
+	maturityAlertByEmail: { type: Types.Select, options: availableOptions.all, default: availableOptions.yes },
+	maturityAlertByPhone: { type: Types.Select, options: availableOptions.all, default: availableOptions.yes },
+	automaticMaturityRollover: { type: Types.Select, options: availableOptions.all, default: availableOptions.yes },
+	interestPaymentViaOtherInstitution: { type: Types.Select, options: availableOptions.all, default: availableOptions.yes },
+	earlyWithdrawalAvailable: { type: Types.Select, options: availableOptions.all, default: availableOptions.yes },
+	isCoveredByGovernmentGuarantee: { type: Types.Select, options: availableOptions.all, default: availableOptions.yes },
 
-	interestPaymentFrequencyOptions: { type: Types.Select, options: 'Monthly, Annually, Semi-Annually, Fortnightly, Weekly' },
-	interestPaymentMethod: { type: Types.Select, options: 'Cheque, Direct Credit, Rollover on maturity' },
-	accountKeepingFeeFrequency: { type: Types.Select, options: 'Monthly, Annually, Semi-Annually, Fortnightly, Weekly' },
+	interestPaymentFrequencyOptions: { type: Types.MultiSelect, options: 'Monthly, Annually, Semi-Annually, Fortnightly, Weekly' },
+	interestPaymentMethod: { type: Types.MultiSelect, options: 'Cheque, Direct Credit, Rollover on maturity' },
+	accountKeepingFeeFrequency: { type: Types.MultiSelect, options: 'Monthly, Annually, Semi-Annually, Fortnightly, Weekly' },
 
 })
 
