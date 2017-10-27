@@ -1,9 +1,8 @@
 const keystone = require('keystone')
 const _ = require('lodash')
+const keystoneUpdate = require('../../utils/helperFunctions').keystoneUpdate
 const logger = require('../../utils/logger')
 const csvtojson = require('../../utils/csvToJson')
-const changeCase = require('change-case')
-const uuid = require('node-uuid')
 
 const BankAccount = keystone.list('BankAccount')
 const Company = keystone.list('Company')
@@ -14,7 +13,7 @@ exports.uploadCsv = async (req, res) => {
 			throw 'No upload file is specified'
 		}
 		const list = await csvtojson(req.files.bankAccountsFileUpload.path)
-		await upsertBankAccounts(list)
+		await upsertBankAccounts(list, req)
 		req.flash('success', 'Import successfully.')
 		return res.redirect('/import-rates')
 	} catch (error) {
@@ -23,7 +22,7 @@ exports.uploadCsv = async (req, res) => {
 	}
 }
 
-async function upsertBankAccounts (list) {
+async function upsertBankAccounts (list, req) {
 	try {
 		const promises = []
 		for(let i = 0; i<list.length; i++) {
@@ -33,18 +32,11 @@ async function upsertBankAccounts (list) {
 				continue
 			}
 			let bankAccount = await BankAccount.model.findOne({uuid: product.uuid}).exec()
-			if (bankAccount) {
-				_.merge(bankAccount, product)
-			} else {
-				bankAccount = new BankAccount.model(product)
+			if(!bankAccount){
+				bankAccount = new BankAccount.model()
 			}
-			promises.push(
-				bankAccount.save((err) => {
-					if (err) {
-						logger.error(err)
-					}
-				})
-			)
+			bankAccount.set(product)
+			promises.push(keystoneUpdate(bankAccount, req))
 		}
 		await Promise.all(promises)
 	} catch (err) {
@@ -96,7 +88,7 @@ async function mapBankAccounts (rawProduct) {
     'overseasEftposFee': 'overseasEftposFee',
     'phoneFee': 'phoneTransactionFee',
     'internetFee': 'internetTransactionFee',
-    'chequeDepositFee': 'chequeFee',
+    'chequeDepositFee': 'chequeDepositFee',
     'chequeDishonourFee': 'chequeDishonourFee',
     'foreignTransactionFeePercent': 'foreignTransactionFeePercent',
     'foreignTransactionFeeDollars': 'foreignTransactionFee',
@@ -126,8 +118,6 @@ async function mapBankAccounts (rawProduct) {
 		}
 	}
 	product.company = company._id
-	product.uuid = rawProduct.productUUID ? rawProduct.productUUID : uuid.v4()
-	product.slug = rawProduct.slug ? rawProduct.slug : changeCase.paramCase(rawProduct.productName.toLowerCase())
 	const smartPaySupport = []
 	rawProduct.applePayAvailable.toLowerCase() === 'yes' ? smartPaySupport.push('Apple Pay') : null
 	rawProduct.androidPayAvailable.toLowerCase() === 'yes' ? smartPaySupport.push('Google Wallet') : null
