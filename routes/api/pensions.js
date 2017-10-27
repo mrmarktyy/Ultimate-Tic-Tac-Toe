@@ -5,7 +5,7 @@ const _ = require('lodash')
 const Superannuation = keystone.list('Superannuation')
 const monetizedCollection = require('./monetizedCollection')
 const CompanyService = require('../../services/CompanyService')
-const { years, ratings, segments, purposes } = require('../../models/superannuation/constants')
+const { years = [], ratings, segments, purposes } = require('../../models/superannuation/constants')
 
 exports.list = async function (req, res) {
   const superannuations = await Superannuation.model.find({ pension: true }).populate('company').lean().exec()

@@ -5,7 +5,7 @@ const _ = require('lodash')
 const Superannuation = keystone.list('Superannuation')
 const monetizedCollection = require('./monetizedCollection')
 const CompanyService = require('../../services/CompanyService')
-const { years, ratings, segments, purposes, options } = require('../../models/superannuation/constants')
+const { getYears, ratings, segments, purposes, options } = require('../../models/superannuation/constants')
 
 exports.list = async function (req, res) {
   const superannuations = await Superannuation.model.find({ superannuation: true }).populate({path: 'fundgroup', populate: {path: 'company'}}).lean().exec()
@@ -29,6 +29,7 @@ async function getSuperannuationObjects (superannuations) {
 		product.name = superannuation.product_name
 		product.segment = getMatchedElment(segments, superannuation.fund_type).name
 		product.purpose = getMatchedElment(purposes, superannuation.fund_type).name
+		product.fy = parseInt(superannuation.fy)
 		superannuation.fundgroup.company = Object.assign({}, superannuation.fundgroup.company)
 		product.company = Object.assign({}, CompanyService.fixLogoUrl(superannuation.fundgroup.company))
 		product.company.logo = product.company.logo && product.company.logo.url
@@ -45,13 +46,15 @@ async function getSuperannuationObjects (superannuations) {
 		product.newFund =  superannuation.startdate ? (today.getFullYear() - parseInt(superannuation.startdate) <= 5) : false
 		product.performance = {}
 		product.performanceAvg = {}
-		years.forEach((year) => {
+		const years = getYears(product.fy)
+		years.forEach((year, index) => {
 			options.forEach((option) => {
 				const key = changeCase.camelCase(option)
+				const dataKey = index === 0 ? 'fytd' : index
 				product.performance[key] = product.performance[key] || {}
 				product.performanceAvg[key] = product.performanceAvg[key] || {}
-				product.performance[key][year] = parseFloat(superannuation[`performance_${option}_${year}`] || 0)
-				product.performanceAvg[key][year] = parseFloat(superannuation[`performance_${option}_${year}_avg`] || 0)
+				product.performance[key][year] = parseFloat(superannuation[`performance_${option}_${dataKey}`] || 0)
+				product.performanceAvg[key][year] = parseFloat(superannuation[`performance_${option}_${dataKey}_avg`] || 0)
 			})
 		})
 		product.performance.balanced.fytd = product['5YearAnnualisedPerformance']
