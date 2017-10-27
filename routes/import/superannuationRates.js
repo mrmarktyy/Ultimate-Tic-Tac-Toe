@@ -15,10 +15,11 @@ exports.uploadCsv = async (req, res) => {
 			throw 'No upload file is specified'
 		}
 		const list = await csvtojson(req.files.superannuationFileUpload.path)
-		const modelType = req.body.dropdown || 'Superannuation'
+		const modelType = req.body.type || 'Superannuation'
+		const fy = req.body.fy || new Date().getFullYear()
 		const fenixJSON = await fetch('http://www.ratecity.com.au/api/money-saver/superannuation/blaze.json')
 		const fenixProducts = await fenixJSON.json()
-		await upsertSuperannuation(list, fenixProducts, modelType)
+		await upsertSuperannuation(list, fenixProducts, modelType, fy)
 		req.flash('success', 'Import successfully.')
 		return res.redirect('/import-rates')
 	} catch (error) {
@@ -27,7 +28,7 @@ exports.uploadCsv = async (req, res) => {
 	}
 }
 
-async function upsertSuperannuation (list, fenixProducts, modelType) {
+async function upsertSuperannuation (list, fenixProducts, modelType, fy) {
 	try {
 		const promises = []
 
@@ -43,13 +44,14 @@ async function upsertSuperannuation (list, fenixProducts, modelType) {
 			} else {
 				superannuation = new Superannuation.model(product)
 				superannuation.uuid = fenixProduct.uuid
-				superannuation.name = product.product_name
 				superannuation.slug = fenixProduct.product_slug
 				superannuation.fenixLogo = fenixProduct.logo
 				superannuation.productUrl = (fenixProduct.product_url || '').replace('http://www.ratecity.com.au', '')
 				superannuation.pension = modelType === 'Pension'
 				superannuation.superannuation = modelType === 'Superannuation'
 			}
+			superannuation.name = product.product_name
+			superannuation.fy = fy
 
 			let fundGroup = await FundGroup.model.findOne({groupCode: superannuation.group_code}, '_id').exec()
 			if (!fundGroup) {
