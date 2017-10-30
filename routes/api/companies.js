@@ -12,6 +12,7 @@ var TermDeposits = keystone.list('TermDeposit')
 var TermDepositsCompany = keystone.list('TermDepositCompany')
 var Superannuation = keystone.list('Superannuation')
 var CompanyService = require('../../services/CompanyService')
+var BankAccounts = keystone.list('BankAccount')
 const MULTIPLIER = 5.32
 
 exports.list = async function (req, res) {
@@ -30,6 +31,7 @@ exports.list = async function (req, res) {
 				creditCards: {},
 				savingsAccounts: {},
 				superannuation: {},
+				bankAccounts: {},
 				termDeposits: {},
 			},
 		})
@@ -134,6 +136,14 @@ exports.list = async function (req, res) {
 			response[company._id].verticals.superannuation.count = count
 		})
 		countPromises.push(superPromise)
+
+		const bankAccountPromise = BankAccounts.model.count({
+			company: company._id,
+		}).exec((err, count) => {
+			if (err) return 'database error'
+			response[company._id].verticals.bankAccounts.count = count
+		})
+		countPromises.push(bankAccountPromise)
 
 		let tdPromise = TermDeposits.model.count({
 			company: company._id,

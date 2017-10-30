@@ -45,6 +45,7 @@ exports = module.exports = function (app) {
   app.post('/import/homeloan-download-rates', routes.import.homeloanRates.downloadCsv)
   app.post('/import/homeloan-upload-rates', routes.import.homeloanRates.uploadCsv)
   app.post('/import/superannuation-upload-rates', routes.import.superannuationRates.uploadCsv)
+  app.post('/import/bank-accounts-upload-rates', routes.import.bankAccountsRates.uploadCsv)
 
   // APIs
   // salesforce turn on and off products
@@ -80,6 +81,9 @@ exports = module.exports = function (app) {
 
   //Brokers
   app.get('/api/brokers', keystone.middleware.api, routes.api.brokers.list)
+
+  // Credit Cards
+  app.get('/api/credit-cards', keystone.middleware.api, routes.api.creditCards.list)
 
 	//GenericProducts
 	app.get('/api/generic-products', keystone.middleware.api, routes.api.genericProducts.list)

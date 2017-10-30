@@ -16,6 +16,10 @@ const schema = {
 	fenixLogo: { type: Types.Text },
 	pension: {type: Types.Boolean, indent: true, noedit: true},
 	superannuation: {type: Types.Boolean, indent: true, noedit: true},
+	productUrl: { type: Types.Text },
+	oldUuid: { type: Types.Text, noedit: true },
+	fy: { type: Types.Number },
+	month: { type: Types.Number },
 	fundgroup: {
 		type: Types.Relationship,
 		ref: 'FundGroup',

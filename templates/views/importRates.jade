@@ -1,49 +1,83 @@
 extends ../layouts/default
 
 block content
-  .container
-    .row
-      h1 Home Loan Rates
-      p Find a company, click button to download a csv of homeloan rates
-      .row
-        .col-sm-8
-          form(action='/import/homeloan-download-rates', method='post')
-            .form-group
-              label Company
-              select(name='companyName').form-control
-                each company in companies
-                  option(value=company.uuid) #{company.name}
+	.container
+		.row
+			h1 Home Loan Rates
+			p Find a company, click button to download a csv of homeloan rates
+			.row
+				.col-sm-8
+					form(action='/import/homeloan-download-rates', method='post')
+						.form-group
+							label Company
+							select(name='companyName').form-control
+								each company in companies
+									option(value=company.uuid) #{company.name}
 
-            button.btn.btn-large.btn-primary(type="submit") Export Rates
+						button.btn.btn-large.btn-primary(type="submit") Export Rates
 
-      .row
-        .col-sm-8
-          .uploadfileform
-            p make changes to the csv and reload them.
-            form(action='/import/homeloan-upload-rates', method='post', enctype='multipart/form-data')
-              .form-group
-                label Input File
-                input(type='file', name='variationfileUpload')
-              button.btn.btn-large.btn-primary(type="submit") Upload File
+			.row
+				.col-sm-8
+					.uploadfileform
+						p make changes to the csv and reload them.
+						form(action='/import/homeloan-upload-rates', method='post', enctype='multipart/form-data')
+							.form-group
+								label Input File
+								input(type='file', name='variationfileUpload')
+							button.btn.btn-large.btn-primary(type="submit") Upload File
 
-    .row
-      h1 Superannuation Rates
-      .row
-        .col-sm-8
-          p
-          form(action="/import/superannuation-upload-rates", method="post", enctype="multipart/form-data")
-            p Select the ratetype you would like to upload, eg Pension, Superannuation
-            .form-group
-              div
-                label Select a file type to upload:
-                p
-                select(name = "dropdown")
-                  option(value="Superannuation") Superannuation
-                  option(value="Pension") Pension
-                  label Input File
-                p
-              div
-                input(type='file', name='superannuationFileUpload')
-                p
+		.row
+			h1 Superannuation Rates
+			.row
+				.col-sm-8
+					p
+					form(action="/import/superannuation-upload-rates", method="post", enctype="multipart/form-data")
+						p Select the ratetype you would like to upload, eg Pension, Superannuation
+						.form-group
+							div
+								label Select a file type to upload:
+								p
+								select(name = "type")
+									option(value="Superannuation") Superannuation
+									option(value="Pension") Pension
+								p
+								label Select which finanical year and month Superannuation rates is importing from
+								p
+								select(name = "fy")
+									option(value="2018") 2018
+									option(value="2017") 2017
+									option(value="2019") 2019
+									option(value="2020") 2020
+								select(name = "month")
+									option(value="1") 1
+									option(value="2") 2
+									option(value="3") 3
+									option(value="4") 4
+									option(value="5") 5
+									option(value="6") 6
+									option(value="7") 7
+									option(value="8") 8
+									option(value="9") 9
+									option(value="10") 10
+									option(value="11") 11
+									option(value="12") 12
+								p
+							div
+								input(type='file', name='superannuationFileUpload')
+								p
 
-              button.btn.btn-large.btn-primary(type="submit") import Rates
+							button.btn.btn-large.btn-primary(type="submit") import Rates
+		.row
+			h1 Bank Accounts Rates
+			.row
+				.col-sm-8
+					p
+					form(action="/import/bank-accounts-upload-rates", method="post", enctype="multipart/form-data")
+						.form-group
+							div
+							br
+							div
+								input(type='file', name='bankAccountsFileUpload')
+							br
+
+							button.btn.btn-large.btn-primary(type="submit") import Rates
