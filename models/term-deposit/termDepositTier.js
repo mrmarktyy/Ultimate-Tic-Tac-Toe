@@ -15,7 +15,6 @@ var TermDepositTier = new keystone.List('TermDepositTier', {track: true}).add({
 	product: {
 		type: Types.Relationship,
 		ref: 'TermDeposit',
-		required: true,
 		initial: true,
 		index: true,
 		noedit: true,
@@ -24,8 +23,8 @@ var TermDepositTier = new keystone.List('TermDepositTier', {track: true}).add({
 	name: { type: Types.Text, required: true, initial: true },
 	minimumDeposit: { type: Types.Number, min: 0, initial: true },
 	maximumDeposit: { type: Types.Number, min: 0 },
-	interestRate: { type: Types.Number, required: true, initial: true },
-	minimumTerm: { type: Types.Number, min: 0, required: true, initial: true },
+	interestRate: { type: Types.Number, initial: true },
+	minimumTerm: { type: Types.Number, min: 0, initial: true },
 	maximumTerm: { type: Types.Number, min: 0 },
 	interestPaymentFrequencyShortTerm: { type: Types.Select, options: 'annually, monthly, semi-annually, quarterly, fortnightly, fortnightly, daily, at maturity' },
 	interestPaymentFrequencyLongTerm: { type: Types.Select, options: 'annually, monthly, semi-annually, quarterly, fortnightly, fortnightly, daily, at maturity' },
