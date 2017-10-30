@@ -43,7 +43,6 @@ async function getSuperannuationObjects (superannuations) {
 		product.ratingScore = rating.score ? (100 - (rating.score - 1) * 5) : null
 		product.productUrl = superannuation.productUrl || `/superannuation/${superannuation.fundgroup.slug}/${superannuation.slug}`
 		// product.applyUrl = ~~(Math.random() * 100) % 2 ? '/' : ''
-		// product.featured = null
 		product.newFund =  superannuation.startdate ? (today.getFullYear() - parseInt(superannuation.startdate) <= 5) : false
 		product.performance = {}
 		product.performanceAvg = {}
