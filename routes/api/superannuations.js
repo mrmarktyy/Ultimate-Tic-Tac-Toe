@@ -30,6 +30,7 @@ async function getSuperannuationObjects (superannuations) {
 		product.segment = getMatchedElment(segments, superannuation.fund_type).name
 		product.purpose = getMatchedElment(purposes, superannuation.fund_type).name
 		product.fy = parseInt(superannuation.fy)
+		product.month = parseInt(superannuation.month)
 		superannuation.fundgroup.company = Object.assign({}, superannuation.fundgroup.company)
 		product.company = Object.assign({}, CompanyService.fixLogoUrl(superannuation.fundgroup.company))
 		product.company.logo = product.company.logo && product.company.logo.url

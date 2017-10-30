@@ -18,6 +18,7 @@ const schema = {
 	superannuation: {type: Types.Boolean, indent: true, noedit: true},
 	productUrl: { type: Types.Text },
 	fy: { type: Types.Number },
+	month: { type: Types.Number },
 	fundgroup: {
 		type: Types.Relationship,
 		ref: 'FundGroup',
