@@ -7,6 +7,7 @@ const specificVerticals = {
 	'Personal Loans': { collection: 'PersonalLoan', findClause: { isPersonalLoan: 'YES' }, salesforceVertical: 'Personal Loans' },
   'Home Loans': { collection: 'HomeLoanVariation', salesforceVertical: 'Home Loans' },
   'Savings Accounts': { collection: 'SavingsAccount', salesforceVertical: 'Savings A/C' },
+  'Superannuation': { collection: 'Superannuation', findClause: { superannuation: true, company: {$ne: null} }, salesforceVertical: 'Superannuation' },
 }
 
 module.exports = _.merge({}, specificVerticals, genericVerticals)
