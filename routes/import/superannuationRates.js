@@ -5,7 +5,7 @@ const fetch = require('node-fetch')
 const logger = require('../../utils/logger')
 const csvtojson = require('../../utils/csvToJson')
 
-const fields = require('../../models/superannuation/constants').fields
+const { fields } = require('../../models/superannuation/constants')
 const Superannuation = keystone.list('Superannuation')
 const FundGroup = keystone.list('FundGroup')
 
@@ -31,6 +31,7 @@ exports.uploadCsv = async (req, res) => {
 async function upsertSuperannuation (list, fenixProducts, modelType, fy) {
 	try {
 		const promises = []
+		const newProductIds = []
 
 		for (let i = 0; i < list.length; i++) {
 			if (_.isNaN(parseInt(list[i].PRODUCT_ID, 10))) {
@@ -52,6 +53,7 @@ async function upsertSuperannuation (list, fenixProducts, modelType, fy) {
 			}
 			superannuation.name = product.product_name
 			superannuation.fy = fy
+			newProductIds.push(product.product_id)
 
 			let fundGroup = await FundGroup.model.findOne({groupCode: superannuation.group_code}, '_id').exec()
 			if (!fundGroup) {
@@ -86,6 +88,19 @@ async function upsertSuperannuation (list, fenixProducts, modelType, fy) {
 				})
 			)
 		}
+
+		const products = await Superannuation.model.find(modelType === 'Superannuation' ? {superannuation: true} : {pension: true}).exec()
+		_.remove(products, (product) => !newProductIds.includes(product.product_id))
+			.forEach((product) => {
+				product.isDiscontinued = true
+				promises.push(
+					product.save((err) => {
+						if (err) {
+							logger.error(err)
+						}
+					})
+				)
+			})
 		await Promise.all(promises)
 	} catch (err) {
 		logger.error(err)
