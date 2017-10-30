@@ -17,33 +17,33 @@ async function getPensionObjects (pensions) {
 	const monetizePensions = await monetizedCollection('Pension')
 	const today = new Date()
 
-	return pensions.map((superannuation) => {
+	return pensions.map((pension) => {
 		const product = {}
-		const monetize = monetizePensions[superannuation._id] || {}
+		const monetize = monetizePensions[pension._id] || {}
 		if (monetize) {
-			superannuation.gotoSiteUrl = monetize.applyUrl
-			superannuation.gotoSiteEnabled = monetize.enabled
-			superannuation.paymentType = monetize.paymentType
+			pension.gotoSiteUrl = monetize.applyUrl
+			pension.gotoSiteEnabled = monetize.enabled
+			pension.paymentType = monetize.paymentType
 		}
-		product.uuid = superannuation.uuid
-		product.name = superannuation.product_name
-		product.segment = getMatchedElment(segments, superannuation.fund_type).name
-		product.purpose = getMatchedElment(purposes, superannuation.fund_type).name
-		product.fy = parseInt(superannuation.fy)
-		product.month = parseInt(superannuation.month)
-		superannuation.fundgroup.company = Object.assign({}, superannuation.fundgroup.company)
-		product.company = Object.assign({}, CompanyService.fixLogoUrl(superannuation.fundgroup.company))
+		product.uuid = pension.uuid
+		product.name = pension.product_name
+		product.segment = getMatchedElment(segments, pension.fund_type).name
+		product.purpose = getMatchedElment(purposes, pension.fund_type).name
+		product.fy = parseInt(pension.fy)
+		product.month = parseInt(pension.month)
+		pension.fundgroup.company = Object.assign({}, pension.fundgroup.company)
+		product.company = Object.assign({}, CompanyService.fixLogoUrl(pension.fundgroup.company))
 		product.company.logo = product.company.logo && product.company.logo.url
-		product.memberFee = parseFloat(superannuation.member_fee || 0)
-		product['5YearAnnualisedPerformance'] = parseFloat(superannuation['5_year_annualised_performance'] || 0)
-		product['5YearAnnualisedPerformanceAvg'] = parseFloat(superannuation['5_year_annualised_performance_avg'] || 0)
-		product.basicFee = parseFloat(superannuation.basic_fee || 0)
-		const rating = getMatchedElment(ratings, superannuation.rating_image)
+		product.memberFee = parseFloat(pension.member_fee || 0)
+		product['5YearAnnualisedPerformance'] = parseFloat(pension['5_year_annualised_performance'] || 0)
+		product['5YearAnnualisedPerformanceAvg'] = parseFloat(pension['5_year_annualised_performance_avg'] || 0)
+		product.basicFee = parseFloat(pension.basic_fee || 0)
+		const rating = getMatchedElment(ratings, pension.rating_image)
 		product.rating = rating.name || null
 		product.ratingScore = rating.score ? (100 - (rating.score - 1) * 5) : null
-		product.productUrl = superannuation.productUrl || `/superannuation/${superannuation.fundgroup.slug}/${superannuation.slug}`
+		product.productUrl = pension.productUrl || `/pension-funds/${pension.fundgroup.slug}/${pension.slug}`
 		// product.applyUrl = ~~(Math.random() * 100) % 2 ? '/' : ''
-		product.newFund =  superannuation.startdate ? (today.getFullYear() - parseInt(superannuation.startdate) <= 5) : false
+		product.newFund =  pension.startdate ? (today.getFullYear() - parseInt(pension.startdate) <= 5) : false
 		product.performance = {}
 		product.performanceAvg = {}
 		getYears(product.fy).forEach((year, index) => {
@@ -52,74 +52,74 @@ async function getPensionObjects (pensions) {
 				const dataKey = index === 0 ? 'fytd' : index
 				product.performance[key] = product.performance[key] || {}
 				product.performanceAvg[key] = product.performanceAvg[key] || {}
-				product.performance[key][year] = parseFloat(superannuation[`performance_${option}_${dataKey}`] || 0)
-				product.performanceAvg[key][year] = parseFloat(superannuation[`performance_${option}_${dataKey}_avg`] || 0)
+				product.performance[key][year] = parseFloat(pension[`performance_${option}_${dataKey}`] || 0)
+				product.performanceAvg[key][year] = parseFloat(pension[`performance_${option}_${dataKey}_avg`] || 0)
 			})
 		})
 		product.performance.balanced.fytd = product['5YearAnnualisedPerformance']
 		product.performanceAvg.balanced.fytd = product['5YearAnnualisedPerformanceAvg']
-		product.basicFee5k = parseFloat(superannuation.basic_fee_5k || 0)
-		product.basicFee50k = parseFloat(superannuation.basic_fee || 0)
-		product.basicFee100k = parseFloat(superannuation.basic_fee_100k || 0)
-		product.basicFee250k = parseFloat(superannuation.basic_fee_250k || 0)
-		product.basicFee500k = parseFloat(superannuation.basic_fee_500k || 0)
-		product.industryAvgFee5k = parseFloat(superannuation.industry_avg_fee_5k || 0)
-		product.industryAvgFee50k = parseFloat(superannuation.industry_avg_fee || 0)
-		product.industryAvgFee100k = parseFloat(superannuation.industry_avg_fee_100k || 0)
-		product.assetAdminFee = parseFloat(superannuation.asset_admin_fee || 0)
-		product.investmentFee = parseFloat(superannuation.investment_fee || 0)
-		product.switchingFee = parseFloat(superannuation.switching_fee || 0)
-		product.withdrawalFee = parseFloat(superannuation.withdrawal_fee || 0)
-		product.acctsizeDiscount = superannuation.acctsize_discount === 'Yes'
-		product.empsizeDiscount = superannuation.empsize_discount === 'Yes'
-		product.finplanService = superannuation.finplan_service === 'Yes'
-		product.healthInsurance = superannuation.health_insurance === 'Yes'
-		product.homeLoans = superannuation.home_loans === 'Yes'
-		product.creditCards = superannuation.credit_cards === 'Yes'
-		product.bindingNominations = superannuation.binding_nominations === 'Yes'
-		product.nonLapsingBindingNoms = superannuation.non_lapsing_binding_noms === 'Yes'
-		product.insLifeEventIncreases = superannuation.ins_life_event_increases === 'Yes'
-		product.antiDetriment = superannuation.anti_detriment === 'Yes'
-		product.ltip = superannuation.ltip === 'Yes'
-		product.validDate = superannuation.valid_date
-		product.termDeposits = superannuation.term_deposits === 'Yes'
-		product.intlShares = parseInt(superannuation.intl_shares || 0)
-		product.ausShares = parseInt(superannuation.aus_shares || 0)
-		product.property = parseInt(superannuation.property || 0)
-		product.alternative = parseInt(superannuation.alternative || 0)
-		product.fixedInterest = parseInt(superannuation.fixed_interest || 0)
-		product.cash = parseInt(superannuation.cash || 0)
-		product.other = parseInt(superannuation.other || 0)
+		product.basicFee5k = parseFloat(pension.basic_fee_5k || 0)
+		product.basicFee50k = parseFloat(pension.basic_fee || 0)
+		product.basicFee100k = parseFloat(pension.basic_fee_100k || 0)
+		product.basicFee250k = parseFloat(pension.basic_fee_250k || 0)
+		product.basicFee500k = parseFloat(pension.basic_fee_500k || 0)
+		product.industryAvgFee5k = parseFloat(pension.industry_avg_fee_5k || 0)
+		product.industryAvgFee50k = parseFloat(pension.industry_avg_fee || 0)
+		product.industryAvgFee100k = parseFloat(pension.industry_avg_fee_100k || 0)
+		product.assetAdminFee = parseFloat(pension.asset_admin_fee || 0)
+		product.investmentFee = parseFloat(pension.investment_fee || 0)
+		product.switchingFee = parseFloat(pension.switching_fee || 0)
+		product.withdrawalFee = parseFloat(pension.withdrawal_fee || 0)
+		product.acctsizeDiscount = pension.acctsize_discount === 'Yes'
+		product.empsizeDiscount = pension.empsize_discount === 'Yes'
+		product.finplanService = pension.finplan_service === 'Yes'
+		product.healthInsurance = pension.health_insurance === 'Yes'
+		product.homeLoans = pension.home_loans === 'Yes'
+		product.creditCards = pension.credit_cards === 'Yes'
+		product.bindingNominations = pension.binding_nominations === 'Yes'
+		product.nonLapsingBindingNoms = pension.non_lapsing_binding_noms === 'Yes'
+		product.insLifeEventIncreases = pension.ins_life_event_increases === 'Yes'
+		product.antiDetriment = pension.anti_detriment === 'Yes'
+		product.ltip = pension.ltip === 'Yes'
+		product.validDate = pension.valid_date
+		product.termDeposits = pension.term_deposits === 'Yes'
+		product.intlShares = parseInt(pension.intl_shares || 0)
+		product.ausShares = parseInt(pension.aus_shares || 0)
+		product.property = parseInt(pension.property || 0)
+		product.alternative = parseInt(pension.alternative || 0)
+		product.fixedInterest = parseInt(pension.fixed_interest || 0)
+		product.cash = parseInt(pension.cash || 0)
+		product.other = parseInt(pension.other || 0)
 		product.varietyOfOptions = !!(product.intlShares || product.ausShares || product.property ||
 			product.alternative || product.fixedInterest || product.cash || product.other !== 100)
-		product.deathInsurance = superannuation.death !== 'na'
-		product.incomeProtection = superannuation.income_protection !== 'na'
-		product.advisoryServices = superannuation.advice !== 'na'
-		product.onlineAccess = superannuation.webmemb_access === 'Yes'
-		product.feeScore = parseInt(superannuation.fee_score || 0)
-		product.employer = superannuation.employer !== 'n/ap'
-		product.summary = superannuation.what_we_say_fund_summary
+		product.deathInsurance = pension.death !== 'na'
+		product.incomeProtection = pension.income_protection !== 'na'
+		product.advisoryServices = pension.advice !== 'na'
+		product.onlineAccess = pension.webmemb_access === 'Yes'
+		product.feeScore = parseInt(pension.fee_score || 0)
+		product.employer = pension.employer !== 'n/ap'
+		product.summary = pension.what_we_say_fund_summary
 		product.pros = _.filter([
-			superannuation.pro_1,
-			superannuation.pro_2,
-			superannuation.pro_3,
-			superannuation.pro_4,
-			superannuation.pro_5,
-			superannuation.pro_6,
-			superannuation.pro_7,
-			superannuation.pro_8,
-			superannuation.pro_9,
-			superannuation.pro_10,
-			superannuation.pro_11,
-			superannuation.pro_12,
+			pension.pro_1,
+			pension.pro_2,
+			pension.pro_3,
+			pension.pro_4,
+			pension.pro_5,
+			pension.pro_6,
+			pension.pro_7,
+			pension.pro_8,
+			pension.pro_9,
+			pension.pro_10,
+			pension.pro_11,
+			pension.pro_12,
 		], (pro) => pro && pro !== '-')
-		product.membership = parseInt(superannuation.membership || 0)
-		product.fundSize = parseInt(superannuation.total_asset || 0)
-		product.yearStarted = parseInt(superannuation.startdate || 0)
-		product.targetMarket = superannuation.target_market
-		product.publicOffer = superannuation.public_offer === 'Yes'
-		product.productType = superannuation.fund_type
-		product.awards = _.map(getMatchedElments(ratings, superannuation.rating_image), (rating) => (_.pick(rating, ['name', 'url'])))
+		product.membership = parseInt(pension.membership || 0)
+		product.fundSize = parseInt(pension.total_asset || 0)
+		product.yearStarted = parseInt(pension.startdate || 0)
+		product.targetMarket = pension.target_market
+		product.publicOffer = pension.public_offer === 'Yes'
+		product.productType = pension.fund_type
+		product.awards = _.map(getMatchedElments(ratings, pension.rating_image), (rating) => (_.pick(rating, ['name', 'url'])))
 		return product
 	})
 }
