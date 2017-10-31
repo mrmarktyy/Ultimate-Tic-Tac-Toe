@@ -20,11 +20,6 @@ async function getSuperannuationObjects (superannuations) {
 	return superannuations.map((superannuation) => {
 		const product = {}
 		const monetize = monetizeSuperannuations[superannuation._id] || {}
-		if (monetize) {
-			superannuation.gotoSiteUrl = monetize.applyUrl
-			superannuation.gotoSiteEnabled = monetize.enabled
-			superannuation.paymentType = monetize.paymentType
-		}
 		product.uuid = superannuation.uuid
 		product.name = superannuation.product_name
 		product.segment = getMatchedElment(segments, superannuation.fund_type).name
@@ -42,7 +37,10 @@ async function getSuperannuationObjects (superannuations) {
 		product.rating = rating.name || null
 		product.ratingScore = rating.score ? (100 - (rating.score - 1) * 5) : null
 		product.productUrl = superannuation.productUrl || `/superannuation/${superannuation.fundgroup.slug}/${superannuation.slug}`
-		// product.applyUrl = ~~(Math.random() * 100) % 2 ? '/' : ''
+		product.applyUrl = Object.keys(monetize).length && monetize.enabled ? monetize.applyUrl : null
+		product.paymentType = Object.keys(monetize).length ? monetize.paymentType : null
+		product.gotoSiteUrl = Object.keys(monetize).length ? monetize.applyUrl : null
+		product.gotoSiteEnabled = Object.keys(monetize).length ? monetize.enabled : null
 		// product.featured = null
 		product.newFund =  superannuation.startdate ? (today.getFullYear() - parseInt(superannuation.startdate) <= 5) : false
 		product.performance = {}

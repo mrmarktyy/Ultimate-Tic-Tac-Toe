@@ -7,9 +7,8 @@ const PartnerConversion = keystone.list('PartnerConversion')
 const monetizedCollection = require('./monetizedCollection')
 
 exports.list = async function (req, res) {
-  let removeFields = { updatedAt: 0, updatedBy: 0, isMonetized }
+  let removeFields = { updatedAt: 0, updatedBy: 0, isMonetized: 0 }
   let monetizedList = await monetizedCollection('Credit Cards')
-  console.log(monetizedList)
   let partnerConversions = await PartnerConversion.model.find()
     .populate('rewardProgram partnerProgram')
     .lean()
