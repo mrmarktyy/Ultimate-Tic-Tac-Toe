@@ -30,7 +30,7 @@ var TermDeposit = new keystone.List('TermDeposit', {track: true}).add(productCom
 	earlyWithdrawalAvailable: { type: Types.Select, options: availableOptions.all, default: availableOptions.yes },
 	isCoveredByGovernmentGuarantee: { type: Types.Select, options: availableOptions.all, default: availableOptions.yes },
 
-	interestPaymentFrequencyOptions: { type: Types.MultiSelect, options: 'Monthly, Annually, Semi-Annually, Fortnightly, Weekly' },
+	interestPaymentFrequencyOptions: { type: Types.Select, options: 'Monthly, Annually, Semi-Annually, Fortnightly, Weekly' },
 	interestPaymentMethod: { type: Types.MultiSelect, options: 'Cheque, Direct Credit, Rollover on maturity' },
 	accountKeepingFeeFrequency: { type: Types.MultiSelect, options: 'Monthly, Annually, Semi-Annually, Fortnightly, Weekly' },
 
