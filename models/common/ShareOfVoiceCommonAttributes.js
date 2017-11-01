@@ -3,7 +3,7 @@ const Types = keystone.Field.Types
 
 module.exports = {
 	shareOfVoiceType: {type: Types.Select, index: true, options: [{value: 'percentage', label: 'Percentage'}, {value: 'count', label: 'Count'}], default: 'percentage'},
-	shareOfVoiceValue: {type: Types.Text, index: true},
+	shareOfVoiceValue: {type: Types.Number, index: true, default: 100},
 	shareOfVoiceMatrix: {type: Types.Select, index: true, options: [
 		{value: 'impression', label: 'Impressions'},
 		{value: 'interactions', label: 'Interactions'},
