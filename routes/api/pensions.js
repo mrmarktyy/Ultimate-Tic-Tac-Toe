@@ -37,7 +37,7 @@ async function getPensionObjects (pensions) {
 		product.memberFee = parseFloat(pension.member_fee || 0)
 		product['5YearAnnualisedPerformance'] = parseFloat(pension['5_year_annualised_performance'] || 0)
 		product['5YearAnnualisedPerformanceAvg'] = parseFloat(pension['5_year_annualised_performance_avg'] || 0)
-		product.basicFee = parseFloat(pension.basic_fee || 0)
+		product.basicFee = parseFloat(pension.basic_fee_50k || 0)
 		const rating = getMatchedElment(ratings, pension.rating_image)
 		product.rating = rating.name || null
 		product.ratingScore = rating.score ? (100 - (rating.score - 1) * 5) : null
@@ -59,7 +59,7 @@ async function getPensionObjects (pensions) {
 		product.performance.balanced.fytd = product['5YearAnnualisedPerformance']
 		product.performanceAvg.balanced.fytd = product['5YearAnnualisedPerformanceAvg']
 		product.basicFee5k = parseFloat(pension.basic_fee_5k || 0)
-		product.basicFee50k = parseFloat(pension.basic_fee || 0)
+		product.basicFee50k = parseFloat(pension.basic_fee_50k || 0)
 		product.basicFee100k = parseFloat(pension.basic_fee_100k || 0)
 		product.basicFee250k = parseFloat(pension.basic_fee_250k || 0)
 		product.basicFee500k = parseFloat(pension.basic_fee_500k || 0)
