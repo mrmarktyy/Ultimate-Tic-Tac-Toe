@@ -102,7 +102,7 @@ async function prepDataAndPushToRedshift (date, personalLoans, personalLoanVaria
   personalLoans.forEach((loan) => {
     let product = Object.assign({}, defaultPersonalLoan)
     product.collectionDate = collectionDate
-    product.productId = loan.legacyCode !== '' ? loan.legacyCode : `${loan._id}`
+    product.productId = loan._id
     product.uuid = loan.uuid
     product.description = loan.name
     product.companyCode = loan.company.legacyCode
