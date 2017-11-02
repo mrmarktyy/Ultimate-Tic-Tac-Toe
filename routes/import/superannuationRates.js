@@ -18,7 +18,10 @@ exports.uploadCsv = async (req, res) => {
 		const type = req.body.type || 'Superannuation'
 		const fy = req.body.fy || new Date().getFullYear()
 		const month = req.body.month || 1
-		const fenixJSON = await fetch('http://www.ratecity.com.au/api/money-saver/superannuation/blaze.json')
+		const fenixJSON = await fetch(
+			type === 'Superannuation' ? 'http://www.ratecity.com.au/api/money-saver/superannuation/blaze.json'
+			: 'http://www.ratecity.com.au/api/money-saver/pension/blaze.json'
+		)
 		const fenixProducts = await fenixJSON.json()
 		await upsertSuperannuation(list, fenixProducts, {type, fy, month})
 		req.flash('success', 'Import successfully.')

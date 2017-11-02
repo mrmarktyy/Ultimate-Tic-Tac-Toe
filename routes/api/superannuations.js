@@ -41,7 +41,6 @@ async function getSuperannuationObjects (superannuations) {
 		product.paymentType = Object.keys(monetize).length ? monetize.paymentType : null
 		product.gotoSiteUrl = Object.keys(monetize).length ? monetize.applyUrl : null
 		product.gotoSiteEnabled = Object.keys(monetize).length ? monetize.enabled : null
-		// product.featured = null
 		product.newFund =  superannuation.startdate ? (today.getFullYear() - parseInt(superannuation.startdate) <= 5) : false
 		product.performance = {}
 		product.performanceAvg = {}
