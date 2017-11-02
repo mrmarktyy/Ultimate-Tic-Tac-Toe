@@ -9,4 +9,5 @@ module.exports = {
 	'Income Protection Insurance': { collection: 'GenericProduct', findClause: { vertical: 'income-protection-insurance' }, slug: 'income-protection-insurance', salesforceVertical: 'Income Protection Insurance' },
 	'Life Insurance': { collection: 'GenericProduct', findClause: { vertical: 'life-insurance' }, slug: 'life-insurance', salesforceVertical: 'Life Insurance' },
 	'Margin Loans': { collection: 'GenericProduct', findClause: { vertical: 'margin-loans' }, slug: 'margin-loans', salesforceVertical: 'Margin Loans' },
+	'Travel Cards': { collection: 'GenericProduct', findClause: {vertical: 'travel-cards'}, slug: 'travel-cards', salesforceVertical: 'Travel Cards' },
 }
