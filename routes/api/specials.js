@@ -6,6 +6,7 @@ const allSpecials = [
   'CreditCard',
   'PersonalLoan',
   'SavingsAccount',
+	'TermDeposit',
 ]
 
 exports.list = async function (req, res) {

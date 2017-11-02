@@ -10,6 +10,7 @@ var verticals = [
   { value: 'superannuation', label: 'Superannuation' },
   { value: 'pension-funds', label: 'Pension' },
   { value: 'managed-funds', label: 'Managed Funds' },
+	{ value: 'term-deposits', label: 'Term Deposits' },
 ]
 
 Object.entries(genericVerticals).forEach(([key, value]) => {
