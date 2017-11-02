@@ -20,11 +20,6 @@ async function getSuperannuationObjects (superannuations) {
 	return superannuations.map((superannuation) => {
 		const product = {}
 		const monetize = monetizeSuperannuations[superannuation._id] || {}
-		if (monetize) {
-			superannuation.gotoSiteUrl = monetize.applyUrl
-			superannuation.gotoSiteEnabled = monetize.enabled
-			superannuation.paymentType = monetize.paymentType
-		}
 		product.uuid = superannuation.uuid
 		product.name = superannuation.product_name
 		product.segment = getMatchedElment(segments, superannuation.fund_type).name
@@ -37,13 +32,15 @@ async function getSuperannuationObjects (superannuations) {
 		product.memberFee = parseFloat(superannuation.member_fee || 0)
 		product['5YearAnnualisedPerformance'] = parseFloat(superannuation['5_year_annualised_performance'] || 0)
 		product['5YearAnnualisedPerformanceAvg'] = parseFloat(superannuation['5_year_annualised_performance_avg'] || 0)
-		product.basicFee = parseFloat(superannuation.basic_fee || 0)
+		product.basicFee = parseFloat(superannuation.basic_fee_50k || 0)
 		const rating = getMatchedElment(ratings, superannuation.rating_image)
 		product.rating = rating.name || null
 		product.ratingScore = rating.score ? (100 - (rating.score - 1) * 5) : null
 		product.productUrl = superannuation.productUrl || `/superannuation/${superannuation.fundgroup.slug}/${superannuation.slug}`
-		// product.applyUrl = ~~(Math.random() * 100) % 2 ? '/' : ''
-		// product.featured = null
+		product.applyUrl = Object.keys(monetize).length && monetize.enabled ? monetize.applyUrl : null
+		product.paymentType = Object.keys(monetize).length ? monetize.paymentType : null
+		product.gotoSiteUrl = Object.keys(monetize).length ? monetize.applyUrl : null
+		product.gotoSiteEnabled = Object.keys(monetize).length ? monetize.enabled : null
 		product.newFund =  superannuation.startdate ? (today.getFullYear() - parseInt(superannuation.startdate) <= 5) : false
 		product.performance = {}
 		product.performanceAvg = {}
@@ -61,7 +58,7 @@ async function getSuperannuationObjects (superannuations) {
 		product.performance.balanced.fytd = product['5YearAnnualisedPerformance']
 		product.performanceAvg.balanced.fytd = product['5YearAnnualisedPerformanceAvg']
 		product.basicFee5k = parseFloat(superannuation.basic_fee_5k || 0)
-		product.basicFee50k = parseFloat(superannuation.basic_fee || 0)
+		product.basicFee50k = parseFloat(superannuation.basic_fee_50k || 0)
 		product.basicFee100k = parseFloat(superannuation.basic_fee_100k || 0)
 		product.basicFee250k = parseFloat(superannuation.basic_fee_250k || 0)
 		product.basicFee500k = parseFloat(superannuation.basic_fee_500k || 0)

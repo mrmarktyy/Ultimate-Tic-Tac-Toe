@@ -32,7 +32,7 @@ block content
 				.col-sm-8
 					p
 					form(action="/import/superannuation-upload-rates", method="post", enctype="multipart/form-data")
-						p Select the ratetype you would like to upload, eg Pension, Superannuation
+						p Select the rate type you would like to import, eg Pension, Superannuation
 						.form-group
 							div
 								label Select a file type to upload:
@@ -41,7 +41,7 @@ block content
 									option(value="Superannuation") Superannuation
 									option(value="Pension") Pension
 								p
-								label Select which finanical year and month Superannuation rates is importing from
+								label Select which finanical year and month Superannuation / Pension rates is importing from
 								p
 								select(name = "fy")
 									option(value="2018") 2018

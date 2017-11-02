@@ -8,7 +8,7 @@ var verticals = [
   { value: 'personal-loans', label: 'Personal Loans' },
   { value: 'car-loans', label: 'Car Loans' },
   { value: 'superannuation', label: 'Superannuation' },
-  { value: 'pension', label: 'Pension' },
+  { value: 'pension-funds', label: 'Pension' },
   { value: 'managed-funds', label: 'Managed Funds' },
 	{ value: 'term-deposits', label: 'Term Deposits' },
 ]
