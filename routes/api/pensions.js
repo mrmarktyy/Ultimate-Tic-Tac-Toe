@@ -20,11 +20,6 @@ async function getPensionObjects (pensions) {
 	return pensions.map((pension) => {
 		const product = {}
 		const monetize = monetizePensions[pension._id] || {}
-		if (monetize) {
-			pension.gotoSiteUrl = monetize.applyUrl
-			pension.gotoSiteEnabled = monetize.enabled
-			pension.paymentType = monetize.paymentType
-		}
 		product.uuid = pension.uuid
 		product.name = pension.product_name
 		product.segment = getMatchedElment(segments, pension.fund_type).name
@@ -42,7 +37,10 @@ async function getPensionObjects (pensions) {
 		product.rating = rating.name || null
 		product.ratingScore = rating.score ? (100 - (rating.score - 1) * 5) : null
 		product.productUrl = pension.productUrl || `/pension-funds/${pension.fundgroup.slug}/${pension.slug}`
-		// product.applyUrl = ~~(Math.random() * 100) % 2 ? '/' : ''
+		product.applyUrl = Object.keys(monetize).length && monetize.enabled ? monetize.applyUrl : null
+		product.paymentType = Object.keys(monetize).length ? monetize.paymentType : null
+		product.gotoSiteUrl = Object.keys(monetize).length ? monetize.applyUrl : null
+		product.gotoSiteEnabled = Object.keys(monetize).length ? monetize.enabled : null
 		product.newFund =  pension.startdate ? (today.getFullYear() - parseInt(pension.startdate) <= 5) : false
 		product.performance = {}
 		product.performanceAvg = {}

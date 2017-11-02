@@ -53,7 +53,13 @@ Superannuation.schema.pre('save', async function (next) {
 	next()
 })
 
+Superannuation.schema.methods.remove = function (callback) {
+  this.isDiscontinued = true
+  return this.save(callback)
+}
+
 Superannuation.defaultColumns = 'product_name, company, superannuation, pension, fundgroup'
+Superannuation.defaultSort = 'isDiscontinued'
 Superannuation.searchFields = 'group_code, product_id, product_name, uuid'
 Superannuation.drilldown = 'fundgroup, company'
 Superannuation.register()
