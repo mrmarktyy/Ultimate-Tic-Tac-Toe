@@ -6,6 +6,7 @@ const allSpecials = [
   'CreditCard',
   'PersonalLoan',
   'SavingsAccount',
+	'BankAccount',
 	'TermDeposit',
 ]
 
