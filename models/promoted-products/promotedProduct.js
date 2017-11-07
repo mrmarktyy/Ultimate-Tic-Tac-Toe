@@ -9,6 +9,7 @@ var shareOfVoiceAttributes = require('../common/ShareOfVoiceCommonAttributes')
 var PromotedProduct = new keystone.List('PromotedProduct', {
     track: true,
 })
+var MonetizeProduct = new keystone.List('Monetize')
 
 PromotedProduct.add({
 	uuid: {type: Types.Text, initial: true},
