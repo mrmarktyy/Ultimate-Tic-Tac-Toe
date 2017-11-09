@@ -54,6 +54,7 @@ BankAccount.add({
 	freeCounterTransactionCount: { type: Types.Number },
 	atmWithdrawalFee: { type: Types.Number },
 	hasOtherBankATMWithdrawalFee: { type: Types.Select, options: availableOptions.all, default: availableOptions.unkown },
+	hasOtherBankAtmFeeWaiver: { type: Types.Select, options: availableOptions.all, default: availableOptions.unkown },
 	otherBankATMWithdrawalFeeCondition: { type: Types.Text },
 	dailyATMwithdrawalLimit: { type: Types.Number },
 	networkBankATMFeeWaiver: { type: Types.Boolean, default: false },
