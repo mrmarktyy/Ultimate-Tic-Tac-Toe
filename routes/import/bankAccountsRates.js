@@ -49,6 +49,7 @@ async function mapBankAccounts (rawProduct) {
 	const mapping = {
     'Slug': 'slug',
     'productName': 'name',
+		'company': 'company',
     'productUUID': 'uuid',
     'legacyID': 'legacyCode',
     'linkedSavingsAccount': 'linkedAccountRequired',
@@ -80,6 +81,7 @@ async function mapBankAccounts (rawProduct) {
     'cardTypeAvailable': 'debitCardTypes',
     'networkAtmFee': 'atmWithdrawalFee',
     'hasOtherBankAtmFee': 'hasOtherBankATMWithdrawalFee',
+		'hasOtherBankAtmFeeWaiver': 'hasOtherBankAtmFeeWaiver',
     'otherBankAtmWaiverCondition': 'OtherBankATMWithdrawalFeeCondition',
     'overseasAtmFee': 'overseasATMWithdrawalFee',
     'overTheCounterDepositFee': 'counterDepositFee',
@@ -103,6 +105,7 @@ async function mapBankAccounts (rawProduct) {
 		{ otherNames: { $regex: new RegExp(`^${rawProduct.company}$`, 'i') } },
 	] }).exec()
 	if(!company) {
+		logger.warn('Wrong company name - ', rawProduct.company)
 		return null
 	}
 	const product = {}
@@ -111,7 +114,7 @@ async function mapBankAccounts (rawProduct) {
 		if(key === 'productUUID') {
 			product[mapping[key]] = rawProduct[key]
 		}
-		else if(!_.isNaN(value)) {
+		else if(!_.isNaN(value) && value.toString().length === rawProduct[key].length) {
 			product[mapping[key]] = value
 		} else {
 			product[mapping[key]] = rawProduct[key]
