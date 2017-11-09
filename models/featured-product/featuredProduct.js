@@ -42,7 +42,7 @@ FeaturedProduct.schema.pre('validate', function (next) {
 	next()
 })
 
-FeaturedProduct.schema.index({uuid: 1, vertical: 1}, {unique: true})
+FeaturedProduct.schema.index({uuid: 1, vertical: 1, dateStart: 1}, {unique: true})
 
 FeaturedProduct.schema.pre('save', async function (next) {
   await changeLogService(this)
