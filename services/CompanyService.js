@@ -1,5 +1,10 @@
-exports.fixLogoUrl = function (company) {
+const bankTypes = [
+	'regional bank',
+	'major bank',
+	'foreign bank',
+]
 
+exports.fixLogoUrl = function (company) {
 	if (company.logo) {
 		if (company.logo.url) {
 			company.logo.url = company.logo.url.replace('res.cloudinary.com', '//production-ultimate-assets.ratecity.com.au')
@@ -14,7 +19,8 @@ exports.fixLogoUrl = function (company) {
 exports.isBank = function (company) {
   if (company.type) {
     company.isBank = false
-    if ((company.type.toLowerCase().indexOf('bank') >= 0) && (company.type.toLowerCase() !== 'Non-bank lender')) {
+		company.bankType = company.type
+    if (bankTypes.includes(company.type.toLowerCase())) {
       company.isBank = true
     }
   }
