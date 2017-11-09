@@ -6,10 +6,10 @@ var mongoosePromise = require('../utils/mongoosePromise')
 
 const Superannuation = keystoneShell.list('Superannuation')
 
-module.exports = async function () {
+async function repopulateUuids (findClause) {
   let connection = await mongoosePromise.connect()
   try {
-    let products = await Superannuation.model.find({superannuation: true}).lean().exec()
+    let products = await Superannuation.model.find(findClause).lean().exec()
 
     for (let i = 0; i < products.length; i++) {
       let item = products[i]
@@ -20,4 +20,9 @@ module.exports = async function () {
     console.log(error)
     return error
   }
+}
+
+module.exports = async function () {
+  await repopulateUuids({superannuation: true})
+  await repopulateUuids({pension: true})
 }()
