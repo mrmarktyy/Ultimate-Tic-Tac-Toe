@@ -54,14 +54,12 @@ async function mapBankAccounts (rawProduct) {
     'legacyID': 'legacyCode',
     'linkedSavingsAccount': 'linkedAccountRequired',
     'jointApplicationAvailable': 'jointApplicationAvailable',
-    'uniqueFeatures': 'uniqueFeatures',
-    'otherBenefits': 'additionalBenefits',
-    'otherRestrictions': 'restrictions',
     'minimumAgeRestriction': 'minimumAgeRestrictions',
     'maximumAgRestriction': 'maximumAgeRestrictions',
     'minimumAccountBalanceToActivateInterestRate': 'minimumBalanceToActivateInterestRate',
     'minInterestRate%': 'minimumInterestRate',
     'maxInterestRate%': 'maximumInterestRate',
+		'interestRateDescription': 'interestRateDescription',
     'interestRateCalculationFrequency': 'interestCalculationFrequency',
     'interestPaymentFrequency': 'interestPaymentFrequency',
     'minimumOpeningBalance': 'minimumOpeningAmount',
@@ -77,12 +75,12 @@ async function mapBankAccounts (rawProduct) {
     'accountKeepingFee': 'accountKeepingFee',
     'accountKeepingFeeFrequency': 'accountKeepingFeesFrequency',
     'depositToWaiveAccountKeepingFee': 'minimumDepositRequiredForFeeFree',
-    'depositToWaiveAccountKeepingFeeFrequency': 'minimumDepositRequiredForFreeFrequency',
+    'depositToWaiveAccountKeepingFeeFrequency': 'minimumDepositRequiredForFeeFreeFrequency',
     'cardTypeAvailable': 'debitCardTypes',
     'networkAtmFee': 'atmWithdrawalFee',
     'hasOtherBankAtmFee': 'hasOtherBankATMWithdrawalFee',
 		'hasOtherBankAtmFeeWaiver': 'hasOtherBankAtmFeeWaiver',
-    'otherBankAtmWaiverCondition': 'OtherBankATMWithdrawalFeeCondition',
+    'otherBankAtmWaiverCondition': 'otherBankATMWithdrawalFeeWaiverCondition',
     'overseasAtmFee': 'overseasATMWithdrawalFee',
     'overTheCounterDepositFee': 'counterDepositFee',
     'overTheCounterWithdrawalFee': 'counterWithdrawalFee',
@@ -93,7 +91,7 @@ async function mapBankAccounts (rawProduct) {
     'chequeDepositFee': 'chequeDepositFee',
     'chequeDishonourFee': 'chequeDishonourFee',
     'foreignTransactionFeePercent': 'foreignTransactionFeePercent',
-    'foreignTransactionFeeDollars': 'foreignTransactionFee',
+    'foreignTransactionFeeDollars': 'foreignTransactionFeeDollars',
   }
 	if(!rawProduct.productName || !rawProduct.company) {
 		return null
@@ -123,12 +121,12 @@ async function mapBankAccounts (rawProduct) {
 	product.company = company._id
 	const smartPaySupport = []
 	rawProduct.applePayAvailable.toLowerCase() === 'yes' ? smartPaySupport.push('Apple Pay') : null
-	rawProduct.androidPayAvailable.toLowerCase() === 'yes' ? smartPaySupport.push('Google Wallet') : null
+	rawProduct.androidPayAvailable.toLowerCase() === 'yes' ? smartPaySupport.push('Android Pay') : null
 	rawProduct.samsungPayAvailable.toLowerCase() === 'yes' ? smartPaySupport.push('Samsung Pay') : null
 	product.smartPaySupport = smartPaySupport
-	product.restrictions = rawProduct.restrictions ? [rawProduct.restrictions] : []
+	product.restrictions = rawProduct.otherRestrictions ? [rawProduct.otherRestrictions] : []
 	product.uniqueFeatures = rawProduct.uniqueFeatures ? [rawProduct.uniqueFeatures] : []
-	product.additionalBenefits = rawProduct.additionalBenefits ? [rawProduct.additionalBenefits] : []
+	product.additionalBenefits = rawProduct.otherBenefits ? [rawProduct.otherBenefits] : []
 	for(let key in product) {
 		if(product[key] === '') {
 			delete product[key]

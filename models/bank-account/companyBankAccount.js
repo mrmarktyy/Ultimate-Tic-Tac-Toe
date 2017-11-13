@@ -16,9 +16,9 @@ CompanyBankAccount.add({
     index: true,
     noedit: true,
   },
-	companyATM: { type: Types.Number, required: true, initial: true },
-	networkATM: { type: Types.Number },
-	branches: { type: Types.Number },
+	companyATM: { type: Types.Text, initial: true },
+	networkATM: { type: Types.Text },
+	branches: { type: Types.Text },
 })
 
 CompanyBankAccount.relationship({ path: 'ChangeLogs', ref: 'ChangeLog', refPath: 'model', many: true })
