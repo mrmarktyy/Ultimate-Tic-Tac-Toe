@@ -38,29 +38,16 @@ module.exports = async function () {
 			obj.interestCalculationFrequency = item.interestCalculationFrequency && item.interestCalculationFrequency.toLowerCase()
 
 
-			const termVariations = []
-			Object.keys(item).filter(termVariation => /(\d|\d\d)-(month|months)-rate/g.test(termVariation) && item.name).
-			reduce((prevVariation, currVariation, index ,arr) => {
-				const termVariation = Object.assign({}, obj)
-				const term = currVariation.split('-')
-				termVariation.name = `${item.name} - ${term[0]} ${term[1]}`
-				termVariation.maximumTerm = term[0] && parseInt(term[0])
-				termVariation.minimumTerm = prevVariation.minimumTerm || termVariation.maximumTerm
-				termVariation.interestRate = item[currVariation] && parseFloat(item[currVariation])
-				if(prevVariation.interestRate !== termVariation.interestRate && index){
-					termVariation.minimumTerm = termVariation.maximumTerm
-					termVariations.push(prevVariation)
-				}
-				if(index === arr.length-1){
-					termVariations.push(termVariation)
-				}
-				return termVariation
-			}, {})
-
+			const termVariations = Object.keys(item).filter(termVariation => /(\d|\d\d)-(month|months)-rate/g.test(termVariation) && item.name)
 			for (terms of termVariations) {
 				const termVariation = Object.assign({}, obj)
-				if (terms.product) {
-					let termDepositsTier = new termDepositsTiers.model(terms)
+				const term = terms.split('-')
+				termVariation.name = `${item.name} - ${term[0]} ${term[1]}`
+				termVariation.minimumTerm = term[0] && parseInt(term[0])
+				termVariation.maximumTerm = term[0] && parseInt(term[0])
+				termVariation.interestRate = item[terms] && parseFloat(item[terms])
+				if (termVariation.product) {
+					let termDepositsTier = new termDepositsTiers.model(termVariation)
 					await termDepositsTier.save(err => {
 						if (err) {
 							logger.error(err)
