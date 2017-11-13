@@ -81,3 +81,17 @@ block content
 							br
 
 							button.btn.btn-large.btn-primary(type="submit") import Rates
+			.row
+				h1 Bank Accounts Companies
+				.row
+					.col-sm-8
+						p
+						form(action="/import/bank-accounts-upload-companies", method="post", enctype="multipart/form-data")
+							.form-group
+								div
+								br
+								div
+									input(type='file', name='bankAccountsCompanyUpload')
+								br
+
+								button.btn.btn-large.btn-primary(type="submit") import Companies
