@@ -66,7 +66,6 @@ BankAccount.add({
 	interestRateDescription: { type: Types.Text },
 	smartPaySupport: { type: Types.MultiSelect, options: 'Apple Pay, Android Pay, Samsung Pay' },
 	debitCardTypes: { type: Types.Select, options: 'Visa, MasterCard, Amex, Others' },
-	rewardsPointProgram: { type: Types.Text },
 	uniqueFeatures: { type: Types.TextArray },
 	additionalBenefits: { type: Types.TextArray },
 	restrictions: { type: Types.TextArray },
