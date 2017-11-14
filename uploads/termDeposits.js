@@ -40,6 +40,7 @@ module.exports = async function () {
 					{otherNames: {$regex: new RegExp(`^${item.company}$`, 'i')}},
 				]
 			}).exec()
+			obj.legacyID = item.legacyID
 			obj.company = companyData && companyData._id
 			obj.accountKeepingFee = item.accountKeepingFee
 			obj.earlyWithdrawalPenalty = item.earlyWithdrawalPenalty
