@@ -21,6 +21,7 @@ var TermDeposit = new keystone.List('TermDeposit', {track: true}).add(productCom
 	otherBenefits: { type: Types.Text },
 	otherRestrictions: { type: Types.Text },
 	minimumAgeRequirement: { type: Types.Text},
+	coveredByGovernmentGuaranteeRestriction: { type: Types.Text},
 	noticePeriodToWithdraw: { type: Types.Number, default: 0 },
 	jointApplicationAvailable: { type: Types.Select, options: availableOptions.all, default: availableOptions.yes },
 	maturityAlertByEmail: { type: Types.Select, options: availableOptions.all, default: availableOptions.yes },
