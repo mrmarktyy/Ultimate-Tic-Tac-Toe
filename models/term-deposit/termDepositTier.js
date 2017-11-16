@@ -26,9 +26,9 @@ var TermDepositTier = new keystone.List('TermDepositTier', {track: true}).add({
 	interestRate: { type: Types.Number, initial: true },
 	minimumTerm: { type: Types.Number, min: 0, initial: true },
 	maximumTerm: { type: Types.Number, min: 0 },
-	interestPaymentFrequencyShortTerm: { type: Types.Select, options: 'annually, monthly, semi-annually, quarterly, fortnightly, fortnightly, daily, at maturity' },
-	interestPaymentFrequencyLongTerm: { type: Types.Select, options: 'annually, monthly, semi-annually, quarterly, fortnightly, fortnightly, daily, at maturity' },
-	interestCalculationFrequency: { type: Types.Select, options: 'annually, monthly, semi-annually, quarterly, fortnightly, fortnightly, daily, at maturity' },
+	interestPaymentFrequencyShortTerm: { type: Types.Select, options: 'Annually, Monthly, Semi-Annually, Quarterly, Fortnightly, Daily, At Maturity' },
+	interestPaymentFrequencyLongTerm: { type: Types.Select, options: 'Annually, Monthly, Semi-Annually, Quarterly, Fortnightly, Daily, At Maturity' },
+	interestCalculationFrequency: { type: Types.Select, options: 'Annually, Monthly, Semi-Annually, Quarterly, Fortnightly, Daily, At Maturity' },
 })
 
 TermDepositTier.relationship({ path: 'ChangeLogs', ref: 'ChangeLog', refPath: 'model', many: true })
