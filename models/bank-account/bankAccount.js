@@ -23,7 +23,6 @@ BankAccount.add({
   },
 	legacyCode: { type: Types.Text, index: true },
 	minimumOpeningAmount: { type: Types.Number, default: 0 },
-	minimumBalance: { type: Types.Number },
 	minimumDepositRequiredForFeeFree: { type: Types.Number },
 	minimumDepositRequiredForFeeFreeFrequency: { type: Types.Select, options: frequency },
 	minimumAgeRestrictions: { type: Types.Number },
