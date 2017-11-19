@@ -9,6 +9,7 @@ const specificVerticals = {
   'Pension': { collection: 'Superannuation', findClause: { pension: true, company: {$ne: null} }, salesforceVertical: 'Pension Funds' },
   'Savings Accounts': { collection: 'SavingsAccount', salesforceVertical: 'Savings A/C' },
   'Superannuation': { collection: 'Superannuation', findClause: { superannuation: true, company: {$ne: null} }, salesforceVertical: 'Superannuation' },
+  'Term Deposits': { collection: 'TermDeposit', salesforceVertical: 'Term Deposits' },
 }
 
 module.exports = _.merge({}, specificVerticals, genericVerticals)
