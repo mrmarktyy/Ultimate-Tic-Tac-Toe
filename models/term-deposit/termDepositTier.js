@@ -25,7 +25,7 @@ var TermDepositTier = new keystone.List('TermDepositTier', {track: true}).add({
 	maximumDeposit: { type: Types.Number, min: 0 },
 	interestRate: { type: Types.Number, initial: true },
 	minimumTerm: { type: Types.Number, min: 0, initial: true },
-	maximumTerm: { type: Types.Number, min: 0 },
+	maximumTerm: { type: Types.Number, min: 0, initial: true, required: true },
 	interestPaymentFrequencyShortTerm: { type: Types.Select, options: 'Annually, Monthly, Semi-Annually, Quarterly, Fortnightly, Daily, At Maturity' },
 	interestPaymentFrequencyLongTerm: { type: Types.Select, options: 'Annually, Monthly, Semi-Annually, Quarterly, Fortnightly, Daily, At Maturity' },
 	interestCalculationFrequency: { type: Types.Select, options: 'Annually, Monthly, Semi-Annually, Quarterly, Fortnightly, Daily, At Maturity' },
@@ -44,6 +44,6 @@ TermDepositTier.schema.pre('save', async function (next) {
   next()
 })
 
-TermDepositTier.defaultColumns = 'interestRate, company, product'
+TermDepositTier.defaultColumns = 'name, company, product, minimumTerm, interestRate'
 TermDepositTier.drilldown = 'company product'
 TermDepositTier.register()
