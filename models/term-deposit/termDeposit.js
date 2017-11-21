@@ -37,6 +37,8 @@ var TermDeposit = new keystone.List('TermDeposit', {track: true}).add(productCom
 
 })
 
+TermDeposit.relationship({ path: 'termDepositTiers', ref: 'TermDepositTier', refPath: 'product' })
+
 TermDeposit.relationship({ path: 'ChangeLogs', ref: 'ChangeLog', refPath: 'model', many: true })
 TermDeposit.schema.index({ company: 1, name: 1 }, { unique: true })
 TermDeposit.schema.index({ company: 1, slug: 1 }, { unique: true })
