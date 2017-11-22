@@ -16,6 +16,7 @@ const Pages = new keystone.List('Pages', {track: true}).add({
 	canonical: {type: Types.Text},
 	category: {type: Types.TextArray},
 	userJourneyStage: {type: Types.Text},
+	searchVolume: { type: Number, min: 0 },
 	og: {
 		id: {type: Types.Text},
 		title: {type: Types.Text},
