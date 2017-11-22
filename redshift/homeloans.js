@@ -156,7 +156,7 @@ async function prepareDataForRedshift (homeloans) {
       product.revertrate = getRevertRate(variation, homeLoanType, features) || variation.rate
       product.smsfpurpose = featureExists(features, 'ALLOW_SMSF_BORROWING')
       product.extrarepaymentsvalue = repaymentObj.value
-      product.isstandardvariable = variation.isStandardVariable || false
+      product.isstandardvariable = featureExists(features, 'IS_STANDARD_VARIABLE') || false //variation.isStandardVariable || false
       product.isnewcustomer = featureExists(features, 'NEW_CUSTOMER_ONLY')
       product.allowsguarantor = featureExists(features, 'ALLOW_GUARANTOR')
       product.dischargefee = getFeeCosts(fees, 'DISCHARGE_FEE').cost || 0.0
