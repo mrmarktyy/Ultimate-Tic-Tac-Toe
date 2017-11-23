@@ -76,7 +76,6 @@ PersonalLoan.add({
   otherBenefits: { type: Types.Text },
   otherRestrictions: { type: Types.Text },
   adminNotes: { type: Types.Text },
-
   isNewCarAllowed: { type: Types.Select, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown },
   isUsedCarAllowed: { type: Types.Select, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown },
   isMotorcycleAllowed: { type: Types.Select, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown },
@@ -107,6 +106,7 @@ PersonalLoan.add({
   earlyExitPenaltyFeePeriod: { type: Types.Number, min: 0 },
   hasEarlyExitPenaltyFeeVaries: { type: Types.Select, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown },
   otherFees: { type: Types.Text },
+  comparisonRateDisclaimer: {type: Types.Code, height: 50, language: 'html'},
 })
 
 PersonalLoan.relationship({ path: 'personalLoanVariations', ref: 'PersonalLoanVariation', refPath: 'product' })
