@@ -61,6 +61,7 @@ HomeLoan.add({
   adminNotes: { type: Types.Text },
   howToApplyBlurb: {type: Types.Code, height: 250, language: 'html'},
   eligibilityBlurb: {type: Types.Code, height: 150, language: 'html'},
+  comparisonRateDisclaimer: {type: Types.Code, height: 50, language: 'html'},
 })
 
 HomeLoan.relationship({ path: 'homeLoanVariations', ref: 'HomeLoanVariation', refPath: 'product' })
