@@ -7,7 +7,7 @@ var TermDepositCompany = keystone.list('TermDepositCompany')
 var monetizedCollection = require('./monetizedCollection')
 
 exports.list = async function (req, res) {
-  let termDeposits = await TermDeposit.model.find().populate('company').lean().exec()
+  let termDeposits = await TermDeposit.model.find({ $or: [ { isDiscontinued: false }, { isDiscontinued: {$exists: false} } ] }).populate('company').lean().exec()
   let result = await customizeTermDeposit(termDeposits)
   res.jsonp(result)
 }
