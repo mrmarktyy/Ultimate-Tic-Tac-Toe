@@ -253,7 +253,7 @@ exports.ratings = [
   { name: '5 Year Platinum Performance', score: 5, regx: new RegExp('5yr', 'i'), url: '//production-content-assets.ratecity.com.au/20171020104217/5-year-platinum-performance-8f49d1b483841ff48a7fe7c4a9094a78.jpg' },
   { name: '7 Year Platinum Performance', score: 6, regx: new RegExp('7yr', 'i'), url: '//production-content-assets.ratecity.com.au/20171020104259/7-year-platinum-performance-23f98ce959e9e43eefcd455896169cf3.jpg' },
   { name: '10 Year Platinum Performance', score: 7, regx: new RegExp('10yr', 'i'), url: '//production-content-assets.ratecity.com.au/20171020104435/10-year-platinum-performance-3483a4961ffb768d057d977b77e57ec4.jpg' },
-  { name: 'Fund of the Year', score: 8, regx: new RegExp('(s)?foty', 'i'), url: '//production-content-assets.ratecity.com.au/20171020104520/fund-of-the-year-a9072db4d4290e277e39c0f630997992.jpg' },
+  { name: 'Fund of the Year', score: 8, regx: new RegExp('/^s/foty', 'i'), url: '//production-content-assets.ratecity.com.au/20171020104520/fund-of-the-year-a9072db4d4290e277e39c0f630997992.jpg' },
   { name: 'Super of the Year', score: 9, regx: new RegExp('sfoty', 'i'), url: '//production-content-assets.ratecity.com.au/20171020104604/super-of-the-year-efe6bcff28f07bbac3ad04bec3e71b7e.jpg' },
   { name: 'Super of the Year Finalist', score: 10, regx: new RegExp('sfoty_f', 'i'), url: '//production-content-assets.ratecity.com.au/20171020104644/super-of-the-year-finalist-9b8a15593c32f6ea6270be6cdd803326.jpg' },
   { name: 'Pension of the Year', score: 11, regx: new RegExp('pfoty', 'i'), url: '//production-content-assets.ratecity.com.au/20171020104722/pension-of-the-year-64be4098140a3f66ec5b2a9f616c1a62.jpg' },
@@ -268,8 +268,10 @@ exports.ratings = [
   { name: 'SR50 Cash Index', score: 20, regx: new RegExp('50cash', 'i'), url: '//production-content-assets.ratecity.com.au/20171020111245/sr50-cash-index-9e56916411d0916ad4897bdb195b9128.jpg' },
   { name: 'SR50 Australian Shares Index', score: 21, regx: new RegExp('####', 'i'), url: '//production-content-assets.ratecity.com.au/20171020111322/sr50-australian-shares-index-36c4542a70c08e9704beb9b82fbfec12.jpg' },
   { name: 'SR50 International Shares Index', score: 22, regx: new RegExp('50int', 'i'), url: '//production-content-assets.ratecity.com.au/20171020111354/sr50-international-shares-index-d841798f2d651bea6840bd4e48b75929.jpg' },
-  { name: 'Infinity Award', score: 23, regx: new RegExp('infinity', 'i'), url: '//production-content-assets.ratecity.com.au/20171020111431/infinity-award-2b7ec9539f4e0b626b78c4201c3a70fe.jpg' },
+  { name: 'Infinity Award', score: 23, regx: new RegExp('infinity/^_/', 'i'), url: '//production-content-assets.ratecity.com.au/20171020111431/infinity-award-2b7ec9539f4e0b626b78c4201c3a70fe.jpg' },
   { name: 'Infinity Recognised', score: 24, regx: new RegExp('infinity_r', 'i'), url: '//production-content-assets.ratecity.com.au/20171020111501/infinity-recognised-c47eb32f1c0557c6a67b6bcd3742c8a2.jpg' },
+  { name: 'Choice Super of the Year', score: 60, regx: new RegExp('csoty/^_/', 'i'), url: '//production-fenix-assets.ratecity.com.au/super_ratings/rating/17/image/super-of-the-year-efe6bcff28f07bbac3ad04bec3e71b7e.jpg' },
+  { name: 'Choice Super of the Year Finalist', score: 55, regx: new RegExp('csoty_f', 'i'), url: '//production-fenix-assets.ratecity.com.au/super_ratings/rating/18/image/super-of-the-year-finalist-9b8a15593c32f6ea6270be6cdd803326.jpg' },
 ]
 
 exports.segments = [
