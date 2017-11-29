@@ -3,6 +3,7 @@ var CompanyService = require('../../services/CompanyService')
 
 const CreditCard = keystone.list('CreditCard')
 const Redemption = keystone.list('Redemption')
+const EarnRate = keystone.list('EarnRate')
 const PartnerConversion = keystone.list('PartnerConversion')
 const monetizedCollection = require('./monetizedCollection')
 
@@ -19,7 +20,11 @@ exports.list = async function (req, res) {
     .exec()
   let creditcards = await CreditCard.model
     .find({ $or: [ { isDiscontinued: false }, { isDiscontinued: {$exists: false} } ] }, removeFields)
-    .populate('company rewardProgram earnPoints', '-updatedAt -updatedBy')
+    .populate('company rewardProgram', '-updatedAt -updatedBy')
+    .lean()
+    .exec()
+
+  let earnRate = await EarnRate.model.find()
     .lean()
     .exec()
 
@@ -46,6 +51,10 @@ exports.list = async function (req, res) {
         }
       })
       card.rewardProgram.partners = partners
+
+      card.earnRate = earnRate.filter((obj) => {
+        return obj.product.toString() === card._id.toString()
+      })
     }
   })
   res.jsonp(creditcards)
