@@ -4,6 +4,8 @@ var frequency = require('../attributes/frequency')
 var availableOptions = require('../attributes/availableOptions')
 var productCommonAttributes = require('../common/ProductCommonAttributes')
 var changeLogService = require('../../services/changeLogService')
+var verifiedService = require('../../services/verifiedService')
+var verifiedCommonAttribute = require('../common/verifiedCommonAttribute')
 var utils = keystone.utils
 var Types = keystone.Field.Types
 
@@ -59,7 +61,7 @@ SavingsAccount.relationship({ path: 'savingsAccountSpecial', ref: 'SavingsAccoun
 
 SavingsAccount.schema.index({ company: 1, name: 1 }, { unique: true })
 SavingsAccount.schema.index({ company: 1, slug: 1 }, { unique: true })
-
+SavingsAccount.add(verifiedCommonAttribute)
 SavingsAccount.schema.pre('validate', function (next) {
   if ((this.offerExpires !== undefined) && (this.offerExpires < new Date())) {
     next(Error('OfferExpires must be greater than today'))
@@ -78,6 +80,11 @@ SavingsAccount.schema.pre('save', async function (next) {
 
   await changeLogService(this)
   next()
+})
+
+SavingsAccount.schema.post('save', async function (next) {
+	await verifiedService(this)
+	next()
 })
 
 SavingsAccount.defaultColumns = 'name, company, isMonetized'

@@ -4,6 +4,8 @@ var availableOptions = require('../attributes/availableOptions')
 var PersonalLoan = keystone.list('PersonalLoan')
 var ComparisonRateCalculator = require('../../services/ComparisonRateCalculator')
 var changeLogService = require('../../services/changeLogService')
+var verifiedService = require('../../services/verifiedService')
+var verifiedCommonAttribute = require('../common/verifiedCommonAttribute')
 var PLConstant = require('../constants/PersonalLoanConstant')
 
 var PersonalLoanVariation = new keystone.List('PersonalLoanVariation', {
@@ -57,7 +59,7 @@ PersonalLoanVariation.add({
   applicationFeesDollar: { type: Types.Number, initial: true, min: 0 },
   applicationFeesPercent: { type: Types.Number, initial: true, min: 0, max: 100 },
 })
-
+PersonalLoanVariation.add(verifiedCommonAttribute)
 PersonalLoanVariation.relationship({ path: 'ChangeLogs', ref: 'ChangeLog', refPath: 'model', many: true })
 
 PersonalLoanVariation.schema.pre('validate', function (next) {
@@ -130,6 +132,11 @@ PersonalLoan.schema.post('remove', (next) => {
 
 PersonalLoanVariation.schema.pre('save', async function (next) {
 	await changeLogService(this)
+	next()
+})
+
+PersonalLoanVariation.schema.post('save', async function (next) {
+	await verifiedService(this)
 	next()
 })
 

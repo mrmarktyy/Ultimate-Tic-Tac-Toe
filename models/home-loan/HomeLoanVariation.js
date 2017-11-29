@@ -5,6 +5,8 @@ var Fee = keystone.list('Fee')
 var productCommonAttributes = require('../common/ProductCommonAttributes')
 var ComparisonRateCalculator = require('../../services/ComparisonRateCalculator')
 var changeLogService = require('../../services/changeLogService')
+var verifiedService = require('../../services/verifiedService')
+var verifiedCommonAttribute = require('../common/verifiedCommonAttribute')
 var utils = keystone.utils
 
 var HomeLoanVariation = new keystone.List('HomeLoanVariation', {
@@ -56,7 +58,7 @@ HomeLoanVariation.add({
 	},
   removeRevertVariation: {type: Types.Boolean, indent: true, initial: false},
 })
-
+HomeLoanVariation.add(verifiedCommonAttribute)
 HomeLoanVariation.schema.index({ company: 1, slug: 1 }, { unique: true })
 
 HomeLoanVariation.schema.pre('validate', async function (next) {
@@ -154,6 +156,10 @@ HomeLoanVariation.schema.methods.remove = function (callback) {
   this.isDiscontinued = true
   return this.save(callback)
 }
+HomeLoanVariation.schema.post('save', async function (next) {
+	await verifiedService(this)
+	next()
+})
 
 HomeLoanVariation.defaultSort = 'isDiscontinued'
 HomeLoanVariation.defaultColumns = 'name|40%, company, rate, revertRate, introductoryRate isDiscontinued'

@@ -3,6 +3,8 @@ var availableOptions = require('../attributes/availableOptions')
 var keystone = require('keystone')
 var Types = keystone.Field.Types
 var changeLogService = require('../../services/changeLogService')
+var verifiedService = require('../../services/verifiedService')
+var verifiedCommonAttribute = require('../common/verifiedCommonAttribute')
 
 var SavingsAccount = keystone.list('SavingsAccount')
 var SavingsAccountTier = new keystone.List('SavingsAccountTier', {
@@ -46,7 +48,7 @@ SavingsAccountTier.add({
   introductoryRateTerm: { type: Types.Number, min: 0 },
 	minimumMonthlyDeposit: { type: Types.Number, min: 0 },
 })
-
+SavingsAccountTier.add(verifiedCommonAttribute)
 SavingsAccountTier.relationship({ path: 'ChangeLogs', ref: 'ChangeLog', refPath: 'model', many: true })
 
 SavingsAccountTier.schema.index({ company: 1, product: 1, name: 1 }, { unique: true })
@@ -58,6 +60,11 @@ SavingsAccount.schema.post('remove', function (next) {
 SavingsAccountTier.schema.pre('save', async function (next) {
   await changeLogService(this)
   next()
+})
+
+SavingsAccountTier.schema.post('save', async function (next) {
+	await verifiedService(this)
+	next()
 })
 
 SavingsAccountTier.defaultColumns = 'baseRate, company, product'

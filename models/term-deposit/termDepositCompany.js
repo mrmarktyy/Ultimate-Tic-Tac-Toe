@@ -1,6 +1,8 @@
 var keystone = require('keystone')
 var Types = keystone.Field.Types
 var changeLogService = require('../../services/changeLogService')
+var verifiedService = require('../../services/verifiedService')
+var verifiedCommonAttribute = require('../common/verifiedCommonAttribute')
 
 var TermDepositCompany = new keystone.List('TermDepositCompany', {
     track: true,
@@ -22,10 +24,15 @@ TermDepositCompany.add({
 })
 
 TermDepositCompany.relationship({ path: 'ChangeLogs', ref: 'ChangeLog', refPath: 'model', many: true })
-
+TermDepositCompany.add(verifiedCommonAttribute)
 TermDepositCompany.schema.pre('save', async function (next) {
   await changeLogService(this)
   next()
+})
+
+TermDepositCompany.schema.post('save', async function (next) {
+	await verifiedService(this)
+	next()
 })
 
 TermDepositCompany.defaultColumns = 'company'

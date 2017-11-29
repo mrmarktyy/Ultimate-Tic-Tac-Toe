@@ -4,6 +4,8 @@ var availableOptions = require('../attributes/availableOptions')
 var productCommonAttributes = require('../common/ProductCommonAttributes')
 var { imageStorage } = require('../helpers/fileStorage')
 var changeLogService = require('../../services/changeLogService')
+var verifiedService = require('../../services/verifiedService')
+var verifiedCommonAttribute = require('../common/verifiedCommonAttribute')
 
 var Types = keystone.Field.Types
 
@@ -206,7 +208,7 @@ CreditCard.add({
 	bonusPointsConditions: { type: Types.Text, label: 'Bonus Pts Cond' },
 	cardArt: imageStorage('creditcard'),
 })
-
+CreditCard.add(verifiedCommonAttribute)
 CreditCard.relationship({ path: 'earnRates', ref: 'EarnRate', refPath: 'product', many: true })
 CreditCard.relationship({ path: 'ChangeLogs', ref: 'ChangeLog', refPath: 'model', many: true })
 CreditCard.relationship({ path: 'creditCardSpecial', ref: 'CreditCardSpecial', refPath: 'product' })
@@ -243,6 +245,11 @@ CreditCard.schema.index({ company: 1, name: 1 }, { unique: true })
 CreditCard.schema.pre('save', async function (next) {
   await changeLogService(this)
   next()
+})
+
+CreditCard.schema.post('save', async function (next) {
+	await verifiedService(this)
+	next()
 })
 
 CreditCard.defaultColumns = 'name, company, uuid, isMonetized'

@@ -2,6 +2,8 @@ var keystone = require('keystone')
 var Types = keystone.Field.Types
 var featureTypes = require('./featureTypes')
 var changeLogService = require('../../services/changeLogService')
+var verifiedService = require('../../services/verifiedService')
+var verifiedCommonAttribute = require('../common/verifiedCommonAttribute')
 
 var Feature = new keystone.List('Feature', {
 	track: true,
@@ -46,6 +48,7 @@ Feature.add({
 	minAmount: {type: Types.Number, initial: true},
 })
 
+Feature.add(verifiedCommonAttribute)
 Feature.schema.pre('validate', function (next) {
 	if (this.minAmount > this.maxAmount) {
 		next(Error('Max Amount can not less than Min Amount'))
@@ -55,6 +58,11 @@ Feature.schema.pre('validate', function (next) {
 
 Feature.schema.pre('save', async function (next) {
 	await changeLogService(this)
+	next()
+})
+
+Feature.schema.post('save', async function (next) {
+	await verifiedService(this)
 	next()
 })
 

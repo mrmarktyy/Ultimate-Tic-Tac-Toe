@@ -1,6 +1,8 @@
 var keystone = require('keystone')
 var Types = keystone.Field.Types
 var changeLogService = require('../../services/changeLogService')
+var verifiedService = require('../../services/verifiedService')
+var verifiedCommonAttribute = require('../common/verifiedCommonAttribute')
 
 var Notifications = new keystone.List('Notifications', {
   track: true,
@@ -19,7 +21,7 @@ Notifications.add({
   dateEnd: { type: Types.Datetime, required: true, initial: true },
   appliedToUrl: { type: Types.TextArray, required: true, initial: true },
 })
-
+Notifications.add(verifiedCommonAttribute)
 Notifications.schema.pre('validate', function (next) {
   if (this.dateEnd < this.dateStart) {
     next(Error('End date has to be greater than start date'))
@@ -30,6 +32,11 @@ Notifications.schema.pre('validate', function (next) {
 Notifications.schema.pre('save', async function (next) {
   await changeLogService(this)
   next()
+})
+
+Notifications.schema.post('save', async function (next) {
+	await verifiedService(this)
+	next()
 })
 
 Notifications.defaultColumns = 'notificationType, text, link, dateStart, dateEnd, appliedToUrl'

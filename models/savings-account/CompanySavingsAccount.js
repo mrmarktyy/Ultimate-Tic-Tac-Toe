@@ -1,6 +1,8 @@
 var keystone = require('keystone')
 var Types = keystone.Field.Types
 var changeLogService = require('../../services/changeLogService')
+var verifiedService = require('../../services/verifiedService')
+var verifiedCommonAttribute = require('../common/verifiedCommonAttribute')
 
 var CompanySavingsAccount = new keystone.List('CompanySavingsAccount', {
     track: true,
@@ -33,7 +35,7 @@ CompanySavingsAccount.add({
 })
 
 CompanySavingsAccount.relationship({ path: 'ChangeLogs', ref: 'ChangeLog', refPath: 'model', many: true })
-
+CompanySavingsAccount.add(verifiedCommonAttribute)
 CompanySavingsAccount.schema.pre('validate', function (next) {
   let postcodeArrayLength = this.availablePostcodes.length
   for (let i = 0; i < postcodeArrayLength; i++) {
@@ -52,6 +54,11 @@ CompanySavingsAccount.schema.pre('save', async function (next) {
   this.removeBig4ComparisonProduct = undefined
   await changeLogService(this)
   next()
+})
+
+CompanySavingsAccount.schema.post('save', async function (next) {
+	await verifiedService(this)
+	next()
 })
 
 CompanySavingsAccount.defaultColumns = 'company'

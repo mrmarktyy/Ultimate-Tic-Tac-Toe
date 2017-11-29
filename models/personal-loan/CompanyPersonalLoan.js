@@ -2,6 +2,8 @@ var keystone = require('keystone')
 var Types = keystone.Field.Types
 var availableOptions = require('../attributes/availableOptions')
 var changeLogService = require('../../services/changeLogService')
+var verifiedService = require('../../services/verifiedService')
+var verifiedCommonAttribute = require('../common/verifiedCommonAttribute')
 
 var CompanyPersonalLoan = new keystone.List('CompanyPersonalLoan', {
     track: true,
@@ -41,7 +43,7 @@ CompanyPersonalLoan.add({
 	personalLoanBlurb: { type: Types.Code, height: 250, language: 'html' },
 	carLoanBlurb: { type: Types.Code, height: 250, language: 'html' },
 })
-
+CompanyPersonalLoan.add(verifiedCommonAttribute)
 CompanyPersonalLoan.relationship({ path: 'ChangeLogs', ref: 'ChangeLog', refPath: 'model', many: true })
 
 CompanyPersonalLoan.schema.pre('validate', function (next) {
@@ -61,6 +63,11 @@ CompanyPersonalLoan.schema.pre('save', async function (next) {
   }
   this.removeBig4ComparisonProduct = undefined
 	await changeLogService(this)
+	next()
+})
+
+CompanyPersonalLoan.schema.post('save', async function (next) {
+	await verifiedService(this)
 	next()
 })
 

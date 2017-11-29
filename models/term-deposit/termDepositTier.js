@@ -1,6 +1,8 @@
 var keystone = require('keystone')
 var Types = keystone.Field.Types
 var changeLogService = require('../../services/changeLogService')
+var verifiedService = require('../../services/verifiedService')
+var verifiedCommonAttribute = require('../common/verifiedCommonAttribute')
 
 var TermDeposit = keystone.list('TermDeposit')
 var TermDepositTier = new keystone.List('TermDepositTier', {track: true}).add({
@@ -30,7 +32,7 @@ var TermDepositTier = new keystone.List('TermDepositTier', {track: true}).add({
 	interestPaymentFrequencyLongTerm: { type: Types.Select, options: 'Annually, Monthly, Semi-Annually, Quarterly, Fortnightly, Daily, At Maturity' },
 	interestCalculationFrequency: { type: Types.Select, options: 'Annually, Monthly, Semi-Annually, Quarterly, Fortnightly, Daily, At Maturity' },
 })
-
+TermDepositTier.add(verifiedCommonAttribute)
 TermDepositTier.relationship({ path: 'ChangeLogs', ref: 'ChangeLog', refPath: 'model', many: true })
 
 TermDepositTier.schema.index({ company: 1, product: 1, name: 1 }, { unique: true })
@@ -42,6 +44,11 @@ TermDeposit.schema.post('remove', (next) => {
 TermDepositTier.schema.pre('save', async function (next) {
   await changeLogService(this)
   next()
+})
+
+TermDepositTier.schema.post('save', async function (next) {
+	await verifiedService(this)
+	next()
 })
 
 TermDepositTier.defaultColumns = 'name, company, product, minimumTerm, interestRate'

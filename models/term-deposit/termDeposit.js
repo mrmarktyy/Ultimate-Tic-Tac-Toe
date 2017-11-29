@@ -5,6 +5,9 @@ var availableOptions = require('../attributes/availableOptions')
 var changeLogService = require('../../services/changeLogService')
 var utils = keystone.utils
 var Types = keystone.Field.Types
+var verifiedCommonAttribute = require('../common/verifiedCommonAttribute')
+var verifiedService = require('../../services/verifiedService')
+
 
 var TermDeposit = new keystone.List('TermDeposit', {track: true}).add(productCommonAttributes).add({
 	company: {
@@ -44,6 +47,7 @@ TermDeposit.relationship({ path: 'ChangeLogs', ref: 'ChangeLog', refPath: 'model
 TermDeposit.schema.index({ company: 1, name: 1 }, { unique: true })
 TermDeposit.schema.index({ company: 1, slug: 1 }, { unique: true })
 
+TermDeposit.add(verifiedCommonAttribute)
 TermDeposit.schema.pre('save', async function (next) {
   if (!this.uuid) {
     this.uuid = uuid.v4()
@@ -55,6 +59,11 @@ TermDeposit.schema.pre('save', async function (next) {
 
   await changeLogService(this)
   next()
+})
+
+TermDeposit.schema.post('save', async function (next) {
+	await verifiedService(this)
+	next()
 })
 
 TermDeposit.defaultColumns = 'name, company, uuid, slug'
