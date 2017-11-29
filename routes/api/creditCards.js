@@ -19,7 +19,7 @@ exports.list = async function (req, res) {
     .exec()
   let creditcards = await CreditCard.model
     .find({ $or: [ { isDiscontinued: false }, { isDiscontinued: {$exists: false} } ] }, removeFields)
-    .populate('company rewardProgram', '-updatedAt -updatedBy')
+    .populate('company rewardProgram earnPoints', '-updatedAt -updatedBy')
     .lean()
     .exec()
 
