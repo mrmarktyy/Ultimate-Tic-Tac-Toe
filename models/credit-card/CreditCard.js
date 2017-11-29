@@ -3,7 +3,6 @@ var uuid = require('node-uuid')
 var availableOptions = require('../attributes/availableOptions')
 var productCommonAttributes = require('../common/ProductCommonAttributes')
 var { imageStorage } = require('../helpers/fileStorage')
-var logger = require('../../utils/logger')
 var changeLogService = require('../../services/changeLogService')
 
 var Types = keystone.Field.Types
@@ -41,7 +40,13 @@ CreditCard.add({
 	isLowFee: { type: Types.Boolean, indent: true, noedit: true },
 	isReward: { type: Types.Boolean, indent: true, noedit: true },
 	isFrequentFlyer: { type: Types.Boolean, indent: true, default: false },
-	ecpc: {type: Types.Number, noedit: true, default: 0},
+	isStoreCard: { type: Types.Boolean, indent: true, default: false },
+	isStudentCard: { type: Types.Boolean, indent: true, default: false },
+	isJoinApplicationAllowed: { type: Types.Select, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown },
+	isGamblingTransactionsAllowed: { type: Types.Select, options: ['Prohibited', 'Allowed but treated as Cash Advance', 'Allowed', 'UNKNOWN'], default: 'UNKNOWN' },
+	minimumBalanceTransferAmount: { type: Types.Number },
+	isBalanceTransferFromPersonalLoanAllowed: { type: Types.Select, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown },
+	ecpc: { type: Types.Number, noedit: true, default: 0 },
 	interestFreeDays: { type: Types.Number, min: 0 },
 	minimumRepaymentDollars: { type: Types.Number, min: 0, label: 'Min Rpymnt Dllrs' },
 	minimumRepaymentPercent: { type: Types.Number, min: 0, label: 'Min Rpymnt Prcnt' },
@@ -50,6 +55,7 @@ CreditCard.add({
 	numberFreeSupplementary: { type: Types.Number, min: 0, label: 'Nmbr Free Sppl' },
 	applePayAvailable: { type: Types.Select, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown },
 	androidPayAvailable: { type: Types.Select, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown },
+	samsungPayAvailable: { type: Types.Select, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown },
 	contactlessAvailable: { type: Types.Select, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown },
 	otherBenefits: { type: Types.Text },
 	otherRestrictions: { type: Types.Text },
@@ -196,27 +202,17 @@ CreditCard.add({
 	},
 	pointsCap: { type: Types.Number, min: 0 },
 	pointsCapFrequency: { type: Types.Number, min: 0 },
-	earnRateVisaMcTier1: { type: Types.Number, min: 0 },
-	earnRateVisMcTier1Limit: { type: Types.Number, min: 0, label: 'Ern Rate Vis Mc Tier1 Lmt' },
-	earnRateVisMcTier1LimitFrequency: { type: Types.Number, min: 0, label: 'Ern Rate Vis Mc Tr2 Lim Fre' },
-	earnRateVisMcTier2: { type: Types.Number, min: 0 },
-	earnRateVisaMcTier2Limit: { type: Types.Number, min: 0, label: 'Ern Rate Visa Mc Tr2 Lmt' },
-	earnRateAmexTier1: { type: Types.Number, min: 0 },
-	earnRateAmexTier1Limit: { type: Types.Number, min: 0, label: 'Ern Rate Amex Tr1 Lmt' },
-	earnRateAmexTier1LimitFrequency: { type: Types.Number, min: 0, label: 'Ern Rate Amex Tr1 Lmt Frq' },
-	earnRateAmexTier2: { type: Types.Number, min: 0 },
-	earnRateAmexTier2Limit: { type: Types.Number, min: 0, label: 'Ern Rate Amex Tr2 Lmt' },
 	bonusPoints: { type: Types.Number, min: 0 },
 	bonusPointsConditions: { type: Types.Text, label: 'Bonus Pts Cond' },
 	cardArt: imageStorage('creditcard'),
 })
 
+CreditCard.relationship({ path: 'earnRates', ref: 'EarnRate', refPath: 'product', many: true })
 CreditCard.relationship({ path: 'ChangeLogs', ref: 'ChangeLog', refPath: 'model', many: true })
 CreditCard.relationship({ path: 'creditCardSpecial', ref: 'CreditCardSpecial', refPath: 'product' })
 
 CreditCard.schema.pre('validate', function (next) {
 	if (([undefined, null].indexOf(this.offerExpires) < 0) && (this.offerExpires <= new Date())) {
-		logger.error(this.offerExpires)
 		next(Error('Offer Expires has to be greater than today'))
 	}
 	if ((this.purchaseRateIntro !== undefined) && (this.purchaseRateIntro > this.purchaseRateStandard)) {
