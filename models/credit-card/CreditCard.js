@@ -31,7 +31,7 @@ CreditCard.add({
 	},
 	cardLevel: {
 		type: Types.Select,
-		options: ['Standard', 'Gold', 'Platinium', 'Premium'],
+		options: ['Standard', 'Gold', 'Platinum', 'Premium'],
 		default: 'Standard',
 		emptyOption: false,
 		required: true,
@@ -42,7 +42,7 @@ CreditCard.add({
 	isFrequentFlyer: { type: Types.Boolean, indent: true, default: false },
 	isStoreCard: { type: Types.Boolean, indent: true, default: false },
 	isStudentCard: { type: Types.Boolean, indent: true, default: false },
-	isJoinApplicationAllowed: { type: Types.Select, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown },
+	isJointApplicationAllowed: { type: Types.Select, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown },
 	isGamblingTransactionsAllowed: { type: Types.Select, options: ['Prohibited', 'Allowed but treated as Cash Advance', 'Allowed', 'UNKNOWN'], default: 'UNKNOWN' },
 	minimumBalanceTransferAmount: { type: Types.Number },
 	isBalanceTransferFromPersonalLoanAllowed: { type: Types.Select, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown },

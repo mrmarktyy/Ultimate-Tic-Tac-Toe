@@ -32,7 +32,7 @@ const CARDTYPES = {
 const CARDLEVELS = {
   'standard': 'Standard',
   'gold': 'Gold',
-  'platinium': 'Platinium',
+  'platinum': 'Platinum',
   'premium': 'Premium',
 }
 
@@ -53,6 +53,11 @@ const RANGEPERIOD = {
   'year': 'Annually',
 }
 
+const YESTOTRUE = {
+  'yes': true,
+  'no': false,
+}
+
 async function populateCreditCards () {
   let connection = await mongoosePromise.connect()
   try {
@@ -64,8 +69,8 @@ async function populateCreditCards () {
       let obj = {}
       obj.name = item.name
 
-      if (item.UUID) {
-        obj.uuid = item.UUID
+      if (item.uuid) {
+        obj.uuid = item.uuid
       } else {
         obj.uuid = uuid.v4()
       }
@@ -110,11 +115,11 @@ async function populateCreditCards () {
       obj.legacyCode = item.legacyCode
       obj.cardType = CARDTYPES[item.cardType.toLowerCase()]
       obj.cardLevel = CARDLEVELS[item.cardLevel.toLowerCase()]
-      obj.isFrequentFlyer = item.isFrequentFlyer || false
+      obj.isFrequentFlyer = YESTOTRUE[item.isFrequentFlyer.toLowerCase()] || false
       obj.isStoreCard = item.isStoreCard || false
       obj.isStudentCard = item.isStudentCard || false
-      obj.isJoinApplicationAllowed = item.isJoinApplicationAllowed || 'UNKNOWN'
-      obj.isGamblingTransactionsAllowed = GAMBLING[item.isGamblingTransactionsAllowed] ? GAMBLING[item.isGamblingTransactionsAllowed] : 'UNKNOWN'
+      obj.isJointApplicationAllowed = item.isJointApplicationAllowed.toUpperCase() || 'UNKNOWN'
+      obj.isGamblingTransactionsAllowed = GAMBLING[item.isGamblingTransactionsAllowed] ? GAMBLING[item.isGamblingTransactionsAllowed.toLowerCase()] : 'UNKNOWN'
       obj.minimumBalanceTransferAmount = item.minimumBalanceTransferAmount
       obj.isBalanceTransferFromPersonalLoanAllowed = item.isBalanceTransferFromPersonalLoanAllowed.toUpperCase() || 'UNKNOWN'
       obj.ecpc = 0
