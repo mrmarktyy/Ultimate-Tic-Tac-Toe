@@ -8,7 +8,7 @@ const CompanyService = require('../../services/CompanyService')
 const { getYears, ratings, segments, purposes, options } = require('../../models/superannuation/constants')
 
 exports.list = async function (req, res) {
-  const superannuations = await Superannuation.model.find({ superannuation: true }).populate({path: 'fundgroup', populate: {path: 'company'}}).lean().exec()
+  const superannuations = await Superannuation.model.find({ superannuation: true, isDiscontinued: false }).populate({path: 'fundgroup', populate: {path: 'company'}}).lean().exec()
   const result = await getSuperannuationObjects(superannuations)
   res.jsonp(result)
 }
