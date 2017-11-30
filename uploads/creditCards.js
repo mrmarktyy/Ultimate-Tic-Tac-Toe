@@ -119,7 +119,7 @@ async function populateCreditCards () {
       obj.isStoreCard = item.isStoreCard || false
       obj.isStudentCard = item.isStudentCard || false
       obj.isJointApplicationAllowed = item.isJointApplicationAllowed.toUpperCase() || 'UNKNOWN'
-      obj.isGamblingTransactionsAllowed = GAMBLING[item.isGamblingTransactionsAllowed] ? GAMBLING[item.isGamblingTransactionsAllowed.toLowerCase()] : 'UNKNOWN'
+      obj.isGamblingTransactionsAllowed = GAMBLING[item.isGamblingTransactionsAllowed.toLowerCase()] ? GAMBLING[item.isGamblingTransactionsAllowed.toLowerCase()] : 'UNKNOWN'
       obj.minimumBalanceTransferAmount = item.minimumBalanceTransferAmount
       obj.isBalanceTransferFromPersonalLoanAllowed = item.isBalanceTransferFromPersonalLoanAllowed.toUpperCase() || 'UNKNOWN'
       obj.ecpc = 0
