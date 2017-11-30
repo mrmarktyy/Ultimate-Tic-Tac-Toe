@@ -1,7 +1,5 @@
 var keystone = require('keystone')
 var changeLogService = require('../../services/changeLogService')
-var verifiedService = require('../../services/verifiedService')
-var verifiedCommonAttribute = require('../common/verifiedCommonAttribute')
 var Types = keystone.Field.Types
 
 var OffsetAccount = new keystone.List('OffsetAccount', {
@@ -32,18 +30,13 @@ OffsetAccount.add({
 	duringPeriod: {type: Types.MultiSelect, initial: true, required: true, options: ['VARIABLE', 'FIXED'], emptyOption: false},
 	offsetPercentage: {type: Types.Number, initial: true},
 })
-OffsetAccount.add(verifiedCommonAttribute)
+
 OffsetAccount.schema.pre('validate', async function (next) {
 	if (this.offsetPercentage < 0 || this.offsetPercentage > 100){
 		next(Error('Offset Percentage need to between 0 and 100 inclusive'))
 	}
 
 	await changeLogService(this)
-	next()
-})
-
-OffsetAccount.schema.post('save', async function (next) {
-	await verifiedService(this)
 	next()
 })
 

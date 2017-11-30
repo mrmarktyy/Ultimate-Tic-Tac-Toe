@@ -3,8 +3,6 @@ const uuid = require('node-uuid')
 
 const { imageStorage } = require('../helpers/fileStorage')
 const changeLogService = require('../../services/changeLogService')
-var verifiedService = require('../../services/verifiedService')
-var verifiedCommonAttribute = require('../common/verifiedCommonAttribute')
 const FundGroup = new keystone.List('FundGroup', {
 	track: true,
 })
@@ -31,18 +29,13 @@ FundGroup.add({
 })
 
 FundGroup.relationship({ path: 'ChangeLogs', ref: 'ChangeLog', refPath: 'model', many: true })
-FundGroup.add(verifiedCommonAttribute)
+
 FundGroup.schema.pre('save', async function (next) {
 	this.uuid = this.uuid || uuid.v4()
 	this.slug = this.slug || utils.slug(this.name.toLowerCase())
 
 	await keystone.list('Superannuation').model.update({fundgroup: this._id}, {company: this.company}, {multi: true})
 	await changeLogService(this)
-	next()
-})
-
-FundGroup.schema.post('save', async function (next) {
-	await verifiedService(this)
 	next()
 })
 

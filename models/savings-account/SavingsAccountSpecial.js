@@ -1,8 +1,6 @@
 const keystone = require('keystone')
 const Types = keystone.Field.Types
 const specialCommonAttributes = require('../common/SpecialCommonAttributes')
-var verifiedService = require('../../services/verifiedService')
-var verifiedCommonAttribute = require('../common/verifiedCommonAttribute')
 
 const SavingsAccountSpecial = new keystone.List('SavingsAccountSpecial', {
   track: true,
@@ -26,7 +24,7 @@ SavingsAccountSpecial.add({
     filters: { company: ':company' },
   },
 })
-SavingsAccountSpecial.add(verifiedCommonAttribute)
+
 SavingsAccountSpecial.schema.pre('validate', function (next) {
   if (this.startDate > this.endDate) {
     next(Error('Start date cannot be past the end date.'))
@@ -34,17 +32,12 @@ SavingsAccountSpecial.schema.pre('validate', function (next) {
   next()
 })
 
-SavingsAccountSpecial.schema.pre('save', async function (next) {
+SavingsAccountSpecial.schema.pre('save', function (next) {
 	if (this.removeSpecialsEndDate) {
     this.endDate = null
   }
 	this.removeSpecialsEndDate = undefined
   next()
-})
-
-SavingsAccountSpecial.schema.post('save', async function (next) {
-	await verifiedService(this)
-	next()
 })
 
 SavingsAccountSpecial.defaultColumns = 'name, type, introText, blurb'

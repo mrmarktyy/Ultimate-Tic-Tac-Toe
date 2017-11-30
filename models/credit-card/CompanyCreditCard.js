@@ -2,8 +2,6 @@ var keystone = require('keystone')
 var Types = keystone.Field.Types
 var states = require('../attributes/states')
 var changeLogService = require('../../services/changeLogService')
-var verifiedService = require('../../services/verifiedService')
-var verifiedCommonAttribute = require('../common/verifiedCommonAttribute')
 
 var CompanyCreditCard = new keystone.List('CompanyCreditCard', {
     track: true,
@@ -35,7 +33,7 @@ CompanyCreditCard.add({
 	hasRepaymentWidget: {type: Types.Boolean, indent: true, default: false},
 	blurb: { type: Types.Code, height: 250, language: 'html' },
 })
-CompanyCreditCard.add(verifiedCommonAttribute)
+
 CompanyCreditCard.relationship({ path: 'ChangeLogs', ref: 'ChangeLog', refPath: 'model', many: true })
 
 CompanyCreditCard.schema.pre('save', async function (next) {
@@ -44,13 +42,7 @@ CompanyCreditCard.schema.pre('save', async function (next) {
   }
   this.removeBig4Comparisonproduct = undefined
   await changeLogService(this)
-	await verifiedService(this)
   next()
-})
-
-CompanyCreditCard.schema.post('save', async function (next) {
-	await verifiedService(this)
-	next()
 })
 
 CompanyCreditCard.defaultColumns = 'company, availableStates'

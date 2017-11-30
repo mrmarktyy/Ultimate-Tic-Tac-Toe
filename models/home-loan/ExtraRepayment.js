@@ -1,8 +1,6 @@
 var keystone = require('keystone')
 var Types = keystone.Field.Types
 var changeLogService = require('../../services/changeLogService')
-var verifiedService = require('../../services/verifiedService')
-var verifiedCommonAttribute = require('../common/verifiedCommonAttribute')
 
 var ExtraRepayment = new keystone.List('ExtraRepayment', {
 	track: true,
@@ -41,7 +39,6 @@ ExtraRepayment.add({
 	penaltyFeeIfMaxAmountExceeded: {type: Types.Text, initial: true},
 })
 
-ExtraRepayment.add(verifiedCommonAttribute)
 ExtraRepayment.schema.pre('validate', function (next) {
 	if (this.maxAmountOfExtraRepaymentInPercentage < 0 || this.maxAmountOfExtraRepaymentInPercentage > 100){
 		next(Error('Max Amount of Extra Repayment In Percentage need to between 0 and 100 inclusive'))
@@ -51,11 +48,6 @@ ExtraRepayment.schema.pre('validate', function (next) {
 
 ExtraRepayment.schema.pre('save', async function (next) {
 	await changeLogService(this)
-	next()
-})
-
-ExtraRepayment.schema.post('save', async function (next) {
-	await verifiedService(this)
 	next()
 })
 

@@ -1,7 +1,5 @@
 var keystone = require('keystone')
 var changeLogService = require('../../services/changeLogService')
-var verifiedService = require('../../services/verifiedService')
-var verifiedCommonAttribute = require('../common/verifiedCommonAttribute')
 var Types = keystone.Field.Types
 
 var RedrawFacility = new keystone.List('RedrawFacility', {
@@ -35,17 +33,12 @@ RedrawFacility.add({
 	maxRedrawAmount: { type: Types.Number, initial: true },
 	feeToActivateRedraw: { type: Types.Number, initial: true },
 })
-RedrawFacility.add(verifiedCommonAttribute)
+
 RedrawFacility.schema.pre('validate', async function (next) {
 	if (this.minRedrawAmount > this.maxRedrawAmount) {
 		next(Error('Max Redraw Amount can not less than Min Redraw Amount'))
 	}
 	await changeLogService(this)
-	next()
-})
-
-RedrawFacility.schema.post('save', async function (next) {
-	await verifiedService(this)
 	next()
 })
 

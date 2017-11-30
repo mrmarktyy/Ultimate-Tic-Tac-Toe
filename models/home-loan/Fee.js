@@ -3,8 +3,6 @@ var Types = keystone.Field.Types
 var feeTypes = require('./feeTypes')
 var frequency = require('./paymentFrequencies')
 var changeLogService = require('../../services/changeLogService')
-var verifiedService = require('../../services/verifiedService')
-var verifiedCommonAttribute = require('../common/verifiedCommonAttribute')
 
 var Fee = new keystone.List('Fee', {
 	track: true,
@@ -60,14 +58,8 @@ Fee.schema.pre('validate', function (next) {
 	next()
 })
 
-Fee.add(verifiedCommonAttribute)
 Fee.schema.pre('save', async function (next) {
 	await changeLogService(this)
-	next()
-})
-
-Fee.schema.post('save', async function (next) {
-	await verifiedService(this)
 	next()
 })
 

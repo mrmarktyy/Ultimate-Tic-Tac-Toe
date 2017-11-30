@@ -1,8 +1,6 @@
 const keystone = require('keystone')
 const Types = keystone.Field.Types
 const qualificationCommonAttributes = require('../common/QualificationCommonAttributes')
-var verifiedService = require('../../services/verifiedService')
-var verifiedCommonAttribute = require('../common/verifiedCommonAttribute')
 
 const PersonalLoanQualification = new keystone.List('PersonalLoanQualification', {
   track: true,
@@ -25,12 +23,6 @@ PersonalLoanQualification.add({
     index: true,
     filters: { company: ':company' },
   },
-})
-PersonalLoanQualification.add(verifiedCommonAttribute)
-
-PersonalLoanQualification.schema.post('save', async function (next) {
-	await verifiedService(this)
-	next()
 })
 
 PersonalLoanQualification.defaultColumns = 'company, product, qualificationType'

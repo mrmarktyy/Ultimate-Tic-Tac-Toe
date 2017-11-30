@@ -3,8 +3,6 @@ var Types = keystone.Field.Types
 var frequency = require('./paymentFrequencies')
 var conditionTypes = require('./conditionTypes')
 var changeLogService = require('../../services/changeLogService')
-var verifiedService = require('../../services/verifiedService')
-var verifiedCommonAttribute = require('../common/verifiedCommonAttribute')
 
 var Condition = new keystone.List('Condition', {
 	track: true,
@@ -47,7 +45,7 @@ Condition.add({
 	startFrom: {type: Types.Number, initial: true},
 	endAt: {type: Types.Number, initial: true},
 })
-Condition.add(verifiedCommonAttribute)
+
 Condition.schema.pre('validate', async function (next) {
 	if (this.conditionType === 'LOAN_TERM' && this.minAmount && this.minAmount % 12 !== 0) {
 		next(Error('Min Amount for Loan Term can only be multiples of 12'))
@@ -75,11 +73,6 @@ Condition.schema.pre('validate', async function (next) {
 
 Condition.schema.pre('save', async function (next) {
 	await changeLogService(this)
-	next()
-})
-
-Condition.schema.post('save', async function (next) {
-	await verifiedService(this)
 	next()
 })
 

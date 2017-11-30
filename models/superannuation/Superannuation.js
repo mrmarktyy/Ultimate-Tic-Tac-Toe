@@ -4,8 +4,6 @@ const _ = require('lodash')
 
 const productCommonAttributes = require('../common/ProductCommonAttributes')
 const changeLogService = require('../../services/changeLogService')
-var verifiedService = require('../../services/verifiedService')
-var verifiedCommonAttribute = require('../common/verifiedCommonAttribute')
 const fields = require('./constants').fields
 const Types = keystone.Field.Types
 const utils = keystone.utils
@@ -42,7 +40,7 @@ _.forEach(_.values(fields), (attribute) => {
 
 Superannuation.add(productCommonAttributes)
 Superannuation.add(schema)
-Superannuation.add(verifiedCommonAttribute)
+
 Superannuation.relationship({ path: 'ChangeLogs', ref: 'ChangeLog', refPath: 'model', many: true })
 Superannuation.schema.index({ fundgroup: 1, product_name: 1 }, { unique: true })
 
@@ -59,11 +57,6 @@ Superannuation.schema.methods.remove = function (callback) {
   this.isDiscontinued = true
   return this.save(callback)
 }
-
-Superannuation.schema.post('save', async function (next) {
-	await verifiedService(this)
-	next()
-})
 
 Superannuation.defaultColumns = 'product_name, company, superannuation, pension, fundgroup'
 Superannuation.defaultSort = 'isDiscontinued'
