@@ -116,8 +116,8 @@ async function populateCreditCards () {
       obj.cardType = CARDTYPES[item.cardType.toLowerCase()]
       obj.cardLevel = CARDLEVELS[item.cardLevel.toLowerCase()]
       obj.isFrequentFlyer = YESTOTRUE[item.isFrequentFlyer.toLowerCase()] || false
-      obj.isStoreCard = item.isStoreCard || false
-      obj.isStudentCard = item.isStudentCard || false
+      obj.isStoreCard = YESTOTRUE[item.isStoreCard.toLowerCase()] || false
+      obj.isStudentCard = YESTOTRUE[item.isStudentCard.toLowerCase()] || false
       obj.isJointApplicationAllowed = item.isJointApplicationAllowed.toUpperCase() || 'UNKNOWN'
       obj.isGamblingTransactionsAllowed = GAMBLING[item.isGamblingTransactionsAllowed.toLowerCase()] ? GAMBLING[item.isGamblingTransactionsAllowed.toLowerCase()] : 'UNKNOWN'
       obj.minimumBalanceTransferAmount = item.minimumBalanceTransferAmount
