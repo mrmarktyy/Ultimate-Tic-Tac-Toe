@@ -339,7 +339,7 @@ async function populateSpecials () {
 
       obj.name = special.name
       obj.type = special.type
-      obj.introText = special.introtext
+      obj.introText = special.introText
       obj.blurb = special.blurb
       obj.startDate = special.startDate ? moment(special.startDate, 'DD-MM-YY') : new Date()
       obj.endDate = special.endDate ? moment(special.endDate, 'DD-MM-YY') : null
