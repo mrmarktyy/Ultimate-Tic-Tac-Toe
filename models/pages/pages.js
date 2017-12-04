@@ -2,6 +2,8 @@ var keystone = require('keystone')
 var uuid = require('node-uuid')
 var Types = keystone.Field.Types
 var verticals = require('../helpers/verticals')
+var verifiedService = require('../../services/verifiedService')
+var verifiedCommonAttribute = require('../common/verifiedCommonAttribute')
 
 const Pages = new keystone.List('Pages', {track: true}).add({
 	uuid: {type: Types.Text, initial: true, unique: true},
@@ -36,10 +38,16 @@ const Pages = new keystone.List('Pages', {track: true}).add({
 	},
 	featuredImage: { type: Types.Url },
 })
+Pages.add(verifiedCommonAttribute)
 Pages.schema.pre('save', async function (next) {
 	if (!this.uuid) {
 		this.uuid = uuid.v4()
 	}
+	next()
+})
+
+Pages.schema.post('save', async function (next) {
+	await verifiedService(this)
 	next()
 })
 

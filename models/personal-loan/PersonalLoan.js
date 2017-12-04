@@ -5,6 +5,8 @@ var availableOptions = require('../attributes/availableOptions')
 var productCommonAttributes = require('../common/ProductCommonAttributes')
 var personalLoanConstant = require('../constants/PersonalLoanConstant')
 var changeLogService = require('../../services/changeLogService')
+var verifiedService = require('../../services/verifiedService')
+var verifiedCommonAttribute = require('../common/verifiedCommonAttribute')
 
 var utils = keystone.utils
 var Types = keystone.Field.Types
@@ -117,7 +119,7 @@ PersonalLoan.schema.index({ company: 1, name: 1 }, { unique: true })
 PersonalLoan.schema.index({ company: 1, slug: 1 }, { unique: true })
 PersonalLoan.schema.set('toObject', { getters: true })
 PersonalLoan.schema.set('toJSON', { getters: true, virtuals: false })
-
+PersonalLoan.add(verifiedCommonAttribute)
 PersonalLoan.schema.pre('validate', function (next) {
   if ((this.applicationFeesDollar === undefined) && (this.applicationFeesPercent === undefined)) {
     next(Error('Application Fee need to fill in either Dollar or Percent'))
@@ -209,6 +211,11 @@ PersonalLoan.schema.pre('save', async function (next) {
 
   await changeLogService(this)
   next()
+})
+
+PersonalLoan.schema.post('save', async function (next) {
+	await verifiedService(this)
+	next()
 })
 
 PersonalLoan.schema.methods.remove = function (callback) {

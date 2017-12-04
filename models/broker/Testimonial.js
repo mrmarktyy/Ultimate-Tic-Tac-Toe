@@ -1,7 +1,7 @@
 var keystone = require('keystone')
 var Types = keystone.Field.Types
 
-var Testimonial = new keystone.List('Testimonial').add({
+var Testimonial = new keystone.List('Testimonial',{track: true}).add({
 	name: {type: Types.Text, initial: true, unique: true},
 	message: {type: Types.Text, initial: true},
 	href: {type: Types.Url, initial: true},

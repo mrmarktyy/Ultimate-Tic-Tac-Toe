@@ -1,6 +1,8 @@
 var keystone = require('keystone')
 var Types = keystone.Field.Types
 var changeLogService = require('../../services/changeLogService')
+var verifiedService = require('../../services/verifiedService')
+var verifiedCommonAttribute = require('../common/verifiedCommonAttribute')
 
 var Redemption = new keystone.List('Redemption', {
     track: true,
@@ -35,6 +37,7 @@ Redemption.add({
 	pointsRequired: {type: Types.Number, min: 0, initial: true, required: true},
 })
 
+Redemption.add(verifiedCommonAttribute)
 Redemption.relationship({ path: 'ChangeLogs', ref: 'ChangeLog', refPath: 'model', many: true })
 
 Redemption.schema.index({program: 1, redemptionType: 1, redemptionName: 1}, {unique: true})
@@ -42,6 +45,11 @@ Redemption.schema.index({program: 1, redemptionType: 1, redemptionName: 1}, {uni
 Redemption.schema.pre('save', async function (next) {
   await changeLogService(this)
   next()
+})
+
+Redemption.schema.post('save', async function (next) {
+	await verifiedService(this)
+	next()
 })
 
 Redemption.defaultColumns = 'program, redemptionName, pointsRequired'

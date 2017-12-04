@@ -4,8 +4,11 @@ var Types = keystone.Field.Types
 var verticals = require('../helpers/verticals')
 var {imageStorage} = require('../helpers/fileStorage')
 var shareOfVoiceAttributes = require('../common/ShareOfVoiceCommonAttributes')
+var verifiedCommonAttribute = require('../common/verifiedCommonAttribute')
+var verifiedService = require('../../services/verifiedService')
+var verifiedCommonAttribute = require('../common/verifiedCommonAttribute')
 
-var Broker = new keystone.List('Broker').add({
+var Broker = new keystone.List('Broker', {track: true}).add({
 	uuid: {type: Types.Text, initial: true, noedit: true, unique: true},
 	name: {type: Types.Text, initial: true, unique: true},
 	slug: {type: Types.Text, initial: true, require: true, unique: true},
@@ -29,6 +32,7 @@ var Broker = new keystone.List('Broker').add({
 })
 
 Broker.add(shareOfVoiceAttributes)
+Broker.add(verifiedCommonAttribute)
 
 Broker.schema.pre('validate', async function (next) {
 		if (!this.default) {
@@ -53,6 +57,11 @@ Broker.schema.pre('save', async function (next) {
 	if (this.default) {
 		await keystone.list('Broker').model.update({default: true, vertical: this.vertical, uuid: {$ne: this.uuid}}, {$set: {default: false}}, {multi: true})
 	}
+	next()
+})
+
+Broker.schema.post('save', async function (next) {
+	await verifiedService(this)
 	next()
 })
 

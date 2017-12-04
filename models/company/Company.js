@@ -3,6 +3,8 @@ var uuid = require('node-uuid')
 var Types = keystone.Field.Types
 var { imageStorage } = require('../helpers/fileStorage')
 var changeLogService = require('../../services/changeLogService')
+var verifiedService = require('../../services/verifiedService')
+var verifiedCommonAttribute = require('../common/verifiedCommonAttribute')
 
 var utils = keystone.utils
 
@@ -35,7 +37,7 @@ Company.add({
 	logo: imageStorage('company'),
 	blurb: { type: Types.Code, height: 250, language: 'html' },
 })
-
+Company.add(verifiedCommonAttribute)
 Company.relationship({ path: 'ATMs', ref: 'ATM', refPath: 'company' })
 Company.relationship({ path: 'Branches', ref: 'Branch', refPath: 'company' })
 Company.relationship({ path: 'ChangeLogs', ref: 'ChangeLog', refPath: 'model', many: true })
@@ -58,6 +60,11 @@ Company.schema.pre('save', async function (next) {
     this.slug = utils.slug(this.name.toLowerCase())
   }
 	await changeLogService(this)
+	next()
+})
+
+Company.schema.post('save', async function (next) {
+	await verifiedService(this)
 	next()
 })
 

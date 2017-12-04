@@ -3,6 +3,8 @@ var {imageStorage} = require('../helpers/fileStorage')
 var verticals = require('../helpers/verticals')
 var changeLogService = require('../../services/changeLogService')
 var shareOfVoiceAttributes = require('../common/ShareOfVoiceCommonAttributes')
+var verifiedService = require('../../services/verifiedService')
+var verifiedCommonAttribute = require('../common/verifiedCommonAttribute')
 var blazePages = require('../../data/blazePages')
 var Types = keystone.Field.Types
 
@@ -23,7 +25,7 @@ FeaturedProduct.add({
 	notes: {type: Types.Text, required: false, initial: true},
 	image: imageStorage('featuredProduct'),
 })
-
+FeaturedProduct.add(verifiedCommonAttribute)
 FeaturedProduct.add(shareOfVoiceAttributes)
 FeaturedProduct.fields.pages.ops = blazePages
 
@@ -47,6 +49,11 @@ FeaturedProduct.schema.index({uuid: 1, vertical: 1, dateStart: 1}, {unique: true
 FeaturedProduct.schema.pre('save', async function (next) {
   await changeLogService(this)
   next()
+})
+
+FeaturedProduct.schema.post('save', async function (next) {
+	await verifiedService(this)
+	next()
 })
 
 FeaturedProduct.defaultColumns = 'uuid, vertical, title, notes, sortOrder, dateStart, dateEnd'

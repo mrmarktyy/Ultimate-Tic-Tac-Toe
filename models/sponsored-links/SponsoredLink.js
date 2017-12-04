@@ -4,6 +4,8 @@ var { imageStorage } = require('../helpers/fileStorage')
 var verticals = require('../helpers/verticals')
 var Types = keystone.Field.Types
 var changeLogService = require('../../services/changeLogService')
+var verifiedService = require('../../services/verifiedService')
+var verifiedCommonAttribute = require('../common/verifiedCommonAttribute')
 var shareOfVoiceAttributes = require('../common/ShareOfVoiceCommonAttributes')
 
 var SponsoredLink = new keystone.List('SponsoredLink', {
@@ -40,7 +42,7 @@ SponsoredLink.add({
 })
 
 SponsoredLink.add(shareOfVoiceAttributes)
-
+SponsoredLink.add(verifiedCommonAttribute)
 SponsoredLink.relationship({ path: 'ChangeLogs', ref: 'ChangeLog', refPath: 'model', many: true })
 
 SponsoredLink.schema.pre('validate', function (next) {
@@ -60,6 +62,11 @@ SponsoredLink.schema.pre('save', async function (next) {
 
   await changeLogService(this)
   next()
+})
+
+SponsoredLink.schema.post('save', async function (next) {
+	await verifiedService(this)
+	next()
 })
 
 SponsoredLink.schema.index({ company: 1, vertical: 1, name: 1 }, { unique: true })
