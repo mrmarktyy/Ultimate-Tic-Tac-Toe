@@ -2,6 +2,7 @@
 require('dotenv').config()
 var uuid = require('node-uuid')
 
+const moment = require('moment')
 var keystone = require('keystone')
 var keystoneShell = require('../utils/keystoneShell')
 var mongoosePromise = require('../utils/mongoosePromise')
@@ -16,6 +17,7 @@ const Redemption = keystoneShell.list('Redemption')
 const EarnRate = keystoneShell.list('EarnRate')
 const RedemptionName = keystoneShell.list('RedemptionName')
 const RedemptionType = keystoneShell.list('RedemptionType')
+const CreditCardSpecial = keystoneShell.list('CreditCardSpecial')
 
 const csvRedemptionFilePath = './tmp/Redemption.csv'
 const csvEarnRateFilePath = './tmp/EarnRate.csv'
@@ -319,8 +321,48 @@ async function populateEarnRate () {
 
 }
 
+const specialsCsv = './tmp/Specials.csv'
+async function populateSpecials () {
+  let connection = await mongoosePromise.connect()
+  try {
+    let data = await csvToJson(specialsCsv)
+    await CreditCardSpecial.model.remove({}).exec()
+    for (let i = 0; i < data.length; i++) {
+      let obj = {}
+      let special = data[i]
+      console.log('~~~~', special.uuid)
+      if (!special.uuid) {
+        console.log('no uuid')
+        continue
+      }
+      let creditcard = await CreditCard.model.findOne({uuid: special.uuid}).exec()
+
+      obj.name = special.name
+      obj.type = special.type
+      obj.introText = special.introtext
+      obj.blurb = special.blurb
+      obj.startDate = special.startDate ? moment(special.startDate, 'DD-MM-YY') : new Date()
+      obj.endDate = special.endDate ? moment(special.endDate, 'DD-MM-YY') : null
+      obj.product = creditcard._id
+      obj.company = creditcard.company
+
+      await CreditCardSpecial.model.create(obj, (error) => {
+        if (error) {
+          console.log(obj)
+          console.log(error)
+          return error
+        }
+      }) // eslint-disable-line babel/no-await-in-loop
+    }
+    connection.close()
+  } catch (error) {
+      console.log(error)
+  }
+}
+
 module.exports = async function () {
   await populateCreditCards()
   await populateRedemptions()
   await populateEarnRate()
+  await populateSpecials()
 }()
