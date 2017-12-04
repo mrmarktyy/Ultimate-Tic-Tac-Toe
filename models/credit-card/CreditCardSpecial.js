@@ -1,12 +1,12 @@
 const keystone = require('keystone')
 const Types = keystone.Field.Types
-const specialCommonAttributes = require('../common/SpecialCommonAttributes')
+const specialAttributes = require('./SpecialAttributes')
 
 const CreditCardSpecial = new keystone.List('CreditCardSpecial', {
   track: true,
 })
 
-CreditCardSpecial.add(specialCommonAttributes)
+CreditCardSpecial.add(specialAttributes)
 CreditCardSpecial.add({
   company: {
     type: Types.Relationship,
@@ -26,7 +26,7 @@ CreditCardSpecial.add({
 })
 
 CreditCardSpecial.schema.pre('validate', function (next) {
-  if (this.startDate > this.endDate) {
+  if (!!this.endDate && this.startDate > this.endDate) {
     next(Error('Start date cannot be past the end date.'))
   }
   next()
