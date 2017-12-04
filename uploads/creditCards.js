@@ -18,6 +18,7 @@ const EarnRate = keystoneShell.list('EarnRate')
 const RedemptionName = keystoneShell.list('RedemptionName')
 const RedemptionType = keystoneShell.list('RedemptionType')
 const CreditCardSpecial = keystoneShell.list('CreditCardSpecial')
+const PartnerConversion = keystoneShell.list('PartnerConversion')
 
 const csvRedemptionFilePath = './tmp/Redemption.csv'
 const csvEarnRateFilePath = './tmp/EarnRate.csv'
@@ -360,9 +361,48 @@ async function populateSpecials () {
   }
 }
 
+const partnerConversionCsv = './tmp/PartnerConversion.csv'
+async function populatePartnerConversion () {
+  let connection = await mongoosePromise.connect()
+
+  let rewards = await Program.model.find({isReward: true}).lean().exec()
+  let partners = await Program.model.find({isPartner: true}).lean().exec()
+  await PartnerConversion.model.remove({}).exec()
+  try {
+    let data = await csvToJson(partnerConversionCsv)
+    await PartnerConversion.model.remove({}).exec()
+    for (let i = 0; i < data.length; i++) {
+      let obj = {}
+      let convert = data[i]
+      console.log(convert)
+      let rewardProgram = rewards.find((reward) => {
+        return reward.name === convert.rewardProgram
+      })
+      let partnerProgram = partners.find((partner) => {
+        return partner.name === convert.partner
+      })
+      obj.rewardProgram = rewardProgram._id
+      obj.partnerProgram = partnerProgram._id
+      obj.conversionRate = convert.points
+
+      await PartnerConversion.model.create(obj, (error) => {
+        if (error) {
+          console.log(obj)
+          console.log(error)
+          return error
+        }
+      }) // eslint-disable-line babel/no-await-in-loop
+    }
+    connection.close()
+  } catch (error) {
+      console.log(error)
+  }
+}
+
 module.exports = async function () {
   await populateCreditCards()
   await populateRedemptions()
   await populateEarnRate()
   await populateSpecials()
+  await populatePartnerConversion()
 }()
