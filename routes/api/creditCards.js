@@ -35,7 +35,9 @@ exports.list = async function (req, res) {
     card.gotoSiteUrl = monetize ? monetize.applyUrl : null
     card.gotoSiteEnabled = monetize ? monetize.enabled : false
     card.paymentType = monetize ? monetize.paymentType : null
+    card.cardArt = card.cardArt ? card.cardArt.url : null
 
+    card.estimatedForeignAtmCost = estimatedForeignAtmCost(card)
     if (card.rewardProgram) {
       let rewards = []
       redemptions.forEach((obj) => {
@@ -58,5 +60,20 @@ exports.list = async function (req, res) {
     }
   })
   res.jsonp(creditcards)
+}
+
+function estimatedForeignAtmCost (card) {
+  let estimate = 0
+  if (['Visa', 'Visa & AMEX'].includes(card.cardType)){
+    estimate = 300 * card.foreignExchangeFeeVisaPercent + card.foreignExchangeFeeVisaAtm
+  }
+  if (['MasterCard', 'MasterCard & AMEX'].includes(card.cardType)) {
+    estimate = 300 * card.foreignExchangeFeeMcPercent + card.foreignExchangeFeeMcAtm
+  }
+  if (['Visa & AMEX', 'MasterCard & AMEX'].includes(this.cardType)) {
+    let amex = 300 * card.foreignExchangeFeeAmexPercent + card.foreignExchangeFeeAmexAtm
+    estimate = estimate > amex ? estimate : amex
+  }
+  return estimate
 }
 
