@@ -8,23 +8,24 @@ const PartnerConversion = keystone.list('PartnerConversion')
 const monetizedCollection = require('./monetizedCollection')
 
 exports.list = async function (req, res) {
-  let removeFields = { updatedAt: 0, updatedBy: 0, isMonetized: 0 }
+  let removeFields = { updatedAt: 0, updatedBy: 0, isMonetized: 0, __v: 0, createdAt: 0, createdBy: 0 }
+  let removePopulatedFields = '-updatedAt -updatedBy -__v  -createdAt -createdBy'
   let monetizedList = await monetizedCollection('Credit Cards')
   let partnerConversions = await PartnerConversion.model.find()
-    .populate('rewardProgram partnerProgram')
+    .populate('rewardProgram partnerProgram', removePopulatedFields)
     .lean()
     .exec()
   let redemptions = await Redemption.model.find()
-    .populate('redemptionName redemptionType program')
+    .populate('redemptionName redemptionType program', removePopulatedFields)
     .lean()
     .exec()
   let creditcards = await CreditCard.model
     .find({ $or: [ { isDiscontinued: false }, { isDiscontinued: {$exists: false} } ] }, removeFields)
-    .populate('company rewardProgram', '-updatedAt -updatedBy')
+    .populate('company rewardProgram', removePopulatedFields)
     .lean()
     .exec()
 
-  let earnRate = await EarnRate.model.find()
+  let earnRate = await EarnRate.model.find({}, removeFields)
     .lean()
     .exec()
 
@@ -73,6 +74,9 @@ function estimatedForeignAtmCost (card) {
   if (['Visa & AMEX', 'MasterCard & AMEX'].includes(this.cardType)) {
     let amex = 300 * card.foreignExchangeFeeAmexPercent + card.foreignExchangeFeeAmexAtm
     estimate = estimate > amex ? estimate : amex
+  }
+  if (card.cardType === 'AMEX') {
+    estimate = 300 * card.foreignExchangeFeeAmexPercent + card.foreignExchangeFeeAmexAtm
   }
   return estimate
 }
