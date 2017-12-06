@@ -4,9 +4,7 @@ var loadSavingsAccountsToRedshift = require('../redshift/savingsaccounts')
 const savingsAccountsToRedshift = {
   perform: async (done) => {
     try {
-      console.log('before date')
       logger.info(new Date() + ' resque loadSavingsAccountsToRedshift')
-      console.log('got here')
       await loadSavingsAccountsToRedshift()
       done()
     } catch (error) {
