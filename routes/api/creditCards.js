@@ -30,7 +30,11 @@ exports.list = async function (req, res) {
     .exec()
 
   creditcards.forEach((card) => {
-    card.company = CompanyService.fixLogoUrl(card.company)
+    let company = CompanyService.fixLogoUrl(card.company)
+    if (company.logo && company.logo.url) {
+      company.logo = company.logo.url
+    }
+    card.company  = company
 
     let monetize = monetizedList[card._id]
     card.gotoSiteUrl = monetize ? monetize.applyUrl : null
@@ -40,19 +44,20 @@ exports.list = async function (req, res) {
 
     card.estimatedForeignAtmCost = estimatedForeignAtmCost(card)
     if (card.rewardProgram) {
-      let rewards = []
-      redemptions.forEach((obj) => {
-        if (card.rewardProgram._id.toString() === obj.program._id.toString()) {
-          rewards.push({program: obj.program.name, redemptionName: obj.redemptionName.name, redemptionType: obj.redemptionType.name})
-        }
-      })
-      card.rewardProgram.redemptions = rewards
+      card.rewardProgram.redemptions = redemptionCalculation(redemptions, card.rewardProgram._id.toString())
+
       let partners = []
       partnerConversions.forEach((obj) => {
         if (card.rewardProgram._id.toString() === obj.rewardProgram._id.toString()) {
-          partners.push({partnerProgram: obj.rewardProgram.name, conversionRate: obj.conversionRate})
+          let partnerObject = {
+            partnerProgram: obj.rewardProgram.name,
+            conversionRate: obj.conversionRate,
+            redemptions: redemptionCalculation(redemptions, obj.partnerProgram._id.toString(), obj.conversionRate),
+          }
+          partners.push(partnerObject)
         }
       })
+
       card.rewardProgram.partners = partners
 
       card.earnRate = earnRate.filter((obj) => {
@@ -81,3 +86,18 @@ function estimatedForeignAtmCost (card) {
   return estimate
 }
 
+function redemptionCalculation (redemptions, rewardProgramId, pointconversion = 1) {
+  let rewards = []
+    redemptions.forEach((obj) => {
+    if (rewardProgramId.toString() === obj.program._id.toString()) {
+      let reward = {
+        program: obj.program.name,
+        redemptionName: obj.redemptionName.name,
+        redemptionType: obj.redemptionType.name,
+        pointsRequired: obj.pointsRequired * pointconversion,
+      }
+      rewards.push(reward)
+    }
+  })
+  return rewards
+}
