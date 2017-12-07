@@ -125,11 +125,13 @@ async function prepDataAndPushToRedshift (date, personalLoans, personalLoanVaria
     product.isUsedCarAllowed = loan.isUsedCarAllowed
     product.isMotorcycleAllowed = loan.isMotorcycleAllowed
     product.isBoatAllowed = loan.isBoatAllowed
-    product.isStudentAllowed = loan.isStudentAllowed
+    product.isStudentAllowed = loan.isStudentLoanAllowed
     product.isDebtConsolidationAllowed = loan.isDebtConsolidationAllowed
     product.isRenovationAllowed = loan.isRenovationAllowed
     product.isSharesAllowed = loan.isSharesAllowed
     product.isHolidaysAllowed = loan.isHolidaysAllowed
+    product.isMedicalBillAllowed = loan.isMedicalBillAllowed
+    product.isWeddingAllowed = loan.isWeddingAllowed
     product.otherPurposes = loan.otherPurposes
     product.repaymentFreq = loan.repaymentFrequency
     product.hasEarlyExitPenalty = loan.hasEarlyExitPenalty === 'UNKNOWN' ? null : loan.hasEarlyExitPenalty
