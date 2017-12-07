@@ -227,6 +227,9 @@ CreditCard.schema.pre('validate', function (next) {
 	if ((this.cashAdvanceRateIntro !== undefined) && (this.cashAdvanceRateIntro > this.cashAdvanceRateStandard)) {
 		next(Error('Cash advance rate intro should be less than cash advance rate standard'))
 	}
+	if (!!this.maximumBalanceTransferPercentage && (this.maximumBalanceTransferPercentage < 0 || this.maximumBalanceTransferPercentage > 100)) {
+		next(Error('maximum balance transfer percentage cannot be less than 0 or greater than 100'))
+	}
 
 	next()
 })
