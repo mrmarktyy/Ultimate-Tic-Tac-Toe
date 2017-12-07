@@ -35,7 +35,7 @@ async function getPensionObjects (pensions) {
 		product.basicFee = parseFloat(pension.basic_fee_50k || 0)
 		const rating = getMatchedElment(ratings, pension.rating_image)
 		product.rating = rating.name || null
-		product.ratingScore = rating.score ? (100 - (rating.score - 1) * 5) : null
+		product.ratingScore = rating.score || null
 		product.productUrl = pension.productUrl || `/pension-funds/${pension.fundgroup.slug}/${pension.slug}`
 		product.applyUrl = Object.keys(monetize).length && monetize.enabled ? monetize.applyUrl : null
 		product.paymentType = Object.keys(monetize).length ? monetize.paymentType : null
