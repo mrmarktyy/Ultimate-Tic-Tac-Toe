@@ -35,7 +35,7 @@ async function getSuperannuationObjects (superannuations) {
 		product.basicFee = parseFloat(superannuation.basic_fee_50k || 0)
 		const rating = getMatchedElment(ratings, superannuation.rating_image)
 		product.rating = rating.name || null
-		product.ratingScore = rating.score ? (100 - (rating.score - 1) * 5) : null
+		product.ratingScore = rating.score || null
 		product.productUrl = superannuation.productUrl || `/superannuation/${superannuation.fundgroup.slug}/${superannuation.slug}`
 		product.applyUrl = Object.keys(monetize).length && monetize.enabled ? monetize.applyUrl : null
 		product.paymentType = Object.keys(monetize).length ? monetize.paymentType : null
