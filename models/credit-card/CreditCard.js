@@ -47,6 +47,7 @@ CreditCard.add({
 	isJointApplicationAllowed: { type: Types.Select, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown },
 	isGamblingTransactionsAllowed: { type: Types.Select, options: ['Prohibited', 'Allowed but treated as Cash Advance', 'Allowed', 'UNKNOWN'], default: 'UNKNOWN' },
 	minimumBalanceTransferAmount: { type: Types.Number },
+	maximumBalanceTransferPercentage: { type: Types.Number, label: 'Max Balance Transfer %' },
 	isBalanceTransferFromPersonalLoanAllowed: { type: Types.Select, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown },
 	ecpc: { type: Types.Number, noedit: true, default: 0 },
 	interestFreeDays: { type: Types.Number, min: 0 },
@@ -225,6 +226,9 @@ CreditCard.schema.pre('validate', function (next) {
 	}
 	if ((this.cashAdvanceRateIntro !== undefined) && (this.cashAdvanceRateIntro > this.cashAdvanceRateStandard)) {
 		next(Error('Cash advance rate intro should be less than cash advance rate standard'))
+	}
+	if (!!this.maximumBalanceTransferPercentage && (this.maximumBalanceTransferPercentage < 0 || this.maximumBalanceTransferPercentage > 100)) {
+		next(Error('maximum balance transfer percentage cannot be less than 0 or greater than 100'))
 	}
 
 	next()
