@@ -8,6 +8,7 @@ module.exports = {
 	'Home Insurance': { collection: 'GenericProduct', findClause: { vertical: 'home-insurance' }, slug: 'home-insurance', salesforceVertical: 'Home Insurance' },
 	'Income Protection Insurance': { collection: 'GenericProduct', findClause: { vertical: 'income-protection-insurance' }, slug: 'income-protection-insurance', salesforceVertical: 'Income Protection Insurance' },
 	'Life Insurance': { collection: 'GenericProduct', findClause: { vertical: 'life-insurance' }, slug: 'life-insurance', salesforceVertical: 'Life Insurance' },
+	'Managed Funds': { collection: 'GenericProduct', findClause: {vertical: 'managed-funds'}, slug: 'managed-funds', salesforceVertical: 'Managed Funds' },
 	'Margin Loans': { collection: 'GenericProduct', findClause: { vertical: 'margin-loans' }, slug: 'margin-loans', salesforceVertical: 'Margin Loans' },
 	'Mortgage Insurance': { collection: 'GenericProduct', findClause: { vertical: 'mortgage-insurance' }, slug: 'mortgage-insurance', salesforceVertical: 'Mortgage Insurance' },
 	'Online Share Trading': { collection: 'GenericProduct', findClause: { vertical: 'online-trading' }, slug: 'online-trading', salesforceVertical: 'Online Share Trading' },
