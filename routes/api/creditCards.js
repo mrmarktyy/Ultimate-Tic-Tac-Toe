@@ -50,7 +50,6 @@ exports.list = async function (req, res) {
     card.estimatedForeignAtmCost = estimatedForeignAtmCost(card)
     if (card.rewardProgram) {
       card.rewardProgram.redemptions = redemptionCalculation(redemptions, card.rewardProgram._id.toString())
-
       let partners = []
       partnerConversions.forEach((obj) => {
         if (card.rewardProgram._id.toString() === obj.rewardProgram._id.toString()) {
@@ -63,11 +62,14 @@ exports.list = async function (req, res) {
         }
       })
 
-      card.rewardProgram.partners = partners
+      card.partners = partners
 
       card.earnRate = earnRate.filter((obj) => {
         return obj.product.toString() === card._id.toString()
       })
+    } else {
+      card.partners = []
+      card.earnRate = null
     }
   })
   res.jsonp(creditcards)
