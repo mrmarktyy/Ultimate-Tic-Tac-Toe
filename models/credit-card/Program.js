@@ -12,6 +12,7 @@ Program.add({
   name: { type: Types.Text, required: true, initial: true, index: true },
   isReward: { type: Types.Boolean, indent: true, default: false, initial: true },
   isPartner: { type: Types.Boolean, indent: true, default: false, initial: true },
+  isFrequentFlyer: { type: Types.Boolean, indent: true, default: false, initial: true },
 })
 
 Program.relationship({ path: 'ChangeLogs', ref: 'ChangeLog', refPath: 'model', many: true })
@@ -37,5 +38,5 @@ Program.schema.post('save', async function (next) {
 	next()
 })
 
-Program.defaultColumns = 'name, isReward, isPartner'
+Program.defaultColumns = 'name, isReward, isPartner, isFrequentFlyer'
 Program.register()

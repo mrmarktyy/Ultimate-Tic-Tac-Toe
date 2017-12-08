@@ -50,6 +50,7 @@ exports.list = async function (req, res) {
     card.estimatedForeignAtmCost = estimatedForeignAtmCost(card)
     if (card.rewardProgram) {
       card.rewardProgram.redemptions = redemptionCalculation(redemptions, card.rewardProgram._id.toString())
+      card.isFrequentFlyer = card.rewardProgram.isFrequentFlyer || false
       let partners = []
       partnerConversions.forEach((obj) => {
         if (card.rewardProgram._id.toString() === obj.rewardProgram._id.toString()) {
@@ -59,6 +60,9 @@ exports.list = async function (req, res) {
             redemptions: redemptionCalculation(redemptions, obj.partnerProgram._id.toString(), obj.conversionRate),
           }
           partners.push(partnerObject)
+          if (obj.partnerProgram.isFrequentFlyer && !card.isFrequentFlyer) {
+            card.isFrequentFlyer = obj.partnerProgram.isFrequentFlyer
+          }
         }
       })
 
@@ -70,6 +74,7 @@ exports.list = async function (req, res) {
     } else {
       card.partners = []
       card.earnRate = null
+      card.isFrequentFlyer = false
     }
   })
   res.jsonp(creditcards)

@@ -41,7 +41,6 @@ CreditCard.add({
 	isLowRate: { type: Types.Boolean, indent: true, noedit: true },
 	isLowFee: { type: Types.Boolean, indent: true, noedit: true },
 	isReward: { type: Types.Boolean, indent: true, noedit: true },
-	isFrequentFlyer: { type: Types.Boolean, indent: true, default: false },
 	isStoreCard: { type: Types.Boolean, indent: true, default: false },
 	isStudentCard: { type: Types.Boolean, indent: true, default: false },
 	isJointApplicationAllowed: { type: Types.Select, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown },
