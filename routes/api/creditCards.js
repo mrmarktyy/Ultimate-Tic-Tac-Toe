@@ -42,6 +42,13 @@ exports.list = async function (req, res) {
     card.paymentType = monetize ? monetize.paymentType : null
     card.cardArt = card.cardArt ? card.cardArt.url : null
 
+    card.foreignExchangeFeeMCDollar = card.foreignExchangeFeeMcDollar
+    card.foreignExchangeFeeMCPercent= card.foreignExchangeFeeMcPercent
+    card.foreignExchangeFeeMCATM = card.foreignExchangeFeeMcATM
+    delete card.foreignExchangeFeeMcDollar
+    delete card.foreignExchangeFeeMcPercent
+    delete card.foreignExchangeFeeMcATM
+
     card.maximumBalanceTransferAmount = null
     if (!!card.maximumBalanceTransferPercentage && !!card.maximumCreditLimit) {
       card.maximumBalanceTransferAmount = card.maximumCreditLimit * card.maximumBalanceTransferPercentage /100
