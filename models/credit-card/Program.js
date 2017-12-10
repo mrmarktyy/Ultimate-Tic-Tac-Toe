@@ -10,6 +10,7 @@ var Program = new keystone.List('Program', {
 
 Program.add({
   name: { type: Types.Text, required: true, initial: true, index: true },
+  shortName: { type: Types.Text, initial: true },
   isReward: { type: Types.Boolean, indent: true, default: false, initial: true },
   isPartner: { type: Types.Boolean, indent: true, default: false, initial: true },
   isFrequentFlyer: { type: Types.Boolean, indent: true, default: false, initial: true },
@@ -21,7 +22,12 @@ Program.schema.pre('validate', function (next) {
   if (this.isReward === false && this.isPartner === false) {
     next(Error('Both is reward and is partner cannot be false'))
   }
-
+  if (this.shortName.length > 25) {
+    next(Error('Short name has a max of 25 characters'))
+  }
+  if (this.isPartner && !this.shortName) {
+    next(Error('Short name is required for programs make isPartner'))
+  }
   next()
 })
 
@@ -38,5 +44,6 @@ Program.schema.post('save', async function (next) {
 	next()
 })
 
-Program.defaultColumns = 'name, isReward, isPartner, isFrequentFlyer'
+Program.defaultSort = 'name'
+Program.defaultColumns = 'name, shortName, isReward, isPartner, isFrequentFlyer'
 Program.register()
