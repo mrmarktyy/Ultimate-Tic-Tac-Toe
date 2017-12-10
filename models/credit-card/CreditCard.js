@@ -255,5 +255,6 @@ CreditCard.schema.post('save', async function (next) {
 	next()
 })
 
+CreditCard.defaultSort = 'isDiscontinued'
 CreditCard.defaultColumns = 'name, company, uuid, isMonetized'
 CreditCard.register()
