@@ -46,6 +46,7 @@ CreditCard.add({
 	isJointApplicationAllowed: { type: Types.Select, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown },
 	isGamblingTransactionsAllowed: { type: Types.Select, options: ['Prohibited', 'Allowed but treated as Cash Advance', 'Allowed', 'UNKNOWN'], default: 'UNKNOWN' },
 	minimumBalanceTransferAmount: { type: Types.Number },
+	balanceTransferConditions: { type: Types.Text },
 	maximumBalanceTransferPercentage: { type: Types.Number, label: 'Max Balance Transfer %' },
 	maximumBalanceTransferAmount: { type: Types.Number, label: 'Max Balance Transfer $' },
 	isBalanceTransferFromPersonalLoanAllowed: { type: Types.Select, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown },
