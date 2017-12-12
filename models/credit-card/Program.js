@@ -3,6 +3,7 @@ var Types = keystone.Field.Types
 var changeLogService = require('../../services/changeLogService')
 var verifiedService = require('../../services/verifiedService')
 var verifiedCommonAttribute = require('../common/verifiedCommonAttribute')
+var { imageStorage } = require('../helpers/fileStorage')
 
 var Program = new keystone.List('Program', {
     track: true,
@@ -14,6 +15,7 @@ Program.add({
   isReward: { type: Types.Boolean, indent: true, default: false, initial: true },
   isPartner: { type: Types.Boolean, indent: true, default: false, initial: true },
   isFrequentFlyer: { type: Types.Boolean, indent: true, default: false, initial: true },
+  icons: imageStorage('creditcardprograms'),
 })
 
 Program.relationship({ path: 'ChangeLogs', ref: 'ChangeLog', refPath: 'model', many: true })
