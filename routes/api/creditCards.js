@@ -61,6 +61,7 @@ exports.list = async function (req, res) {
             partnerProgram: obj.partnerProgram.name,
             conversionRate: obj.conversionRate,
             redemptions: redemptionCalculation(redemptions, obj.partnerProgram._id.toString(), obj.conversionRate),
+            icon: obj.partnerProgram.icon = obj.partnerProgram.icon ? obj.partnerProgram.icon.url : null,
           }
           partners.push(partnerObject)
           if (obj.partnerProgram.isFrequentFlyer && !card.isFrequentFlyer) {
@@ -86,17 +87,17 @@ exports.list = async function (req, res) {
 function estimatedForeignAtmCost (card) {
   let estimate = 0
   if (['Visa', 'Visa & AMEX'].includes(card.cardType)){
-    estimate = 300 * card.foreignExchangeFeeVisaPercent + card.foreignExchangeFeeVisaAtm
+    estimate = (300.0 * card.foreignExchangeFeeVisaPercent)/100 + card.foreignExchangeFeeVisaAtm
   }
   if (['MasterCard', 'MasterCard & AMEX'].includes(card.cardType)) {
-    estimate = 300 * card.foreignExchangeFeeMcPercent + card.foreignExchangeFeeMcAtm
+    estimate = (300.0 * card.foreignExchangeFeeMcPercent)/100 + card.foreignExchangeFeeMcAtm
   }
   if (['Visa & AMEX', 'MasterCard & AMEX'].includes(this.cardType)) {
-    let amex = 300 * card.foreignExchangeFeeAmexPercent + card.foreignExchangeFeeAmexAtm
+    let amex = (300.0 * card.foreignExchangeFeeAmexPercent)/100 + card.foreignExchangeFeeAmexAtm
     estimate = estimate > amex ? estimate : amex
   }
   if (card.cardType === 'AMEX') {
-    estimate = 300 * card.foreignExchangeFeeAmexPercent + card.foreignExchangeFeeAmexAtm
+    estimate = (300.0 * card.foreignExchangeFeeAmexPercent)/100 + card.foreignExchangeFeeAmexAtm
   }
   return estimate
 }
