@@ -48,6 +48,7 @@ exports.list = async function (req, res) {
     delete card.foreignExchangeFeeMcDollar
     delete card.foreignExchangeFeeMcPercent
     delete card.foreignExchangeFeeMcATM
+    card.balanceTransferConditions = card.balanceTransferConditions === '' ? null : card.balanceTransferConditions
 
     card.estimatedForeignAtmCost = estimatedForeignAtmCost(card)
     if (card.rewardProgram) {
