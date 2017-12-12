@@ -49,11 +49,6 @@ exports.list = async function (req, res) {
     delete card.foreignExchangeFeeMcPercent
     delete card.foreignExchangeFeeMcATM
 
-    card.maximumBalanceTransferAmount = null
-    if (!!card.maximumBalanceTransferPercentage && !!card.maximumCreditLimit) {
-      card.maximumBalanceTransferAmount = card.maximumCreditLimit * card.maximumBalanceTransferPercentage /100
-    }
-
     card.estimatedForeignAtmCost = estimatedForeignAtmCost(card)
     if (card.rewardProgram) {
       card.rewardProgram.redemptions = redemptionCalculation(redemptions, card.rewardProgram._id.toString())
