@@ -40,9 +40,8 @@ GenericProduct.schema.pre('save', async function (next) {
 	next()
 })
 
-GenericProduct.schema.post('save', async function (next) {
+GenericProduct.schema.post('save', async function () {
 	await verifiedService(this)
-	next()
 })
 
 GenericProduct.defaultColumns = 'uuid, vertical, name, description, url'

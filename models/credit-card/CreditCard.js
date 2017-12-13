@@ -252,9 +252,8 @@ CreditCard.schema.pre('save', async function (next) {
   next()
 })
 
-CreditCard.schema.post('save', async function (next) {
+CreditCard.schema.post('save', async function () {
 	await verifiedService(this)
-	next()
 })
 
 CreditCard.defaultSort = 'isDiscontinued'

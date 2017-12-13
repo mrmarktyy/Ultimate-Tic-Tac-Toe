@@ -156,9 +156,8 @@ HomeLoanVariation.schema.methods.remove = function (callback) {
   this.isDiscontinued = true
   return this.save(callback)
 }
-HomeLoanVariation.schema.post('save', async function (next) {
+HomeLoanVariation.schema.post('save', async function () {
 	await verifiedService(this)
-	next()
 })
 
 HomeLoanVariation.defaultSort = 'isDiscontinued'

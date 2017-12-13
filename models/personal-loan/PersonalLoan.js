@@ -213,9 +213,8 @@ PersonalLoan.schema.pre('save', async function (next) {
   next()
 })
 
-PersonalLoan.schema.post('save', async function (next) {
+PersonalLoan.schema.post('save', async function () {
 	await verifiedService(this)
-	next()
 })
 
 PersonalLoan.schema.methods.remove = function (callback) {

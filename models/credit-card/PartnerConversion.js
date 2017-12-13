@@ -42,9 +42,8 @@ PartnerConversion.schema.pre('save', async function (next) {
   next()
 })
 
-PartnerConversion.schema.post('save', async function (next) {
+PartnerConversion.schema.post('save', async function () {
 	await verifiedService(this)
-	next()
 })
 
 PartnerConversion.defaultColumns = 'rewardProgram, partnerProgram, conversionRate'

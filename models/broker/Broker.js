@@ -60,9 +60,8 @@ Broker.schema.pre('save', async function (next) {
 	next()
 })
 
-Broker.schema.post('save', async function (next) {
+Broker.schema.post('save', async function () {
 	await verifiedService(this)
-	next()
 })
 
 Broker.defaultColumns = 'uuid, name, displayName, default, slug, vertical, acl, abn'

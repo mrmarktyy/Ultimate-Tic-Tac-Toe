@@ -46,9 +46,8 @@ Pages.schema.pre('save', async function (next) {
 	next()
 })
 
-Pages.schema.post('save', async function (next) {
+Pages.schema.post('save', async function () {
 	await verifiedService(this)
-	next()
 })
 
 Pages.defaultColumns = 'uuid, url, title, tagline, vertical'

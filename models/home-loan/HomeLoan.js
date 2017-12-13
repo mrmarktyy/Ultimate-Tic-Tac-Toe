@@ -101,9 +101,8 @@ HomeLoan.schema.methods.remove = function (callback) {
   return this.save(callback)
 }
 
-HomeLoan.schema.post('save', async function (next) {
+HomeLoan.schema.post('save', async function () {
 	await verifiedService(this)
-	next()
 })
 
 HomeLoan.defaultColumns = 'name, company, homeLoanType, propertyPurposeTypes, repaymentTypes'

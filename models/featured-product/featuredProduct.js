@@ -51,9 +51,8 @@ FeaturedProduct.schema.pre('save', async function (next) {
   next()
 })
 
-FeaturedProduct.schema.post('save', async function (next) {
+FeaturedProduct.schema.post('save', async function () {
 	await verifiedService(this)
-	next()
 })
 
 FeaturedProduct.defaultColumns = 'uuid, vertical, title, notes, sortOrder, dateStart, dateEnd'

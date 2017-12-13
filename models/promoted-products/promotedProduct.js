@@ -52,9 +52,8 @@ PromotedProduct.schema.pre('save', async function (next) {
   next()
 })
 
-PromotedProduct.schema.post('save', async function (next) {
+PromotedProduct.schema.post('save', async function () {
 	await verifiedService(this)
-	next()
 })
 
 PromotedProduct.defaultColumns = 'uuid, vertical, title, order, dateStart, dateEnd, company'

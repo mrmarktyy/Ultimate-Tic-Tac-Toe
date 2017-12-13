@@ -61,9 +61,8 @@ TermDeposit.schema.pre('save', async function (next) {
   next()
 })
 
-TermDeposit.schema.post('save', async function (next) {
+TermDeposit.schema.post('save', async function () {
 	await verifiedService(this)
-	next()
 })
 
 TermDeposit.defaultColumns = 'name, company, uuid, slug'
