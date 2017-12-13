@@ -4,6 +4,7 @@ var genericVerticals = require('../helpers/genericVerticals')
 const specificVerticals = {
   'Car Loans': { collection: 'PersonalLoan', findClause: { isCarLoan: 'YES' }, salesforceVertical: 'Car Loans' },
   'Bank Accounts': { collection: 'BankAccount', salesforceVertical: 'Bank Accounts' },
+  'Credit Cards': { collection: 'CreditCard', salesforceVertical: 'Credit Cards' },
   'Personal Loans': { collection: 'PersonalLoan', findClause: { isPersonalLoan: 'YES' }, salesforceVertical: 'Personal Loans' },
   'Home Loans': { collection: 'HomeLoanVariation', salesforceVertical: 'Home Loans' },
   'Pension': { collection: 'Superannuation', findClause: { pension: true, company: {$ne: null} }, salesforceVertical: 'Pension Funds' },
