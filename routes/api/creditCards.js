@@ -58,7 +58,7 @@ exports.list = async function (req, res) {
       partnerConversions.forEach((obj) => {
         if (card.rewardProgram._id.toString() === obj.rewardProgram._id.toString()) {
           let partnerObject = {
-            partnerProgram: obj.partnerProgram.name,
+            partnerProgram: obj.partnerProgram.shortName,
             conversionRate: obj.conversionRate,
             redemptions: redemptionCalculation(redemptions, obj.partnerProgram._id.toString(), obj.conversionRate),
             icon: obj.partnerProgram.icon = obj.partnerProgram.icon ? obj.partnerProgram.icon.url : null,
