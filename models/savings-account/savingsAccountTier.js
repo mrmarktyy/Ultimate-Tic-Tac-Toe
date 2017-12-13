@@ -62,9 +62,8 @@ SavingsAccountTier.schema.pre('save', async function (next) {
   next()
 })
 
-SavingsAccountTier.schema.post('save', async function (next) {
+SavingsAccountTier.schema.post('save', async function () {
 	await verifiedService(this)
-	next()
 })
 
 SavingsAccountTier.defaultColumns = 'baseRate, company, product'

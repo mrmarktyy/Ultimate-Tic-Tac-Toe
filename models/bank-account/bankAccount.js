@@ -95,9 +95,8 @@ BankAccount.schema.pre('save', async function (next) {
   next()
 })
 
-BankAccount.schema.post('save', async function (next) {
+BankAccount.schema.post('save', async function () {
 	await verifiedService(this)
-	next()
 })
 
 BankAccount.defaultColumns = 'name, company, uuid, slug'

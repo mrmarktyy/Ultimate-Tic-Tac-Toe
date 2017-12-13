@@ -82,9 +82,8 @@ SavingsAccount.schema.pre('save', async function (next) {
   next()
 })
 
-SavingsAccount.schema.post('save', async function (next) {
+SavingsAccount.schema.post('save', async function () {
 	await verifiedService(this)
-	next()
 })
 
 SavingsAccount.defaultColumns = 'name, company, isMonetized'

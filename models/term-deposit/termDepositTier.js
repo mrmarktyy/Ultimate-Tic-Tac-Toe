@@ -46,9 +46,8 @@ TermDepositTier.schema.pre('save', async function (next) {
   next()
 })
 
-TermDepositTier.schema.post('save', async function (next) {
+TermDepositTier.schema.post('save', async function () {
 	await verifiedService(this)
-	next()
 })
 
 TermDepositTier.defaultColumns = 'name, company, product, minimumTerm, interestRate'

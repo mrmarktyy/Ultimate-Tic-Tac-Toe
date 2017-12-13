@@ -135,9 +135,8 @@ PersonalLoanVariation.schema.pre('save', async function (next) {
 	next()
 })
 
-PersonalLoanVariation.schema.post('save', async function (next) {
+PersonalLoanVariation.schema.post('save', async function () {
 	await verifiedService(this)
-	next()
 })
 
 PersonalLoanVariation.defaultColumns = 'name, company, product, minLoanAmount, maxLoanAmount, minLoanTerm, maxLoanTerm, comparisonRatePersonal, comparisonRatePersonalManual, comparisonRateCar, comparisonRateCarManual'

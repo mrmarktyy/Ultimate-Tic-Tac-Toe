@@ -47,9 +47,8 @@ Redemption.schema.pre('save', async function (next) {
   next()
 })
 
-Redemption.schema.post('save', async function (next) {
+Redemption.schema.post('save', async function () {
 	await verifiedService(this)
-	next()
 })
 
 Redemption.defaultColumns = 'program, redemptionName, pointsRequired'

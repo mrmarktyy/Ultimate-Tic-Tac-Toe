@@ -32,9 +32,8 @@ Branch.schema.pre('save', async function (next) {
   next()
 })
 
-Branch.schema.post('save', async function (next) {
+Branch.schema.post('save', async function () {
 	await verifiedService(this)
-	next()
 })
 
 Branch.schema.plugin(uniqueValidator)

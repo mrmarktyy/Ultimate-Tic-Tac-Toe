@@ -63,9 +63,8 @@ Company.schema.pre('save', async function (next) {
 	next()
 })
 
-Company.schema.post('save', async function (next) {
+Company.schema.post('save', async function () {
 	await verifiedService(this)
-	next()
 })
 
 Company.schema.methods.remove = function (callback) {

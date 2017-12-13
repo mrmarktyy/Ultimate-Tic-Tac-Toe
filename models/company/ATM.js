@@ -32,9 +32,8 @@ ATM.schema.pre('save', async function (next) {
   next()
 })
 
-ATM.schema.post('save', async function (next) {
+ATM.schema.post('save', async function () {
 	await verifiedService(this)
-	next()
 })
 
 ATM.schema.plugin(uniqueValidator)

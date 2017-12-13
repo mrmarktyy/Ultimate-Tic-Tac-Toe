@@ -64,9 +64,8 @@ SponsoredLink.schema.pre('save', async function (next) {
   next()
 })
 
-SponsoredLink.schema.post('save', async function (next) {
+SponsoredLink.schema.post('save', async function () {
 	await verifiedService(this)
-	next()
 })
 
 SponsoredLink.schema.index({ company: 1, vertical: 1, name: 1 }, { unique: true })

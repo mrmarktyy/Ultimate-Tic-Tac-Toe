@@ -39,9 +39,8 @@ Program.schema.pre('save', async function (next) {
   next()
 })
 
-Program.schema.post('save', async function (next) {
+Program.schema.post('save', async function () {
 	await verifiedService(this)
-	next()
 })
 
 Program.defaultSort = 'name'

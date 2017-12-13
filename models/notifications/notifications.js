@@ -34,9 +34,8 @@ Notifications.schema.pre('save', async function (next) {
   next()
 })
 
-Notifications.schema.post('save', async function (next) {
+Notifications.schema.post('save', async function () {
 	await verifiedService(this)
-	next()
 })
 
 Notifications.defaultColumns = 'notificationType, text, link, dateStart, dateEnd, appliedToUrl'
