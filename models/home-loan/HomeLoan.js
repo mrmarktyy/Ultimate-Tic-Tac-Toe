@@ -74,6 +74,8 @@ HomeLoan.relationship({ path: 'fees', ref: 'Fee', refPath: 'product' })
 HomeLoan.relationship({ path: 'features', ref: 'Feature', refPath: 'product' })
 HomeLoan.relationship({ path: 'conditions', ref: 'Condition', refPath: 'product' })
 HomeLoan.relationship({ path: 'homeLoanSpecial', ref: 'HomeLoanSpecial', refPath: 'product' })
+HomeLoan.relationship({ path: 'ChangeLogs', ref: 'ChangeLog', refPath: 'model', many: true })
+
 HomeLoan.add(verifiedCommonAttribute)
 HomeLoan.schema.pre('validate', async function (next) {
   let variation = await keystone.list('HomeLoanVariation').model.findOne({product: this._id, isDiscontinued: false, isMonetized: true}).lean().exec()

@@ -6,7 +6,6 @@ var {imageStorage} = require('../helpers/fileStorage')
 var shareOfVoiceAttributes = require('../common/ShareOfVoiceCommonAttributes')
 var verifiedCommonAttribute = require('../common/verifiedCommonAttribute')
 var verifiedService = require('../../services/verifiedService')
-var verifiedCommonAttribute = require('../common/verifiedCommonAttribute')
 
 var Broker = new keystone.List('Broker', {track: true}).add({
 	uuid: {type: Types.Text, initial: true, noedit: true, unique: true},
