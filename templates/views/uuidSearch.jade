@@ -1,0 +1,67 @@
+extends ../layouts/default
+
+block content
+  .container
+    h1 UUID Search
+    .row
+      .col-sm-8
+        //- form(action='/import-page', method='post')
+        .form-group
+          input(type="text", placeholder="your UUID", size="38", id='select_uuid')
+        button.btn.btn-large.btn-primary#uuidUpload Search
+        button.btn.btn-large.btn-primary#uuidClear Clear
+
+    .row
+      .col-sm-8
+        #record-summary
+
+
+block intro
+  .row
+    .col-sm-8.col-sm-offset-2
+      .alert
+
+block js
+    script.
+      let resetPage = () => {
+        $('div.alert').empty()
+        $('div.alert').removeClass('alert-success alert-danger')
+        $('#record-summary ul').remove()
+      }
+
+      $(document).ready(function() {
+        $('#uuidUpload').click(function(e) {
+          let uuid = $('#select_uuid').val()
+          $.ajax({
+            method: "POST",
+            url: "/find-uuid",
+            data: { uuid: $('#select_uuid').val() }
+          })
+            .done(function(msg) {
+              resetPage()
+              if (msg.vertical.flashcode) {
+                $('div.alert').addClass('alert-success')
+                $('#record-summary').append('<ul style="list-style: none;"></ul>')
+                let listItem
+                for (let key in msg.data) {
+                  if (key === 'url') {
+                    listItem = `<li>${key}: <a href=${msg.data[key]}>${msg.data[key]}</a></li>`
+                  } else {
+                    listItem = `<li>${key}: ${msg.data[key]}</li>`
+                  }
+                  $('#record-summary ul').append(listItem)
+                }
+              } else {
+                $('div.alert').addClass('alert-danger')
+              }
+              if (msg.vertical.flashmessage) {
+                $('div.alert').text(msg.vertical.flashmessage)
+              }
+            })
+        })
+
+        $('#uuidClear').click(function(e) {
+          $('#select_uuid').val('')
+          resetPage()
+        })
+      })

@@ -5839,3 +5839,30 @@ button.close {
   margin-top: 40px;
   padding-top: 10px;
   border-top: 1px solid #eeeeee; }
+
+.dropdown-menu li:hover .sub-menu {
+  visibility: visible; }
+
+.dropdown:hover .dropdown-menu {
+  display: block;
+  margin-top: 0; }
+
+.dropdown-menu .sub-menu {
+  left: 100%;
+  position: absolute;
+  top: 0;
+  visibility: hidden;
+  margin-top: -1px; }
+
+.dropdown-text {
+  padding-top: 15px;
+  margin-left: 20px; }
+
+.dropdowntitle {
+  padding-left: 10px;
+  font-size: 14px;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; }
+
+#record-summary {
+  padding-top: 20px;
+  font-size: 20px; }
