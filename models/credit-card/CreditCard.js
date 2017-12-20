@@ -241,7 +241,7 @@ CreditCard.schema.pre('save', function (next) {
 	}
 	this.isLowRate = this.purchaseRateStandard <= 14.0 || this.name.toLowerCase().includes('low rate')
 	this.isLowFee = this.annualFeeStandard <= 50 || this.name.toLowerCase().includes('low fee')
-	this.isReward = this.rewardProgram !== null
+	this.isReward = this.rewardProgram ? this.rewardProgram !== null : false
 	next()
 })
 
