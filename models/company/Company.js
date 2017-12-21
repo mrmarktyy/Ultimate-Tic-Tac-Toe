@@ -22,7 +22,7 @@ Company.add({
 		type: Types.Select,
 		required: true,
 		initial: true,
-		options: 'Major bank, Regional bank, Foreign bank, Mutual bank, Credit union, Building society, Peer to Peer,  Online lender, Non-bank Lender, Other',
+		options: 'Major bank, Regional bank, Foreign bank, Mutual bank, Credit union, Building society, Peer to Peer,  Online lender, Non-bank Lender, Super, Other',
 	},
 	isDiscontinued: { type: Types.Boolean, indent: true, default: false },
 	abnOrAcn: { type: Types.Number },
