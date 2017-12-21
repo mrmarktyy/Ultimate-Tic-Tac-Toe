@@ -14,7 +14,7 @@ exports.list = async function (req, res) {
 }
 
 async function getSavingAccounts (accounts) {
-	const variations = await SavingsAccountTier.model.find().populate('product').lean().exec()
+	const variations = await SavingsAccountTier.model.find({ isDiscontinued: false }).populate('product').lean().exec()
 	const companySavingsAccounts = await CompanySavingsAccount.model.find().populate('big4ComparisonProduct').lean().exec()
 	const monetizedList = await monetizedCollection('Savings Accounts')
 
