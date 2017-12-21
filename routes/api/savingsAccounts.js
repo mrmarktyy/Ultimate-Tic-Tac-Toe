@@ -8,13 +8,13 @@ var CompanySavingsAccount = keystone.list('CompanySavingsAccount')
 var monetizedCollection = require('./monetizedCollection')
 
 exports.list = async function (req, res) {
-  let savingsAccounts = await SavingsAccount.model.find().populate('company').lean().exec()
+  let savingsAccounts = await SavingsAccount.model.find({ isDiscontinued: false }).populate('company').lean().exec()
   let result = await getSavingAccounts(savingsAccounts)
   res.jsonp(result)
 }
 
 async function getSavingAccounts (accounts) {
-	const variations = await SavingsAccountTier.model.find({ isDiscontinued: false }).populate('product').lean().exec()
+	const variations = await SavingsAccountTier.model.find().populate('product').lean().exec()
 	const companySavingsAccounts = await CompanySavingsAccount.model.find().populate('big4ComparisonProduct').lean().exec()
 	const monetizedList = await monetizedCollection('Savings Accounts')
 
