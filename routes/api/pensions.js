@@ -6,6 +6,7 @@ const Superannuation = keystone.list('Superannuation')
 const monetizedCollection = require('./monetizedCollection')
 const CompanyService = require('../../services/CompanyService')
 const { getYears, ratings, segments, purposes, options } = require('../../models/superannuation/constants')
+const recommendedMultiplier = require('../../utils/recommendedMultiplier').multiplier
 
 exports.list = async function (req, res) {
   const pensions = await Superannuation.model.find({ pension: true, isDiscontinued: false }).populate({path: 'fundgroup', populate: {path: 'company'}}).lean().exec()
@@ -118,6 +119,8 @@ async function getPensionObjects (pensions) {
 		product.publicOffer = pension.public_offer === 'Yes'
 		product.productType = pension.fund_type
 		product.awards = _.map(getMatchedElments(ratings, pension.rating_image), (rating) => (_.pick(rating, ['name', 'url'])))
+    product.popularityScore = (product.monthlyClicks ? product.monthlyClicks * recommendedMultiplier : 0)
+    delete product.monthlyClicks
 		return product
 	})
 }

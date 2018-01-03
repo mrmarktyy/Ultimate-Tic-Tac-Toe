@@ -8,7 +8,6 @@ var Types = keystone.Field.Types
 var verifiedCommonAttribute = require('../common/verifiedCommonAttribute')
 var verifiedService = require('../../services/verifiedService')
 
-
 var TermDeposit = new keystone.List('TermDeposit', {track: true}).add(productCommonAttributes).add({
 	company: {
 		type: Types.Relationship,
@@ -24,8 +23,8 @@ var TermDeposit = new keystone.List('TermDeposit', {track: true}).add(productCom
 	otherBenefits: { type: Types.Text },
 	otherRestrictions: { type: Types.Text },
 	earlyWithdrawalFee: { type: Types.Text },
-	minimumAgeRequirement: { type: Types.Number},
-	coveredByGovernmentGuaranteeRestriction: { type: Types.Text},
+	minimumAgeRequirement: { type: Types.Number },
+	coveredByGovernmentGuaranteeRestriction: { type: Types.Text },
 	noticePeriodToWithdraw: { type: Types.Number, default: 0 },
 	jointApplicationAvailable: { type: Types.Select, options: availableOptions.all, default: availableOptions.yes },
 	maturityAlertByEmail: { type: Types.Select, options: availableOptions.all, default: availableOptions.yes },
@@ -37,7 +36,7 @@ var TermDeposit = new keystone.List('TermDeposit', {track: true}).add(productCom
 	interestPaymentFrequencyOptions: { type: Types.Select, options: 'Monthly, Annually, Semi-Annually, Fortnightly, Weekly, Daily' },
 	interestPaymentMethod: { type: Types.MultiSelect, options: 'Cheque, Direct Credit, Rollover on maturity' },
 	accountKeepingFeeFrequency: { type: Types.MultiSelect, options: 'Monthly, Annually, Semi-Annually, Fortnightly, Weekly' },
-
+	monthlyClicks: {type: Types.Number, noedit: true, min: 0, default: 0},
 })
 
 TermDeposit.relationship({ path: 'termDepositTiers', ref: 'TermDepositTier', refPath: 'product' })

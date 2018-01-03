@@ -109,6 +109,7 @@ PersonalLoan.add({
   hasEarlyExitPenaltyFeeVaries: { type: Types.Select, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown },
   otherFees: { type: Types.Text },
   comparisonRateDisclaimer: {type: Types.Code, height: 50, language: 'html'},
+  monthlyClicks: {type: Types.Number, noedit: true, min: 0, default: 0},
 })
 
 PersonalLoan.relationship({ path: 'personalLoanVariations', ref: 'PersonalLoanVariation', refPath: 'product' })

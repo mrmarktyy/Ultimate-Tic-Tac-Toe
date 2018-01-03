@@ -101,12 +101,49 @@ exports.list = async function (req, res) {
 		})
 		countPromises.push(plbPromise)
 
+		let plccPromise = PersonalLoan.model
+			.find({company: company._id, monthlyClicks: {$gt: 0}, isPersonalLoan: 'YES'})
+			.exec((err, results) => {
+				let totalClicks = 0
+				results.forEach((result) => {
+					totalClicks = totalClicks + result.monthlyClicks
+				})
+
+				response[company._id].verticals.personalLoans.popularityScore = totalClicks * MULTIPLIER
+			})
+		countPromises.push(plccPromise)
+
+		let clccPromise = PersonalLoan.model
+			.find({company: company._id, monthlyClicks: {$gt: 0}, isCarLoan: 'YES'})
+			.exec((err, results) => {
+				let totalClicks = 0
+				results.forEach((result) => {
+					totalClicks = totalClicks + result.monthlyClicks
+				})
+
+				response[company._id].verticals.carLoans.popularityScore = totalClicks * MULTIPLIER
+			})
+		countPromises.push(clccPromise)
+
 		let ccPromise = CreditCard.model.count({
 			company: company._id,
 		}).exec((err, count) => {
 			if (err) return 'database error'
 			response[company._id].verticals.creditCards.count = count
 		})
+		countPromises.push(ccPromise)
+
+		let ccclkPromise = CreditCard.model
+			.find({company: company._id, monthlyClicks: {$gt: 0}})
+			.exec((err, results) => {
+				let totalClicks = 0
+				results.forEach((result) => {
+					totalClicks = totalClicks + result.monthlyClicks
+				})
+
+				response[company._id].verticals.creditCards.popularityScore = totalClicks * MULTIPLIER
+			})
+		countPromises.push(ccclkPromise)
 
 		let saPromise = SavingsAccounts.model.count({
 			company: company._id,
@@ -129,6 +166,18 @@ exports.list = async function (req, res) {
 		})
 		countPromises.push(saCompanyPromise)
 
+		let saclkPromise = SavingsAccounts.model
+			.find({company: company._id, monthlyClicks: {$gt: 0}})
+			.exec((err, results) => {
+				let totalClicks = 0
+				results.forEach((result) => {
+					totalClicks = totalClicks + result.monthlyClicks
+				})
+
+				response[company._id].verticals.savingsAccounts.popularityScore = totalClicks * MULTIPLIER
+			})
+		countPromises.push(saclkPromise)
+
 		const superPromise = Superannuation.model.count({
 			company: company._id,
 		}).exec((err, count) => {
@@ -137,6 +186,18 @@ exports.list = async function (req, res) {
 		})
 		countPromises.push(superPromise)
 
+		let superclkPromise = Superannuation.model
+			.find({company: company._id, monthlyClicks: {$gt: 0}})
+			.exec((err, results) => {
+				let totalClicks = 0
+				results.forEach((result) => {
+					totalClicks = totalClicks + result.monthlyClicks
+				})
+
+				response[company._id].verticals.superannuation.popularityScore = totalClicks * MULTIPLIER
+			})
+		countPromises.push(superclkPromise)
+
 		const bankAccountPromise = BankAccounts.model.count({
 			company: company._id,
 		}).exec((err, count) => {
@@ -144,6 +205,18 @@ exports.list = async function (req, res) {
 			response[company._id].verticals.bankAccounts.count = count
 		})
 		countPromises.push(bankAccountPromise)
+
+		let baclkPromise = BankAccounts.model
+			.find({company: company._id, monthlyClicks: {$gt: 0}})
+			.exec((err, results) => {
+				let totalClicks = 0
+				results.forEach((result) => {
+					totalClicks = totalClicks + result.monthlyClicks
+				})
+
+				response[company._id].verticals.bankAccounts.popularityScore = totalClicks * MULTIPLIER
+			})
+		countPromises.push(baclkPromise)
 
 		let tdPromise = TermDeposits.model.count({
 			company: company._id,
@@ -164,6 +237,18 @@ exports.list = async function (req, res) {
 			}
 		})
 		countPromises.push(tdCompanyPromise)
+
+		let tdclkPromise = TermDeposits.model
+			.find({company: company._id, monthlyClicks: {$gt: 0}})
+			.exec((err, results) => {
+				let totalClicks = 0
+				results.forEach((result) => {
+					totalClicks = totalClicks + result.monthlyClicks
+				})
+
+				response[company._id].verticals.termDeposits.popularityScore = totalClicks * MULTIPLIER
+			})
+		countPromises.push(tdclkPromise)
 	})
 
 	Promise.all(countPromises).then(() => {

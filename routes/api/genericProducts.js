@@ -5,6 +5,7 @@ var CompanyService = require('../../services/CompanyService')
 var monetizedCollection = require('./monetizedCollection')
 var genericVerticals = require('../../models/helpers/genericVerticals')
 var removeUneededFields = require('../../utils/removeUneededFields')
+const recommendedMultiplier = require('../../utils/recommendedMultiplier').multiplier
 
 exports.list = async function (req, res) {
 	const monetizedCollectionRequest = []
@@ -22,8 +23,10 @@ exports.list = async function (req, res) {
 		product.gotoSiteEnabled = monetize ? monetize.enabled : false
 		product.paymentType = monetize ? monetize.paymentType : null
 		product.company = removeUneededFields(CompanyService.fixLogoUrl(product.company))
+		product.popularityScore = (product.monthlyClicks ? product.monthlyClicks * recommendedMultiplier : 0)
+		delete product.monthlyClicks
+
 		return removeUneededFields(product)
 	})
 	res.jsonp(enrichedProducts)
 }
-

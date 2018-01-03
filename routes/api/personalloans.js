@@ -11,6 +11,7 @@ var logger = require('../../utils/logger')
 var monetizedCollection = require('./monetizedCollection')
 var removeUneededFields = require('../../utils/removeUneededFields')
 var setPromotedOrder = require('../../utils/helperFunctions').setPromotedOrder
+const recommendedMultiplier = require('../../utils/recommendedMultiplier').multiplier
 
 exports.list = async function (req, res) {
 	let personalLoans = await PersonalLoan.model.find({ isDiscontinued: false }).populate('company').lean().exec()
@@ -78,6 +79,8 @@ async function getPersonalLoanObjects (loans) {
 			return qualification
 		})
 
+		loan.popularityScore = (loan.monthlyClicks ? loan.monthlyClicks * recommendedMultiplier : 0)
+		delete loan.monthlyClicks
 		return loan
 	})
 

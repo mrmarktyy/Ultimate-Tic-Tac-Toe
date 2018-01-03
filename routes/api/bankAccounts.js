@@ -6,6 +6,7 @@ const BankAccount = keystone.list('BankAccount')
 const CompanyBankAccount = keystone.list('CompanyBankAccount')
 const monetizedCollection = require('./monetizedCollection')
 const CompanyService = require('../../services/CompanyService')
+const recommendedMultiplier = require('../../utils/recommendedMultiplier').multiplier
 
 exports.list = async function (req, res) {
   const bankAccounts = await BankAccount.model.find().populate('company').lean().exec()
@@ -31,6 +32,8 @@ async function getBankAccounts (accounts) {
 		account.gotoSiteEnabled = monetize ? monetize.enabled : false
 		account.paymentType = monetize ? monetize.paymentType : null
 		setPromotedOrder(account)
+    account.popularityScore = (account.monthlyClicks ? account.monthlyClicks * recommendedMultiplier : 0)
+    delete account.monthlyClicks
 		return removeUneededFields(account)
 	})
 
