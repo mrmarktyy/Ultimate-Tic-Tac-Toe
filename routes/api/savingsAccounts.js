@@ -6,6 +6,7 @@ var SavingsAccount = keystone.list('SavingsAccount')
 var SavingsAccountTier = keystone.list('SavingsAccountTier')
 var CompanySavingsAccount = keystone.list('CompanySavingsAccount')
 var monetizedCollection = require('./monetizedCollection')
+const CompanyService = require('../../services/CompanyService')
 const recommendedMultiplier = require('../../utils/recommendedMultiplier').multiplier
 
 exports.list = async function (req, res) {
@@ -20,7 +21,7 @@ async function getSavingAccounts (accounts) {
 	const monetizedList = await monetizedCollection('Savings Accounts')
 
 	let result = accounts.map((account, index) => {
-		let company = Object.assign({}, account.company)
+		let company = Object.assign({}, CompanyService.fixLogoUrl(account.company))
 		account.variations = variations
 			.filter((variation) => variation.product.uuid === account.uuid)
 			.map((variation) => {

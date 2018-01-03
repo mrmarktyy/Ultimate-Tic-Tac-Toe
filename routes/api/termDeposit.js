@@ -5,6 +5,7 @@ var TermDeposit = keystone.list('TermDeposit')
 var TermDepositTier = keystone.list('TermDepositTier')
 var TermDepositCompany = keystone.list('TermDepositCompany')
 var monetizedCollection = require('./monetizedCollection')
+const CompanyService = require('../../services/CompanyService')
 const recommendedMultiplier = require('../../utils/recommendedMultiplier').multiplier
 
 exports.list = async function (req, res) {
@@ -19,7 +20,7 @@ async function customizeTermDeposit (termDeposits) {
 	const monetizedList = await monetizedCollection('Term Deposits')
 
 	let result = termDeposits.map((termDeposit) => {
-		let company = Object.assign({}, termDeposit.company)
+		let company = Object.assign({}, CompanyService.fixLogoUrl(termDeposit.company))
 		termDeposit.variations = variations
 			.filter((variation) => variation.product.uuid === termDeposit.uuid)
 			.map((variation) => {
