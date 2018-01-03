@@ -70,6 +70,7 @@ BankAccount.add({
 	uniqueFeatures: { type: Types.TextArray },
 	additionalBenefits: { type: Types.TextArray },
 	restrictions: { type: Types.TextArray },
+  monthlyClicks: {type: Types.Number, noedit: true, min: 0, default: 0},
 })
 BankAccount.add(verifiedCommonAttribute)
 BankAccount.relationship({ path: 'ChangeLogs', ref: 'ChangeLog', refPath: 'model', many: true })

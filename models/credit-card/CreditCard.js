@@ -209,6 +209,7 @@ CreditCard.add({
 	bonusPoints: { type: Types.Number, min: 0 },
 	bonusPointsConditions: { type: Types.Text, label: 'Bonus Pts Cond' },
 	cardArt: imageStorage('creditcard'),
+  monthlyClicks: {type: Types.Number, noedit: true, min: 0, default: 0},
 })
 CreditCard.add(verifiedCommonAttribute)
 CreditCard.relationship({ path: 'earnRates', ref: 'EarnRate', refPath: 'product', many: true })

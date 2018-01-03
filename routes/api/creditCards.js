@@ -6,6 +6,7 @@ const Redemption = keystone.list('Redemption')
 const EarnRate = keystone.list('EarnRate')
 const PartnerConversion = keystone.list('PartnerConversion')
 const monetizedCollection = require('./monetizedCollection')
+const recommendedMultiplier = require('../../utils/recommendedMultiplier').multiplier
 
 exports.list = async function (req, res) {
   let removeFields = { updatedAt: 0, updatedBy: 0, isMonetized: 0, __v: 0, createdAt: 0, createdBy: 0 }
@@ -51,6 +52,8 @@ exports.list = async function (req, res) {
     card.balanceTransferConditions = card.balanceTransferConditions === '' ? null : card.balanceTransferConditions
 
     card.estimatedForeignAtmCost = estimatedForeignAtmCost(card)
+    card.popularityScore = (card.monthlyClicks ? card.monthlyClicks * recommendedMultiplier : 0)
+    delete card.monthlyClicks
     if (card.rewardProgram) {
       card.rewardProgram.redemptions = redemptionCalculation(redemptions, card.rewardProgram._id.toString())
       card.isFrequentFlyer = card.rewardProgram.isFrequentFlyer || false

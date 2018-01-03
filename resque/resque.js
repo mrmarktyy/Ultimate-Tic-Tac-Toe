@@ -35,7 +35,7 @@ queue.connect(() => {
   })
   schedule.scheduleJob('00 7 * * *', () => {
     if (scheduler.master) {
-      queue.enqueue('ultimate', 'homeLoansMonthlyClickCount')
+      queue.enqueue('ultimate', 'monthlyClickCount')
     }
   })
   schedule.scheduleJob('15 7 * * *', () => {

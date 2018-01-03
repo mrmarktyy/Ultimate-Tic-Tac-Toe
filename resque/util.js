@@ -3,7 +3,7 @@ require('dotenv').config()
 var Resque = require('node-resque')
 var logger = require('../utils/logger')
 
-var homeLoansMonthlyClickCount = require('../resqueJobs/importHomeloansMonthlyClickCount')
+var monthlyClickCount = require('../resqueJobs/importMonthlyClickCount')
 var paymentMonetizationTypes = require('../resqueJobs/importPaymentMonetizationTypes')
 var homeLoansToRedshift = require('../resqueJobs/loadHomeLoansToRedshift')
 var personalLoansToRedshift = require('../resqueJobs/loadPersonalLoansToRedshift')
@@ -21,7 +21,7 @@ const connectionDetails = {
 }
 
 const jobs = {
-  'homeLoansMonthlyClickCount': homeLoansMonthlyClickCount,
+  'monthlyClickCount': monthlyClickCount,
   'homeLoansToRedshift': homeLoansToRedshift,
   'paymentMonetizationTypes': paymentMonetizationTypes,
   'personalLoansToRedshift': personalLoansToRedshift,
