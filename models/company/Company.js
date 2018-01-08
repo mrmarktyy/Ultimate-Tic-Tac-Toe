@@ -33,9 +33,12 @@ Company.add({
 	slug: { type: Types.Text, unique: true, required: true, initial: true },
 	legacyCode: { type: Types.Text, noedit: true },
 	url: { type: Types.Url, required: true, index: true, initial: true },
+  facebook: { type: Types.Url },
+  google: { type: Types.Url },
 	searchKeyword: { type: Types.TextArray },
 	logo: imageStorage('company'),
 	blurb: { type: Types.Code, height: 250, language: 'html' },
+  productReview: { type: Types.Url },
 })
 Company.add(verifiedCommonAttribute)
 Company.relationship({ path: 'ATMs', ref: 'ATM', refPath: 'company' })
