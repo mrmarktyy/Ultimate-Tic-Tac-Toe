@@ -24,6 +24,7 @@ EarnRate.add({
     noedit: true,
     filters: {company: ':company'},
   },
+  isGenericEarnRate: { type: Boolean, indent: true, default: false },
   pointsEarned: { type: Types.Number, initial: true, require: true, default: 0 },
   spendAt: { type: Types.Text, initial: true, required: true },
   cardType: {
