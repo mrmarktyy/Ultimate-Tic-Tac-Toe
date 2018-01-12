@@ -109,11 +109,14 @@ function redemptionCalculation (redemptions, rewardProgramId, pointconversion = 
   let rewards = []
     redemptions.forEach((obj) => {
     if (rewardProgramId.toString() === obj.program._id.toString()) {
+      let pointsRequired = obj.pointsRequired * pointconversion
       let reward = {
         program: obj.program.name,
         redemptionName: obj.redemptionName.name,
         redemptionType: obj.redemptionType.name,
-        pointsRequired: obj.pointsRequired * pointconversion,
+        pointsRequired: pointsRequired,
+        dollarPerPoint: obj.redemptionName.price ? (obj.redemptionName.price / parseFloat(pointsRequired)).toFixed(4) : 0,
+        priceMethod: obj.redemptionName.priceMethod,
       }
       rewards.push(reward)
     }
