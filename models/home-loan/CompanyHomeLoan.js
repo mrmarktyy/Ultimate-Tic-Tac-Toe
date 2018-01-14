@@ -32,6 +32,7 @@ CompanyHomeLoan.add({
 	hasRepaymentWidget: {type: Types.Boolean, indent: true, default: false},
 	howToApplyBlurb: {type: Types.Code, height: 250, language: 'html'},
 	eligibilityBlurb: {type: Types.Code, height: 150, language: 'html'},
+  productReview: { type: Types.Url },
 })
 
 CompanyHomeLoan.schema.pre('save', async function (next) {

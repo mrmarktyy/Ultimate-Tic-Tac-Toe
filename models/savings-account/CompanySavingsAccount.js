@@ -30,6 +30,7 @@ CompanySavingsAccount.add({
   removeBig4ComparisonProduct: {type: Types.Boolean, indent: true, default: false},
   hasRepaymentWidget: {type: Types.Boolean, indent: true, default: false},
   blurb: { type: Types.Code, height: 250, language: 'html' },
+  productReview: { type: Types.Url },
 })
 
 CompanySavingsAccount.relationship({ path: 'ChangeLogs', ref: 'ChangeLog', refPath: 'model', many: true })
