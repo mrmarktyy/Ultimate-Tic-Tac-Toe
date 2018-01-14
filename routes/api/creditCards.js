@@ -41,7 +41,7 @@ exports.list = async function (req, res) {
     card.gotoSiteUrl = monetize ? monetize.applyUrl : null
     card.gotoSiteEnabled = monetize ? monetize.enabled : false
     card.paymentType = monetize ? monetize.paymentType : null
-    card.cardArt = card.cardArt ? card.cardArt.url : null
+    card.cardArt = card.cardArt ? fixCardArtUrl(card.cardArt.url) : null
 
     card.foreignExchangeFeeMCDollar = card.foreignExchangeFeeMcDollar
     card.foreignExchangeFeeMCPercent= card.foreignExchangeFeeMcPercent
@@ -122,4 +122,11 @@ function redemptionCalculation (redemptions, rewardProgramId, pointconversion = 
     }
   })
   return rewards
+}
+
+function fixCardArtUrl (url) {
+  if (url) {
+    url = url.replace('res.cloudinary.com', '//production-ultimate-assets.ratecity.com.au')
+  }
+  return url
 }
