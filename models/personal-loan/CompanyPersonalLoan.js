@@ -40,6 +40,7 @@ CompanyPersonalLoan.add({
   hasRepaymentWidget: {type: Types.Boolean, indent: true, default: false},
 	personalLoanBlurb: { type: Types.Code, height: 250, language: 'html' },
 	carLoanBlurb: { type: Types.Code, height: 250, language: 'html' },
+  productReview: { type: Types.Url },
 })
 
 CompanyPersonalLoan.relationship({ path: 'ChangeLogs', ref: 'ChangeLog', refPath: 'model', many: true })
