@@ -204,6 +204,7 @@ CreditCard.add({
 		noedit: false,
 
 	},
+	removeRewardProgram: {type: Types.Boolean, indent: true, initial: false},
 	pointsCap: { type: Types.Number, min: 0 },
 	pointsCapFrequency: { type: Types.Number, min: 0 },
 	bonusPoints: { type: Types.Number, min: 0 },
@@ -237,6 +238,10 @@ CreditCard.schema.pre('validate', function (next) {
 })
 
 CreditCard.schema.pre('save', function (next) {
+	if (this.removeRewardProgram) {
+    this.rewardProgram = null
+  }
+  this.removeRewardProgram = undefined
 	if (!this.uuid) {
 		this.uuid = uuid.v4()
 	}
