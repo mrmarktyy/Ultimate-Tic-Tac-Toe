@@ -11,6 +11,9 @@ var verticals = [
   { value: 'pension-funds', label: 'Pension' },
   { value: 'managed-funds', label: 'Managed Funds' },
 	{ value: 'term-deposits', label: 'Term Deposits' },
+	{ value: 'bank-accounts', label: 'Bank Accounts' },
+	{ value: 'infographic', label: 'Infographic' },
+	{ value: 'investment-funds', label: 'Investment Funds' },
 	{ value: 'default', label: 'Default' },
 ]
 
