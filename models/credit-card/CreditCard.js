@@ -214,8 +214,9 @@ CreditCard.add({
 })
 CreditCard.add(verifiedCommonAttribute)
 CreditCard.relationship({ path: 'earnRates', ref: 'EarnRate', refPath: 'product', many: true })
-CreditCard.relationship({ path: 'ChangeLogs', ref: 'ChangeLog', refPath: 'model', many: true })
+CreditCard.relationship({ path: 'Perk', ref: 'Perk', refPath: 'product', many: true })
 CreditCard.relationship({ path: 'creditCardSpecial', ref: 'CreditCardSpecial', refPath: 'product' })
+CreditCard.relationship({ path: 'ChangeLogs', ref: 'ChangeLog', refPath: 'model', many: true })
 
 CreditCard.schema.pre('validate', function (next) {
 	if (([undefined, null].indexOf(this.offerExpires) < 0) && (this.offerExpires <= new Date())) {
