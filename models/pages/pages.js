@@ -11,7 +11,7 @@ const Pages = new keystone.List('Pages', {track: true}).add({
 	header: {type: Types.Text, initial: true},
 	tagline: {type: Types.Text, initial: true},
 	title: {type: Types.Text, initial: true},
-	vertical: {type: Types.Select, options: verticals, initial: true},
+	vertical: {type: Types.Select, options: verticals, initial: true, default: 'default'},
 	resultName: {type: Types.Text},
 	description: {type: Types.Code, height: 250, language: 'html'},
 	keywords: {type: Types.Text},
