@@ -1,7 +1,6 @@
 var keystone = require('keystone')
 const Types = keystone.Field.Types
 var changeLogService = require('../../services/changeLogService')
-var mongoose = require('mongoose')
 
 const Perk = new keystone.List('Perk', {
   track: true,
@@ -49,4 +48,5 @@ Perk.schema.pre('save', async function (next) {
 })
 
 Perk.defaultColumns = 'perkType, company, product, value, conditions'
+Perk.defaultSort = 'perkType'
 Perk.register()

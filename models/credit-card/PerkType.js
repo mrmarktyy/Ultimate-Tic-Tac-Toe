@@ -8,7 +8,7 @@ const PerkType = new keystone.List('PerkType', {
 
 PerkType.add({
   name: { type: Types.Text, initial: true, required: true },
-  oldname: { type: Types.Text },
+  oldname: { type: Types.Text, noedit: true },
   value: { type: Types.Number, initial: true, required: true },
   Assumptions: { type: Types.Text, initial: true },
 })

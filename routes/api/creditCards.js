@@ -5,8 +5,40 @@ const CreditCard = keystone.list('CreditCard')
 const Redemption = keystone.list('Redemption')
 const EarnRate = keystone.list('EarnRate')
 const PartnerConversion = keystone.list('PartnerConversion')
+const PerkType = keystone.list('PerkType')
+const Perk = keystone.list('Perk')
+
 const monetizedCollection = require('./monetizedCollection')
 const recommendedMultiplier = require('../../utils/recommendedMultiplier').multiplier
+
+const DEFAULT_OLD_PERKS = {
+  perksFreeDomesticTravelInsurance: 'NO',
+  perksFreeDomesticTravelInsuranceConditions: '',
+  perksFreeInternationalTravelInsurance: 'NO',
+  perksFreeInternationalTravelInsuranceConditions: '',
+  perksFreeTravelInsuranceDays: null,
+  perksFreeTravelInsuranceDaysConditions: '',
+  perksFreeSupplementaryCards: 'NO',
+  perksFreeSupplementaryCardsConditions: '',
+  perksPurchaseProtectionDays: null,
+  perksPurchaseProtectionConditions: '',
+  perksPriceGuarantee: 'NO',
+  perksPriceGuaranteeConditions: '',
+  perksExtendedWarranty: 'NO',
+  perksExtendedWarrantyConditions: '',
+  perksRentalCarExcessInsurance: 'NO',
+  perksRentalCarExcessInsuranceConditions: '',
+  perksVIPSeating: 'NO',
+  perksVIPSeatingConditions: '',
+  perksConcierge: 'NO',
+  perksConciergeConditions: '',
+  perksSpecialEvents: 'NO',
+  perksSpecialEventsConditions: '',
+  perksPartnerDiscounts: 'NO',
+  perksPartnerDiscountsConditions: '',
+  perksAirportLounge: 'NO',
+  perksAirportLoungeConditions: '',
+}
 
 exports.list = async function (req, res) {
   let removeFields = { updatedAt: 0, updatedBy: 0, isMonetized: 0, __v: 0, createdAt: 0, createdBy: 0 }
@@ -25,11 +57,23 @@ exports.list = async function (req, res) {
     .populate('company rewardProgram', removePopulatedFields)
     .lean()
     .exec()
-
   let earnRate = await EarnRate.model.find({}, removeFields)
     .lean()
     .exec()
 
+  let perks = await Perk.model
+    .find({}. removeFields)
+    .populate('perkType', removePopulatedFields)
+    .lean()
+    .exec()
+  let perkTypes = (await PerkType.model
+    .find()
+    .lean()
+    .exec()).map((perk) => {
+      return perk.name
+    })
+
+  let cards = []
   creditcards.forEach((card) => {
     let company = CompanyService.fixLogoUrl(card.company)
     if (company.logo && company.logo.url) {
@@ -54,6 +98,9 @@ exports.list = async function (req, res) {
     card.estimatedForeignAtmCost = estimatedForeignAtmCost(card)
     card.popularityScore = (card.monthlyClicks ? card.monthlyClicks * recommendedMultiplier : 0)
     delete card.monthlyClicks
+
+    card = populateOldperks(card, perks)
+    card.perks = populatePerks (card, perks, perkTypes)
     if (card.rewardProgram) {
       card.rewardProgram.redemptions = redemptionCalculation(redemptions, card.rewardProgram._id.toString())
       card.isFrequentFlyer = card.rewardProgram.isFrequentFlyer || false
@@ -83,8 +130,9 @@ exports.list = async function (req, res) {
       card.earnRate = null
       card.isFrequentFlyer = false
     }
+    cards.push(card)
   })
-  res.jsonp(creditcards)
+  res.jsonp(cards)
 }
 
 function estimatedForeignAtmCost (card) {
@@ -129,4 +177,44 @@ function fixCardArtUrl (url) {
     url = url.replace('res.cloudinary.com', '//production-ultimate-assets.ratecity.com.au')
   }
   return url
+}
+
+function populateOldperks (card, perks) {
+  let oldPerkNames = Object.keys(DEFAULT_OLD_PERKS)
+  let cardPerks = perks.filter((perk) => {
+    return perk.product.toString() === card._id.toString()
+  })
+
+  let perksAvailable = {}
+  cardPerks.forEach((perk) => {
+    perksAvailable[perk.perkType.oldname] = 'YES'
+    if (oldPerkNames.includes(`${perk.perkType.oldname}Days`)) {
+      perksAvailable[`${perk.perkType.oldname}Days`] = perk.days
+    }
+    if  (oldPerkNames.includes(`${perk.perkType.oldname}Conditions`)) {
+      perksAvailable[`${perk.perkType.oldname}Conditions`] = perk.conditions
+    }
+  })
+  return  Object.assign({}, card, DEFAULT_OLD_PERKS, perksAvailable)
+}
+
+function populatePerks (card, perks, perkTypes) {
+  let perkList = []
+  let cardPerks = perks.filter((perk) => {
+    return perk.product.toString() === card._id.toString()
+  })
+  for (let name of perkTypes) {
+    let cardPerk = cardPerks.find((perk) => {return perk.perkType.name === name})
+    let item = {name: name, active: false, conditions: '', days: null, daysConditions: '', assumptions: ''}
+    if (cardPerk) {
+      item[name] = name
+      item.active = true
+      item.conditions = cardPerk.conditions
+      item.days = cardPerk.days
+      item.daysConditions = cardPerk.daysConditions
+      item.assumptions = cardPerk.perkType.assumptions
+    }
+    perkList.push(item)
+  }
+  return perkList
 }
