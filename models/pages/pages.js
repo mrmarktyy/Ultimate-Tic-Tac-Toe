@@ -11,6 +11,7 @@ const Pages = new keystone.List('Pages', {track: true}).add({
 	header: {type: Types.Text, initial: true},
 	tagline: {type: Types.Text, initial: true},
 	title: {type: Types.Text, initial: true},
+	popularSearchTitle: {type: Types.Text},
 	vertical: {type: Types.Select, options: verticals, initial: true, default: 'default'},
 	resultName: {type: Types.Text},
 	description: {type: Types.Code, height: 250, language: 'html'},
@@ -52,4 +53,3 @@ Pages.schema.post('save', async function () {
 
 Pages.defaultColumns = 'uuid, url, title, tagline, vertical'
 Pages.register()
-
