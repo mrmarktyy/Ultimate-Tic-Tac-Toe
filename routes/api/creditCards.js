@@ -194,6 +194,10 @@ function populateOldperks (card, perks) {
     if  (oldPerkNames.includes(`${perk.perkType.oldname}Conditions`)) {
       perksAvailable[`${perk.perkType.oldname}Conditions`] = perk.conditions
     }
+    if (perk.perkType.oldname === 'perksFreeInternationalTravelInsurance') {
+      perksAvailable.perksFreeTravelInsuranceDays = perk.days
+      perksAvailable.perksFreeTravelInsuranceDaysConditions = perk.daysConditions
+    }
   })
   return  Object.assign({}, card, DEFAULT_OLD_PERKS, perksAvailable)
 }
