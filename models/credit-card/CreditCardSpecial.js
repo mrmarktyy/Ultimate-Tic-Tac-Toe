@@ -66,6 +66,16 @@ CreditCardSpecial.schema.pre('validate', async function (next) {
       next(Error(`There is already an active special Company: ${specials[0].company.name} ${specials[0].product ? ' Name: ' + specials[0].product.name : ''}`))
     }
   }
+  if (!this.type.includes(this.defaultType) && this.type.length > 1) {
+    next(Error('default type has to be one of the types presented.'))
+  }
+  next()
+})
+
+CreditCardSpecial.schema.pre('save', function (next) {
+  if (this.type.length === 1 && this.defaultType !== this.type[0]) {
+    this.defaultType = this.type[0]
+  }
   next()
 })
 
