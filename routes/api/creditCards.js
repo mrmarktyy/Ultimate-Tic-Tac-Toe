@@ -174,7 +174,9 @@ function redemptionCalculation (redemptions, rewardProgramId, pointconversion = 
 
 function fixCardArtUrl (url) {
   if (url) {
-    url = url.replace('res.cloudinary.com', '//production-ultimate-assets.ratecity.com.au')
+    url = url
+    	.replace(/^https?:/, '')
+    	.replace('res.cloudinary.com', '//production-ultimate-assets.ratecity.com.au')
   }
   return url
 }
