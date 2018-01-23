@@ -17,7 +17,7 @@ const Pages = new keystone.List('Pages', {track: true}).add({
 	description: {type: Types.Code, height: 250, language: 'html'},
 	keywords: {type: Types.Text},
 	canonical: {type: Types.Text},
-	category: {type: Types.TextArray},
+	category: {type: Types.Text},
 	userJourneyStage: {type: Types.Text},
 	searchVolume: { type: Number, min: 0 },
 	og: {
