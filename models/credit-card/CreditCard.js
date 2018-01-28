@@ -108,6 +108,7 @@ CreditCard.add({
 	cashAdvanceRateStandard: { type: Types.Number, min: 0, label: 'Csh Adv Rate Stndrd' },
 	cashAdvanceRateIntro: { type: Types.Number, min: 0 },
 	cashAdvanceRateIntroTerm: { type: Types.Number, min: 0, label: 'Csh Adv Rate Intr Trm' },
+	defaultRewardProgram: { type: Types.Boolean, indent: true, default: true },
 	rewardProgram: {
 		type: Types.Relationship,
 		ref: 'Program',
