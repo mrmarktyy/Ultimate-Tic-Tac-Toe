@@ -36,6 +36,7 @@ async function upsertSuperannuation (list, fenixProducts, {type, fy, month}) {
 	try {
 		const promises = []
 		const newProductIds = []
+		const allProducts = await Superannuation.model.find(type === 'Superannuation' ? {superannuation: true} : {pension: true}).exec()
 
 		for (let i = 0; i < list.length; i++) {
 			if (_.isNaN(parseInt(list[i].PRODUCT_ID, 10))) {
@@ -94,8 +95,11 @@ async function upsertSuperannuation (list, fenixProducts, {type, fy, month}) {
 			)
 		}
 
-		const products = await Superannuation.model.find(type === 'Superannuation' ? {superannuation: true} : {pension: true}).exec()
-		_.remove(products, (product) => !newProductIds.includes(product.product_id))
+		if (newProductIds.length === 0) {
+			return
+		}
+
+		_.remove(allProducts, (product) => !newProductIds.includes(product.product_id))
 			.forEach((product) => {
 				product.isDiscontinued = true
 				promises.push(
