@@ -230,7 +230,8 @@ exports.fields = {
   f155b: 'performance_cash_5_avg',
 }
 
-exports.getYears = function (year) {
+exports.getYears = function (year, month) {
+	if (month >= 7) year += 1
 	return [
 		'fytd',
 		year - 1,
