@@ -45,8 +45,7 @@ async function getSuperannuationObjects (superannuations) {
 		product.newFund =  superannuation.startdate ? (today.getFullYear() - parseInt(superannuation.startdate) <= 5) : false
 		product.performance = {}
 		product.performanceAvg = {}
-		const years = getYears(product.fy)
-		years.forEach((year, index) => {
+		getYears(product.fy, product.month).forEach((year, index) => {
 			options.forEach((option) => {
 				const key = changeCase.camelCase(option)
 				const dataKey = index === 0 ? 'fytd' : index

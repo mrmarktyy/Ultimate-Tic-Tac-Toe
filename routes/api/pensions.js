@@ -45,7 +45,7 @@ async function getPensionObjects (pensions) {
 		product.newFund =  pension.startdate ? (today.getFullYear() - parseInt(pension.startdate) <= 5) : false
 		product.performance = {}
 		product.performanceAvg = {}
-		getYears(product.fy).forEach((year, index) => {
+		getYears(product.fy, product.month).forEach((year, index) => {
 			options.forEach((option) => {
 				const key = changeCase.camelCase(option)
 				const dataKey = index === 0 ? 'fytd' : index
