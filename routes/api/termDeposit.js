@@ -29,6 +29,11 @@ async function customizeTermDeposit (termDeposits) {
 				if(typeof variation.maximumDeposit === 'undefined' || variation.maximumDeposit === null) {
 					variation.maximumDeposit = 99999999
 				}
+				variation.minimumTerm = variation.term
+				variation.maximumTerm = variation.term
+				variation.interestPaymentFrequencyShortTerm = variation.term <= 12 ? variation.interestPaymentFrequencyTerm : null
+				variation.interestPaymentFrequencyLongTerm = variation.term > 12 ? variation.interestPaymentFrequencyTerm : null
+
 				return variation
 			})
 		let companyVertical = termDepositsCompanies.filter((termDepositCompany) => {

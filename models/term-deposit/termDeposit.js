@@ -21,8 +21,8 @@ var TermDeposit = new keystone.List('TermDeposit', {track: true}).add(productCom
 	otherBenefits: { type: Types.Text },
 	otherRestrictions: { type: Types.Text },
 	earlyWithdrawalFee: { type: Types.Text },
-	minimumAgeRequirement: { type: Types.Number},
-	coveredByGovernmentGuaranteeRestriction: { type: Types.Text},
+	minimumAgeRequirement: { type: Types.Number },
+  coveredByGovernmentGuaranteeRestriction: { type: Types.Text },
 	noticePeriodToWithdraw: { type: Types.Number, default: 0 },
 	jointApplicationAvailable: { type: Types.Select, options: availableOptions.all, default: availableOptions.yes },
 	maturityAlertByEmail: { type: Types.Select, options: availableOptions.all, default: availableOptions.yes },
@@ -31,7 +31,7 @@ var TermDeposit = new keystone.List('TermDeposit', {track: true}).add(productCom
 	interestPaymentViaOtherInstitution: { type: Types.Select, options: availableOptions.all, default: availableOptions.yes },
 	earlyWithdrawalAvailable: { type: Types.Select, options: availableOptions.all, default: availableOptions.yes },
 	isCoveredByGovernmentGuarantee: { type: Types.Select, options: availableOptions.all, default: availableOptions.yes },
-	interestPaymentFrequencyOptions: { type: Types.Select, options: 'Monthly, Annually, Semi-Annually, Fortnightly, Weekly, Daily' },
+	interestPaymentFrequencyOptions: { type: Types.MultiSelect, options: 'Monthly, Annually, Semi-Annually, Fortnightly, Weekly, Daily, At Maturity' },
 	interestPaymentMethod: { type: Types.MultiSelect, options: 'Cheque, Direct Credit, Rollover on maturity' },
 	accountKeepingFeeFrequency: { type: Types.MultiSelect, options: 'Monthly, Annually, Semi-Annually, Fortnightly, Weekly' },
 
@@ -57,7 +57,8 @@ TermDeposit.schema.pre('save', async function (next) {
   next()
 })
 
-TermDeposit.defaultColumns = 'name, company, uuid, slug'
+TermDeposit.defaultColumns = 'name, company, isMonetized, isDiscontinued, uuid'
+TermDeposit.defaultSort = 'isDiscontinued'
 TermDeposit.searchFields = 'name, legacyID'
 TermDeposit.drilldown = 'company'
 TermDeposit.register()
