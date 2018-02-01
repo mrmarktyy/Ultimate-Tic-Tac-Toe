@@ -44,14 +44,10 @@ TermDepositTier.schema.pre('save', async function (next) {
   next()
 })
 
-<<<<<<< HEAD
-TermDepositTier.defaultColumns = 'name, company, product, minimumDeposit, maximumDeposit, term, interestRate, interestPaymentFrequencyTerm'
-=======
 TermDepositTier.schema.post('save', async function () {
 	await verifiedService(this)
 })
 
-TermDepositTier.defaultColumns = 'name, company, product, minimumTerm, interestRate'
->>>>>>> master
+TermDepositTier.defaultColumns = 'name, company, product, minimumDeposit, maximumDeposit, term, interestRate, interestPaymentFrequencyTerm'
 TermDepositTier.drilldown = 'company product'
 TermDepositTier.register()
