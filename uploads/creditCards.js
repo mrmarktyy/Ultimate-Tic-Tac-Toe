@@ -1,6 +1,8 @@
 // node --harmony_async_await uploads/creditCards.js
 require('dotenv').config()
+var uuid = require('node-uuid')
 
+const moment = require('moment')
 var keystone = require('keystone')
 var keystoneShell = require('../utils/keystoneShell')
 var mongoosePromise = require('../utils/mongoosePromise')
@@ -12,10 +14,14 @@ const CreditCard = keystoneShell.list('CreditCard')
 const Company = keystoneShell.list('Company')
 const Program = keystoneShell.list('Program')
 const Redemption = keystoneShell.list('Redemption')
+const EarnRate = keystoneShell.list('EarnRate')
 const RedemptionName = keystoneShell.list('RedemptionName')
 const RedemptionType = keystoneShell.list('RedemptionType')
+const CreditCardSpecial = keystoneShell.list('CreditCardSpecial')
+const PartnerConversion = keystoneShell.list('PartnerConversion')
 
 const csvRedemptionFilePath = './tmp/Redemption.csv'
+const csvEarnRateFilePath = './tmp/EarnRate.csv'
 
 const CARDTYPES = {
   'mastercard': 'MasterCard',
@@ -29,8 +35,30 @@ const CARDTYPES = {
 const CARDLEVELS = {
   'standard': 'Standard',
   'gold': 'Gold',
-  'platinium': 'Platinium',
+  'platinum': 'Platinum',
   'premium': 'Premium',
+}
+
+const GAMBLING = {
+  'prohibted': 'Prohibited',
+  'prohibited': 'Prohibited',
+  'allowed but treated as cash advance': 'Allowed but treated as Cash Advance',
+  'allowed': 'Allowed',
+}
+
+const RANGEUNITS = {
+  'points': 'Points',
+  'dollars': 'Dollars',
+}
+
+const RANGEPERIOD = {
+  'month': 'Monthly',
+  'year': 'Annually',
+}
+
+const YESTOTRUE = {
+  'yes': true,
+  'no': false,
 }
 
 async function populateCreditCards () {
@@ -46,6 +74,8 @@ async function populateCreditCards () {
 
       if (item.uuid) {
         obj.uuid = item.uuid
+      } else {
+        obj.uuid = uuid.v4()
       }
 
       let slug
@@ -59,13 +89,18 @@ async function populateCreditCards () {
         let cname = item.company
         company = await Company.model.findOne({$or: [{name: cname}, {displayName: cname}]}) //eslint-disable-line babel/no-await-in-loop
         // console.log(item.company, company)
+      } else {
+        console.log(item.company)
       }
+
       let rewardProgram = {_id: null}
-      if (item.rewardName || item.rewardProgram) {
+      if (item.rewardProgram) {
         let rewardProgramName = item.rewardProgram
         rewardProgram = await Program.model.findOne({name: rewardProgramName}).exec() //eslint-disable-line babel/no-await-in-loop
       //   console.log('rewardProgram', item)
-      //   console.log(item.name, item.rewardName, rewardProgram)
+         // console.log(item.company, item.name, item.rewardName, rewardProgram)
+      } else {
+        console.log('rewardprogram', item.rewardName)
       }
 
       obj.otherNames = item.otherNames
@@ -83,7 +118,13 @@ async function populateCreditCards () {
       obj.legacyCode = item.legacyCode
       obj.cardType = CARDTYPES[item.cardType.toLowerCase()]
       obj.cardLevel = CARDLEVELS[item.cardLevel.toLowerCase()]
-      obj.isFrequentFlyer = item.isFrequentFlyer || false
+      obj.isFrequentFlyer = YESTOTRUE[item.isFrequentFlyer.toLowerCase()] || false
+      obj.isStoreCard = YESTOTRUE[item.isStoreCard.toLowerCase()] || false
+      obj.isStudentCard = YESTOTRUE[item.isStudentCard.toLowerCase()] || false
+      obj.isJointApplicationAllowed = item.isJointApplicationAllowed.toUpperCase() || 'UNKNOWN'
+      obj.isGamblingTransactionsAllowed = GAMBLING[item.isGamblingTransactionsAllowed.toLowerCase()] ? GAMBLING[item.isGamblingTransactionsAllowed.toLowerCase()] : 'UNKNOWN'
+      obj.minimumBalanceTransferAmount = item.minimumBalanceTransferAmount
+      obj.isBalanceTransferFromPersonalLoanAllowed = item.isBalanceTransferFromPersonalLoanAllowed.toUpperCase() || 'UNKNOWN'
       obj.ecpc = 0
       obj.interestFreeDays = item.interestFreeDays
       obj.minimumRepaymentDollars = item.minimumRepaymentDollars
@@ -92,7 +133,8 @@ async function populateCreditCards () {
       obj.maximumCreditLimit = item.maximumCreditLimit
       obj.numberFreeSupplementary = item.numberFreeSupplementary
       obj.applePayAvailable = item.applePayAvailable || 'UNKNOWN'
-      obj.androidPayAvailable = item.androidPayAvailable  || 'UNKNOWN'
+      obj.androidPayAvailable = item.androidPayAvailable || 'UNKNOWN'
+      obj.samsungPayAvailable = item.samsungPayAvailable || 'UNKNOWN'
       obj.contactlessAvailable = item.contactlessAvailable  || 'UNKNOWN'
       obj.otherBenefits = item.otherBenefits
       obj.otherRestrictions = item.otherRestrictions
@@ -146,7 +188,7 @@ async function populateCreditCards () {
       obj.perksPriceGuaranteeConditions = item.perksPriceGuaranteeConditions
       obj.perksExtendedWarranty = item.perksExtendedWarranty || 'UNKNOWN'
       obj.perksExtendedWarrantyConditions = item.perksExtendedWarrantyConditions
-      obj.perksRentalCarExcessInsurance = item.perksRentalCarExcessInsurance || "UNKNOWN"
+      obj.perksRentalCarExcessInsurance = item.perksRentalCarExcessInsurance || 'UNKNOWN'
       obj.perksRentalCarExcessInsuranceConditions = item.perksRentalCarExcessInsuranceConditions
       obj.perksVIPSeating = item.perksVIPSeating || 'UNKNOWN'
       obj.perksVIPSeatingConditions = item.perksVIPSeatingConditions
@@ -171,16 +213,6 @@ async function populateCreditCards () {
       obj.rewardProgram = rewardProgram._id
       obj.pointsCap = item.pointsCap
       obj.pointsCapFrequency = item.pointsCapFrequency
-      obj.earnRateVisaMcTier1 = item.earnRateVisaMcTier1
-      obj.earnRateVisMcTier1Limit = item.earnRateVisMcTier1Limit
-      obj.earnRateVisMcTier1LimitFrequency = item.earnRateVisMcTier1LimitFrequency
-      obj.earnRateVisMcTier2 = item.earnRateVisMcTier2
-      obj.earnRateVisaMcTier2Limit = item.earnRateVisaMcTier2Limit
-      obj.earnRateAmexTier1 = item.earnRateAmexTier1
-      obj.earnRateAmexTier1Limit = item.earnRateAmexTier1Limit
-      obj.earnRateAmexTier1LimitFrequency = item.earnRateAmexTier1LimitFrequency
-      obj.earnRateAmexTier2 = item.earnRateAmexTier2
-      obj.earnRateAmexTier2Limit = item.earnRateAmexTier2Limit
       obj.bonusPoints = item.bonusPoints
       obj.bonusPointsConditions = item.bonusPointsConditions
 
@@ -213,6 +245,7 @@ async function populateRedemptions () {
     for (let i = 0; i < data.length; i++) {
       let item = data[i]
       let obj = {}
+      console.log(item.rewardProgram)
       let program = programs.filter((prog) => {
         return prog.name === item.rewardProgram
       })[0]
@@ -248,7 +281,128 @@ async function populateRedemptions () {
   }
 }
 
+async function populateEarnRate () {
+  let connection = await mongoosePromise.connect()
+  try {
+      let data = await csvToJson(csvEarnRateFilePath)
+      await EarnRate.model.remove({}).exec()
+      for (let i = 0; i < data.length; i++) {
+        let obj = {}
+        let product = data[i]
+        console.log('~~~~', product.uuid)
+        if (!product.uuid) {
+          console.log('no uuid')
+          continue
+        }
+        let creditcard = await CreditCard.model.findOne({uuid: product.uuid}).exec()
+        // console.log('~~cc', creditcard)
+        obj.company = creditcard.company
+        obj.product = creditcard._id
+        obj.pointsEarned = product.pointsEarned || 0
+        obj.spendAt = product.spendAt
+        obj.cardType = CARDTYPES[product.cardType.toLowerCase()]
+        obj.rangeMinimum = product.rangeMinimum
+        obj.rangeMaximum = product.rangeMaximum
+        obj.rangeUnit = RANGEUNITS[product.rangeUnit.toLowerCase()]
+        obj.rangePeriod = RANGEPERIOD[product.rangePeriod.toLowerCase()]
+
+        await EarnRate.model.create(obj, (error) => {
+          if (error) {
+            console.log(obj)
+            console.log(error)
+            return error
+          }
+        }) // eslint-disable-line babel/no-await-in-loop
+      }
+
+  connection.close()
+  } catch (error) {
+      console.log(error)
+  }
+
+}
+
+const specialsCsv = './tmp/Specials.csv'
+async function populateSpecials () {
+  let connection = await mongoosePromise.connect()
+  try {
+    let data = await csvToJson(specialsCsv)
+    await CreditCardSpecial.model.remove({}).exec()
+    for (let i = 0; i < data.length; i++) {
+      let obj = {}
+      let special = data[i]
+      console.log('~~~~', special.uuid)
+      if (!special.uuid) {
+        console.log('no uuid')
+        continue
+      }
+      let creditcard = await CreditCard.model.findOne({uuid: special.uuid}).exec()
+
+      obj.name = special.name
+      obj.type = special.type
+      obj.introText = special.introText
+      obj.blurb = special.blurb
+      obj.startDate = special.startDate ? moment(special.startDate, 'DD-MM-YY') : new Date()
+      obj.endDate = special.endDate ? moment(special.endDate, 'DD-MM-YY') : null
+      obj.product = creditcard._id
+      obj.company = creditcard.company
+
+      await CreditCardSpecial.model.create(obj, (error) => {
+        if (error) {
+          console.log(obj)
+          console.log(error)
+          return error
+        }
+      }) // eslint-disable-line babel/no-await-in-loop
+    }
+    connection.close()
+  } catch (error) {
+      console.log(error)
+  }
+}
+
+const partnerConversionCsv = './tmp/PartnerConversion.csv'
+async function populatePartnerConversion () {
+  let connection = await mongoosePromise.connect()
+
+  let rewards = await Program.model.find({isReward: true}).lean().exec()
+  let partners = await Program.model.find({isPartner: true}).lean().exec()
+  await PartnerConversion.model.remove({}).exec()
+  try {
+    let data = await csvToJson(partnerConversionCsv)
+    await PartnerConversion.model.remove({}).exec()
+    for (let i = 0; i < data.length; i++) {
+      let obj = {}
+      let convert = data[i]
+      console.log(convert)
+      let rewardProgram = rewards.find((reward) => {
+        return reward.name === convert.rewardProgram
+      })
+      let partnerProgram = partners.find((partner) => {
+        return partner.name === convert.partner
+      })
+      obj.rewardProgram = rewardProgram._id
+      obj.partnerProgram = partnerProgram._id
+      obj.conversionRate = convert.points
+
+      await PartnerConversion.model.create(obj, (error) => {
+        if (error) {
+          console.log(obj)
+          console.log(error)
+          return error
+        }
+      }) // eslint-disable-line babel/no-await-in-loop
+    }
+    connection.close()
+  } catch (error) {
+      console.log(error)
+  }
+}
+
 module.exports = async function () {
   await populateCreditCards()
   await populateRedemptions()
+  await populateEarnRate()
+  await populateSpecials()
+  await populatePartnerConversion()
 }()

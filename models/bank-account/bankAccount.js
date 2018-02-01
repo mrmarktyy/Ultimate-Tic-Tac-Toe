@@ -4,6 +4,8 @@ var productCommonAttributes = require('../common/ProductCommonAttributes')
 var frequency = require('../attributes/frequency')
 var availableOptions = require('../attributes/availableOptions')
 var changeLogService = require('../../services/changeLogService')
+var verifiedService = require('../../services/verifiedService')
+var verifiedCommonAttribute = require('../common/verifiedCommonAttribute')
 var utils = keystone.utils
 var Types = keystone.Field.Types
 
@@ -68,8 +70,9 @@ BankAccount.add({
 	uniqueFeatures: { type: Types.TextArray },
 	additionalBenefits: { type: Types.TextArray },
 	restrictions: { type: Types.TextArray },
+  monthlyClicks: {type: Types.Number, noedit: true, min: 0, default: 0},
 })
-
+BankAccount.add(verifiedCommonAttribute)
 BankAccount.relationship({ path: 'ChangeLogs', ref: 'ChangeLog', refPath: 'model', many: true })
 BankAccount.schema.index({ company: 1, name: 1 }, { unique: true })
 BankAccount.schema.index({ company: 1, slug: 1 }, { unique: true })
@@ -89,9 +92,12 @@ BankAccount.schema.pre('save', async function (next) {
     let slug = utils.slug(this.name.toLowerCase())
     this.slug = slug
   }
-
   await changeLogService(this)
   next()
+})
+
+BankAccount.schema.post('save', async function () {
+	await verifiedService(this)
 })
 
 BankAccount.defaultColumns = 'name, company, uuid, slug'

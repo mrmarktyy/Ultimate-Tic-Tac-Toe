@@ -4,6 +4,8 @@ var frequency = require('./paymentFrequencies')
 var availableOptions = require('../attributes/availableOptions')
 var productCommonAttributes = require('../common/ProductCommonAttributes')
 var changeLogService = require('../../services/changeLogService')
+var verifiedService = require('../../services/verifiedService')
+var verifiedCommonAttribute = require('../common/verifiedCommonAttribute')
 
 var Types = keystone.Field.Types
 
@@ -72,7 +74,9 @@ HomeLoan.relationship({ path: 'fees', ref: 'Fee', refPath: 'product' })
 HomeLoan.relationship({ path: 'features', ref: 'Feature', refPath: 'product' })
 HomeLoan.relationship({ path: 'conditions', ref: 'Condition', refPath: 'product' })
 HomeLoan.relationship({ path: 'homeLoanSpecial', ref: 'HomeLoanSpecial', refPath: 'product' })
+HomeLoan.relationship({ path: 'ChangeLogs', ref: 'ChangeLog', refPath: 'model', many: true })
 
+HomeLoan.add(verifiedCommonAttribute)
 HomeLoan.schema.pre('validate', async function (next) {
   let variation = await keystone.list('HomeLoanVariation').model.findOne({product: this._id, isDiscontinued: false, isMonetized: true}).lean().exec()
   if (variation && Object.keys(variation).length > 0 && variation.isMonetized && this.isDiscontinued) {
@@ -98,6 +102,10 @@ HomeLoan.schema.methods.remove = function (callback) {
   this.isDiscontinued = true
   return this.save(callback)
 }
+
+HomeLoan.schema.post('save', async function () {
+	await verifiedService(this)
+})
 
 HomeLoan.defaultColumns = 'name, company, homeLoanType, propertyPurposeTypes, repaymentTypes'
 HomeLoan.defaultSort = 'isDiscontinued'

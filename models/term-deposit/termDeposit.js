@@ -5,6 +5,8 @@ var availableOptions = require('../attributes/availableOptions')
 var changeLogService = require('../../services/changeLogService')
 var utils = keystone.utils
 var Types = keystone.Field.Types
+var verifiedCommonAttribute = require('../common/verifiedCommonAttribute')
+var verifiedService = require('../../services/verifiedService')
 
 var TermDeposit = new keystone.List('TermDeposit', {track: true}).add(productCommonAttributes).add({
 	company: {
@@ -34,7 +36,7 @@ var TermDeposit = new keystone.List('TermDeposit', {track: true}).add(productCom
 	interestPaymentFrequencyOptions: { type: Types.MultiSelect, options: 'Monthly, Annually, Semi-Annually, Fortnightly, Weekly, Daily, At Maturity' },
 	interestPaymentMethod: { type: Types.MultiSelect, options: 'Cheque, Direct Credit, Rollover on maturity' },
 	accountKeepingFeeFrequency: { type: Types.MultiSelect, options: 'Monthly, Annually, Semi-Annually, Fortnightly, Weekly' },
-
+	monthlyClicks: {type: Types.Number, noedit: true, min: 0, default: 0},
 })
 
 TermDeposit.relationship({ path: 'termDepositTiers', ref: 'TermDepositTier', refPath: 'product' })
@@ -44,6 +46,7 @@ TermDeposit.relationship({ path: 'ChangeLogs', ref: 'ChangeLog', refPath: 'model
 TermDeposit.schema.index({ company: 1, name: 1 }, { unique: true })
 TermDeposit.schema.index({ company: 1, slug: 1 }, { unique: true })
 
+TermDeposit.add(verifiedCommonAttribute)
 TermDeposit.schema.pre('save', async function (next) {
   if (!this.uuid) {
     this.uuid = uuid.v4()
@@ -55,6 +58,10 @@ TermDeposit.schema.pre('save', async function (next) {
 
   await changeLogService(this)
   next()
+})
+
+TermDeposit.schema.post('save', async function () {
+	await verifiedService(this)
 })
 
 TermDeposit.defaultColumns = 'name, company, isMonetized, isDiscontinued, uuid'

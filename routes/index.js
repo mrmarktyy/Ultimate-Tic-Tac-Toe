@@ -41,6 +41,8 @@ exports = module.exports = function (app) {
 	app.post('/monthly-leads-download', middleware.requireUser, routes.views.exportLeads.download)
 	app.get('/import-pages', middleware.requireUser, routes.views.importPages.screen)
 	app.post('/import-page/uploads', middleware.requireUser, routes.views.importPages.uploadFile)
+  app.get('/uuid-search', middleware.requireUser, routes.views.uuidSearch.screen)
+  app.post('/find-uuid', middleware.requireUser, routes.views.uuidSearch.findUuid)
 	//downloads
   app.post('/import/homeloan-download-rates', routes.import.homeloanRates.downloadCsv)
   app.post('/import/homeloan-upload-rates', routes.import.homeloanRates.uploadCsv)

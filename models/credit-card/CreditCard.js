@@ -3,8 +3,9 @@ var uuid = require('node-uuid')
 var availableOptions = require('../attributes/availableOptions')
 var productCommonAttributes = require('../common/ProductCommonAttributes')
 var { imageStorage } = require('../helpers/fileStorage')
-var logger = require('../../utils/logger')
 var changeLogService = require('../../services/changeLogService')
+var verifiedService = require('../../services/verifiedService')
+var verifiedCommonAttribute = require('../common/verifiedCommonAttribute')
 
 var Types = keystone.Field.Types
 
@@ -32,7 +33,7 @@ CreditCard.add({
 	},
 	cardLevel: {
 		type: Types.Select,
-		options: ['Standard', 'Gold', 'Platinium', 'Premium'],
+		options: ['Standard', 'Gold', 'Platinum', 'Premium'],
 		default: 'Standard',
 		emptyOption: false,
 		required: true,
@@ -40,8 +41,16 @@ CreditCard.add({
 	isLowRate: { type: Types.Boolean, indent: true, noedit: true },
 	isLowFee: { type: Types.Boolean, indent: true, noedit: true },
 	isReward: { type: Types.Boolean, indent: true, noedit: true },
-	isFrequentFlyer: { type: Types.Boolean, indent: true, default: false },
-	ecpc: {type: Types.Number, noedit: true, default: 0},
+	isStoreCard: { type: Types.Boolean, indent: true, default: false },
+	isStudentCard: { type: Types.Boolean, indent: true, default: false },
+	isJointApplicationAllowed: { type: Types.Select, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown },
+	isGamblingTransactionsAllowed: { type: Types.Select, options: ['Prohibited', 'Allowed but treated as Cash Advance', 'Allowed', 'UNKNOWN'], default: 'UNKNOWN' },
+	minimumBalanceTransferAmount: { type: Types.Number },
+	maximumBalanceTransferPercentage: { type: Types.Number, label: 'Max Balance Transfer %' },
+	balanceTransferConditions: { type: Types.Text },
+	maximumBalanceTransferAmount: { type: Types.Number, label: 'Max Balance Transfer $' },
+	isBalanceTransferFromPersonalLoanAllowed: { type: Types.Select, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown },
+	ecpc: { type: Types.Number, noedit: true, default: 0 },
 	interestFreeDays: { type: Types.Number, min: 0 },
 	minimumRepaymentDollars: { type: Types.Number, min: 0, label: 'Min Rpymnt Dllrs' },
 	minimumRepaymentPercent: { type: Types.Number, min: 0, label: 'Min Rpymnt Prcnt' },
@@ -50,6 +59,7 @@ CreditCard.add({
 	numberFreeSupplementary: { type: Types.Number, min: 0, label: 'Nmbr Free Sppl' },
 	applePayAvailable: { type: Types.Select, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown },
 	androidPayAvailable: { type: Types.Select, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown },
+	samsungPayAvailable: { type: Types.Select, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown },
 	contactlessAvailable: { type: Types.Select, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown },
 	otherBenefits: { type: Types.Text },
 	otherRestrictions: { type: Types.Text },
@@ -88,92 +98,6 @@ CreditCard.add({
 	availableTo457Visa: { type: Types.Select, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown },
 	eligibilityConditions: { type: Types.Text },
 	instantApproval: { type: Types.Select, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown },
-	perksFreeDomesticTravelInsurance: {
-		type: Types.Select,
-		options: availableOptions.all,
-		label: 'Prk Free Dmstc Trvl Ins',
-		emptyOption: false,
-		default: availableOptions.unknown,
-	},
-	perksFreeDomesticTravelInsuranceConditions: { type: Types.Text, label: 'Prk Free Dmstc Trvl Ins Cnd' },
-	perksFreeInternationalTravelInsurance: {
-		type: Types.Select,
-		options: availableOptions.all,
-		label: 'Prk Free Intn Trvl Ins',
-		emptyOption: false,
-		default: availableOptions.unknown,
-	},
-	perksFreeInternationalTravelInsuranceConditions: { type: Types.Text, label: 'Prk Free Intn Trvl Ins Cnd' },
-	perksFreeTravelInsuranceDays: { type: Types.Number, min: 0, label: 'Prk Free Trvl Insrnc Dys' },
-	perksFreeTravelInsuranceDaysConditions: { type: Types.Text, label: 'Prk Free Trvl Insrnc Dys Cnd' },
-	perksFreeSupplementaryCards: {
-		type: Types.Select,
-		options: availableOptions.all,
-		label: 'Prk Free Sppl Crd',
-		emptyOption: false,
-		default: availableOptions.unknown,
-	},
-	perksFreeSupplementaryCardsConditions: { type: Types.Text, label: 'Prk Free Sppl Crd Cdtns' },
-	perksPurchaseProtection: {
-		type: Types.Select,
-		options: availableOptions.all,
-		emptyOption: false,
-		default: availableOptions.unknown,
-	},
-	perksPurchaseProtectionDays: { type: Types.Number, label: 'Prk Prchs Prtctn Dys' },
-	perksPurchaseProtectionConditions: { type: Types.Text, label: 'Prk Prchs Prtctn Cndtns' },
-	perksPriceGuarantee: { type: Types.Select, emptyOption: false, options: availableOptions.all, default: availableOptions.unknown },
-	perksPriceGuaranteeConditions: { type: Types.Text, label: 'Prk Prc Grnt Cndtns' },
-	perksExtendedWarranty: {
-		type: Types.Select,
-		options: availableOptions.all,
-		emptyOption: false,
-		default: availableOptions.unknown,
-	},
-	perksExtendedWarrantyConditions: { type: Types.Text, label: 'Prk Extndd Wrrnty Cndtns' },
-	perksRentalCarExcessInsurance: {
-		type: Types.Select,
-		options: availableOptions.all,
-		label: 'Prk Excss Insrnc',
-		emptyOption: false,
-		default: availableOptions.unknown,
-	},
-	perksRentalCarExcessInsuranceConditions: { type: Types.Text, label: 'Prk Excss Insrnc Cndtns' },
-	perksVIPSeating: {
-		type: Types.Select,
-		options: availableOptions.all,
-		emptyOption: false,
-		default: availableOptions.unknown,
-	},
-	perksVIPSeatingConditions: { type: Types.Text },
-	perksConcierge: {
-		type: Types.Select,
-		options: availableOptions.all,
-		emptyOption: false,
-		default: availableOptions.unknown,
-	},
-	perksConciergeConditions: { type: Types.Text },
-	perksSpecialEvents: {
-		type: Types.Select,
-		options: availableOptions.all,
-		emptyOption: false,
-		default: availableOptions.unknown,
-	},
-	perksSpecialEventsConditions: { type: Types.Text, label: 'Prk Spcl Vnt Cndtns' },
-	perksPartnerDiscounts: {
-		type: Types.Select,
-		options: availableOptions.all,
-		emptyOption: false,
-		default: availableOptions.unknown,
-	},
-	perksPartnerDiscountsConditions: { type: Types.Text, label: 'Prk Prntr Dscnt Cndtns' },
-	perksAirportLounge: {
-		type: Types.Select,
-		options: availableOptions.all,
-		emptyOption: false,
-		default: availableOptions.unknown,
-	},
-	perksAirportLoungeConditions: { type: Types.Text, label: 'Prk Arprt Lng Cndtns' },
 	perksAdditional: { type: Types.Text },
 	purchaseRateStandard: { type: Types.Number, require: true, min: 0 },
 	purchaseRateIntro: { type: Types.Number, min: 0 },
@@ -184,6 +108,7 @@ CreditCard.add({
 	cashAdvanceRateStandard: { type: Types.Number, min: 0, label: 'Csh Adv Rate Stndrd' },
 	cashAdvanceRateIntro: { type: Types.Number, min: 0 },
 	cashAdvanceRateIntroTerm: { type: Types.Number, min: 0, label: 'Csh Adv Rate Intr Trm' },
+	defaultRewardProgram: { type: Types.Boolean, indent: true, default: true },
 	rewardProgram: {
 		type: Types.Relationship,
 		ref: 'Program',
@@ -194,29 +119,22 @@ CreditCard.add({
 		noedit: false,
 
 	},
+	removeRewardProgram: {type: Types.Boolean, indent: true, initial: false},
 	pointsCap: { type: Types.Number, min: 0 },
 	pointsCapFrequency: { type: Types.Number, min: 0 },
-	earnRateVisaMcTier1: { type: Types.Number, min: 0 },
-	earnRateVisMcTier1Limit: { type: Types.Number, min: 0, label: 'Ern Rate Vis Mc Tier1 Lmt' },
-	earnRateVisMcTier1LimitFrequency: { type: Types.Number, min: 0, label: 'Ern Rate Vis Mc Tr2 Lim Fre' },
-	earnRateVisMcTier2: { type: Types.Number, min: 0 },
-	earnRateVisaMcTier2Limit: { type: Types.Number, min: 0, label: 'Ern Rate Visa Mc Tr2 Lmt' },
-	earnRateAmexTier1: { type: Types.Number, min: 0 },
-	earnRateAmexTier1Limit: { type: Types.Number, min: 0, label: 'Ern Rate Amex Tr1 Lmt' },
-	earnRateAmexTier1LimitFrequency: { type: Types.Number, min: 0, label: 'Ern Rate Amex Tr1 Lmt Frq' },
-	earnRateAmexTier2: { type: Types.Number, min: 0 },
-	earnRateAmexTier2Limit: { type: Types.Number, min: 0, label: 'Ern Rate Amex Tr2 Lmt' },
 	bonusPoints: { type: Types.Number, min: 0 },
 	bonusPointsConditions: { type: Types.Text, label: 'Bonus Pts Cond' },
 	cardArt: imageStorage('creditcard'),
+  monthlyClicks: {type: Types.Number, noedit: true, min: 0, default: 0},
 })
-
-CreditCard.relationship({ path: 'ChangeLogs', ref: 'ChangeLog', refPath: 'model', many: true })
+CreditCard.add(verifiedCommonAttribute)
+CreditCard.relationship({ path: 'earnRates', ref: 'EarnRate', refPath: 'product', many: true })
+CreditCard.relationship({ path: 'Perk', ref: 'Perk', refPath: 'product', many: true })
 CreditCard.relationship({ path: 'creditCardSpecial', ref: 'CreditCardSpecial', refPath: 'product' })
+CreditCard.relationship({ path: 'ChangeLogs', ref: 'ChangeLog', refPath: 'model', many: true })
 
 CreditCard.schema.pre('validate', function (next) {
 	if (([undefined, null].indexOf(this.offerExpires) < 0) && (this.offerExpires <= new Date())) {
-		logger.error(this.offerExpires)
 		next(Error('Offer Expires has to be greater than today'))
 	}
 	if ((this.purchaseRateIntro !== undefined) && (this.purchaseRateIntro > this.purchaseRateStandard)) {
@@ -228,17 +146,24 @@ CreditCard.schema.pre('validate', function (next) {
 	if ((this.cashAdvanceRateIntro !== undefined) && (this.cashAdvanceRateIntro > this.cashAdvanceRateStandard)) {
 		next(Error('Cash advance rate intro should be less than cash advance rate standard'))
 	}
+	if (!!this.maximumBalanceTransferPercentage && (this.maximumBalanceTransferPercentage < 0 || this.maximumBalanceTransferPercentage > 100)) {
+		next(Error('maximum balance transfer percentage cannot be less than 0 or greater than 100'))
+	}
 
 	next()
 })
 
 CreditCard.schema.pre('save', function (next) {
+	if (this.removeRewardProgram) {
+    this.rewardProgram = null
+  }
+  this.removeRewardProgram = undefined
 	if (!this.uuid) {
 		this.uuid = uuid.v4()
 	}
 	this.isLowRate = this.purchaseRateStandard <= 14.0 || this.name.toLowerCase().includes('low rate')
 	this.isLowFee = this.annualFeeStandard <= 50 || this.name.toLowerCase().includes('low fee')
-	this.isReward = this.rewardProgram !== undefined
+	this.isReward = this.rewardProgram ? this.rewardProgram !== null : false
 	next()
 })
 
@@ -249,5 +174,10 @@ CreditCard.schema.pre('save', async function (next) {
   next()
 })
 
+CreditCard.schema.post('save', async function () {
+	await verifiedService(this)
+})
+
+CreditCard.defaultSort = 'isDiscontinued'
 CreditCard.defaultColumns = 'name, company, uuid, isMonetized'
 CreditCard.register()

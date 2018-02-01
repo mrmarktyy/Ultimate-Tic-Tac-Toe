@@ -6,9 +6,10 @@ const Superannuation = keystone.list('Superannuation')
 const monetizedCollection = require('./monetizedCollection')
 const CompanyService = require('../../services/CompanyService')
 const { getYears, ratings, segments, purposes, options } = require('../../models/superannuation/constants')
+const recommendedMultiplier = require('../../utils/recommendedMultiplier').multiplier
 
 exports.list = async function (req, res) {
-  const pensions = await Superannuation.model.find({ pension: true }).populate({path: 'fundgroup', populate: {path: 'company'}}).lean().exec()
+  const pensions = await Superannuation.model.find({ pension: true, isDiscontinued: false }).populate({path: 'fundgroup', populate: {path: 'company'}}).lean().exec()
   const result = await getPensionObjects(pensions)
   res.jsonp(result)
 }
@@ -35,7 +36,7 @@ async function getPensionObjects (pensions) {
 		product.basicFee = parseFloat(pension.basic_fee_50k || 0)
 		const rating = getMatchedElment(ratings, pension.rating_image)
 		product.rating = rating.name || null
-		product.ratingScore = rating.score ? (100 - (rating.score - 1) * 5) : null
+		product.ratingScore = rating.score || null
 		product.productUrl = pension.productUrl || `/pension-funds/${pension.fundgroup.slug}/${pension.slug}`
 		product.applyUrl = Object.keys(monetize).length && monetize.enabled ? monetize.applyUrl : null
 		product.paymentType = Object.keys(monetize).length ? monetize.paymentType : null
@@ -44,7 +45,7 @@ async function getPensionObjects (pensions) {
 		product.newFund =  pension.startdate ? (today.getFullYear() - parseInt(pension.startdate) <= 5) : false
 		product.performance = {}
 		product.performanceAvg = {}
-		getYears(product.fy).forEach((year, index) => {
+		getYears(product.fy, product.month).forEach((year, index) => {
 			options.forEach((option) => {
 				const key = changeCase.camelCase(option)
 				const dataKey = index === 0 ? 'fytd' : index
@@ -118,6 +119,8 @@ async function getPensionObjects (pensions) {
 		product.publicOffer = pension.public_offer === 'Yes'
 		product.productType = pension.fund_type
 		product.awards = _.map(getMatchedElments(ratings, pension.rating_image), (rating) => (_.pick(rating, ['name', 'url'])))
+    product.popularityScore = (product.monthlyClicks ? product.monthlyClicks * recommendedMultiplier : 0)
+    delete product.monthlyClicks
 		return product
 	})
 }

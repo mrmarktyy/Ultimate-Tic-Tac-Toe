@@ -4,6 +4,8 @@ var frequency = require('../attributes/frequency')
 var availableOptions = require('../attributes/availableOptions')
 var productCommonAttributes = require('../common/ProductCommonAttributes')
 var changeLogService = require('../../services/changeLogService')
+var verifiedService = require('../../services/verifiedService')
+var verifiedCommonAttribute = require('../common/verifiedCommonAttribute')
 var utils = keystone.utils
 var Types = keystone.Field.Types
 
@@ -51,6 +53,7 @@ SavingsAccount.add({
   atmWithdrawalFee: { type: Types.Number, min: 0 },
 	jointApplicationAvailable: { type: Types.Select, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.yes },
 	unlimitedWithdrawals: { type: Types.Select, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.yes },
+  monthlyClicks: {type: Types.Number, noedit: true, min: 0, default: 0},
 })
 
 SavingsAccount.relationship({ path: 'savingsAccountTiers', ref: 'SavingsAccountTier', refPath: 'product' })
@@ -59,7 +62,7 @@ SavingsAccount.relationship({ path: 'savingsAccountSpecial', ref: 'SavingsAccoun
 
 SavingsAccount.schema.index({ company: 1, name: 1 }, { unique: true })
 SavingsAccount.schema.index({ company: 1, slug: 1 }, { unique: true })
-
+SavingsAccount.add(verifiedCommonAttribute)
 SavingsAccount.schema.pre('validate', function (next) {
   if ((this.offerExpires !== undefined) && (this.offerExpires < new Date())) {
     next(Error('OfferExpires must be greater than today'))
@@ -78,6 +81,10 @@ SavingsAccount.schema.pre('save', async function (next) {
 
   await changeLogService(this)
   next()
+})
+
+SavingsAccount.schema.post('save', async function () {
+	await verifiedService(this)
 })
 
 SavingsAccount.defaultColumns = 'name, company, isMonetized'

@@ -7,10 +7,14 @@ exports.initLocals = function (req, res, next) {
 	res.locals.navLinks = [
 		{ label: 'Import Rates', key: 'importRates', href: '/import-rates' },
 		{ label: 'Monthly Clicks', key: 'monthlyClicks', href: '/monthly-clicks-export' },
-		{ label: 'Salesforce Push', key: 'salesforcePush', href: '/salesforce-push' },
 		{ label: 'Import ECPC', key: 'importEcpc', href: '/import-ecpc' },
 		{ label: 'Export Leads', key: 'exportLeads', href: '/monthly-leads-export' },
 		{ label: 'Import Pages', key: 'importPages', href: '/import-pages' },
+		{ label: 'Admin', dropdown: true, items: [
+				{ label: 'Salesforce Push', key: 'salesforcePush', href: '/salesforce-push' },
+				{ label: 'UUID Search', key: 'uuidSearch', href: '/uuid-search' },
+			],
+		},
 	]
 	res.locals.user = req.user
 	next()

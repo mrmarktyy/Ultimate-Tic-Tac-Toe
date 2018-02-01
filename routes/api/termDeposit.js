@@ -5,6 +5,8 @@ var TermDeposit = keystone.list('TermDeposit')
 var TermDepositTier = keystone.list('TermDepositTier')
 var TermDepositCompany = keystone.list('TermDepositCompany')
 var monetizedCollection = require('./monetizedCollection')
+const CompanyService = require('../../services/CompanyService')
+const recommendedMultiplier = require('../../utils/recommendedMultiplier').multiplier
 
 exports.list = async function (req, res) {
   let termDeposits = await TermDeposit.model.find({ $or: [ { isDiscontinued: false }, { isDiscontinued: {$exists: false} } ] }).populate('company').lean().exec()
@@ -18,7 +20,7 @@ async function customizeTermDeposit (termDeposits) {
 	const monetizedList = await monetizedCollection('Term Deposits')
 
 	let result = termDeposits.map((termDeposit) => {
-		let company = Object.assign({}, termDeposit.company)
+		let company = Object.assign({}, CompanyService.fixLogoUrl(termDeposit.company))
 		termDeposit.variations = variations
 			.filter((variation) => variation.product.uuid === termDeposit.uuid)
 			.map((variation) => {
@@ -52,6 +54,8 @@ async function customizeTermDeposit (termDeposits) {
 		termDeposit.company.hasRepaymentWidget = companyVertical ? companyVertical.hasRepaymentWidget : false
 		termDeposit.company.removeBig4ComparisonProduct = companyVertical ? companyVertical.removeBig4ComparisonProduct : false
 		setPromotedOrder(termDeposit)
+    termDeposit.popularityScore = (termDeposit.monthlyClicks ? termDeposit.monthlyClicks * recommendedMultiplier : 0)
+    delete termDeposit.monthlyClicks
 		return removeUneededFields(termDeposit)
 	})
 

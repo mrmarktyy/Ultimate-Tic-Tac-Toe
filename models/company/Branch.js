@@ -2,6 +2,8 @@ var keystone = require('keystone')
 var Types = keystone.Field.Types
 var uniqueValidator = require('mongoose-unique-validator')
 var changeLogService = require('../../services/changeLogService')
+var verifiedService = require('../../services/verifiedService')
+var verifiedCommonAttribute = require('../common/verifiedCommonAttribute')
 
 var Branch = new keystone.List('Branch', {
     track: true,
@@ -22,12 +24,16 @@ Branch.add({
   openingHoursSat: {type: Types.Text},
   openingHoursSun: {type: Types.Text},
 })
-
+Branch.add(verifiedCommonAttribute)
 Branch.relationship({ path: 'ChangeLogs', ref: 'ChangeLog', refPath: 'model', many: true })
 
 Branch.schema.pre('save', async function (next) {
   await changeLogService(this)
   next()
+})
+
+Branch.schema.post('save', async function () {
+	await verifiedService(this)
 })
 
 Branch.schema.plugin(uniqueValidator)

@@ -6,9 +6,10 @@ const Superannuation = keystone.list('Superannuation')
 const monetizedCollection = require('./monetizedCollection')
 const CompanyService = require('../../services/CompanyService')
 const { getYears, ratings, segments, purposes, options } = require('../../models/superannuation/constants')
+const recommendedMultiplier = require('../../utils/recommendedMultiplier').multiplier
 
 exports.list = async function (req, res) {
-  const superannuations = await Superannuation.model.find({ superannuation: true }).populate({path: 'fundgroup', populate: {path: 'company'}}).lean().exec()
+  const superannuations = await Superannuation.model.find({ superannuation: true, isDiscontinued: false }).populate({path: 'fundgroup', populate: {path: 'company'}}).lean().exec()
   const result = await getSuperannuationObjects(superannuations)
   res.jsonp(result)
 }
@@ -35,7 +36,7 @@ async function getSuperannuationObjects (superannuations) {
 		product.basicFee = parseFloat(superannuation.basic_fee_50k || 0)
 		const rating = getMatchedElment(ratings, superannuation.rating_image)
 		product.rating = rating.name || null
-		product.ratingScore = rating.score ? (100 - (rating.score - 1) * 5) : null
+		product.ratingScore = rating.score || null
 		product.productUrl = superannuation.productUrl || `/superannuation/${superannuation.fundgroup.slug}/${superannuation.slug}`
 		product.applyUrl = Object.keys(monetize).length && monetize.enabled ? monetize.applyUrl : null
 		product.paymentType = Object.keys(monetize).length ? monetize.paymentType : null
@@ -44,8 +45,7 @@ async function getSuperannuationObjects (superannuations) {
 		product.newFund =  superannuation.startdate ? (today.getFullYear() - parseInt(superannuation.startdate) <= 5) : false
 		product.performance = {}
 		product.performanceAvg = {}
-		const years = getYears(product.fy)
-		years.forEach((year, index) => {
+		getYears(product.fy, product.month).forEach((year, index) => {
 			options.forEach((option) => {
 				const key = changeCase.camelCase(option)
 				const dataKey = index === 0 ? 'fytd' : index
@@ -119,7 +119,9 @@ async function getSuperannuationObjects (superannuations) {
 		product.publicOffer = superannuation.public_offer === 'Yes'
 		product.productType = superannuation.fund_type
 		product.awards = _.map(getMatchedElments(ratings, superannuation.rating_image), (rating) => (_.pick(rating, ['name', 'url'])))
-		return product
+    product.popularityScore = (product.monthlyClicks ? product.monthlyClicks * recommendedMultiplier : 0)
+		delete product.monthlyClicks
+    return product
 	})
 }
 

@@ -8,6 +8,8 @@ var RedemptionName = new keystone.List('RedemptionName', {
 
 RedemptionName.add({
   name: { type: Types.Text, required: true, initial: true, index: true },
+  price: { type: Types.Number, required: true, initial: true },
+  priceMethod: { type: Types.Text },
 })
 
 RedemptionName.relationship({ path: 'ChangeLogs', ref: 'ChangeLog', refPath: 'model', many: true })
@@ -19,5 +21,5 @@ RedemptionName.schema.pre('save', async function (next) {
   next()
 })
 
-RedemptionName.defaultColumns = 'name'
+RedemptionName.defaultColumns = 'name, price, priceMethod'
 RedemptionName.register()

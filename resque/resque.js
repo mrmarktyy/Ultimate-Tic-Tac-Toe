@@ -35,7 +35,7 @@ queue.connect(() => {
   })
   schedule.scheduleJob('00 7 * * *', () => {
     if (scheduler.master) {
-      queue.enqueue('ultimate', 'homeLoansMonthlyClickCount')
+      queue.enqueue('ultimate', 'monthlyClickCount')
     }
   })
   schedule.scheduleJob('15 7 * * *', () => {
@@ -48,7 +48,7 @@ queue.connect(() => {
       queue.enqueue('ultimate', 'homeLoansToRedshift')
     }
   })
-  schedule.scheduleJob('57 18 * * *', () => {
+  schedule.scheduleJob('00 19 * * *', () => {
    if (scheduler.master) {
       queue.enqueue('ultimate', 'savingsAccountsToRedshift')
     }

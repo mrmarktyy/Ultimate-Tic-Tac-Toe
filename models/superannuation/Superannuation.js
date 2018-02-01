@@ -33,6 +33,7 @@ const schema = {
 		initial: true,
 		noedit: true,
 	},
+	monthlyClicks: {type: Types.Number, noedit: true, min: 0, default: 0},
 }
 _.forEach(_.values(fields), (attribute) => {
 	schema[attribute] = { type: Types.Text }

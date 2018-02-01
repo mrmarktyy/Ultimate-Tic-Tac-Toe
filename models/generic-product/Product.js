@@ -3,6 +3,8 @@ var uuid = require('node-uuid')
 var Types = keystone.Field.Types
 var genericVerticals = require('../helpers/genericVerticals')
 var changeLogService = require('../../services/changeLogService')
+var verifiedService = require('../../services/verifiedService')
+var verifiedCommonAttribute = require('../common/verifiedCommonAttribute')
 
 const verticals = Object.keys(genericVerticals).map((key) => ({ value: genericVerticals[key].slug, label: key }))
 
@@ -20,8 +22,10 @@ GenericProduct.add({
 	company: {type: Types.Relationship, ref: 'Company', required: true, many: false, initial: true},
 	url: {type: Types.Text, initial: true},
 	promotedOrder: { type: Types.Select, options: [{ value: '0', label: 'None' }, { value: '1', label: '1 - First' }, 2, 3, 4, 5, 6, 7, 8, 9, 10], default: '0' },
+	monthlyClicks: {type: Types.Number, noedit: true, min: 0, default: 0},
 })
 
+GenericProduct.add(verifiedCommonAttribute)
 GenericProduct.schema.pre('validate', async function (next) {
 	if(this.features && this.features.length > 6) {
 		next(Error('Can add only upto 6 features for every product'))
@@ -37,6 +41,9 @@ GenericProduct.schema.pre('save', async function (next) {
 	next()
 })
 
+GenericProduct.schema.post('save', async function () {
+	await verifiedService(this)
+})
+
 GenericProduct.defaultColumns = 'uuid, vertical, name, description, url'
 GenericProduct.register()
-

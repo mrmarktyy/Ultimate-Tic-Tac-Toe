@@ -3,6 +3,8 @@ var uuid = require('node-uuid')
 var Types = keystone.Field.Types
 var { imageStorage } = require('../helpers/fileStorage')
 var changeLogService = require('../../services/changeLogService')
+var verifiedService = require('../../services/verifiedService')
+var verifiedCommonAttribute = require('../common/verifiedCommonAttribute')
 
 var utils = keystone.utils
 
@@ -20,7 +22,7 @@ Company.add({
 		type: Types.Select,
 		required: true,
 		initial: true,
-		options: 'Major bank, Regional bank, Foreign bank, Mutual bank, Credit union, Building society, Peer to Peer,  Online lender, Non-bank Lender, Other',
+		options: 'Major bank, Regional bank, Foreign bank, Mutual bank, Credit union, Building society, Peer to Peer,  Online lender, Non-bank Lender, Super, Other',
 	},
 	isDiscontinued: { type: Types.Boolean, indent: true, default: false },
 	abnOrAcn: { type: Types.Number },
@@ -31,11 +33,14 @@ Company.add({
 	slug: { type: Types.Text, unique: true, required: true, initial: true },
 	legacyCode: { type: Types.Text, noedit: true },
 	url: { type: Types.Url, required: true, index: true, initial: true },
+  facebook: { type: Types.Url },
+  google: { type: Types.Url },
 	searchKeyword: { type: Types.TextArray },
 	logo: imageStorage('company'),
 	blurb: { type: Types.Code, height: 250, language: 'html' },
+  productReview: { type: Types.Url },
 })
-
+Company.add(verifiedCommonAttribute)
 Company.relationship({ path: 'ATMs', ref: 'ATM', refPath: 'company' })
 Company.relationship({ path: 'Branches', ref: 'Branch', refPath: 'company' })
 Company.relationship({ path: 'ChangeLogs', ref: 'ChangeLog', refPath: 'model', many: true })
@@ -59,6 +64,10 @@ Company.schema.pre('save', async function (next) {
   }
 	await changeLogService(this)
 	next()
+})
+
+Company.schema.post('save', async function () {
+	await verifiedService(this)
 })
 
 Company.schema.methods.remove = function (callback) {

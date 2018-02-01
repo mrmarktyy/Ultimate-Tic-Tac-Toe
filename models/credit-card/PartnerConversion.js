@@ -1,6 +1,8 @@
 var keystone = require('keystone')
 var Types = keystone.Field.Types
 var changeLogService = require('../../services/changeLogService')
+var verifiedService = require('../../services/verifiedService')
+var verifiedCommonAttribute = require('../common/verifiedCommonAttribute')
 
 var PartnerConversion = new keystone.List('PartnerConversion', {
     track: true,
@@ -30,6 +32,7 @@ PartnerConversion.add({
   conversionRate: { type: Types.Number, min: 0, initial: true, required: true },
 })
 
+PartnerConversion.add(verifiedCommonAttribute)
 PartnerConversion.relationship({ path: 'ChangeLogs', ref: 'ChangeLog', refPath: 'model', many: true })
 
 PartnerConversion.schema.index({ rewardProgram: 1, partnerProgram: 1 }, { unique: true })
@@ -37,6 +40,10 @@ PartnerConversion.schema.index({ rewardProgram: 1, partnerProgram: 1 }, { unique
 PartnerConversion.schema.pre('save', async function (next) {
   await changeLogService(this)
   next()
+})
+
+PartnerConversion.schema.post('save', async function () {
+	await verifiedService(this)
 })
 
 PartnerConversion.defaultColumns = 'rewardProgram, partnerProgram, conversionRate'

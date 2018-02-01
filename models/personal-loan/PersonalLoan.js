@@ -5,6 +5,8 @@ var availableOptions = require('../attributes/availableOptions')
 var productCommonAttributes = require('../common/ProductCommonAttributes')
 var personalLoanConstant = require('../constants/PersonalLoanConstant')
 var changeLogService = require('../../services/changeLogService')
+var verifiedService = require('../../services/verifiedService')
+var verifiedCommonAttribute = require('../common/verifiedCommonAttribute')
 
 var utils = keystone.utils
 var Types = keystone.Field.Types
@@ -107,6 +109,7 @@ PersonalLoan.add({
   hasEarlyExitPenaltyFeeVaries: { type: Types.Select, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown },
   otherFees: { type: Types.Text },
   comparisonRateDisclaimer: {type: Types.Code, height: 50, language: 'html'},
+  monthlyClicks: {type: Types.Number, noedit: true, min: 0, default: 0},
 })
 
 PersonalLoan.relationship({ path: 'personalLoanVariations', ref: 'PersonalLoanVariation', refPath: 'product' })
@@ -117,7 +120,7 @@ PersonalLoan.schema.index({ company: 1, name: 1 }, { unique: true })
 PersonalLoan.schema.index({ company: 1, slug: 1 }, { unique: true })
 PersonalLoan.schema.set('toObject', { getters: true })
 PersonalLoan.schema.set('toJSON', { getters: true, virtuals: false })
-
+PersonalLoan.add(verifiedCommonAttribute)
 PersonalLoan.schema.pre('validate', function (next) {
   if ((this.applicationFeesDollar === undefined) && (this.applicationFeesPercent === undefined)) {
     next(Error('Application Fee need to fill in either Dollar or Percent'))
@@ -209,6 +212,10 @@ PersonalLoan.schema.pre('save', async function (next) {
 
   await changeLogService(this)
   next()
+})
+
+PersonalLoan.schema.post('save', async function () {
+	await verifiedService(this)
 })
 
 PersonalLoan.schema.methods.remove = function (callback) {

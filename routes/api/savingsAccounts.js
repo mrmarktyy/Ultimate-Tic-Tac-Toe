@@ -6,9 +6,11 @@ var SavingsAccount = keystone.list('SavingsAccount')
 var SavingsAccountTier = keystone.list('SavingsAccountTier')
 var CompanySavingsAccount = keystone.list('CompanySavingsAccount')
 var monetizedCollection = require('./monetizedCollection')
+const CompanyService = require('../../services/CompanyService')
+const recommendedMultiplier = require('../../utils/recommendedMultiplier').multiplier
 
 exports.list = async function (req, res) {
-  let savingsAccounts = await SavingsAccount.model.find().populate('company').lean().exec()
+  let savingsAccounts = await SavingsAccount.model.find({ isDiscontinued: false }).populate('company').lean().exec()
   let result = await getSavingAccounts(savingsAccounts)
   res.jsonp(result)
 }
@@ -19,7 +21,7 @@ async function getSavingAccounts (accounts) {
 	const monetizedList = await monetizedCollection('Savings Accounts')
 
 	let result = accounts.map((account, index) => {
-		let company = Object.assign({}, account.company)
+		let company = Object.assign({}, CompanyService.fixLogoUrl(account.company))
 		account.variations = variations
 			.filter((variation) => variation.product.uuid === account.uuid)
 			.map((variation) => {
@@ -50,6 +52,8 @@ async function getSavingAccounts (accounts) {
 
 		account.company.hasRepaymentWidget = companyVertical ? companyVertical.hasRepaymentWidget : false
 		setPromotedOrder(account)
+    account.popularityScore = (account.monthlyClicks ? account.monthlyClicks * recommendedMultiplier : 0)
+    delete account.monthlyClicks
 		return removeUneededFields(account)
 	})
 

@@ -2,6 +2,8 @@ var keystone = require('keystone')
 var Types = keystone.Field.Types
 var uniqueValidator = require('mongoose-unique-validator')
 var changeLogService = require('../../services/changeLogService')
+var verifiedService = require('../../services/verifiedService')
+var verifiedCommonAttribute = require('../common/verifiedCommonAttribute')
 
 var ATM = new keystone.List('ATM', {
     track: true,
@@ -22,12 +24,16 @@ ATM.add({
   feeForBalanceEnquiry: {type: Types.Money},
   ATMPartners: {type: Types.Relationship, ref: 'Company', many: true},
 })
-
+ATM.add(verifiedCommonAttribute)
 ATM.relationship({ path: 'ChangeLogs', ref: 'ChangeLog', refPath: 'model', many: true })
 
 ATM.schema.pre('save', async function (next) {
   await changeLogService(this)
   next()
+})
+
+ATM.schema.post('save', async function () {
+	await verifiedService(this)
 })
 
 ATM.schema.plugin(uniqueValidator)

@@ -2,6 +2,8 @@ var keystone = require('keystone')
 var uuid = require('node-uuid')
 var verticals = require('../helpers/verticals')
 var changeLogService = require('../../services/changeLogService')
+var verifiedService = require('../../services/verifiedService')
+var verifiedCommonAttribute = require('../common/verifiedCommonAttribute')
 var Types = keystone.Field.Types
 var blazePages = require('../../data/blazePages')
 var shareOfVoiceAttributes = require('../common/ShareOfVoiceCommonAttributes')
@@ -30,7 +32,7 @@ PromotedProduct.add({
 })
 
 PromotedProduct.add(shareOfVoiceAttributes)
-
+PromotedProduct.add(verifiedCommonAttribute)
 PromotedProduct.fields.pages.ops = blazePages
 
 PromotedProduct.schema.pre('validate', function (next) {
@@ -48,6 +50,10 @@ PromotedProduct.schema.pre('save', async function (next) {
 	}
   await changeLogService(this)
   next()
+})
+
+PromotedProduct.schema.post('save', async function () {
+	await verifiedService(this)
 })
 
 PromotedProduct.defaultColumns = 'uuid, vertical, title, order, dateStart, dateEnd, company'
