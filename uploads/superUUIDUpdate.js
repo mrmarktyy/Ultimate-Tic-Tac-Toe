@@ -1,4 +1,4 @@
-// node --harmony_async_await uploads/superUUIDUpdate.js
+// node uploads/superUUIDUpdate.js
 require('dotenv').config()
 var uuid = require('node-uuid')
 var keystoneShell = require('../utils/keystoneShell')

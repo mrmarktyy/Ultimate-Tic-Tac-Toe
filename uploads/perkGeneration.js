@@ -1,4 +1,4 @@
-// node --harmony_async_await uploads/perkGeneration.js
+// node uploads/perkGeneration.js
 require('dotenv').config()
 
 var keystoneShell = require('../utils/keystoneShell')

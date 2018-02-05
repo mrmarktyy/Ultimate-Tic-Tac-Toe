@@ -1,4 +1,4 @@
-// node --harmony_async_await uploads/creditcardsMonetized.js
+// node uploads/creditcardsMonetized.js
 require('dotenv').config()
 
 var keystone = require('keystone')

@@ -1,4 +1,4 @@
-// node --harmony_async_await uploads/savingsAccountsHistoryReplay.js
+// node uploads/savingsAccountsHistoryReplay.js
 require('dotenv').config()
 
 const redshiftQuery = require('../utils/redshiftQuery')
