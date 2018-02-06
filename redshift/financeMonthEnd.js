@@ -1,4 +1,7 @@
 var Mailer = require('../utils/mailer')
+const keystone = require('keystone')
+const ALLVERTICALS = require('../models/helpers/salesforceVerticals')
+
 const redshiftQuery = require('../utils/redshiftQuery')
 const _ = require('lodash')
 const moment = require('moment')
@@ -28,18 +31,38 @@ var monthlyClicksCsv = exports.monthlyClicksCsv = async function (month, year) {
   let enddate = dt.add(1, 'months').format('YYYY-MM-DD')
   let command = `
     select substring((a.datetime::date), 1, 10) as click_date, a.channel, a.utm_source, a.utm_medium, a.utm_campaign,
-    a.vertical, a.product_uuid as uuid, sf.name, sf.company_name, count(1)
+    a.vertical, a.product_uuid as uuid, count(1)
     from apply_clicks a
-    LEFT JOIN
-      (SELECT * from salesforce_products sales where sales.date_start >= $1 and sales.date_end < $2 and inserted_at =
-          (select distinct max(inserted_at) from salesforce_products innersales where innersales.uuid = sales.uuid
-          and innersales.date_start >= $1 and innersales.date_end < $2)) as sf ON
-      sf.uuid = a.product_uuid
     where a.datetime >= $1 and a.datetime < $2
-    group by click_date, a.channel, a.utm_source, a.utm_medium, a.utm_campaign, a.vertical, a.product_uuid, sf.name, sf.company_name
+    group by click_date, a.channel, a.utm_source, a.utm_medium, a.utm_campaign, a.vertical, a.product_uuid
     order by click_date, a.product_uuid
   `
   let rows = await redshiftQuery(command, [startdate, enddate])
+  let productsObj = await getProducts()
 
+  rows = rows.map((row) => {
+    row.company_name = null
+    row.name = null
+    if (productsObj[row.uuid]) {
+      row.company_name = productsObj[row.uuid].company.name
+      row.name = productsObj[row.uuid].name
+    }
+    return row
+  })
   return json2csv({data: rows})
+}
+
+async function getProducts () {
+  let records = []
+  for (let vertical in ALLVERTICALS) {
+    let {collection, findClause} = ALLVERTICALS[vertical]
+    let model = await keystone.list(collection).model // eslint-disable-line babel/no-await-in-loop
+    findClause = findClause || {}
+    records = records.concat(await model.find(findClause).populate('company').lean().exec()) // eslint-disable-line babel/no-await-in-loop
+  }
+  let recordsObj = records.reduce((result, product) =>{
+    result[product.uuid] = product
+    return result
+  }, {})
+  return recordsObj
 }
