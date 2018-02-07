@@ -65,8 +65,8 @@
     "test": "mocha --recursive",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "start": "node --harmony_async_await keystone.js",
-    "resque": "node --harmony_async_await resque/resque.js",
+    "start": "node keystone.js",
+    "resque": "node resque/resque.js",
     "lint:changed": "LIST=`git diff-index --name-only HEAD | grep '.jsx\\{0,1\\}'$`; if [ \"$LIST\" ]; then eslint $LIST; fi",
     "lint:changed:fix": "LIST=`git diff-index --name-only HEAD | grep '.jsx\\{0,1\\}'$`; if [ \"$LIST\" ]; then eslint $LIST --fix; fi",
     "lint:changed-PR": "LIST=`git diff-index --name-only HEAD^ | grep '.jsx\\{0,1\\}'$`; if [ \"$LIST\" ]; then eslint $LIST; fi"

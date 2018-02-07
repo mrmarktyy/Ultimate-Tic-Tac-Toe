@@ -1,5 +1,5 @@
 // to run type
-// node --harmony_async_await uploads/personalLoan5YearComp-2017-06.js
+// node uploads/personalLoan5YearComp-2017-06.js
 require('dotenv').config()
 
 var ComparisonRateCalculator = require('../services/ComparisonRateCalculator')

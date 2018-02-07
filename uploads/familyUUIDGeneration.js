@@ -1,4 +1,4 @@
-// node --harmony_async_await uploads/familyUUIDGeneration.js
+// node uploads/familyUUIDGeneration.js
 require('dotenv').config()
 var uuid = require('node-uuid')
 var keystoneShell = require('../utils/keystoneShell')

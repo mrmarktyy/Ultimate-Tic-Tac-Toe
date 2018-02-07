@@ -1,4 +1,4 @@
-// node --harmony_async_await uploads/redirectSuper.js
+// node uploads/redirectSuper.js
 require('dotenv').config()
 var keystoneShell = require('../utils/keystoneShell')
 var mongoosePromise = require('../utils/mongoosePromise')

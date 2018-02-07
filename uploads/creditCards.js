@@ -1,4 +1,4 @@
-// node --harmony_async_await uploads/creditCards.js
+// node uploads/creditCards.js
 require('dotenv').config()
 var uuid = require('node-uuid')
 
