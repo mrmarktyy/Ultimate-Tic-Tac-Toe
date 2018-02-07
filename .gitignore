@@ -32,4 +32,3 @@ node_modules
 public/uploads/
 .tern-port
 tmp/
-package-lock.json
