@@ -93,6 +93,8 @@ async function prepDataAndPushToRedshift (date, personalLoans, personalLoanVaria
     missedPaymentPenalty: 0.0,
     earlyExitPenaltyFee: 0.0,
     earlyExitPenaltyFeePeriod: 0,
+    extraRepaymentDollarLimits: 0,
+    extraRepaymentDollarLimitsPeriod: 0,
     hasEarlyExitPenaltyFeesVaries: 'UNKNOWN',
     otherFees: 0.0,
     isDiscontinued: false,
@@ -134,6 +136,8 @@ async function prepDataAndPushToRedshift (date, personalLoans, personalLoanVaria
     product.isWeddingAllowed = loan.isWeddingAllowed
     product.otherPurposes = loan.otherPurposes
     product.repaymentFreq = loan.repaymentFrequency
+    product.extraRepaymentDollarLimits = loan.extraRepaymentDollarLimits
+    product.extraRepaymentDollarLimitsPeriod = loan.extraRepaymentDollarLimitsPeriod
     product.hasEarlyExitPenalty = loan.hasEarlyExitPenalty === 'UNKNOWN' ? null : loan.hasEarlyExitPenalty
     product.earlyExitPenaltyFee = loan.earlyExitPenaltyFee
     product.missedPaymentPenalty = loan.missedPaymentPenalty
@@ -155,6 +159,8 @@ async function prepDataAndPushToRedshift (date, personalLoans, personalLoanVaria
       variation.maxLoanTerm = cVariation.maxLoanTerm
       variation.minRate = cVariation.minRate
       variation.maxRate = cVariation.maxRate
+      variation.introRate = cVariation.introRate
+      variation.introTerm = cVariation.introTerm
       variation.comparisonRatePersonal = cVariation.comparisonRatePersonal
       variation.comparisonRateCar = cVariation.comparisonRateCar
       variation.applicationFeesPercent = cVariation.applicationFeesPercent
@@ -175,8 +181,9 @@ async function prepDataAndPushToRedshift (date, personalLoans, personalLoanVaria
     'isSelfEmploymentAccepted', 'otherBenefits', 'otherRestrictions', 'adminNotes', 'isNewCarAllowed', 'isUsedCarAllowed',
     'isMotorcycleAllowed', 'isBoatAllowed', 'isStudentAllowed', 'isDebtConsolidationAllowed', 'isRenovationAllowed',
     'isSharesAllowed', 'isHolidaysAllowed', 'isMedicalBillAllowed', 'isWeddingAllowed', 'otherPurposes', 'encumbranceCheckFees',
-    'redrawActivationFee', 'minRedrawAmount', 'hasEarlyExitPenalty', 'missedPaymentPenalty', 'earlyExitPenaltyFee',
-    'earlyExitPenaltyFeePeriod', 'hasEarlyExitPenaltyFeesVaries', 'otherFees', 'isDiscontinued', 'filename',
+    'redrawActivationFee', 'minRedrawAmount', 'hasEarlyExitPenalty', 'missedPaymentPenalty', 'extraRepaymentDollarLimits',
+    'extraRepaymentDollarLimitsPeriod', 'earlyExitPenaltyFee', 'earlyExitPenaltyFeePeriod',
+    'hasEarlyExitPenaltyFeesVaries', 'otherFees', 'isDiscontinued', 'filename',
   ]
 
   const variationHeaders = [
@@ -190,6 +197,8 @@ async function prepDataAndPushToRedshift (date, personalLoans, personalLoanVaria
     'maxLoanTerm',
     'minRate',
     'maxRate',
+    'introRate',
+    'introTerm',
     'comparisonRatePersonal',
     'comparisonRateCar',
     'applicationFeesPercent',
