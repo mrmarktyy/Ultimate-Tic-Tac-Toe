@@ -7,6 +7,7 @@ const EarnRate = keystone.list('EarnRate')
 const PartnerConversion = keystone.list('PartnerConversion')
 const PerkType = keystone.list('PerkType')
 const Perk = keystone.list('Perk')
+const CompanyCreditCard = keystone.list('CompanyCreditCard')
 
 const monetizedCollection = require('./monetizedCollection')
 const recommendedMultiplier = require('../../utils/recommendedMultiplier').multiplier
@@ -44,6 +45,10 @@ exports.list = async function (req, res) {
   let removeFields = { updatedAt: 0, updatedBy: 0, isMonetized: 0, __v: 0, createdAt: 0, createdBy: 0 }
   let removePopulatedFields = '-updatedAt -updatedBy -__v  -createdAt -createdBy'
   let monetizedList = await monetizedCollection('Credit Cards')
+  let companyVerticalData = await CompanyCreditCard.model.find().populate('big4ComparisonProduct').lean().exec()
+  companyVerticalData.forEach((obj) => {
+     obj.big4ComparisonProductUuid = obj.big4ComparisonProduct ? obj.big4ComparisonProduct.uuid : null
+  })
   let partnerConversions = await PartnerConversion.model.find()
     .populate('rewardProgram partnerProgram', removePopulatedFields)
     .lean()
@@ -80,6 +85,7 @@ exports.list = async function (req, res) {
       company.logo = company.logo.url
     }
     card.company  = company
+    card.companyVertical = companyVerticalData
 
     let monetize = monetizedList[card._id]
     card.gotoSiteUrl = monetize ? monetize.applyUrl : null
