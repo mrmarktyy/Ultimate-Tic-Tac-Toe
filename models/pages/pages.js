@@ -18,7 +18,7 @@ const Pages = new keystone.List('Pages', {track: true}).add({
 	description: {type: Types.Code, height: 250, language: 'html'},
 	keywords: {type: Types.Text},
 	canonical: {type: Types.Text},
-	category: {type: Types.Text},
+	category: {type: Types.TextArray},
 	userJourneyStage: {type: Types.Text},
 	rankingScore: { type: Number, min: 0 },
 	og: {
@@ -39,6 +39,7 @@ const Pages = new keystone.List('Pages', {track: true}).add({
 		image: {type: Types.Text},
 	},
 	featuredImage: { type: Types.Url },
+	cannedSearchGroup: {type: Types.Text},
 })
 Pages.add(verifiedCommonAttribute)
 Pages.schema.pre('save', async function (next) {
