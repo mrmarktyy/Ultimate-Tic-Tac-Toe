@@ -133,7 +133,7 @@ async function populateCreditCards () {
       obj.maximumCreditLimit = item.maximumCreditLimit
       obj.numberFreeSupplementary = item.numberFreeSupplementary
       obj.applePayAvailable = item.applePayAvailable || 'UNKNOWN'
-      obj.androidPayAvailable = item.androidPayAvailable || 'UNKNOWN'
+      obj.googlePayAvailable = item.googlePayAvailable || 'UNKNOWN'
       obj.samsungPayAvailable = item.samsungPayAvailable || 'UNKNOWN'
       obj.contactlessAvailable = item.contactlessAvailable  || 'UNKNOWN'
       obj.otherBenefits = item.otherBenefits
