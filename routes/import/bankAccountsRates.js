@@ -121,7 +121,7 @@ async function mapBankAccounts (rawProduct) {
 	product.company = company._id
 	const smartPaySupport = []
 	rawProduct.applePayAvailable.toLowerCase() === 'yes' ? smartPaySupport.push('Apple Pay') : null
-	rawProduct.androidPayAvailable.toLowerCase() === 'yes' ? smartPaySupport.push('Android Pay') : null
+	rawProduct.googlePayAvailable.toLowerCase() === 'yes' ? smartPaySupport.push('Google Pay') : null
 	rawProduct.samsungPayAvailable.toLowerCase() === 'yes' ? smartPaySupport.push('Samsung Pay') : null
 	product.smartPaySupport = smartPaySupport
 	product.restrictions = rawProduct.otherRestrictions ? [rawProduct.otherRestrictions] : []
