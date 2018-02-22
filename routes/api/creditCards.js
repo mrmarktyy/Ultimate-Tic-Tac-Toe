@@ -107,6 +107,9 @@ exports.list = async function (req, res) {
 
     card = populateOldperks(card, perks)
     card.perks = populatePerks (card, perks, perkTypes)
+
+		//adding temp fix for google pay
+		card.androidPayAvailable = card.googlePayAvailable
     if (card.rewardProgram) {
       card.rewardProgram.redemptions = redemptionCalculation(redemptions, card.rewardProgram._id.toString())
       card.isFrequentFlyer = card.rewardProgram.isFrequentFlyer || false
