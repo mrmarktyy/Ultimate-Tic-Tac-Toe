@@ -34,10 +34,6 @@ async function getBankAccounts (accounts) {
 		setPromotedOrder(account)
     account.popularityScore = (account.monthlyClicks ? account.monthlyClicks * recommendedMultiplier : 0)
 
-		//adding temp fix for google pay
-		if(account.smartPaySupport.indexOf('Google Pay') !== -1){
-			account.smartPaySupport.push('Android Pay')
-		}
     delete account.monthlyClicks
 		return removeUneededFields(account)
 	})
