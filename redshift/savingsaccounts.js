@@ -80,7 +80,7 @@ async function prepDataAndPushToRedshift (date, savingsAccounts, savingsAccountT
     product.jointApplicationavailable = account.jointApplicationAvailable
     product.unlimitedwithdrawals = account.unlimitedWithdrawals
     product.isdiscontinued = account.isDiscontinued ? account.isDiscontinued : false
-    product.filename = filename,
+    product.filename = filename
     products.push(product)
 
     let tiers = savingsAccountTiers.filter((item) => item.product.uuid === account.uuid)

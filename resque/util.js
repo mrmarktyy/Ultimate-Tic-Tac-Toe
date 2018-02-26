@@ -7,6 +7,7 @@ var monthlyClickCount = require('../resqueJobs/importMonthlyClickCount')
 var paymentMonetizationTypes = require('../resqueJobs/importPaymentMonetizationTypes')
 var homeLoansToRedshift = require('../resqueJobs/loadHomeLoansToRedshift')
 var personalLoansToRedshift = require('../resqueJobs/loadPersonalLoansToRedshift')
+var creditCardsToRedshift = require('../resqueJobs/loadCreditCardsToRedshift')
 var emailMonthlyClicks = require('../resqueJobs/monthlyClicks')
 var salesforceProducts = require('../resqueJobs/salesforcePushProducts')
 var salesforceCompanies = require('../resqueJobs/salesforcePushCompanies')
@@ -25,6 +26,7 @@ const jobs = {
   'homeLoansToRedshift': homeLoansToRedshift,
   'paymentMonetizationTypes': paymentMonetizationTypes,
   'personalLoansToRedshift': personalLoansToRedshift,
+  'creditCardsToRedshift': creditCardsToRedshift,
   'emailMonthlyClicks': emailMonthlyClicks,
   'salesforceProducts': salesforceProducts,
   'salesforceCompanies': salesforceCompanies,
