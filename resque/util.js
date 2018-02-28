@@ -12,6 +12,8 @@ var emailMonthlyClicks = require('../resqueJobs/monthlyClicks')
 var salesforceProducts = require('../resqueJobs/salesforcePushProducts')
 var salesforceCompanies = require('../resqueJobs/salesforcePushCompanies')
 var savingsAccountsToRedshift = require('../resqueJobs/loadSavingsAccountsToRedshift')
+var bankAccountsToRedshift = require('../resqueJobs/loadBankAccountsToRedshift')
+
 var blazePages = require('../resqueJobs/blazePages')
 
 const connectionDetails = {
@@ -31,6 +33,7 @@ const jobs = {
   'salesforceProducts': salesforceProducts,
   'salesforceCompanies': salesforceCompanies,
   'savingsAccountsToRedshift': savingsAccountsToRedshift,
+  'bankAccountsToRedshift': bankAccountsToRedshift,
   'blazePages': blazePages,
 }
 
