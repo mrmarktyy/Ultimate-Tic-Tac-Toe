@@ -158,6 +158,8 @@ exports.fields = {
   f193b: 'performance_diversified_4_avg',
   f194a: 'performance_diversified_5',
   f194b: 'performance_diversified_5_avg',
+  f126a: 'performance_growth_fytd',
+  f126b: 'performance_growth_fytd_avg',
   f121a: 'performance_growth_1',
   f121b: 'performance_growth_1_avg',
   f122a: 'performance_growth_2',
