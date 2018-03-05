@@ -14,6 +14,7 @@ Redirect.add({
     required: true,
     initial: true,
   },
+  startDate: { type: Types.Datetime },
   notes: { type: Types.Text },
 })
 

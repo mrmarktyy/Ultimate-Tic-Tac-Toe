@@ -1,0 +1,95 @@
+extends ../layouts/default
+
+block content
+  .container
+    h1 Company Redirects
+    h3 This will create entries into redirects collection for all products and the company
+    .row
+      .col-sm-8
+        .form-group
+          label Company UUID
+          input(type="text", placeholder="Company UUID", id='companyUuid').form-control
+        .form-group
+          label Name
+          #companyName
+        .form-group
+          label Response Status
+          select(id='responseStatus').form-control
+            option(value='302') 302 - Temporary
+            option(value='301' selected='selected') 301 - Permanent
+        .form-group
+          label Old Slug
+          input(type="text", placeholder="old slug", id='oldSlug').form-control
+        .form-group
+          label Current Slug
+          #currentSlug
+        .form-group
+          label Comment
+          input(type="text", size='100', id='redirectComment').form-control
+
+        .form-group
+          button.btn.btn-large.btn-primary#createRedirect Create Redirects
+          button.btn.btn-large.btn-primary#clearRedirects Clear
+
+block intro
+  .row
+    .col-sm-8.col-sm-offset-2
+      .alert
+
+block js
+  script.
+    let resetPage = () => {
+      $('#companyName').empty()
+      $('#currentSlug').empty()
+      $('#companyName').empty()
+      $('#redirectComment').val('')
+      $('div.alert').removeClass('alert-success alert-danger')
+      $('div.alert').empty()
+    }
+
+    $(document).ready(function() {
+      resetPage()
+      $('#companyUuid').focusout(function(e) {
+        $.ajax({
+          method: "POST",
+          url: "/find-company-uuid",
+          data: { uuid: $('#companyUuid').val() }
+        })
+          .done(function(msg) {
+            if (msg.name) {
+              $('#companyName').text(msg.name)
+              $('#currentSlug').text(msg.slug)
+              $('#redirectComment').val(msg.name + ' redirects')
+            } else {
+              resetPage()
+            }
+          })
+      })
+      $('#createRedirect').click((e) =>{
+        $.ajax({
+          method: "POST",
+          url: "/redirects",
+          data: { uuid: $('#companyUuid').val(), oldSlug: $('#oldSlug').val(), comment:  $('#redirectComment').val(), responseStatus: $('#responseStatus').val()}
+        })
+          .done(function(msg) {
+            $('div.alert').removeClass('alert-success alert-danger')
+            $('div.alert').empty()
+            if (msg.flashcode) {
+              $('div.alert').addClass('alert-success')
+              $('div.alert').append('<ul style="list-style: none;"></ul>')
+              for (let key in msg.data) {
+                $('div.alert ul').append(`<li>${key} -- ${msg.data[key]} redirects</li>`)
+              }
+            } else {
+              $('div.alert').addClass('alert-danger')
+              $('div.alert').text(msg.flashmessage)
+            }
+          })
+      })
+      $('#clearRedirects').click((e) => {
+        resetPage()
+        $('#companyUuid').val('')
+        $('#oldSlug').val('')
+        e.preventDefault()
+      })
+    })
