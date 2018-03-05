@@ -13,6 +13,7 @@ exports.initLocals = function (req, res, next) {
 		{ label: 'Admin', dropdown: true, items: [
 				{ label: 'Salesforce Push', key: 'salesforcePush', href: '/salesforce-push' },
 				{ label: 'UUID Search', key: 'uuidSearch', href: '/uuid-search' },
+				{ label: 'Company Redirects', key: 'companyRedirects', href: '/company-redirects' },
 			],
 		},
 	]
@@ -48,6 +49,16 @@ exports.requireUser = function (req, res, next) {
 
 exports.financeUser = function (req, res, next) {
 	const KEY_PEOPLE = ['ian.fletcher@ratecity.com.au', 'rochelle.dicristo@ratecity.com.au', 'pravin.mahajan@ratecity.com.au', 'matthew.halpin@ratecity.com.au']
+	if (KEY_PEOPLE.includes(req.user.email) === false) {
+		req.flash('error', 'Only key people have access to this page.')
+		res.redirect('/')
+	} else {
+		next()
+	}
+}
+
+exports.itUser = function (req, res, next) {
+	const KEY_PEOPLE = ['ian.fletcher@ratecity.com.au', 'pravin.mahajan@ratecity.com.au']
 	if (KEY_PEOPLE.includes(req.user.email) === false) {
 		req.flash('error', 'Only key people have access to this page.')
 		res.redirect('/')

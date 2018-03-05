@@ -29,6 +29,8 @@ exports = module.exports = function (app) {
 
   // Views
   app.get('/', routes.views.index)
+  app.get('/company-redirects', middleware.requireUser, middleware.itUser, routes.views.companyRedirects.screen)
+  app.post('/redirects', middleware.requireUser, middleware.itUser, routes.views.companyRedirects.redirects)
   app.get('/import-rates', middleware.requireUser, routes.views.importRates)
   app.get('/monthly-clicks-export', middleware.requireUser, routes.views.monthlyClicks.screen)
   app.post('/monthly-clicks-download', middleware.requireUser, routes.views.monthlyClicks.download)
@@ -43,7 +45,8 @@ exports = module.exports = function (app) {
 	app.post('/import-page/uploads', middleware.requireUser, routes.views.importPages.uploadFile)
   app.get('/uuid-search', middleware.requireUser, routes.views.uuidSearch.screen)
   app.post('/find-uuid', middleware.requireUser, routes.views.uuidSearch.findUuid)
-	//downloads
+	app.post('/find-company-uuid', middleware.requireUser, middleware.itUser, routes.views.companyRedirects.getCompany)
+  //downloads
   app.post('/import/homeloan-download-rates', routes.import.homeloanRates.downloadCsv)
   app.post('/import/homeloan-upload-rates', routes.import.homeloanRates.uploadCsv)
   app.post('/import/superannuation-upload-rates', routes.import.superannuationRates.uploadCsv)
