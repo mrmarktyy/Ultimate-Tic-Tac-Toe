@@ -9,7 +9,7 @@ const CompanyService = require('../../services/CompanyService')
 const recommendedMultiplier = require('../../utils/recommendedMultiplier').multiplier
 
 exports.list = async function (req, res) {
-  const bankAccounts = await BankAccount.model.find().populate('company').lean().exec()
+  const bankAccounts = await BankAccount.model.find({ $or: [ { isDiscontinued: false }, { isDiscontinued: {$exists: false} } ] }).populate('company').lean().exec()
   const result = await getBankAccounts(bankAccounts)
   res.jsonp(result)
 }
