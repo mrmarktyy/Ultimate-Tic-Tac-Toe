@@ -55,8 +55,6 @@ async function getPensionObjects (pensions) {
 				product.performanceAvg[key][year] = parseFloat(pension[`performance_${option}_${dataKey}_avg`] || 0)
 			})
 		})
-		product.performance.balanced.fytd = product['5YearAnnualisedPerformance']
-		product.performanceAvg.balanced.fytd = product['5YearAnnualisedPerformanceAvg']
 		product.basicFee5k = parseFloat(pension.basic_fee_5k || 0)
 		product.basicFee50k = parseFloat(pension.basic_fee_50k || 0)
 		product.basicFee100k = parseFloat(pension.basic_fee_100k || 0)
