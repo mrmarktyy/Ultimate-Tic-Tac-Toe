@@ -63,6 +63,11 @@ queue.connect(() => {
       queue.enqueue('ultimate', 'bankAccountsToRedshift')
     }
   })
+  schedule.scheduleJob('00 20 * * *', () => {
+    if (scheduler.master) {
+      queue.enqueue('ultimate', 'termDepositsToRedshift')
+    }
+  })
   schedule.scheduleJob('25 * * * *', () => {
     if (scheduler.master) {
       queue.enqueue('ultimate', 'salesforceCompanies')
