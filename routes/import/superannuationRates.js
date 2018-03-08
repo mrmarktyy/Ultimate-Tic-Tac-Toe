@@ -123,7 +123,7 @@ function extractFields (item) {
 		result[changeCase.snakeCase(key)] = value
 	})
 	_.forIn(fields, (value, key) => {
-		product[value] = (data[key] || '').replace(/[\r\n]/g, '')
+		product[value] = (data[key] || '').replace(/[\r\n]/g, '') || product[value] || ''
 	})
 	return product
 }
