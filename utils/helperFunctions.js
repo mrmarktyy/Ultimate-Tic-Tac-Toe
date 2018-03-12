@@ -7,6 +7,7 @@ exports.keystoneUpdate = function (model, req) {
 	return new Promise((resolve, reject) => {
 		updateHandler.process(model, (err) => {
 			if (err) {
+				console.log(err);
 				reject('UUID: ' + model.uuid + 'Error:' + err.detail)
 			} else {
 				resolve()
