@@ -2,14 +2,13 @@ var logger = require('../utils/logger')
 var loadTermDepositsToRedshift = require('../redshift/termdeposits')
 
 const termDepositsToRedshift = {
-  perform: async (done) => {
+  plugins: ['QueueLock'],
+  perform: async () => {
     try {
       logger.info(new Date() + ' resque loadTermDepositsToRedshift')
       await loadTermDepositsToRedshift()
-      done()
     } catch (error) {
-      console.log('in error')
-      done(new Date() + ' loadTermDepositsToRedshift ' + error.message)
+      return new Date() + ' loadTermDepositsToRedshift ' + error.message
     }
   },
 }

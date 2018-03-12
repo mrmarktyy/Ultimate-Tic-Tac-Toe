@@ -2,14 +2,13 @@ var logger = require('../utils/logger')
 var loadBankAccountsToRedshift = require('../redshift/bankaccounts')
 
 const bankAccountsToRedshift = {
-  perform: async (done) => {
+  plugins: ['QueueLock'],
+  perform: async () => {
     try {
       logger.info(new Date() + ' resque loadBankAccountsToRedshift')
       await loadBankAccountsToRedshift()
-      done()
     } catch (error) {
-      console.log('in error')
-      done(new Date() + ' loadBankAccountsToRedshift ' + error.message)
+      return new Date() + ' loadBankAccountsToRedshift ' + error.message
     }
   },
 }

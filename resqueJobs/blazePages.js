@@ -3,7 +3,8 @@ var client = require('../utils/elasticsearch')
 var jsonfile = require('jsonfile')
 
 const blazePages = {
-  perform: async (done) => {
+  plugins: ['QueueLock'],
+  perform: async () => {
     try {
       const result = await client.search({
         index: 'blaze-pages',
@@ -27,11 +28,9 @@ const blazePages = {
       pagesData.sort((a, b) => (a.value > b.value) - (a.value < b.value))
 
       jsonfile.writeFileSync('data/blazePages.json', pagesData)
-
-      done()
     } catch (error) {
       logger.error('blazePages ' + error)
-      done()
+      return error.message
     }
   },
 }

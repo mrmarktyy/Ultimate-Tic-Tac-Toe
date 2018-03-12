@@ -2,13 +2,13 @@ var logger = require('../utils/logger')
 var loadPersonalLoansToRedshift = require('../redshift/personalloans')
 
 const personalLoansToRedshift = {
-  perform: async (done) => {
+  plugins: ['QueueLock'],
+  perform: async () => {
     try {
       logger.info(new Date() + ' resque loadPersonalLoansToRedshift')
       await loadPersonalLoansToRedshift()
-      done()
     } catch (error) {
-      done(new Date() + ' loadPersonalLoansToRedshift ' + error.message)
+      return new Date() + ' loadPersonalLoansToRedshift ' + error.message
     }
   },
 }

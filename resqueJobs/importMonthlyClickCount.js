@@ -2,13 +2,13 @@ var logger = require('../utils/logger')
 var importMonthlyClickCount = require('../redshift/importMonthlyClickCount')
 
 module.exports = {
-  perform: async (done) => {
+  plugins: ['QueueLock'],
+  perform: async () => {
     try {
       logger.info(new Date() + ' resque importMonthlyClickCount')
       await importMonthlyClickCount()
-      done()
     } catch (error) {
-      done(new Date() + ' importMonthlyClickCount ' + error.message)
+      return new Date() + ' importMonthlyClickCount ' + error.message
     }
   },
 }
