@@ -102,6 +102,7 @@ exports.fields = {
   f171b: '5_year_annualised_performance_avg',
   w43a_default: 'performance_balanced_fytd',
   w44a_option2: 'performance_balanced_fytd_avg',
+  p_w44a_option2: 'performance_balanced_fytd_avg',
   f166a: 'performance_balanced_1',
   f166b: 'performance_balanced_1_avg',
   f167a: 'performance_balanced_2',
