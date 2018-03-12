@@ -2,13 +2,13 @@ var logger = require('../utils/logger')
 var salesforcePushProducts = require('../services/salesforcePush').pushProducts
 
 const salesforceProducts = {
-  perform: async (done) => {
+  plugins: ['QueueLock'],
+  perform: async () => {
     try {
       logger.info(new Date() + ' resque salesforcePushProducts')
       await salesforcePushProducts()
-      done()
     } catch (error) {
-      done(new Date() + ' salesforcePushProducts ' + error.message)
+      return new Date() + ' salesforcePushProducts ' + error.message
     }
   },
 }

@@ -39,9 +39,9 @@ const jobs = {
   'blazePages': blazePages,
 }
 
-let scheduler = new Resque.scheduler({connection: connectionDetails})
-let queue = new Resque.queue({connection: connectionDetails}, jobs)
-let worker = new Resque.worker({connection: connectionDetails, queues: ['ultimate']}, jobs)
+let scheduler = new Resque.Scheduler({connection: connectionDetails})
+let queue = new Resque.Queue({connection: connectionDetails}, jobs)
+let worker = new Resque.Worker({connection: connectionDetails, queues: ['ultimate']}, jobs)
 
 worker.on('start', () => { logger.info('worker started') })
 worker.on('end', () => { logger.info('worker ended') })
