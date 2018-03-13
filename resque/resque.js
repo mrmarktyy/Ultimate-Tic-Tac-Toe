@@ -8,10 +8,6 @@ const scheduler = resqueUtil.scheduler
 const worker = resqueUtil.worker
 const queue = resqueUtil.queue
 
-scheduler.connect(() => {
-  scheduler.start()
-})
-
 async function startResque () {
   await worker.connect()
   await worker.workerCleanup()
