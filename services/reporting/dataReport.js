@@ -33,7 +33,7 @@ async function dataReport () {
 }
 
 async function badslugs () {
-  let collections = await productService({slug: /.*-duplicate/}, {isDiscontinued: 1})
+  let collections = await productService({$or: [{slug: /.*-duplicate/}, {name: /.*duplicate/}]}, {isDiscontinued: 1})
   let slugs = []
   for (let vertical in collections) {
     let products = collections[vertical]
