@@ -9,6 +9,7 @@ var homeLoansToRedshift = require('../resqueJobs/loadHomeLoansToRedshift')
 var personalLoansToRedshift = require('../resqueJobs/loadPersonalLoansToRedshift')
 var creditCardsToRedshift = require('../resqueJobs/loadCreditCardsToRedshift')
 var emailMonthlyClicks = require('../resqueJobs/monthlyClicks')
+var emailDataReport = require('../resqueJobs/dataReportJob')
 var salesforceProducts = require('../resqueJobs/salesforcePushProducts')
 var salesforceCompanies = require('../resqueJobs/salesforcePushCompanies')
 var savingsAccountsToRedshift = require('../resqueJobs/loadSavingsAccountsToRedshift')
@@ -31,6 +32,7 @@ const jobs = {
   'personalLoansToRedshift': personalLoansToRedshift,
   'creditCardsToRedshift': creditCardsToRedshift,
   'emailMonthlyClicks': emailMonthlyClicks,
+  'emailDataReport': emailDataReport,
   'salesforceProducts': salesforceProducts,
   'salesforceCompanies': salesforceCompanies,
   'savingsAccountsToRedshift': savingsAccountsToRedshift,

@@ -20,16 +20,13 @@ async function startResque () {
   await queue.connect()
   await queue.cleanOldWorkers(120000)
   logger.info('cleaned old workers')
-  // queue.cleanOldWorkers(120000, (error, data) => {
-  //   if (Object.keys(data).length > 0) {
-  //     logger.info('cleaned old workers')
-  //   }
-  //   if (error) {
-  //     logger.error(error)
-  //   }
-  // })
 
   // Daily
+  schedule.scheduleJob('50 5 * * 1-5', async () => {
+    if (scheduler.master) {
+      await queue.enqueue('ultimate', 'emailDataReport')
+    }
+  })
   schedule.scheduleJob('47 18 * * *', async () => {
     if (scheduler.master) {
       await queue.enqueue('ultimate', 'personalLoansToRedshift')
@@ -86,7 +83,6 @@ async function startResque () {
       await queue.enqueue('ultimate', 'emailMonthlyClicks')
     }
   })
-
   schedule.scheduleJob('39 15 * * *', async () => {
     if (scheduler.master) {
       await queue.enqueue('ultimate', 'blazePages')
