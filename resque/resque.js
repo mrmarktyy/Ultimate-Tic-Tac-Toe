@@ -7,6 +7,7 @@ const resqueUtil = require('./util')
 const scheduler = resqueUtil.scheduler
 const worker = resqueUtil.worker
 const queue = resqueUtil.queue
+const stagingEnv = new RegExp('staging')
 
 async function startResque () {
   await worker.connect()
@@ -23,7 +24,7 @@ async function startResque () {
 
   // Daily
   schedule.scheduleJob('50 5 * * 1-5', async () => {
-    if (scheduler.master && process.env.BLAZE !== /.*staging.*/) {
+    if (scheduler.master && !stagingEnv.exec(process.env.BLAZE)) {
       await queue.enqueue('ultimate', 'emailDataReport')
     }
   })
