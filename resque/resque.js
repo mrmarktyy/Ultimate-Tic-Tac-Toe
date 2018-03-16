@@ -23,7 +23,7 @@ async function startResque () {
 
   // Daily
   schedule.scheduleJob('50 5 * * 1-5', async () => {
-    if (scheduler.master) {
+    if (scheduler.master && process.env.BLAZE !== /.*staging.*/) {
       await queue.enqueue('ultimate', 'emailDataReport')
     }
   })
