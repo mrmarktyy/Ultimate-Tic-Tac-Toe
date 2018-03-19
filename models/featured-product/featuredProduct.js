@@ -41,6 +41,9 @@ FeaturedProduct.schema.pre('validate', function (next) {
 	if (this.description.length >= 135) {
 		next(Error('Description has maximum of 135 characters'))
 	}
+	if(this.sortOrder < 0){
+		next(Error('Sort order cannot be negative'))
+	}
 	next()
 })
 
