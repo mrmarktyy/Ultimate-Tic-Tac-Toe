@@ -80,7 +80,7 @@ keystone.set('nav', {
   saleEventProducts: ['SaleEventProduct', 'SaleEventProductField'],
   feeds: ['ProductFeedInclusion', 'ProductFeed', 'WidgetImage'],
   users: 'users',
-  utilites: ['ApiKey', 'Monetize', 'ChangeLog', 'Log'],
+  utilites: ['ApiKey', 'ExternalApi', 'Monetize', 'ChangeLog', 'Log'],
 	brokers: ['Broker', 'Tile', 'Testimonial'],
 	genericProducts: ['GenericProduct'],
   notifications: 'Notifications',
