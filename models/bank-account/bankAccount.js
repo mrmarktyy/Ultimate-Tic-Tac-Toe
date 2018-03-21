@@ -89,9 +89,12 @@ BankAccount.schema.pre('save', async function (next) {
     this.uuid = uuid.v4()
   }
   if (!this.slug) {
-    let slug = utils.slug(this.name.toLowerCase())
-    this.slug = slug
+    this.slug = utils.slug(this.name.toLowerCase())
   }
+  if (utils.slug(this.slug.toLowerCase()) !== this.slug) {
+    this.slug = utils.slug(this.slug.toLowerCase())
+  }
+
   await changeLogService(this)
   next()
 })

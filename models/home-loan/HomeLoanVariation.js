@@ -90,9 +90,6 @@ HomeLoanVariation.schema.pre('validate', async function (next) {
   if (this.isMonetized && this.isDiscontinued) {
      next(Error('You cannot discontinue a variation that is monetized.'))
   }
-  if (!this.slug) {
-    next(Error('The Slug must have a value'))
-  }
   next()
 })
 
@@ -106,6 +103,9 @@ HomeLoanVariation.schema.pre('save', async function (next) {
   }
   if (!this.slug) {
     this.slug = utils.slug(this.name.toLowerCase())
+  }
+  if (utils.slug(this.slug.toLowerCase()) !== this.slug) {
+    this.slug = utils.slug(this.slug.toLowerCase())
   }
 
   await changeLogService(this)
