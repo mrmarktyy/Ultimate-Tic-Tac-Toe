@@ -6,6 +6,7 @@ var {imageStorage} = require('../helpers/fileStorage')
 var shareOfVoiceAttributes = require('../common/ShareOfVoiceCommonAttributes')
 var verifiedCommonAttribute = require('../common/verifiedCommonAttribute')
 var verifiedService = require('../../services/verifiedService')
+var utils = keystone.utils
 
 var Broker = new keystone.List('Broker', {track: true}).add({
 	uuid: {type: Types.Text, initial: true, noedit: true, unique: true},
@@ -20,7 +21,7 @@ var Broker = new keystone.List('Broker', {track: true}).add({
 	email: {type: Types.TextArray},
 	logo: imageStorage('Broker'),
 	imageHeader: imageStorage('brokerHeader'),
-  isDiscontinued: {type: Types.Boolean, initial: true, require: true, index: true}, 
+  isDiscontinued: {type: Types.Boolean, initial: true, require: true, index: true},
 	phone: {type: Types.Text},
 	default: {type: Types.Boolean, initial: true, require: true},
 	pros: {type: Types.TextArray},
@@ -53,6 +54,12 @@ Broker.schema.pre('save', async function (next) {
 	if (!this.uuid) {
 		this.uuid = uuid.v4()
 	}
+  if (!this.slug) {
+		this.slug = utils.slug(this.name.toLowerCase())
+  }
+  if (utils.slug(this.slug.toLowerCase()) !== this.slug) {
+    this.slug = utils.slug(this.slug.toLowerCase())
+  }
 
 	if (this.default) {
 		await keystone.list('Broker').model.update({default: true, vertical: this.vertical, uuid: {$ne: this.uuid}}, {$set: {default: false}}, {multi: true})

@@ -55,6 +55,9 @@ TermDeposit.schema.pre('save', async function (next) {
     let slug = utils.slug(this.name.toLowerCase())
     this.slug = slug
   }
+  if (utils.slug(this.slug.toLowerCase()) !== this.slug) {
+    this.slug = utils.slug(this.slug.toLowerCase())
+  }
 
   await changeLogService(this)
   next()

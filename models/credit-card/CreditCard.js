@@ -7,6 +7,7 @@ var changeLogService = require('../../services/changeLogService')
 var verifiedService = require('../../services/verifiedService')
 var verifiedCommonAttribute = require('../common/verifiedCommonAttribute')
 
+var utils = keystone.utils
 var Types = keystone.Field.Types
 
 var CreditCard = new keystone.List('CreditCard', {
@@ -161,6 +162,13 @@ CreditCard.schema.pre('save', function (next) {
 	if (!this.uuid) {
 		this.uuid = uuid.v4()
 	}
+	if (!this.slug) {
+    this.slug = utils.slug(this.name.toLowerCase())
+  }
+  if (utils.slug(this.slug.toLowerCase()) !== this.slug) {
+    this.slug = utils.slug(this.slug.toLowerCase())
+  }
+
 	this.isLowRate = this.purchaseRateStandard <= 14.0 || this.name.toLowerCase().includes('low rate')
 	this.isLowFee = this.annualFeeStandard <= 50 || this.name.toLowerCase().includes('low fee')
 	this.isReward = this.rewardProgram ? this.rewardProgram !== null : false

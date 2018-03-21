@@ -47,7 +47,12 @@ Superannuation.schema.index({ fundgroup: 1, product_name: 1 }, { unique: true })
 
 Superannuation.schema.pre('save', async function (next) {
 	this.uuid = this.uuid || uuid.v4()
-	this.slug = this.slug || utils.slug(this.name.toLowerCase())
+	if (!this.slug) {
+		this.slug = utils.slug(this.name.toLowerCase())
+  }
+  if (utils.slug(this.slug.toLowerCase()) !== this.slug) {
+    this.slug = utils.slug(this.slug.toLowerCase())
+  }
 	const fundGroup = await keystone.list('FundGroup').model.findOne({_id: this.fundgroup}).exec()
 	this.company = fundGroup.company || this.company
 	await changeLogService(this)
