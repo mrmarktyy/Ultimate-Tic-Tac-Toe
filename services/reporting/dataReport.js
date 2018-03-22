@@ -45,6 +45,7 @@ async function badslugs () {
         name: product.name,
         uuid: product.uuid,
         slug: product.slug,
+        isMonetized: product.isMonetized ? product.isMonetized : false,
         isDiscontinued: product.isDiscontinued,
       }
       slugs.push(obj)
@@ -94,6 +95,7 @@ async function specialsBadSlug () {
         company: special.company.name,
         name: special.name,
         uuid: null,
+        isMonetized: null,
         slug: special.slug,
         isDiscontinued: null,
       }
