@@ -18,5 +18,5 @@ PerkType.schema.pre('save', async function (next) {
   next()
 })
 
-PerkType.defaultColumns = 'name, value, assumptions'
+PerkType.defaultColumns = 'name, value, Assumptions'
 PerkType.register()

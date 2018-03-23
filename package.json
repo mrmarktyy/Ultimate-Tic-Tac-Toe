@@ -17,7 +17,7 @@
     "jade": "^1.11.0",
     "json2csv": "^3.7.3",
     "jsonfile": "4.0.0",
-    "keystone": "git+https://github.com/ratecity/keystone.git#3ef538d9fda354de73fadf1778a0033ace372902",
+    "keystone": "git+https://github.com/ratecity/keystone.git#593704938eecf170d999e495076969e4664be999",
     "keystone-storage-adapter-s3": "^1.1.0",
     "keystone-utils": "^0.4.0",
     "lodash": "^4.13.1",
