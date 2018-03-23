@@ -70,7 +70,7 @@ SponsoredLink.schema.post('save', async function () {
 
 SponsoredLink.schema.index({ company: 1, vertical: 1, name: 1 }, { unique: true })
 
-SponsoredLink.defaultColumns = 'uuid, name, vertical, company, description, dateStart, dateEnd'
+SponsoredLink.defaultColumns = 'uuid, name, vertical, company, dateStart, dateEnd'
 SponsoredLink.drilldown = 'company'
 SponsoredLink.register()
 

@@ -25,5 +25,5 @@ SaleEventProduct.schema.pre('save', async function (next) {
   next()
 })
 
-SaleEventProduct.defaultColumns = 'uuid, vertical, name, notes'
+SaleEventProduct.defaultColumns = 'uuid, vertical, name, description'
 SaleEventProduct.register()
