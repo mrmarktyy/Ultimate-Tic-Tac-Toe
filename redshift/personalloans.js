@@ -150,6 +150,7 @@ async function prepDataAndPushToRedshift (date, personalLoans, personalLoanVaria
     variations.forEach((cVariation) => {
       let variation = {}
       variation.collectionDate = collectionDate
+      variation.id = cVariation._id.toString()
       variation.productId = product.productId
       variation.uuid = product.uuid
       variation.description = product.description
@@ -188,6 +189,7 @@ async function prepDataAndPushToRedshift (date, personalLoans, personalLoanVaria
 
   const variationHeaders = [
     'collectionDate',
+    'id',
     'productId',
     'uuid',
     'description',
