@@ -101,9 +101,6 @@ async function getHomeLoansObjects (homeLoans) {
     if (variations[homeLoan._id]) {
       let company = CompanyService.fixLogoUrl(homeLoan.company)
       company = CompanyService.isBank(company)
-      if (company.logo && company.logo.url) {
-        company.logo = company.logo.url.replace(/(^\w+:|^)\/\//, '')
-      }
       homeLoan.company = company
 
       response[homeLoan._id] = Object.assign(
