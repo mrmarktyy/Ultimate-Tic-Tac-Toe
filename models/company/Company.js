@@ -39,6 +39,7 @@ Company.add({
 	logo: imageStorage('company'),
 	blurb: { type: Types.Code, height: 250, language: 'html' },
   productReview: { type: Types.Url },
+	hasRefinanceCalculator: { type: Types.Boolean, indent: true, default: false },
 })
 Company.add(verifiedCommonAttribute)
 Company.relationship({ path: 'ATMs', ref: 'ATM', refPath: 'company' })
