@@ -33,6 +33,16 @@ HomeLoanVariation.add({
 		noedit: true,
 		filters: {company: ':company'},
 	},
+  providerProductName: {
+    type: Types.Relationship,
+    ref: 'ProviderProductName',
+    required: false,
+    initial: true,
+    index: true,
+    noedit: true,
+    filters: {company: ':company'},
+  },
+
 	name: {type: Types.Text, required: true, initial: true, index: true},
 	neo4jId: {type: Types.Number, noedit: true},
 	legacyCode: {type: Types.Text, noedit: true},

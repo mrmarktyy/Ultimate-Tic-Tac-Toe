@@ -93,7 +93,7 @@ async function getHomeLoansObjects (homeLoans) {
   })
 
   let isDiscontinuedFilter = { $or: [ { isDiscontinued: false }, { isDiscontinued: {$exists: false} } ] }
-  let variations = await getHomeLoanModel(HomeLoanVariation.model, 'product', 'revertVariation', isDiscontinuedFilter)
+  let variations = await getHomeLoanModel(HomeLoanVariation.model, 'product', 'revertVariation providerProductName', isDiscontinuedFilter)
 
   let response = {}
 
