@@ -18,8 +18,9 @@ const HomeLoanVariation = keystoneShell.list('HomeLoanVariation')
 module.exports = async function () {
   let connection = await mongoosePromise.connect()
   await ProviderProductName.model.remove({})
-  await HomeLoanVariation.model.update({}, {$set: {vendorProductName: null}}, {multi: true}).exec()
+  await HomeLoanVariation.model.update({}, {$set: {providerProductName: null}}, {multi: true}).exec()
   try {
+    console.log('here')
     const data = await csvToJson(csvFilePath)
     for (let item of data) {
       let uuid = item.uuid
@@ -30,12 +31,12 @@ module.exports = async function () {
           let offical = await ProviderProductName.model.findOne({company: variation.company, name: item.CPN})
           if (!offical) {
             console.log('here')
-            await ProviderProductName.model.create({company: variation.company, name: item.CPN}, (error, vendorProductName) => {
+            await ProviderProductName.model.create({company: variation.company, name: item.CPN}, (error, providerProductName) => {
               if (error) {
                 console.log(error)
                 return error
               }
-              offical = vendorProductName
+              offical = providerProductName
             })
           }
           console.log(JSON.stringify(offical))
