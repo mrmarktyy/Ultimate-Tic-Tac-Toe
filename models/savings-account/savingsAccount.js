@@ -85,11 +85,17 @@ SavingsAccount.schema.pre('save', async function (next) {
   next()
 })
 
+SavingsAccount.schema.methods.remove = function (callback) {
+  this.isDiscontinued = true
+  return this.save(callback)
+}
+
 SavingsAccount.schema.post('save', async function () {
 	await verifiedService(this)
 })
 
-SavingsAccount.defaultColumns = 'name, company, isMonetized'
+SavingsAccount.defaultColumns = 'name, company, isMonetized isDiscontinued'
 SavingsAccount.searchFields = 'name, legacyCode'
+SavingsAccount.defaultSort = 'isDiscontinued'
 SavingsAccount.drilldown = 'company'
 SavingsAccount.register()

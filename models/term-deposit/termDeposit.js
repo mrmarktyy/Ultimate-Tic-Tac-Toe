@@ -63,6 +63,11 @@ TermDeposit.schema.pre('save', async function (next) {
   next()
 })
 
+TermDeposit.schema.methods.remove = function (callback) {
+  this.isDiscontinued = true
+  return this.save(callback)
+}
+
 TermDeposit.schema.post('save', async function () {
 	await verifiedService(this)
 })
