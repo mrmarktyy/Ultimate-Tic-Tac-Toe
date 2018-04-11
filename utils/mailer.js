@@ -14,12 +14,11 @@ const smtpConfig = {
 
 class Mailer {
   constructor (mailOptions) {
-    // mailOptions has to, attachment, subject (and optional cc)
     this.options = {
       from: 'tech@ratecity.com.au',
       to: mailOptions.to,
       subject: mailOptions.subject,
-      html: '<p>Please see attached</p>',
+      html: mailOptions.html || '<p>Please see attached</p>',
       attachments: mailOptions.attachments,
     }
     if (mailOptions.cc) {
