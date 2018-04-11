@@ -2,26 +2,21 @@ require('dotenv').config()
 
 const logger = require('../../utils/logger')
 var mongoosePromise = require('../../utils/mongoosePromise')
-var keystoneShell = require('../../utils/keystoneShell')
-const productService = require('../productService')
-const json2csv = require('json2csv')
 const moment = require('moment')
-const fs = require('fs')
 const filePath = '/tmp/'
 var Mailer = require('../../utils/mailer')
-
-const ALL_SPECIALS = [
-  'CreditCardSpecial', 'HomeLoanSpecial', 'PersonalLoanSpecial',
-  'SavingsAccountSpecial', 'TermDepositSpecial',
-]
+const badslugs = require('./dataReportAttachments/badslugs')
+const  noProviderProductName = require('./dataReportAttachments/noProviderProductName')
 
 async function dataReport () {
   let connection = await mongoosePromise.connect()
   try {
-    let attachment
-    attachment = await badslugs()
-    if (attachment) {
-      emailDataTeam([attachment])
+    let attachments = []
+    attachments.push(await badslugs(filePath))
+    attachments.push(await noProviderProductName(filePath))
+    attachments = attachments.filter((a) => { return a !== null })
+    if (attachments.length) {
+      emailDataTeam(attachments)
     }
     connection.close()
   } catch (error) {
@@ -32,37 +27,6 @@ async function dataReport () {
 
 }
 
-async function badslugs () {
-  let collections = await productService({$or: [{slug: /.*-duplicate/}, {name: /.*duplicate/}]}, {isDiscontinued: 1})
-  let slugs = []
-  for (let vertical in collections) {
-    let products = collections[vertical]
-    for (let i = 0; i < products.length; i++) {
-      let product = products[i]
-      let obj = {
-        vertical: vertical,
-        company: product.company.name,
-        name: product.name,
-        uuid: product.uuid,
-        slug: product.slug,
-        isMonetized: product.isMonetized ? product.isMonetized : false,
-        isDiscontinued: product.isDiscontinued,
-      }
-      slugs.push(obj)
-    }
-  }
-
-  slugs = slugs.concat(await specialsBadSlug())
-  let result = null
-  if (slugs.length) {
-    let csv = json2csv({data: slugs})
-    let fileName = `bad-slugs.csv`
-    fs.writeFileSync(filePath + fileName, csv)
-    result =  {path: `${filePath}${fileName}`}
-  }
-  return result
-}
-
 async function emailDataTeam (attachments) {
   let dt = moment().format('DD-MMM-YYYY')
   let mailer = new Mailer({
@@ -70,43 +34,10 @@ async function emailDataTeam (attachments) {
     attachments: attachments,
     subject: `Ultimate Data Errors Report ${dt}`,
     cc: 'ian.fletcher@ratecity.com.au',
+    html: '<p>Data report csv attachments</p>',
   })
 
   await mailer.sendEmail()
-}
-
-async function specialsBadSlug () {
-  let specials = []
-  let slugs = []
-  for(let i = 0; i < ALL_SPECIALS.length; i++) {
-    let special = ALL_SPECIALS[i]
-    let model = await keystoneShell.list(special).model // eslint-disable-line babel/no-await-in-loop
-    let collection = await model.find({name: /.*duplicate/}).populate('company product').lean().exec() // eslint-disable-line babel/no-await-in-loop
-    if (collection.length) {
-      specials[special] = collection
-    }
-  }
-  for (let collection in specials) {
-    let items = specials[collection]
-    for (let i = 0; i < items.length; i++) {
-      let special = items[i]
-      let obj = {
-        vertical: collection,
-        company: special.company.name,
-        name: special.name,
-        uuid: null,
-        isMonetized: null,
-        slug: special.slug,
-        isDiscontinued: null,
-      }
-      slugs.push(obj)
-    }
-  }
-  let result = []
-  if (slugs.length) {
-    result = slugs
-  }
-  return result
 }
 
 module.exports = dataReport
