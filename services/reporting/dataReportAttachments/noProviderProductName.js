@@ -7,7 +7,7 @@ const json2csv = require('json2csv')
 const HomeLoanVariation = keystoneShell.list('HomeLoanVariation')
 
 module.exports = async function noProviderProductName (filePath) {
-  let variations = await HomeLoanVariation.model.find({providerProductName: null}).populate('company product').lean().exec()
+  let variations = await HomeLoanVariation.model.find({providerProductName: null, isDiscontinued: false}).populate('company product').lean().exec()
   variations = variations.sort((a, b) => {
     return a.company.name.toLowerCase().localeCompare(b.company.name.toLowerCase()) || a.name.toLowerCase().localeCompare(b.name.toLowerCase())
   })

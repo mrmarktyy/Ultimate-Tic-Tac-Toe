@@ -39,7 +39,7 @@ HomeLoanVariation.add({
     required: false,
     initial: true,
     index: true,
-    noedit: true,
+    noedit: false,
     filters: {company: ':company'},
   },
 
