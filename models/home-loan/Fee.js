@@ -55,6 +55,9 @@ Fee.schema.pre('validate', function (next) {
 	if (this.atCost && (this.fixedCost > 0 || this.fixedPercentage > 0)) {
 		next(Error(`Can only have at cost or a either a fixed cost or percentage, not both on a ${this.feeType}`))
 	}
+	if (this.feeType === 'SETTLEMENT_FEE' && this.fixedCost > 0 && this.fixedCost % 1 > 0) {
+		next(Error(`Settlement fee is an integer`))
+	}
 	next()
 })
 
