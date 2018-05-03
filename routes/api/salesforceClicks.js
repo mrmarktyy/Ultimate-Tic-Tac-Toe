@@ -22,9 +22,7 @@ exports.list = async function (req, res) {
       'Accept': 'application/json',
     },
   })
-
   let jsonResponse = await response.json()
-
   var conn = new jsforce.Connection({
     instanceUrl: jsonResponse.instance_url,
     accessToken: jsonResponse.access_token,
@@ -40,9 +38,25 @@ exports.list = async function (req, res) {
     }
   })
 
-  const productResult = await conn.query('select RC_Product_ID__c, Id from RC_Console_Product__c where RC_Product_Active__c = True')
+  const productResult = await new Promise((resolve, reject) => {
+    try {
+      let records = []
+      conn.query('select RC_Product_ID__c, Id from RC_Console_Product__c where RC_Product_Archived__c = False')
+      .on('record', (record) => {
+        records.push(record)
+      })
+      .on('end', () => {
+        resolve(records)
+      })
+      .on('error', (err) => {
+        reject(err)
+      })
+    } catch (error) {
+      reject()
+    }
+  })
 
-  const products = productResult.records.map((record) => {
+  const products = productResult.map((record) => {
     return {
       productId: record.Id,
       productUuid: record.RC_Product_ID__c,
