@@ -21,6 +21,8 @@ const Pages = new keystone.List('Pages', {track: true}).add({
 	category: {type: Types.TextArray},
 	userJourneyStage: {type: Types.Text},
 	rankingScore: { type: Number, min: 0 },
+	rank: { type: Number, min: 0 },
+	links: {type: Types.TextArray},
 	wordDisclaimerRequired: { type: Types.Boolean, indent: false, default: false },
 	lowestRateProduct: { type: Types.Boolean, indent: false, default: false },
 	og: {
