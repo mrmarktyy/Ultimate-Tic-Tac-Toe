@@ -22,7 +22,7 @@ const Pages = new keystone.List('Pages', {track: true}).add({
 	userJourneyStage: {type: Types.Text},
 	rankingScore: { type: Number, min: 0 },
 	rank: { type: Number, min: 0 },
-	links: {type: Types.TextArray},
+	links: {type: Types.Relationship, ref: 'Link', many: true},
 	wordDisclaimerRequired: { type: Types.Boolean, indent: false, default: false },
 	lowestRateProduct: { type: Types.Boolean, indent: false, default: false },
 	og: {
