@@ -58,6 +58,7 @@
     "gulp-sass": "^2.0.4",
     "gulp-shell": "^0.5.0",
     "gulp-watch": "^4.3.5",
+    "nodemon": "^1.17.4",
     "pre-commit": "1.1.3",
     "shipit-cli": "^3.0.0",
     "shipit-deploy": "^2.5.0"
@@ -69,6 +70,7 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "start": "node keystone.js",
+    "dev": "nodemon keystone.js",
     "resque": "node resque/resque.js",
     "lint:changed": "LIST=`git diff-index --name-only HEAD | grep '.jsx\\{0,1\\}'$`; if [ \"$LIST\" ]; then eslint $LIST; fi",
     "lint:changed:fix": "LIST=`git diff-index --name-only HEAD | grep '.jsx\\{0,1\\}'$`; if [ \"$LIST\" ]; then eslint $LIST --fix; fi",
