@@ -110,6 +110,9 @@ PersonalLoan.add({
   otherFees: { type: Types.Text },
   comparisonRateDisclaimer: {type: Types.Code, height: 50, language: 'html'},
   monthlyClicks: {type: Types.Number, noedit: true, min: 0, default: 0},
+  personalisedFeeMinimum: { type: Types.Number },
+  personalisedFeeMaximum: { type: Types.Number },
+  personalisedFeeName: { type: Types.Text },
 })
 
 PersonalLoan.relationship({ path: 'personalLoanVariations', ref: 'PersonalLoanVariation', refPath: 'product' })
@@ -145,6 +148,13 @@ PersonalLoan.schema.pre('validate', function (next) {
   }
   if (this.isMonetized && this.isDiscontinued) {
      next(Error('You cannot discontinue a variation that is monetized.'))
+  }
+  let personalisedNumbers = [this.personalisedFeeMinimum, this.personalisedFeeMaximum]
+  if ((personalisedNumbers.includes(null) || this.personalisedFeeName === '') && (this.personalisedFeeMinimum !== null || this.personalisedFeeMaximum !== null || this.personalisedFeeName !== '')) {
+    next(Error('If any of personalisedFeeMinimum, personalisedFeeMaximum or personalisedFeeName are filled, all have to be filled'))
+  }
+  if (this.personalisedFeeMinimum !== null && this.personalisedFeeMaximum !== null && this.personalisedFeeMinimum > this.personalisedFeeMaximum) {
+    next(Error('personalisedFeeMinimum has to be less or equal to personalisedFeeMaximum'))
   }
   next()
 })
