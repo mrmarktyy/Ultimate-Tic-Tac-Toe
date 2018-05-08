@@ -9,7 +9,7 @@ const { getYears, ratings, segments, purposes, options } = require('../../models
 const recommendedMultiplier = require('../../utils/recommendedMultiplier').multiplier
 
 exports.list = async function (req, res) {
-  const superannuations = await Superannuation.model.find({ superannuation: true, isDiscontinued: false }).populate({path: 'fundgroup', populate: {path: 'company'}}).lean().exec()
+  const superannuations = await Superannuation.model.find({ superannuation: true, isDiscontinued: false, company: {$exists: true} }).populate({path: 'fundgroup', populate: {path: 'company'}}).lean().exec()
   const result = await getSuperannuationObjects(superannuations)
   res.jsonp(result)
 }
@@ -37,7 +37,7 @@ async function getSuperannuationObjects (superannuations) {
 		const rating = getMatchedElment(ratings, superannuation.rating_image)
 		product.rating = rating.name || null
 		product.ratingScore = rating.score || null
-		product.productUrl = superannuation.productUrl || `/superannuation/${superannuation.fundgroup.slug}/${superannuation.slug}`
+		product.productUrl = `/superannuation/${superannuation.fundgroup.slug}/${superannuation.slug}`
 		product.applyUrl = Object.keys(monetize).length && monetize.enabled ? monetize.applyUrl : null
 		product.paymentType = Object.keys(monetize).length ? monetize.paymentType : null
 		product.gotoSiteUrl = Object.keys(monetize).length ? monetize.applyUrl : null

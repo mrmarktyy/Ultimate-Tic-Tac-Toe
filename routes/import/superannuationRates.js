@@ -1,9 +1,10 @@
 const keystone = require('keystone')
+const utils = keystone.utils
 const changeCase = require('change-case')
 const _ = require('lodash')
-const fetch = require('node-fetch')
 const logger = require('../../utils/logger')
 const csvtojson = require('../../utils/csvToJson')
+const uuid = require('node-uuid')
 
 const { fields } = require('../../models/superannuation/constants')
 const Superannuation = keystone.list('Superannuation')
@@ -18,12 +19,7 @@ exports.uploadCsv = async (req, res) => {
 		const type = req.body.type || 'Superannuation'
 		const fy = req.body.fy || new Date().getFullYear()
 		const month = req.body.month || 1
-		const fenixJSON = await fetch(
-			type === 'Superannuation' ? 'http://www.ratecity.com.au/api/money-saver/superannuation/blaze.json'
-			: 'http://www.ratecity.com.au/api/money-saver/pension/blaze.json'
-		)
-		const fenixProducts = await fenixJSON.json()
-		await upsertSuperannuation(list, fenixProducts, {type, fy, month})
+		await upsertSuperannuation(list, {type, fy, month})
 		req.flash('success', 'Import successfully.')
 		return res.redirect('/import-rates')
 	} catch (error) {
@@ -32,7 +28,7 @@ exports.uploadCsv = async (req, res) => {
 	}
 }
 
-async function upsertSuperannuation (list, fenixProducts, {type, fy, month}) {
+async function upsertSuperannuation (list, {type, fy, month}) {
 	try {
 		const promises = []
 		const newProductIds = []
@@ -43,16 +39,11 @@ async function upsertSuperannuation (list, fenixProducts, {type, fy, month}) {
 				continue
 			}
 			const product = extractFields(list[i])
-			const fenixProduct = findProduct(product.product_id, fenixProducts)
 			let superannuation = await Superannuation.model.findOne({product_id: product.product_id}).exec()
 			if (superannuation) {
 				_.merge(superannuation, product)
 			} else {
 				superannuation = new Superannuation.model(product)
-				superannuation.uuid = fenixProduct.uuid
-				superannuation.slug = fenixProduct.product_slug
-				superannuation.fenixLogo = fenixProduct.logo
-				superannuation.productUrl = (fenixProduct.product_url || '').replace('http://www.ratecity.com.au', '')
 				superannuation.pension = type === 'Pension'
 				superannuation.superannuation = type === 'Superannuation'
 			}
@@ -64,10 +55,9 @@ async function upsertSuperannuation (list, fenixProducts, {type, fy, month}) {
 			let fundGroup = await FundGroup.model.findOne({groupCode: superannuation.group_code}, '_id').exec()
 			if (!fundGroup) {
 				await new FundGroup.model({
-					uuid: fenixProduct.company.company_uuid,
-					slug: fenixProduct.company.slug,
+					slug: utils.slug(superannuation.fund_name.toLowerCase()),
+					uuid: uuid.v4(),
 					name: superannuation.short_name,
-					type: fenixProduct.company.company_type,
 					fundName: superannuation.fund_name,
 					groupName: superannuation.group_name,
 					groupCode: superannuation.group_code,
@@ -126,8 +116,4 @@ function extractFields (item) {
 		product[value] = (data[key] || '').replace(/[\r\n]/g, '') || product[value] || ''
 	})
 	return product
-}
-
-function findProduct (id, products) {
-	return _.find(products, {supplier_reference: id}) || {company: {}}
 }
