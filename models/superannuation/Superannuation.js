@@ -16,7 +16,6 @@ const schema = {
 	fenixLogo: { type: Types.Text },
 	pension: {type: Types.Boolean, indent: true, noedit: true},
 	superannuation: {type: Types.Boolean, indent: true, noedit: true},
-	productUrl: { type: Types.Text },
 	oldUuid: { type: Types.Text, noedit: true },
 	fy: { type: Types.Number },
 	month: { type: Types.Number },
@@ -47,11 +46,8 @@ Superannuation.schema.index({ fundgroup: 1, product_name: 1 }, { unique: true })
 
 Superannuation.schema.pre('save', async function (next) {
 	this.uuid = this.uuid || uuid.v4()
-	if (!this.slug) {
+	if (!this.slug || utils.slug(this.slug.toLowerCase()) !== this.slug) {
 		this.slug = utils.slug(this.name.toLowerCase())
-  }
-  if (utils.slug(this.slug.toLowerCase()) !== this.slug) {
-    this.slug = utils.slug(this.slug.toLowerCase())
   }
 	const fundGroup = await keystone.list('FundGroup').model.findOne({_id: this.fundgroup}).exec()
 	this.company = fundGroup.company || this.company
