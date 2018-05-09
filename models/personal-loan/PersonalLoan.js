@@ -23,6 +23,7 @@ PersonalLoan.add({
   hookEnabled: { type: Types.Boolean, default: true },
   isRentalBondAllowed: { type: Types.Boolean, indent: true, default: true },
   existsOnSorbet: { type: Types.Boolean, indent: true, default: false },
+  isMarketplaceParticipant: { type: Types.Boolean, indent: true, default: false },
   company: {
     type: Types.Relationship,
     ref: 'Company',
