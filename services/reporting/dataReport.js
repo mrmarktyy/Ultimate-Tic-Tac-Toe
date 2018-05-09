@@ -7,7 +7,7 @@ const filePath = '/tmp/'
 var Mailer = require('../../utils/mailer')
 const badslugs = require('./dataReportAttachments/badslugs')
 const noProviderProductName = require('./dataReportAttachments/noProviderProductName')
-const noCompanyInFundGroup = require('./dataReportAttachments/noCompanyInFundGroup')
+const noCompanyInFundgroup = require('./dataReportAttachments/noCompanyInFundgroup')
 
 async function dataReport () {
   let connection = await mongoosePromise.connect()
@@ -15,7 +15,7 @@ async function dataReport () {
     let attachments = []
     attachments.push(await badslugs(filePath))
     attachments.push(await noProviderProductName(filePath))
-    attachments.push(await noCompanyInFundGroup(filePath))
+    attachments.push(await noCompanyInFundgroup(filePath))
     attachments = attachments.filter((a) => { return a !== null })
     if (attachments.length) {
       emailDataTeam(attachments)
