@@ -25,5 +25,5 @@ PersonalLoanQualification.add({
   },
 })
 
-PersonalLoanQualification.defaultColumns = 'company, product, qualificationType'
+PersonalLoanQualification.defaultColumns = 'company, product, employmentStatus'
 PersonalLoanQualification.register()
