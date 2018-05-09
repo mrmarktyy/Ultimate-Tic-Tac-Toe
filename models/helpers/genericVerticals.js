@@ -12,5 +12,6 @@ module.exports = {
 	'Margin Loans': { collection: 'GenericProduct', findClause: { vertical: 'margin-loans' }, slug: 'margin-loans', salesforceVertical: 'Margin Loans' },
 	'Mortgage Insurance': { collection: 'GenericProduct', findClause: { vertical: 'mortgage-insurance' }, slug: 'mortgage-insurance', salesforceVertical: 'Mortgage Insurance' },
 	'Online Share Trading': { collection: 'GenericProduct', findClause: { vertical: 'online-trading' }, slug: 'online-trading', salesforceVertical: 'Online Share Trading' },
+	'Payday Loans': { collection: 'GenericProduct', findClause: { vertical: 'payday-loans' }, slug: 'payday-loans', salesforceVertical: 'Payday Loans' },
 	'Travel Cards': { collection: 'GenericProduct', findClause: {vertical: 'travel-cards'}, slug: 'travel-cards', salesforceVertical: 'Travel Cards' },
 }
