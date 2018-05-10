@@ -4,6 +4,7 @@ const logger = require('../utils/logger')
 const redshiftQuery = require('../utils/redshiftQuery')
 const keystoneShell = require('../utils/keystoneShell')
 const mongoosePromise = require('../utils/mongoosePromise')
+const salesforceVerticals = require('../models/helpers/salesforceVerticals')
 
 module.exports = async function () {
   let startDay = new Date()
@@ -13,19 +14,6 @@ module.exports = async function () {
   let uuidsWithClicks = await redshiftQuery(sqlCommand, [startDay])
 
   await importMonthyClicks(uuidsWithClicks)
-}
-
-const verticalModelMap = {
-  'home loans': 'HomeLoanVariation',
-  'personal loans': 'PersonalLoan',
-  'car loans': 'PersonalLoan',
-  'term deposits': 'TermDeposit',
-  'savings accounts': 'SavingsAccount',
-  'credit cards': 'CreditCard',
-  'bank accounts': 'BankAccount',
-  'managed funds': 'GenericProduct',
-  'superannuation': 'Superannuation',
-  'pension funds': 'Superannuation',
 }
 
 async function importMonthyClicks (uuidsWithClicks = []) {
@@ -41,14 +29,14 @@ async function importMonthyClicks (uuidsWithClicks = []) {
         )
         return all
       }, {})
-
+      let verticalModelMap = verticalToModel()
       for (let vertical in verticalClicks) {
-        const model = verticalModelMap[`${vertical}`]
+        const model = verticalModelMap[vertical]
         const verticalModel = keystoneShell.list(`${model}`)
-        const verticalUuids = verticalClicks[`${vertical}`].map((item) => item.uuid)
+        const verticalUuids = verticalClicks[vertical].map((item) => item.uuid)
         if (model) {
           await clearMonthlyClickCounts(verticalModel, verticalUuids)
-          await updateMonthlyClickCounts(verticalClicks[`${vertical}`], verticalModel)
+          await updateMonthlyClickCounts(verticalClicks[vertical], verticalModel)
         }
       }
       connection.close()
@@ -58,6 +46,18 @@ async function importMonthyClicks (uuidsWithClicks = []) {
       return error
     }
   }
+}
+
+function verticalToModel () {
+  let obj = {}
+  Object.keys(salesforceVerticals).forEach((vertical) => {
+    if (vertical === 'Savings Accounts') {
+      obj[vertical.toLowerCase()] = salesforceVerticals[vertical].collection
+    } else {
+      obj[salesforceVerticals[vertical].salesforceVertical.toLowerCase()] = salesforceVerticals[vertical].collection
+    }
+  })
+  return obj
 }
 
 async function clearMonthlyClickCounts (verticalModel, uuids) {
