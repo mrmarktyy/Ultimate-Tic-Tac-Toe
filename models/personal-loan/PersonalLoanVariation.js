@@ -58,7 +58,9 @@ PersonalLoanVariation.add({
 	comparisonRateCarManual: { type: Types.Number, initial: true },
   applicationFeesDollar: { type: Types.Number, initial: true, min: 0 },
   applicationFeesPercent: { type: Types.Number, initial: true, min: 0, max: 100 },
-  hasHomeOwnersDiscount: { type: Types.Boolean, default: false },
+  hasHomeOwnersDiscount: { type: Types.Boolean, indent: true, default: false },
+	isMarketplaceParticipant: { type: Types.Boolean, indent: true, default: false },
+
 })
 PersonalLoanVariation.add(verifiedCommonAttribute)
 PersonalLoanVariation.relationship({ path: 'ChangeLogs', ref: 'ChangeLog', refPath: 'model', many: true })
