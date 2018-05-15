@@ -5,9 +5,9 @@ var verticals = require('../helpers/verticals')
 var verifiedService = require('../../services/verifiedService')
 var verifiedCommonAttribute = require('../common/verifiedCommonAttribute')
 
-const Pages = new keystone.List('Pages', {track: true}).add({
-	uuid: {type: Types.Text, initial: true, unique: true},
+const Pages = new keystone.List('Pages', {track: true,   map: { name: 'url' },}).add({
 	url: {type: Types.Text, initial: true, unique: true,  noedit: true},
+	uuid: {type: Types.Text, initial: true, unique: true},
 	header: {type: Types.Text, initial: true},
 	tagline: {type: Types.Text, initial: true},
 	title: {type: Types.Text, initial: true},
@@ -21,6 +21,8 @@ const Pages = new keystone.List('Pages', {track: true}).add({
 	category: {type: Types.TextArray},
 	userJourneyStage: {type: Types.Text},
 	rankingScore: { type: Number, min: 0 },
+	rank: { type: Number, min: 0 },
+	links: {type: Types.Relationship, ref: 'Link', many: true},
 	wordDisclaimerRequired: { type: Types.Boolean, indent: false, default: false },
 	lowestRateProduct: { type: Types.Boolean, indent: false, default: false },
 	og: {
@@ -44,6 +46,7 @@ const Pages = new keystone.List('Pages', {track: true}).add({
 	cannedSearchGroup: {type: Types.Text},
 })
 Pages.add(verifiedCommonAttribute)
+Pages.relationship({path: 'links', ref: 'Link', refPath: 'page'});
 Pages.schema.pre('save', async function (next) {
 	if (!this.uuid) {
 		this.uuid = uuid.v4()
