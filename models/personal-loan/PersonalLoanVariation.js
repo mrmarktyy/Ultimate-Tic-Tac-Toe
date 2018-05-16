@@ -60,8 +60,24 @@ PersonalLoanVariation.add({
   applicationFeesPercent: { type: Types.Number, initial: true, min: 0, max: 100 },
   hasHomeOwnersDiscount: { type: Types.Boolean, indent: true, default: false },
 	isMarketplaceParticipant: { type: Types.Boolean, indent: true, default: false },
-
+	minimumIncome: { type: Types.Number },
+	maximumIncome: { type: Types.Number },
+	minimumAge: { type: Types.Number },
+	maximumAge: { type: Types.Number },
+	chanceOfApproval: { type: Types.Number },
+	equifaxScoreType: {
+		type: Types.Select,
+		options: [
+			{value: 'VSA_2.0_XY_NR', label: 'Equifax Apply Negative – Consumer + Commercial consent'},
+			{value: 'VSA_2.0_X_NR', label: 'Equifax Apply Negative - Consumer Consent'},
+			{value: 'VS_1.1_XY_NR', label: 'VedaScore1.1 Negative – Consumer + Commercial consent'},
+			{value: 'VS_1.1_X_NR', label: 'VedaScore1.1 Negative – Consumer consent'},
+			{value: 'Not Applicable', label: 'Not Applicable'}
+		], default: 'Not Applicable',
+	},
+	thinFile: { type: Types.Boolean, indent: true, default: false },
 })
+
 PersonalLoanVariation.add(verifiedCommonAttribute)
 PersonalLoanVariation.relationship({ path: 'ChangeLogs', ref: 'ChangeLog', refPath: 'model', many: true })
 
@@ -77,6 +93,12 @@ PersonalLoanVariation.schema.pre('validate', function (next) {
 	}
 	if (this.introRate > this.minRate) {
 		next(Error('Intro Rate can not be higher than Min Rate'))
+	}
+	if (this.minimumIncome > this.maximumIncome) {
+		next(Error('Minimum income cannot be greater than maximum income'))
+	}
+	if (this.minimumAge > this.maximumAge) {
+		next(Error('Minimum age cannot be greater than maximum age'))
 	}
 	let thiz = this
 	let promise = PersonalLoan.model.find({ _id: this.product }).lean().exec()
@@ -142,5 +164,6 @@ PersonalLoanVariation.schema.post('save', async function () {
 	await verifiedService(this)
 })
 
-PersonalLoanVariation.defaultColumns = 'name, company, product, minLoanAmount, maxLoanAmount, minLoanTerm, maxLoanTerm, comparisonRatePersonal, comparisonRatePersonalManual, comparisonRateCar, comparisonRateCarManual'
+PersonalLoanVariation.defaultSort = 'isMarketplaceParticipant'
+PersonalLoanVariation.defaultColumns = 'company, product, isMarketplaceParticipant, minLoanAmount, maxLoanAmount, minLoanTerm, maxLoanTerm, comparisonRatePersonal, comparisonRatePersonalManual, comparisonRateCar, comparisonRateCarManual'
 PersonalLoanVariation.register()
