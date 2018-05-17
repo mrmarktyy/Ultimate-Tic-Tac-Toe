@@ -2,11 +2,11 @@ extends ../layouts/default
 
 block content
   .container
-    h1 Export Monthly Clicks
+    h1 Export Click Report
     p Select a month and year to extract
     .row
       .col-sm-8
-        form(class='form-inline', action='/monthly-clicks-download', method='post')
+        form(class='form-inline', action='/click-report-download', method='post')
           .form-group
             label Month
             select(name='month').form-control

@@ -15,7 +15,7 @@ exports.screen = (req, res) => {
   locals.years = [parseInt(locals.currentYear), parseInt(locals.currentYear) - 1]
   locals.months = moment().localeData().months()
   // Render the view
-  view.render('monthlyClicks')
+  view.render('clickReport')
 }
 
 exports.download = async (req, res) => {
