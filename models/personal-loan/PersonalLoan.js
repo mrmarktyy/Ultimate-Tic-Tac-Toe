@@ -115,7 +115,7 @@ PersonalLoan.add({
   personalisedFeeName: { type: Types.Text },
   allPurposesAllowed: { type: Types.Select, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown },
   instantApproval: { type: Types.Select, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown },
-  timeToFunding: {type: Types.Number, min: 0, default: 0}
+  timeToFunding: {type: Types.Number, min: 0}
 })
 
 PersonalLoan.relationship({ path: 'personalLoanVariations', ref: 'PersonalLoanVariation', refPath: 'product' })
