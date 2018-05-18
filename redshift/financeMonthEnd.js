@@ -11,7 +11,11 @@ const filePath = '/tmp/'
 
 exports.monthlyClicksMail = async function ({month, year}) {
   let attachments = []
-  let csv = await monthlyClicksCsv(month, year)
+	let dt = moment(`1-${month}-${year}`, 'DD-MMM-YYYY')
+	let startdate = dt.format('YYYY-MM-DD')
+	let enddate = dt.add(1, 'months').format('YYYY-MM-DD')
+	
+  let csv = await monthlyClicksCsv(startdate, enddate)
   let fileName = `monthly-clicks-${month}-${year}.csv`
   fs.writeFileSync(filePath + fileName, csv)
   attachments.push({path: `${filePath}${fileName}`})
@@ -25,10 +29,7 @@ exports.monthlyClicksMail = async function ({month, year}) {
   await mailer.sendEmail()
 }
 
-var monthlyClicksCsv = exports.monthlyClicksCsv = async function (month, year) {
-  let dt = moment(`1-${month}-${year}`, 'DD-MMM-YYYY')
-  let startdate = dt.format('YYYY-MM-DD')
-  let enddate = dt.add(1, 'months').format('YYYY-MM-DD')
+var monthlyClicksCsv = exports.monthlyClicksCsv = async function (fromDate, toDate) {
   let command = `
     select substring((a.datetime::date), 1, 10) as click_date, a.channel, a.utm_source, a.utm_medium, a.utm_campaign,
     a.vertical, a.product_uuid as uuid, count(1)
@@ -37,7 +38,7 @@ var monthlyClicksCsv = exports.monthlyClicksCsv = async function (month, year) {
     group by click_date, a.channel, a.utm_source, a.utm_medium, a.utm_campaign, a.vertical, a.product_uuid
     order by click_date, a.product_uuid
   `
-  let rows = await redshiftQuery(command, [startdate, enddate])
+  let rows = await redshiftQuery(command, [fromDate, toDate])
   let productsObj = await getProducts()
 
   rows = rows.map((row) => {
