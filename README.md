@@ -15,6 +15,7 @@
 * Create .env file in the folder `cp .env.example .env`
 * Setup MongoDB replica set as below
 * Start the server `npm start`
+* Start the server on development mode `npm run dev`
 * Visit `http://localhost:4000` to check the website
 
 ## Deployment
