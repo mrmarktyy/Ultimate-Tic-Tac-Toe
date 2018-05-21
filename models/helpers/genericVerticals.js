@@ -13,5 +13,6 @@ module.exports = {
 	'Mortgage Insurance': { collection: 'GenericProduct', findClause: { vertical: 'mortgage-insurance' }, slug: 'mortgage-insurance', salesforceVertical: 'Mortgage Insurance' },
 	'Online Share Trading': { collection: 'GenericProduct', findClause: { vertical: 'online-trading' }, slug: 'online-trading', salesforceVertical: 'Online Share Trading' },
 	'Payday Loans': { collection: 'GenericProduct', findClause: { vertical: 'payday-loans' }, slug: 'payday-loans', salesforceVertical: 'Payday Loans' },
+	'Reverse Mortgages': { collection: 'GenericProduct', findClause: { vertical: 'reverse-mortgages' }, slug: 'reverse-mortgages', salesforceVertical: 'Reverse Mortgages' },
 	'Travel Cards': { collection: 'GenericProduct', findClause: {vertical: 'travel-cards'}, slug: 'travel-cards', salesforceVertical: 'Travel Cards' },
 }
