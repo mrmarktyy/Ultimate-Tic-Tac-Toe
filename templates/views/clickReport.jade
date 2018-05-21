@@ -1,0 +1,22 @@
+extends ../layouts/default
+
+block content
+	.container
+		h1 Export Click Report
+		p Select a date to extract
+		.row
+			.col-sm-8
+				form(class='form-inline', action='/click-report-download', method='post')
+					.form-group
+						label From Date
+						input(type='text', name='fromdate', id='fromdate')
+						label To Date
+						input(type='text', name='todate', id='todate')
+					button.btn.btn-large.btn-primary(type="submit") Export Click Report
+
+block js
+	script.
+		$(function () {
+			$('#fromdate').datepicker({dateFormat: 'yy-mm-dd'});
+			$('#todate').datepicker({dateFormat: 'yy-mm-dd'});
+		});

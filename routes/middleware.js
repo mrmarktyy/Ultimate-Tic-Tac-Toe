@@ -6,7 +6,7 @@ var _ = require('lodash')
 exports.initLocals = function (req, res, next) {
 	res.locals.navLinks = [
 		{ label: 'Import Rates', key: 'importRates', href: '/import-rates' },
-		{ label: 'Monthly Clicks', key: 'monthlyClicks', href: '/monthly-clicks-export' },
+		{ label: 'Click Report', key: 'monthlyClicks', href: '/click-report-export' },
 		{ label: 'Import ECPC', key: 'importEcpc', href: '/import-ecpc' },
 		{ label: 'Export Leads', key: 'exportLeads', href: '/monthly-leads-export' },
 		{ label: 'Import Pages', key: 'importPages', href: '/import-pages' },

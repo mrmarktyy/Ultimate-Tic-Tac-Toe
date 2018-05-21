@@ -14,7 +14,7 @@ html
 
 		//- Customise the stylesheet for your site by editing /public/styles/site.sass
 		link(href="/styles/site.css", rel="stylesheet")
-
+		link(href="/styles/jquery/jquery-ui.min.css", rel="stylesheet")
 		//- This file provides the default styling for the KeystoneJS Content Editor
 		if user && user.canAccessKeystone
 			link(href="/keystone/styles/content/editor.min.css", rel="stylesheet")
@@ -106,6 +106,8 @@ html
 		//- you can upgrade to 2.1.4 (also bundled) for better performance.
 		script(src='/js/jquery/jquery-1.11.3.min.js')
 
+		//jquery UI js
+		script(src='/js/jquery/jquery-ui.min.js')
 		//- Customise which Bootstrap javascript files are served by including
 		//- them specifically here, instead of bootstrap-3.3.5.min.js
 		script(src='/js/bootstrap/bootstrap-3.3.5.min.js')
