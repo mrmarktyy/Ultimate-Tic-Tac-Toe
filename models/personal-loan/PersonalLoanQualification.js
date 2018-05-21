@@ -1,12 +1,12 @@
 const keystone = require('keystone')
 const Types = keystone.Field.Types
+var changeLogService = require('../../services/changeLogService')
 const qualificationCommonAttributes = require('../common/QualificationCommonAttributes')
 
 const PersonalLoanQualification = new keystone.List('PersonalLoanQualification', {
   track: true,
 })
 
-PersonalLoanQualification.add(qualificationCommonAttributes)
 PersonalLoanQualification.add({
   company: {
     type: Types.Relationship,
@@ -23,7 +23,22 @@ PersonalLoanQualification.add({
     index: true,
     filters: { company: ':company' },
   },
+  name: { type: Types.Text },
 })
+PersonalLoanQualification.add(qualificationCommonAttributes)
 
+PersonalLoanQualification.relationship({ path: 'Knockout', ref: 'Knockout', refPath: 'knockouts', many: true })
+
+PersonalLoanQualification.schema.pre('save', async function (next) {
+  let company = await keystone.list('Company').model.findOne({_id: this.company}).lean().exec()
+  if (this.product) {
+    let product = await keystone.list('PersonalLoan').model.findOne({_id: this.product}).lean().exec()
+    this.name = `${company.name} - ${product.name}`
+  } else {
+    this.name = company.name
+  }
+  await changeLogService(this)
+  next()
+})
 PersonalLoanQualification.defaultColumns = 'company, product, employmentStatus'
 PersonalLoanQualification.register()
