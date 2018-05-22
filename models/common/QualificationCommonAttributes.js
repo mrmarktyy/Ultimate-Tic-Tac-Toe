@@ -21,15 +21,17 @@ module.exports = {
   minIncomeRequired: { type: Types.Number },
   isGovernmentIncomeAccepted: { type: Types.Boolean, indent: true, default: true },
   isMoreThan50GovernmentIncomeAccepted: { type: Types.Boolean, indent: true, default: false },
-  creditHistoryDefaultsNumberAccepted: { type: Types.Number },
-  creditHistoryDefaultsTimeframe: { type: Types.Number },
-  creditHistoryBankruptcyDischargedTimeFrame: { type: Types.Number },
-  creditHistoryJudgementsNumberAccepted: { type: Types.Number },
-  creditHistoryJudgementsTimeframe: { type: Types.Number },
   residency: {
     type: Types.MultiSelect,
     options: ['Australian Citizens', 'Australian PR', 'Other', '457 visa'],
     required: true,
-     initial: true,
+    initial: true,
+  },
+  knockouts: {
+    type: Types.Relationship,
+    ref: 'Knockout',
+    initial: true,
+    index: true,
+    many: true,
   },
 }

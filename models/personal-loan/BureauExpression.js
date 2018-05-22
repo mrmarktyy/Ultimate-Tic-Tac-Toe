@@ -7,14 +7,6 @@ const BureauExpression = new keystone.List('BureauExpression', {
 
 BureauExpression.add ({
   name: { type: Types.Text, initial: true, required: true },
-  knockouts: {
-    type: Types.Relationship,
-    ref: 'Company',
-    required: true,
-    initial: true,
-    index: true,
-    many: true,
-  },
   bureauAttribute: {
     type: Types.Relationship,
     ref: 'BureauAttribute',
@@ -22,7 +14,7 @@ BureauExpression.add ({
     initial: true,
     index: false,
   },
-  operator: { type: Types.Select, options: '=,>,<', default: '=', initial: true },
+  operator: { type: Types.Select, options: '=,>,<,<=,>=', default: '=', initial: true },
   value: { type: Types.Text, initial: true },
 })
 
