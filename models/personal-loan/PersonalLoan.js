@@ -38,6 +38,8 @@ PersonalLoan.add({
   isExtraRepaymentsAllowed: { type: Types.Select, initial: true, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown },
   hasRedrawFacility: { type: Types.Select, initial: true, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown },
   securedType: { type: Types.Select, initial: true, required: true, options: ['SECURED', 'UNSECURED'], emptyOption: false },
+	instantApproval: { type: Types.Select, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown },
+	timeToFunding: {type: Types.Number, min: 0},
   applicationFeesDollar: { type: Types.Number, initial: true, min: 0 },
   applicationFeesPercent: { type: Types.Number, initial: true, min: 0, max: 100 },
   ongoingFees: { type: Types.Number, initial: true, default: 0, min: 0 },
@@ -89,6 +91,7 @@ PersonalLoan.add({
   isHolidaysAllowed: { type: Types.Select, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown },
   isMedicalBillAllowed: { type: Types.Select, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown },
   isWeddingAllowed: { type: Types.Select, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown },
+	allPurposesAllowed: { type: Types.Select, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown },
   otherPurposes: { type: Types.Text },
   repaymentFrequency: {
     type: Types.MultiSelect,
@@ -113,9 +116,6 @@ PersonalLoan.add({
   personalisedFeeMinimum: { type: Types.Number },
   personalisedFeeMaximum: { type: Types.Number },
   personalisedFeeName: { type: Types.Text },
-  allPurposesAllowed: { type: Types.Select, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown },
-  instantApproval: { type: Types.Select, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown },
-  timeToFunding: {type: Types.Number, min: 0}
 })
 
 PersonalLoan.relationship({ path: 'personalLoanVariations', ref: 'PersonalLoanVariation', refPath: 'product' })
