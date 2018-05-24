@@ -40,6 +40,7 @@ Feature.add({
 		emptyOption: false,
 	},
 	isAffectComparisonRate: {type: Types.Boolean, indent: true, default: false},
+	isGreenHomeLoan: {type: Types.Boolean, indent: true, default: false},
 	noOfFreeElectronicTransactions: {type: Types.Text},
 	term: {type: Types.Number, initial: true},
 	maxAmount: {type: Types.Number, initial: true},
