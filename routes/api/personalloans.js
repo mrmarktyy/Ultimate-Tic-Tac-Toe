@@ -28,7 +28,7 @@ async function getPersonalLoanObjects (loans) {
 
 	const monetizeCarLoans = await monetizedCollection('Car Loans')
 	const monetizePersonalLoans = await monetizedCollection('Personal Loans')
-	const qualifications = await PersonalLoanQualification.model.find().populate('company product').populate({path: 'knockouts', populate: {path: 'qualifications'}}).lean().exec()
+	const qualifications = await PersonalLoanQualification.model.find().populate('company product').populate({path: 'knockouts', populate: {path: 'qualifications', populate: {path: 'bureauAttribute'}}}).lean().exec()
 
 	const monetizedList = _.merge({}, monetizeCarLoans, monetizePersonalLoans)
 
