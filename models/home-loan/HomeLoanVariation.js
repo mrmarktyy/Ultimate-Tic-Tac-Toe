@@ -67,6 +67,9 @@ HomeLoanVariation.add({
 		filters: {company: ':company'},
 	},
   removeRevertVariation: {type: Types.Boolean, indent: true, initial: false},
+	propertyType: {type: Types.Select, options: ['Residential', 'Commercial', 'Rural']},
+  trusteeSMTF: {type: Types.Select, options: ['Individual', 'Company']},
+  minAmountSMSF: {type: Types.Number},
 })
 HomeLoanVariation.add(verifiedCommonAttribute)
 HomeLoanVariation.schema.index({ company: 1, slug: 1 }, { unique: true })
