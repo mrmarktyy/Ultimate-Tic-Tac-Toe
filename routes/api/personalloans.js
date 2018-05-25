@@ -28,7 +28,7 @@ async function getPersonalLoanObjects (loans) {
 
 	const monetizeCarLoans = await monetizedCollection('Car Loans')
 	const monetizePersonalLoans = await monetizedCollection('Personal Loans')
-	const qualifications = await PersonalLoanQualification.model.find().populate('company product').lean().exec()
+	const qualifications = await PersonalLoanQualification.model.find().populate('company product').populate({path: 'knockouts', populate: {path: 'qualifications'}}).lean().exec()
 
 	const monetizedList = _.merge({}, monetizeCarLoans, monetizePersonalLoans)
 
@@ -74,9 +74,11 @@ async function getPersonalLoanObjects (loans) {
 				return false
 			}
 		}).map((qualification) => {
-			qualification = removeUneededFields(qualification, ['company', 'product'])
-
-			return qualification
+			qualification.knockouts = (qualification.knockouts || []).map((knockout) => {
+				knockout.qualifications = (knockout.qualifications || []).map((qualification) => removeUneededFields(qualification))
+				return removeUneededFields(knockout)
+			})
+			return removeUneededFields(qualification, ['company', 'product'])
 		})
 
 		loan.popularityScore = (loan.monthlyClicks ? loan.monthlyClicks * recommendedMultiplier : 0)
