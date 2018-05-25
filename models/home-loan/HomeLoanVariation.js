@@ -91,6 +91,10 @@ HomeLoanVariation.schema.pre('validate', async function (next) {
   if (this.introductoryRate > this.rate) {
     next(Error('Introductory Rate need to less or equal than Rate'))
   }
+	if (this.fixMonth <= 0) {
+		let product = await keystone.list('HomeLoan').model.findOne({_id: this.product}).lean().exec()
+		product.homeLoanType === 'FIXED' && next(Error('Fix Month should greater than 0 for fixed home loans'))
+	}
   if (this.fixMonth && !this.revertRate && (!this.revertVariation || (this.revertVariation && this.removeRevertVariation))) {
     next(Error('This is a Variation for Fix HomeLoan. Need either a revertRate or revertVariation'))
   }
