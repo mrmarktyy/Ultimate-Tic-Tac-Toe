@@ -67,7 +67,10 @@ HomeLoanVariation.add({
 		filters: {company: ':company'},
 	},
   removeRevertVariation: {type: Types.Boolean, indent: true, initial: false},
-	propertyType: {type: Types.Select, options: ['Residential', 'Commercial', 'Rural']},
+	maximumBridgingTerm: {type: Types.Number},
+	bridgingLoanMaxLVR: {type: Types.Number},
+	bridgingLoanRate: {type: Types.Number},
+  propertyType: {type: Types.Select, options: ['Residential', 'Commercial', 'Rural']},
   trusteeSMTF: {type: Types.Select, options: ['Individual', 'Company']},
   minAmountSMSF: {type: Types.Number},
 })
