@@ -30,7 +30,7 @@ const addImage = function (model, namespace, options = {initial: true, required:
   model.schema.virtual(`${namespace}_url`).get(function () {
     if (process.env.CLOUDINARY_URL) {
       if (this[namespace].url) {
-        return this[namespace].url.replace('res.cloudinary.com', 'production-ultimate-assets.ratecity.com.au')
+        return this[namespace].url.replace('http://res.cloudinary.com', '//production-ultimate-assets.ratecity.com.au')
       }
       return null
     } else {
