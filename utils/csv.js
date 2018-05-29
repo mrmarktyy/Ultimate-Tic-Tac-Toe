@@ -1,16 +1,12 @@
-const readline = require('readline')
-const fs = require('fs')
+const lineReader = require('line-reader')
 
 function checkCSVMissingHeader (filePath, missingHeaderFields = []) {
-	var lineReader = readline.createInterface({
-		input: fs.createReadStream(filePath),
-	})
-
 	return new Promise((resolve) => {
-		lineReader.on('line',  (line) => {
-			const headers = line.split(',')
-			lineReader.close()
+		lineReader.eachLine(filePath, (line) => {
+			const rawHeaders = line.split(',')
+			const headers = rawHeaders.map((header) => header.replace(/"/g, ''))
 			resolve(missingHeaderFields.some((missingHeader) => !headers.includes(missingHeader)))
+			return false
 		})
 	})
 }

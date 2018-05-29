@@ -21,6 +21,7 @@
     "keystone": "git+https://github.com/ratecity/keystone.git#593704938eecf170d999e495076969e4664be999",
     "keystone-storage-adapter-s3": "^1.1.0",
     "keystone-utils": "^0.4.0",
+    "line-reader": "^0.4.0",
     "lodash": "^4.13.1",
     "mocha": "^3.1.2",
     "moment": "2.17.1",
