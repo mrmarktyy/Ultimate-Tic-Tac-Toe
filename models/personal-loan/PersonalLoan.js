@@ -152,8 +152,7 @@ PersonalLoan.schema.pre('validate', function (next) {
   if (this.isMonetized && this.isDiscontinued) {
      next(Error('You cannot discontinue a variation that is monetized.'))
   }
-  let personalisedNumbers = [this.personalisedFeeMinimum, this.personalisedFeeMaximum]
-  if ((personalisedNumbers.includes(null) || this.personalisedFeeName === '') && (this.personalisedFeeMinimum !== null || this.personalisedFeeMaximum !== null || this.personalisedFeeName !== '')) {
+  if ((this.personalisedFeeMinimum || this.personalisedFeeMaximum || this.personalisedFeeName) && (!this.personalisedFeeMinimum || !this.personalisedFeeName || !this.personalisedFeeName)) {
     next(Error('If any of personalisedFeeMinimum, personalisedFeeMaximum or personalisedFeeName are filled, all have to be filled'))
   }
   if (this.personalisedFeeMinimum !== null && this.personalisedFeeMaximum !== null && this.personalisedFeeMinimum > this.personalisedFeeMaximum) {
