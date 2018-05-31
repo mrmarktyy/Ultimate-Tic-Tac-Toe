@@ -10,15 +10,21 @@ exports.list = async function (req, res) {
 		if (broker.companies) {
 			broker.companies = broker.companies.map((company) => CompanyService.fixLogoUrl(company))
 		}
-		broker.tiles.map(tile => {
-			tile.icon = fixUrl(tile.icon)
-			return tile
-		})
+		broker.tiles = fixUrls(broker.tiles, 'icon')
+		broker.testimonials = fixUrls(broker.testimonials, 'href')
 		return broker
 	})
 	res.jsonp(brokers)
 }
 
+function fixUrls(attributes, field, url) {
+	return attributes.map(attribute => {
+		attribute[field] = fixUrl(attribute[field])
+		return attribute
+	})
+}
+
 function fixUrl(url) {
-	return url.replace('http://', '//')
+	var regex = new RegExp("^(http|https):", "i");
+	return url.replace(regex, '')
 }
