@@ -94,7 +94,7 @@ PersonalLoanVariation.schema.pre('validate', function (next) {
 	if (this.introRate > this.minRate) {
 		next(Error('Intro Rate can not be higher than Min Rate'))
 	}
-	if (this.minimumIncome > this.maximumIncome) {
+	if (this.minimumIncome && this.maximumIncome && this.minimumIncome > this.maximumIncome) {
 		next(Error('Minimum income cannot be greater than maximum income'))
 	}
 	if (this.minimumAge > this.maximumAge) {
