@@ -100,6 +100,8 @@ PersonalLoan.add({
   personalisedFeeMinimum: { type: Types.Number },
   personalisedFeeMaximum: { type: Types.Number },
   personalisedFeeName: { type: Types.Text },
+  riskAssuranceFee: { type: Types.Number },
+  generateRange: { type: Types.Number },
 })
 
 PersonalLoan.relationship({ path: 'personalLoanVariations', ref: 'PersonalLoanVariation', refPath: 'product' })
