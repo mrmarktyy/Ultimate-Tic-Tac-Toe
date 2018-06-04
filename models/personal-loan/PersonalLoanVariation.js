@@ -68,10 +68,9 @@ PersonalLoanVariation.add({
 	equifaxScoreType: {
 		type: Types.Select,
 		options: [
-			{value: 'VSA_2.0_XY_NR', label: 'Equifax Apply Negative – Consumer + Commercial consent'},
-			{value: 'VSA_2.0_X_NR', label: 'Equifax Apply Negative - Consumer Consent'},
-			{value: 'VS_1.1_XY_NR', label: 'VedaScore1.1 Negative – Consumer + Commercial consent'},
-			{value: 'VS_1.1_X_NR', label: 'VedaScore1.1 Negative – Consumer consent'},
+			{value: 'VSA_2.0_XY_NR', label: 'Equifax Apply Negative'},
+			{value: 'VSA_2.0_XY_CR', label: 'Equifax Apply Comprehensive'},
+			{value: 'VS_1.1_XY_NR', label: 'VedaScore1.1 Negative'},
 			{value: 'Not Applicable', label: 'Not Applicable'},
 		], default: 'Not Applicable',
 	},
