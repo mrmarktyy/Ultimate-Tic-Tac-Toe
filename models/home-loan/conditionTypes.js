@@ -5,5 +5,5 @@ module.exports = [
 	'AMOUNT',
 	'LVR',
 	'LVR_WITHOUT_LMI',
-	'LENGTH_OF_IO_REPAYMENT'
+	'LENGTH_OF_IO_REPAYMENT',
 ]
