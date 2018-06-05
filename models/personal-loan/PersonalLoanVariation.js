@@ -68,10 +68,9 @@ PersonalLoanVariation.add({
 	equifaxScoreType: {
 		type: Types.Select,
 		options: [
-			{value: 'VSA_2.0_XY_NR', label: 'Equifax Apply Negative – Consumer + Commercial consent'},
-			{value: 'VSA_2.0_X_NR', label: 'Equifax Apply Negative - Consumer Consent'},
-			{value: 'VS_1.1_XY_NR', label: 'VedaScore1.1 Negative – Consumer + Commercial consent'},
-			{value: 'VS_1.1_X_NR', label: 'VedaScore1.1 Negative – Consumer consent'},
+			{value: 'VSA_2.0_XY_NR', label: 'Equifax Apply Negative'},
+			{value: 'VSA_2.0_XY_CR', label: 'Equifax Apply Comprehensive'},
+			{value: 'VS_1.1_XY_NR', label: 'VedaScore1.1 Negative'},
 			{value: 'Not Applicable', label: 'Not Applicable'},
 		], default: 'Not Applicable',
 	},
@@ -94,7 +93,7 @@ PersonalLoanVariation.schema.pre('validate', function (next) {
 	if (this.introRate > this.minRate) {
 		next(Error('Intro Rate can not be higher than Min Rate'))
 	}
-	if (this.minimumIncome > this.maximumIncome) {
+	if (this.minimumIncome && this.maximumIncome && this.minimumIncome > this.maximumIncome) {
 		next(Error('Minimum income cannot be greater than maximum income'))
 	}
 	if (this.minimumAge > this.maximumAge) {

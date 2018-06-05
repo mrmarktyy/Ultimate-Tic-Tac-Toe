@@ -57,11 +57,8 @@ exports = module.exports = function (app) {
   // salesforce turn on and off products
   app.post('/api/v1/salesforce/product_monetize', keystone.middleware.api, routes.api.salesforceActivation.monetize)
 
-
 	// links api
-	app.post('/api/links/add', keystone.middleware.api, routes.api.links.add)
-	app.post('/api/links/update', keystone.middleware.api, routes.api.links.update)
-	app.post('/api/links/delete', keystone.middleware.api, routes.api.links.delete)
+	app.post('/api/links', keystone.middleware.api, routes.api.links)
 
 	// salesforce get click Accounts
   app.get('/api/salesforce/click_counts', keystone.middleware.api, routes.api.salesforceClicks.list)

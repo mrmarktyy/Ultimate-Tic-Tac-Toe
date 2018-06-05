@@ -1,6 +1,4 @@
 module.exports = [
-	'ANNUAL_FEE',
-	'MONTHLY_FEE',
 	'APPLICATION_FEE',
 	'SETTLEMENT_FEE',
 	'OTHER_UPFRONT_FEE',
@@ -35,5 +33,5 @@ module.exports = [
 	'OTHER_BANK_ATM_FEE',
 	'OVERSEAS_ATM_FEE',
 	'INTRO_ONGOING_FEE',
-	'EXIT_LEGAL_FEE'
+	'EXIT_LEGAL_FEE',
 ]

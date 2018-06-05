@@ -61,22 +61,6 @@ PersonalLoan.add({
   specialConditions: { type: Types.Text },
   isRestrictedToCurrentHLCustomer: { type: Types.Select, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown },
   minimumYearsAddress: { type: Number, min: 0 },
-  minimumIncome: { type: Number, min: 0 },
-  isFullTimeEmploymentAccepted: { type: Types.Select, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown },
-  isPartTimeEmploymentAccepted: { type: Types.Select, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown },
-  isContractEmploymentAccepted: { type: Types.Select, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown },
-  isSelfEmploymentAccepted: { type: Types.Select, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown },
-  isSoleTraderAccepted: { type: Types.Select, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown },
-  minEmploymentLengthFullTime: { type: Number, min: 0 },
-  minEmploymentLengthPartTime: { type: Number, min: 0 },
-  minEmploymentLengthContractors: { type: Number, min: 0 },
-  minEmploymentLengthSelfEmployed: { type: Number, min: 0 },
-  minEmploymentLengthSoleTrader: { type: Number, min: 0 },
-  minVedaScore: { type: Number, min: 200 },
-  minExperianScore: { type: Number, min: 0 },
-  minDunBradstreetScore: { type: Number, min: 0 },
-  minYearsNoBankruptcy: { type: Number, min: 0 },
-  minYearsGoodCredit: { type: Number, min: 0 },
   otherBenefits: { type: Types.Text },
   otherRestrictions: { type: Types.Text },
   adminNotes: { type: Types.Text },
@@ -116,6 +100,8 @@ PersonalLoan.add({
   personalisedFeeMinimum: { type: Types.Number },
   personalisedFeeMaximum: { type: Types.Number },
   personalisedFeeName: { type: Types.Text },
+  riskAssuranceFee: { type: Types.Number },
+  generateRange: { type: Types.Number },
 })
 
 PersonalLoan.relationship({ path: 'personalLoanVariations', ref: 'PersonalLoanVariation', refPath: 'product' })
@@ -152,8 +138,7 @@ PersonalLoan.schema.pre('validate', function (next) {
   if (this.isMonetized && this.isDiscontinued) {
      next(Error('You cannot discontinue a variation that is monetized.'))
   }
-  let personalisedNumbers = [this.personalisedFeeMinimum, this.personalisedFeeMaximum]
-  if ((personalisedNumbers.includes(null) || this.personalisedFeeName === '') && (this.personalisedFeeMinimum !== null || this.personalisedFeeMaximum !== null || this.personalisedFeeName !== '')) {
+  if ((this.personalisedFeeMinimum || this.personalisedFeeMaximum || this.personalisedFeeName) && (!this.personalisedFeeMinimum || !this.personalisedFeeName || !this.personalisedFeeName)) {
     next(Error('If any of personalisedFeeMinimum, personalisedFeeMaximum or personalisedFeeName are filled, all have to be filled'))
   }
   if (this.personalisedFeeMinimum !== null && this.personalisedFeeMaximum !== null && this.personalisedFeeMinimum > this.personalisedFeeMaximum) {

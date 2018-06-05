@@ -10,6 +10,7 @@ exports.screen = (req, res) => {
 exports.download = async (req, res) => {
   let fromDate = req.body.fromdate
   let toDate = req.body.todate
+	toDate = moment(toDate).add(1, 'days').format('YYYY-MM-DD')
   let csv = await monthlyClicksCsv(fromDate, toDate)
   let fileName = `click-report-${fromDate}---${toDate}.csv`
   res.set({'Content-Disposition': `attachment; filename= ${fileName}`})

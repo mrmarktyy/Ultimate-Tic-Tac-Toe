@@ -67,6 +67,12 @@ HomeLoanVariation.add({
 		filters: {company: ':company'},
 	},
   removeRevertVariation: {type: Types.Boolean, indent: true, initial: false},
+	maximumBridgingTerm: {type: Types.Number},
+	bridgingLoanMaxLVR: {type: Types.Number},
+	bridgingLoanRate: {type: Types.Number},
+  propertyType: {type: Types.Select, options: ['Residential', 'Commercial', 'Rural']},
+  trusteeSMTF: {type: Types.Select, options: ['Individual', 'Company']},
+  minAmountSMSF: {type: Types.Number},
 })
 HomeLoanVariation.add(verifiedCommonAttribute)
 HomeLoanVariation.schema.index({ company: 1, slug: 1 }, { unique: true })
@@ -91,6 +97,10 @@ HomeLoanVariation.schema.pre('validate', async function (next) {
   if (this.introductoryRate > this.rate) {
     next(Error('Introductory Rate need to less or equal than Rate'))
   }
+	if (this.fixMonth <= 0) {
+		let product = await keystone.list('HomeLoan').model.findOne({_id: this.product}).lean().exec()
+		product.homeLoanType === 'FIXED' && next(Error('Fix Month should greater than 0 for fixed home loans'))
+	}
   if (this.fixMonth && !this.revertRate && (!this.revertVariation || (this.revertVariation && this.removeRevertVariation))) {
     next(Error('This is a Variation for Fix HomeLoan. Need either a revertRate or revertVariation'))
   }
