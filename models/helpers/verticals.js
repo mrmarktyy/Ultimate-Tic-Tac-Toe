@@ -14,6 +14,7 @@ var verticals = [
 	{ value: 'bank-accounts', label: 'Bank Accounts' },
 	{ value: 'infographic', label: 'Infographic' },
 	{ value: 'investment-funds', label: 'Investment Funds' },
+	{value: 'nonspecific', label: 'Non Specific'},
 	{ value: 'default', label: 'Default' },
 ]
 
