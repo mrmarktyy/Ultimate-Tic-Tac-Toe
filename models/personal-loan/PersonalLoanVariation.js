@@ -75,6 +75,8 @@ PersonalLoanVariation.add({
 		], default: 'Not Applicable',
 	},
 	thinFile: { type: Types.Boolean, indent: true, default: false },
+	riskAssuranceFee: { type: Types.Number },
+	generateRange: { type: Types.Number },
 })
 
 PersonalLoanVariation.add(verifiedCommonAttribute)
