@@ -17,14 +17,14 @@ exports.list = async function (req, res) {
 	res.jsonp(brokers)
 }
 
-function fixUrls(attributes, field, url) {
-	return attributes.map(attribute => {
+function fixUrls (attributes, field, url) {
+	return attributes.map((attribute) => {
 		attribute[field] = fixUrl(attribute[field])
 		return attribute
 	})
 }
 
-function fixUrl(url) {
-	var regex = new RegExp("^(http|https):", "i");
+function fixUrl (url) {
+	var regex = new RegExp('^(http|https):', 'i')
 	return url.replace(regex, '')
 }

@@ -23,9 +23,9 @@ module.exports = async function (req, res) {
 			}
 			Pages.model.findOneAndUpdate({_id: pageModel._id}, {$set: {links: ids}}).exec()
 		}
-		res.status(200).jsonp({success: "Links updated successfully"})
+		res.status(200).jsonp({success: 'Links updated successfully'})
 	} catch (err) {
-		res.status(400).jsonp({error: "Error in updating links"})
+		res.status(400).jsonp({error: 'Error in updating links'})
 	}
 }
 
