@@ -19,10 +19,15 @@ Company.add({
 	parentCompany: { type: Types.Relationship, ref: 'Company' },
 	otherNames: { type: Types.TextArray },
 	type: {
+		label: "Display Classification",
 		type: Types.Select,
 		required: true,
 		initial: true,
 		options: 'Major bank, Regional bank, Foreign bank, Mutual bank, Credit union, Building society, Peer to Peer,  Online lender, Non-bank Lender, Super, Other',
+	},
+	classificationType: {
+		type: Types.MultiSelect,
+		options: 'Bank, Mutual, Mutual Bank, Major Bank, Minor Bank, Finance Company, Peer-to-Peer, Online Only',
 	},
 	isDiscontinued: { type: Types.Boolean, indent: true, default: false },
 	abnOrAcn: { type: Types.Number },
