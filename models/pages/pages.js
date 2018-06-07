@@ -1,9 +1,9 @@
-var keystone = require('keystone')
-var uuid = require('node-uuid')
-var Types = keystone.Field.Types
-var verticals = require('../helpers/verticals')
-var verifiedService = require('../../services/verifiedService')
-var verifiedCommonAttribute = require('../common/verifiedCommonAttribute')
+const keystone = require('keystone')
+const uuid = require('node-uuid')
+const Types = keystone.Field.Types
+const verifiedService = require('../../services/verifiedService')
+const verifiedCommonAttribute = require('../common/verifiedCommonAttribute')
+const verticals = [...require('../helpers/verticals'), {value: 'nonspecific', label: 'Non Specific'}]
 
 const Pages = new keystone.List('Pages', {track: true,   map: { name: 'url' },}).add({
 	url: {type: Types.Text, initial: true, unique: true,  noedit: true},
