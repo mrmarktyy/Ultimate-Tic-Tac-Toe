@@ -2,7 +2,7 @@ const keystone = require('keystone')
 const csvtojson = require('../../utils/csvToJson')
 const keystoneUpdate = require('../../utils/helperFunctions').keystoneUpdate
 const checkCSVMissingHeader = require('../../utils/csv').checkCSVMissingHeader
-const verticals = require('../../models/helpers/verticals')
+const verticals = [...require('../../models/helpers/verticals'), {value: 'nonspecific', label: 'Non Specific'}]
 
 exports.screen =  (req, res) => {
 	let view = new keystone.View(req, res)
