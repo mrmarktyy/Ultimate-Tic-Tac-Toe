@@ -1,5 +1,6 @@
 const keystone = require('keystone')
 const leadsCsv = require('../../redshift/leadsData').leadsCsv
+const moment = require('moment')
 const Broker = keystone.list('Broker')
 
 exports.screen = async (req, res) => {
@@ -19,6 +20,7 @@ exports.download = async (req, res) => {
 	let broker = req.body.broker
 	let fromDate = req.body.fromdate
 	let toDate = req.body.todate
+	toDate = moment(toDate).add(1, 'days').format('YYYY-MM-DD')
 	let csv = await leadsCsv(broker, fromDate, toDate)
 	let fileName = `monthly-leads-${fromDate}-${toDate}-${broker}.csv`
 	res.set({'Content-Disposition': `attachment; filename= ${fileName}`})
