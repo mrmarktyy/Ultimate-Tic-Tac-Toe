@@ -192,7 +192,7 @@ async function prepDataAndPushToRedshift (date, creditCards) {
     product.filename = filename
     products.push(product)
 
-    let cardPerks = perks.filter((perk) => { return  card._id.toString() === perk.product._id.toString() })
+    let cardPerks = perks.filter((perk) => { return  perk.product && card._id.toString() === perk.product._id.toString() })
     cardPerks.forEach((perk) => {
       let cardPerk = {}
       cardPerk.collectionDate = collectionDate
