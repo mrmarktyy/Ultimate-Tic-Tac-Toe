@@ -12,16 +12,17 @@ block content
 						select(name='broker').form-control
 							each broker in brokers
 								option(value=broker.slug) #{broker.name}
-						label Month
-						select(name='month').form-control
-							each month in months
-								option(value=month selected=month == currentMonth) #{month}
-						label Year
-						select(name='year').form-control
-							each year in years
-								option(value=month selected=year == currentMonth) #{year}
+						label From Date
+						input(type='text', name='fromdate', id='fromdate')
+						label To Date
+						input(type='text', name='todate', id='todate')
 						.row
 						.col-sm-12
 								&nbsp;
 							button.btn.btn-large.btn-primary(type="submit") Export Leads
-
+block js
+	script.
+		$(function () {
+			$('#fromdate').datepicker({dateFormat: 'yy-mm-dd'});
+			$('#todate').datepicker({dateFormat: 'yy-mm-dd'});
+		});
