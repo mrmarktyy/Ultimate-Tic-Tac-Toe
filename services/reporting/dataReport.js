@@ -8,6 +8,7 @@ var Mailer = require('../../utils/mailer')
 const badslugs = require('./dataReportAttachments/badslugs')
 const noProviderProductName = require('./dataReportAttachments/noProviderProductName')
 const noCompanyInFundgroup = require('./dataReportAttachments/noCompanyInFundgroup')
+const noRedshiftHistory = require('./dataReportAttachments/noRedshiftHistory')
 
 async function dataReport () {
   let connection = await mongoosePromise.connect()
@@ -16,10 +17,10 @@ async function dataReport () {
     attachments.push(await badslugs(filePath))
     attachments.push(await noProviderProductName(filePath))
     attachments.push(await noCompanyInFundgroup(filePath))
+    attachments.push(await noRedshiftHistory(filePath))
     attachments = attachments.filter((a) => { return a !== null })
-    if (attachments.length) {
-      emailDataTeam(attachments)
-    }
+    emailDataTeam(attachments)
+
     connection.close()
   } catch (error) {
     logger.error(error)
@@ -36,7 +37,7 @@ async function emailDataTeam (attachments) {
     attachments: attachments,
     subject: `Ultimate Data Errors Report ${dt}`,
     cc: 'ian.fletcher@ratecity.com.au',
-    html: '<p>Data report csv attachments</p>',
+    html: '<p>Data report errors in csv attachments. If no csv files, then there are no errors. The missing redshift data checks from 30 days ago.</p>',
   })
 
   await mailer.sendEmail()
