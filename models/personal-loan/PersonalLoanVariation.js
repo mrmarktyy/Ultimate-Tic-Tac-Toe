@@ -57,6 +57,7 @@ PersonalLoanVariation.add({
   applicationFeesDollar: { type: Types.Number, initial: true, min: 0 },
   applicationFeesPercent: { type: Types.Number, initial: true, min: 0, max: 100 },
   hasHomeOwnersDiscount: { type: Types.Boolean, indent: true, default: false },
+	headlineRate: { type: Types.Boolean, indent: true, default: false },
 	isMarketplaceParticipant: { type: Types.Boolean, indent: true, default: false },
 	minEquifaxScore: { type: Types.Number, min: 0 },
 	maxEquifaxScore: { type: Types.Number, max: 1200 },
