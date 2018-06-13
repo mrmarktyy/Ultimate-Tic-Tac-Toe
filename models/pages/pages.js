@@ -16,6 +16,7 @@ const Pages = new keystone.List('Pages', {track: true,   map: { name: 'url' },})
 	resultName: {type: Types.Text},
 	variant: {type: Types.Text},
 	description: {type: Types.Code, height: 250, language: 'html'},
+	ignoreSeoOptimisation: { type: Types.Boolean, indent: true, default: false },
 	keywords: {type: Types.Text},
 	canonical: {type: Types.Text},
 	category: {type: Types.TextArray},
