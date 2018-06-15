@@ -33,7 +33,6 @@ function calculateComparisonRate (monthlyRate, loanAmount, loanTermInMonth, mont
 		}
 	}
 	cashflow[size] = cashflow[size] + totalEndOfLoanFees //  add end of loan fees
-
 	var comparisonRate = IRR(cashflow)
 	return toTwoDecimal(comparisonRate * 12)
 }
@@ -72,6 +71,7 @@ exports.calculatePersonalLoanComparisonRate = function (data = {}) {
 		totalEndOfLoanFees = 0,
 		loanAmount = 0,
 		loanTermInMonth = 0,
+		riskAssuranceFee = 0,
 	} = data
 
 	let monthlyRate = yearlyRate / 100 / 12
@@ -83,7 +83,7 @@ exports.calculatePersonalLoanComparisonRate = function (data = {}) {
 		loanTermInMonth = personalLoanConstant.PERSONAL_LOAN_DEFAULT_LOAN_TERM
 	}
 
-	return calculateComparisonRate(monthlyRate, loanAmount, loanTermInMonth, monthlyIntroRate, introTermInMonth, totalUpfrontFees, totalMonthlyFees, totalYearlyFees, totalEndOfLoanFees)
+	return calculateComparisonRate(monthlyRate, loanAmount, loanTermInMonth, monthlyIntroRate, introTermInMonth, totalUpfrontFees + riskAssuranceFee, totalMonthlyFees, totalYearlyFees, totalEndOfLoanFees)
 }
 
 exports.calculateCarlLoanComparisonRate = function (data) {
@@ -95,6 +95,7 @@ exports.calculateCarlLoanComparisonRate = function (data) {
 		totalMonthlyFees = 0,
 		totalYearlyFees = 0,
 		totalEndOfLoanFees = 0,
+		riskAssuranceFee = 0,
 	} = data
 
 	let monthlyRate = yearlyRate / 100 / 12
@@ -102,7 +103,7 @@ exports.calculateCarlLoanComparisonRate = function (data) {
 	let loanAmount = personalLoanConstant.CAR_LOAN_DEFAULT_LOAN_AMOUNT
 	let loanTermInMonth = personalLoanConstant.CAR_LOAN_DEFAULT_LOAN_TERM
 
-	return calculateComparisonRate(monthlyRate, loanAmount, loanTermInMonth, monthlyIntroRate, introTermInMonth, totalUpfrontFees, totalMonthlyFees, totalYearlyFees, totalEndOfLoanFees)
+	return calculateComparisonRate(monthlyRate, loanAmount, loanTermInMonth, monthlyIntroRate, introTermInMonth, totalUpfrontFees + riskAssuranceFee, totalMonthlyFees, totalYearlyFees, totalEndOfLoanFees)
 }
 
 function PMT (rate, nper, pv, fv, type) {

@@ -125,6 +125,7 @@ PersonalLoanVariation.schema.pre('save', async function (next) {
 		introTermInMonth: this.introTerm,
 		totalMonthlyFees: personalLoan.totalMonthlyFee,
 		totalYearlyFees: personalLoan.totalYearlyFee,
+		riskAssuranceFee: this.isMarketplaceParticipant ? this.riskAssuranceFee : 0,
 		}
 		if (personalLoan.isPersonalLoan === availableOptions.yes) {
 			loan.totalUpfrontFees = personalLoan.personalLoanTotalUpfrontFee
