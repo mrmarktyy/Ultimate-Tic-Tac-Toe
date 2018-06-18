@@ -2,7 +2,7 @@ var _ = require('lodash')
 var genericVerticals = require('../helpers/genericVerticals')
 
 const specificVerticals = {
-  'Car Loans': { collection: 'PersonalLoan', findClause: { isCarLoan: 'YES' }, salesforceVertical: 'Car Loans' },
+  'Car Loans': { collection: 'PersonalLoan', findClause: { isCarLoan: 'YES' }, salesforceVertical: 'Car Loans', specificClause: { isCarLoan: 'YES', isPersonalLoan: 'No' } },
   'Bank Accounts': { collection: 'BankAccount', salesforceVertical: 'Bank Accounts' },
   'Credit Cards': { collection: 'CreditCard', salesforceVertical: 'Credit Cards' },
   'Personal Loans': { collection: 'PersonalLoan', findClause: { isPersonalLoan: 'YES' }, salesforceVertical: 'Personal Loans' },
