@@ -123,22 +123,29 @@ function PMT (rate, nper, pv, fv, type) {
 }
 
 function IRR (CArray) {
-	let min = 0.0
-	let max = 1.0
-	let guest
-	let NPV
-	do {
-		guest = (min + max) / 2
+  var min = -1.0
+  var max = 1.0
+  var guess = (min + max) / 2
+  var lastGuess = 1.0
+  var notSame = true
+  var NPV
+  do {
 		NPV = 0
-		for (let j = 0; j < CArray.length; j++) {
-			NPV += CArray[j] / Math.pow((1 + guest), j)
-		}
-		if (NPV > 0) {
-			min = guest
-		}
-		else {
-			max = guest
-		}
-	} while (Math.abs(NPV) > 0.000001)
-	return guest * 100
+		guess = (min + max) / 2
+    if (Math.abs(lastGuess-guess) < 0.0000000000000000001) {
+			notSame = false
+    }
+    lastGuess = guess
+    for (var j = 0; j < CArray.length; j++) {
+			NPV += CArray[j] / Math.pow((1 + guess), j)
+    }
+    if (NPV > 0) {
+      min = guess
+    } else {
+      max = guess
+    }
+  } while(notSame && (Math.abs(NPV) > 0.0000000000000000001))
+  // let raw = parseFloat(guess * 100).toFixed(2)
+  // return parseFloat(raw) // more precise if we ever want it.
+  return guess * 100
 }

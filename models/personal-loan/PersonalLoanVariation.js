@@ -120,12 +120,12 @@ PersonalLoanVariation.schema.pre('save', async function (next) {
 	let personalLoans = await PersonalLoan.model.find({ _id: this.product }).exec()
 	personalLoans.forEach((personalLoan) => {
 		let loan = {
-		yearlyRate: this.minRate,
-		yearlyIntroRate: this.introRate,
-		introTermInMonth: this.introTerm,
-		totalMonthlyFees: personalLoan.totalMonthlyFee,
-		totalYearlyFees: personalLoan.totalYearlyFee,
-		riskAssuranceFee: this.isMarketplaceParticipant ? this.riskAssuranceFee : 0,
+			yearlyRate: this.minRate,
+			yearlyIntroRate: this.introRate,
+			introTermInMonth: this.introTerm,
+			totalMonthlyFees: personalLoan.totalMonthlyFee,
+			totalYearlyFees: personalLoan.totalYearlyFee,
+			riskAssuranceFee: this.isMarketplaceParticipant && this.riskAssuranceFee ? this.riskAssuranceFee : 0,
 		}
 		if (personalLoan.isPersonalLoan === availableOptions.yes) {
 			loan.totalUpfrontFees = personalLoan.personalLoanTotalUpfrontFee
