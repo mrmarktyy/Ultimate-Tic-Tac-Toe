@@ -209,7 +209,7 @@ async function prepDataAndPushToRedshift (date, creditCards) {
       creditcardPerks.push(cardPerk)
     })
 
-    let rates = earnRates.filter((rate) => { return  card._id.toString() === rate.product._id.toString() })
+    let rates = earnRates.filter((rate) => { return rate.product && card._id.toString() === rate.product._id.toString() })
     rates.forEach((earn) =>{
       let earnRate = {}
       earnRate.collectiondate = collectionDate
