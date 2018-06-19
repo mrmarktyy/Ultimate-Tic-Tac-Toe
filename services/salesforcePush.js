@@ -46,9 +46,9 @@ var pushProducts = async function () {
 }
 
 var salesforceProductFactory = async function (vertical) {
-	const { collection, findClause, salesforceVertical } = salesforceVerticals[vertical]
+	const { collection, findClause, specificClause, salesforceVertical } = salesforceVerticals[vertical]
 	let ProductVertical = keystoneShell.list(collection)
-	let products = await (ProductVertical.model.find(findClause).populate('company product').lean())
+	let products = await (ProductVertical.model.find(specificClause || findClause).populate('company product').lean())
 
 	for (var i = 0; i < products.length; i++) {
 		if (vertical == 'Home Loans' && !products[i].isDiscontinued && products[i].product.isDiscontinued) {
