@@ -19,7 +19,7 @@ module.exports = async function () {
     for (let i = 0; i < variations.length; i++) {
       let variation = variations[i]
       let loan = {
-        yearlyRate: variation.generateRange ? variation.minRate - variation.generateRange/100 : variation.minRate,
+        yearlyRate: variation.generateRange ? variation.minRate - (variation.minRate * variation.generateRange/100) : variation.minRate,
         yearlyIntroRate: variation.introRate,
         introTermInMonth: variation.introTerm,
         totalMonthlyFees: variation.product.totalMonthlyFee,
@@ -34,7 +34,7 @@ module.exports = async function () {
         {},
         loan,
         {
-          yearlyRate: variation.generateRange ? variation.maxRate + variation.generateRange/100 : variation.maxRate,
+          yearlyRate: variation.generateRange ? variation.maxRate + (variation.maxRate * variation.generateRange/100) : variation.maxRate,
         }
       )
       let maxComparisonRate = ComparisonRateCalculator.calculatePersonalLoanComparisonRate(maxLoan)
