@@ -122,7 +122,7 @@ PersonalLoanVariation.schema.pre('save', async function (next) {
 	let personalLoans = await PersonalLoan.model.find({ _id: this.product }).exec()
 	personalLoans.forEach((personalLoan) => {
 		let loan = {
-			yearlyRate: this.generateRange ? this.minRate - this.generateRange/100 : this.minRate,
+			yearlyRate: this.generateRange ? this.minRate - (this.generateRange/100 * this.minRate) : this.minRate,
 			yearlyIntroRate: this.introRate,
 			introTermInMonth: this.introTerm,
 			totalMonthlyFees: personalLoan.totalMonthlyFee,
@@ -146,7 +146,7 @@ PersonalLoanVariation.schema.pre('save', async function (next) {
 				{},
 				loan5Years,
 				{
-					yearlyRate: this.generateRange ? this.maxRate + this.generateRange/100 : this.maxRate,
+					yearlyRate: this.generateRange ? this.maxRate + (this.generateRange/100 * this.maxRate) : this.maxRate,
 				}
 			)
 			this.maxComparisonRate = ComparisonRateCalculator.calculatePersonalLoanComparisonRate(maxLoan5Years)
