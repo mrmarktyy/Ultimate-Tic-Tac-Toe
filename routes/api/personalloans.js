@@ -131,6 +131,12 @@ function handleComparisonRate (variation) {
 	} else {
 		variation.carLoanComparisonRate = variation.comparisonRateCar
 	}
+	if (variation.maxComparisonRateManual) {
+		variation.maxComparisonRate = variation.maxComparisonRateManual
+	} else {
+		variation.maxComparisonRateManual = null
+		variation.maxComparisonRate = variation.maxComparisonRate
+	}
 
 	return variation
 }

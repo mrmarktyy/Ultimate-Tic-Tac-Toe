@@ -48,10 +48,12 @@ PersonalLoanVariation.add({
 	maxRate: { type: Types.Number, required: true, initial: true },
 	introRate: { type: Types.Number, min: 0 },
 	introTerm: { type: Types.Number, min: 0 },
-	comparisonRatePersonal: { type: Types.Number, noedit: true },
-	comparisonRatePersonalManual: { type: Types.Number, initial: true },
+	comparisonRatePersonal: { type: Types.Number, noedit: true, hidden: true },
+	comparisonRatePersonalManual: { type: Types.Number, hidden: true },
 	comparisonRatePersonal5Years: { type: Types.Number, noedit: true, label: 'Comp Pl 5Yrs' },
 	comparisonRatePersonalManual5Years: { type: Types.Number, initial: true, label: 'Comp Pl 5Yrs Manual' },
+	maxComparisonRate: { type: Types.Number, noedit: true },
+	maxComparisonRateManual: { type: Types.Number, initial: true },
 	comparisonRateCar: { type: Types.Number, noedit: true },
 	comparisonRateCarManual: { type: Types.Number, initial: true },
   applicationFeesDollar: { type: Types.Number, initial: true, min: 0 },
@@ -77,7 +79,7 @@ PersonalLoanVariation.add({
 	},
 	thinFile: { type: Types.Boolean, indent: true, default: false },
 	riskAssuranceFee: { type: Types.Number },
-	generateRange: { type: Types.Number },
+	generateRange: { type: Types.Number, label: 'Generate Range %' },
 })
 
 PersonalLoanVariation.add(verifiedCommonAttribute)
@@ -120,12 +122,12 @@ PersonalLoanVariation.schema.pre('save', async function (next) {
 	let personalLoans = await PersonalLoan.model.find({ _id: this.product }).exec()
 	personalLoans.forEach((personalLoan) => {
 		let loan = {
-			yearlyRate: this.minRate,
+			yearlyRate: this.generateRange ? this.minRate - this.generateRange/100 : this.minRate,
 			yearlyIntroRate: this.introRate,
 			introTermInMonth: this.introTerm,
 			totalMonthlyFees: personalLoan.totalMonthlyFee,
 			totalYearlyFees: personalLoan.totalYearlyFee,
-			riskAssuranceFee: this.isMarketplaceParticipant && this.riskAssuranceFee ? this.riskAssuranceFee : 0,
+			riskAssuranceFee: this.riskAssuranceFee ? this.riskAssuranceFee : 0,
 		}
 		if (personalLoan.isPersonalLoan === availableOptions.yes) {
 			loan.totalUpfrontFees = personalLoan.personalLoanTotalUpfrontFee
@@ -140,9 +142,18 @@ PersonalLoanVariation.schema.pre('save', async function (next) {
 				}
 			)
 			this.comparisonRatePersonal5Years = ComparisonRateCalculator.calculatePersonalLoanComparisonRate(loan5Years)
+			let maxLoan5Years = Object.assign(
+				{},
+				loan5Years,
+				{
+					yearlyRate: this.generateRange ? this.maxRate + this.generateRange/100 : this.maxRate,
+				}
+			)
+			this.maxComparisonRate = ComparisonRateCalculator.calculatePersonalLoanComparisonRate(maxLoan5Years)
 		} else {
 			this.comparisonRatePersonal = null
 			this.comparisonRatePersonal5Years = null
+			this.maxComparisonRate = null
 		}
 		if (personalLoan.isCarLoan === availableOptions.yes) {
 			loan.totalUpfrontFees = personalLoan.carLoanTotalUpfrontFee
