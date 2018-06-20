@@ -79,11 +79,12 @@ exports.calculatePersonalLoanComparisonRate = function (data = {}) {
 	if (!loanAmount) {
 		loanAmount = personalLoanConstant.PERSONAL_LOAN_DEFAULT_LOAN_AMOUNT
 	}
+	loanAmount += riskAssuranceFee
 	if (!loanTermInMonth) {
 		loanTermInMonth = personalLoanConstant.PERSONAL_LOAN_DEFAULT_LOAN_TERM
 	}
 
-	return calculateComparisonRate(monthlyRate, loanAmount, loanTermInMonth, monthlyIntroRate, introTermInMonth, totalUpfrontFees + riskAssuranceFee, totalMonthlyFees, totalYearlyFees, totalEndOfLoanFees)
+	return calculateComparisonRate(monthlyRate, loanAmount, loanTermInMonth, monthlyIntroRate, introTermInMonth, totalUpfrontFees, totalMonthlyFees, totalYearlyFees, totalEndOfLoanFees)
 }
 
 exports.calculateCarlLoanComparisonRate = function (data) {
@@ -100,10 +101,10 @@ exports.calculateCarlLoanComparisonRate = function (data) {
 
 	let monthlyRate = yearlyRate / 100 / 12
 	let monthlyIntroRate = yearlyIntroRate / 100 / 12
-	let loanAmount = personalLoanConstant.CAR_LOAN_DEFAULT_LOAN_AMOUNT
+	let loanAmount = personalLoanConstant.CAR_LOAN_DEFAULT_LOAN_AMOUNT + riskAssuranceFee
 	let loanTermInMonth = personalLoanConstant.CAR_LOAN_DEFAULT_LOAN_TERM
 
-	return calculateComparisonRate(monthlyRate, loanAmount, loanTermInMonth, monthlyIntroRate, introTermInMonth, totalUpfrontFees + riskAssuranceFee, totalMonthlyFees, totalYearlyFees, totalEndOfLoanFees)
+	return calculateComparisonRate(monthlyRate, loanAmount, loanTermInMonth, monthlyIntroRate, introTermInMonth, totalUpfrontFees, totalMonthlyFees, totalYearlyFees, totalEndOfLoanFees)
 }
 
 function PMT (rate, nper, pv, fv, type) {
