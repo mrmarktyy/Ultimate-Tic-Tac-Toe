@@ -4,7 +4,7 @@ const Types = keystone.Field.Types
 module.exports = {
   employmentStatus: {
     type: Types.MultiSelect,
-    options: ['Full Time', 'Part Time', 'Contract', 'Self Employed', 'Sole Trader', 'Casual employment'],
+    options: ['Full Time', 'Part Time', 'Contract', 'Self Employed', 'Sole Trader', 'Casual employment', 'Unemployed'],
     required: true,
     initial: true,
   },
