@@ -52,6 +52,8 @@ async function prepareDataForRedshift (homeloans) {
       isRCSpecial,
       repaymentTypes,
       isPackage,
+      isBasicVariable,
+      isBridgingLoan,
       otherBenefits,
       otherRestrictions,
       adminNotes,
@@ -75,6 +77,7 @@ async function prepareDataForRedshift (homeloans) {
       product.updatedat = variation.updatedAt ? moment(variation.updatedAt).format('YYYY-MM-DD HH:mm:ss') : null
       product.productname = name
       product.variationname = variation.name
+      product.providerproductname = variation.providerProductName ? variation.providerProductName.name : null
       product.gotositeenabled = variation.gotoSiteEnabled
       product.gotositeurl = variation.gotoSiteUrl
       product.companyuuid = company.uuid
@@ -85,7 +88,6 @@ async function prepareDataForRedshift (homeloans) {
       product.slug = variation.slug
       product.paymenttype = variation.paymentType || 'cpc'
       product.neo4jid = variation.neo4jId
-      product.promotedorder = variation.promotedOrder || 0
       product.homeloantype = homeLoanType
       product.comparisonrate = variation.comparisonRate || variation.calculatedComparisonRate
       product.mintotalloanamount = variation.minTotalLoanAmount || null
@@ -118,6 +120,9 @@ async function prepareDataForRedshift (homeloans) {
       product.isspecial = isRCSpecial === 'yes'
       product.isfirsthomebuyersavailable = featureExists(features, 'IS_FIRST_HOME_BUYER_AVAILABLE')
       product.requiresfirsthomebuyers = featureExists(features, 'REQUIRES_FIRST_HOME_BUYER')
+      product.isgreenhomeloan = featureExists(features, 'IS_GREEN_HOME_LOAN')
+      product.bridgingloanmaxlvr = variation.bridgingLoanMaxLVR || null
+      product.bridgingloanrate = variation.bridgingLoanRate
       product.hasowneroccupiedpurpose = propertyPurposeTypes.includes('OWNER_OCCUPIED')
       product.hasinvestmentpurpose = propertyPurposeTypes.includes('INVESTMENT')
       product.hasprincipalandinterest = repaymentTypes.includes('PRINCIPAL_AND_INTEREST'),
@@ -152,6 +157,8 @@ async function prepareDataForRedshift (homeloans) {
       product.hasfortnightlyrepayments = repaymentFrequencies.includes('FORTNIGHTLY')
       product.hasmonthlyrepayments = repaymentFrequencies.includes('MONTHLY')
       product.ispackage = isPackage || false
+      product.isbasicvariable = isBasicVariable || false
+      product.isbridgingloan = isBridgingLoan || false
       product.rate = variation.rate
       product.revertrate = getRevertRate(variation, homeLoanType, features) || variation.rate
       product.smsfpurpose = featureExists(features, 'ALLOW_SMSF_BORROWING')
@@ -165,6 +172,9 @@ async function prepareDataForRedshift (homeloans) {
       product.isrefinanceavailable = featureExists(features, 'IS_REFINANCE_AVAILABLE')
       product.otherbenefits = otherBenefits || null
       product.otherrestrictions = otherRestrictions || null
+      product.propertytype = variation.propertyType
+      product.trusteesmtf = variation.trusteeSMTF
+      product.minamountsmsf = variation.minAmountSMSF
       product.nswapplicable = stateApplicable(states, 'NSW')
       product.vicapplicable = stateApplicable(states, 'VIC')
       product.waapplicable = stateApplicable(states, 'WA')
