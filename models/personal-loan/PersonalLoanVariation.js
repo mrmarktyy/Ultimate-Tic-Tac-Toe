@@ -80,6 +80,7 @@ PersonalLoanVariation.add({
 	thinFile: { type: Types.Boolean, indent: true, default: false },
 	riskAssuranceFee: { type: Types.Number },
 	generateRange: { type: Types.Number, label: 'Generate Range %' },
+	rangeMinFee: { type: Types.Number },
 })
 
 PersonalLoanVariation.add(verifiedCommonAttribute)
@@ -122,15 +123,18 @@ PersonalLoanVariation.schema.pre('save', async function (next) {
 	let personalLoans = await PersonalLoan.model.find({ _id: this.product }).exec()
 	personalLoans.forEach((personalLoan) => {
 		let loan = {
-			yearlyRate: this.generateRange ? this.minRate - (this.generateRange/100 * this.minRate) : this.minRate,
+			yearlyRate: this.minRate,
 			yearlyIntroRate: this.introRate,
 			introTermInMonth: this.introTerm,
 			totalMonthlyFees: personalLoan.totalMonthlyFee,
 			totalYearlyFees: personalLoan.totalYearlyFee,
-			riskAssuranceFee: this.riskAssuranceFee ? this.riskAssuranceFee : 0,
+			riskAssuranceFee: this.riskAssuranceFee ? this.riskAssuranceFee * (1 - this.generateRange/100) : 0,
 		}
 		if (personalLoan.isPersonalLoan === availableOptions.yes) {
 			loan.totalUpfrontFees = personalLoan.personalLoanTotalUpfrontFee
+			if (this.generateRate) {
+				loan.totalUpfrontFees += this.rangeMinFee
+			}
 			this.comparisonRatePersonal = ComparisonRateCalculator.calculatePersonalLoanComparisonRate(loan)
 			let loan5Years = Object.assign(
 				{},
@@ -138,7 +142,7 @@ PersonalLoanVariation.schema.pre('save', async function (next) {
 				{
 					loanAmount: PLConstant.PERSONAL_LOAN_30000_LOAN_AMOUNT,
 					loanTermInMonth: PLConstant.PERSONAL_LOAN_5YEAR_LOAN_TERM,
-					totalUpfrontFees: personalLoan.personalLoanTotalUpfrontFee30000,
+					totalUpfrontFees: this.generateRate ? personalLoan.personalLoanTotalUpfrontFee30000 + this.rangeMinFee: personalLoan.personalLoanTotalUpfrontFee30000,
 				}
 			)
 			this.comparisonRatePersonal5Years = ComparisonRateCalculator.calculatePersonalLoanComparisonRate(loan5Years)
@@ -146,7 +150,9 @@ PersonalLoanVariation.schema.pre('save', async function (next) {
 				{},
 				loan5Years,
 				{
-					yearlyRate: this.generateRange ? this.maxRate + (this.generateRange/100 * this.maxRate) : this.maxRate,
+					totalUpfrontFees: personalLoan.personalLoanTotalUpfrontFee,
+					yearlyRate: this.maxRate,
+					riskAssuranceFee: this.riskAssuranceFee ? this.riskAssuranceFee * (1 + this.generateRange/100) : 0,
 				}
 			)
 			this.maxComparisonRate = ComparisonRateCalculator.calculatePersonalLoanComparisonRate(maxLoan5Years)
