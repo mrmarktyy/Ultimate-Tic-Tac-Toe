@@ -19,22 +19,24 @@ module.exports = async function () {
     for (let i = 0; i < variations.length; i++) {
       let variation = variations[i]
       let loan = {
-        yearlyRate: variation.generateRange ? variation.minRate - (variation.minRate * variation.generateRange/100) : variation.minRate,
+        yearlyRate: variation.minRate,
         yearlyIntroRate: variation.introRate,
         introTermInMonth: variation.introTerm,
         totalMonthlyFees: variation.product.totalMonthlyFee,
         totalYearlyFees: variation.product.totalYearlyFee,
-        totalUpfrontFees: variation.product.personalLoanTotalUpfrontFee30000,
+        totalUpfrontFees: variation.generateRate ? variation.product.personalLoanTotalUpfrontFee30000 + variation.rangeMinFee: variation.product.personalLoanTotalUpfrontFee30000,
         loanAmount: 30000,
         loanTermInMonth: 60,
-        riskAssuranceFee: variation.riskAssuranceFee ? variation.riskAssuranceFee : 0,
+        riskAssuranceFee: variation.riskAssuranceFee ? variation.riskAssuranceFee * (1 - variation.generateRange/100) : 0
       }
       let comp5Years = ComparisonRateCalculator.calculatePersonalLoanComparisonRate(loan)
       let maxLoan = Object.assign(
         {},
         loan,
         {
-          yearlyRate: variation.generateRange ? variation.maxRate + (variation.maxRate * variation.generateRange/100) : variation.maxRate,
+          totalUpfrontFees: variation.product.personalLoanTotalUpfrontFee30000,
+          yearlyRate: variation.maxRate,
+          riskAssuranceFee: variation.riskAssuranceFee ? variation.riskAssuranceFee * (1 + variation.generateRange/100) : 0,
         }
       )
       let maxComparisonRate = ComparisonRateCalculator.calculatePersonalLoanComparisonRate(maxLoan)
