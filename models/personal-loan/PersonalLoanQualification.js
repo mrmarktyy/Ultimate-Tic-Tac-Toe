@@ -27,8 +27,6 @@ PersonalLoanQualification.add({
 })
 PersonalLoanQualification.add(qualificationCommonAttributes)
 
-PersonalLoanQualification.relationship({ path: 'Knockout', ref: 'Knockout', refPath: 'knockouts', many: true })
-
 PersonalLoanQualification.schema.pre('save', async function (next) {
   let company = await keystone.list('Company').model.findOne({_id: this.company}).lean().exec()
   if (this.product) {
