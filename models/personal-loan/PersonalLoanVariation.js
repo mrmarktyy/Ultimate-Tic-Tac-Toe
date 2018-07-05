@@ -69,16 +69,8 @@ PersonalLoanVariation.add({
 	maximumAge: { type: Types.Number },
 	chanceOfApproval: { type: Types.Number },
 	maritalStatus: {
-		type: Types.Select,
-		options: [
-			{label: 'Select', value: ''},
-			{label: 'Defacto', value: 'Defacto'},
-			{label: 'Divorced', value: 'Divorced'},
-			{label: 'Married', value: 'Married'},
-			{label: 'Separated', value: 'Separated'},
-			{label: 'Single', value: 'Single'},
-			{label: 'Widowed', value: 'Widowed'},
-		], default: 'Select',
+		type: Types.MultiSelect,
+		options: ['Defacto', 'Divorced', 'Married', 'Separated', 'Single', 'Widowed'],
 	},
 	equifaxScoreType: {
 		type: Types.Select,
