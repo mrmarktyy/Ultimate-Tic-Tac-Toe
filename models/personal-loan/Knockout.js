@@ -14,9 +14,9 @@ Knockout.add ({
     initial: true,
     index: true,
     many: true,
+    label: 'BureauExpressions',
   },
 })
 
-Knockout.relationship({ path: 'BureauExpressions', ref: 'BureauExpression', refPath: 'knockouts', many: true })
-Knockout.defaultColumns = 'name, code, dataType'
+Knockout.defaultColumns = 'name, qualifications'
 Knockout.register()
