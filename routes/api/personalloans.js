@@ -10,7 +10,7 @@ var CompanyService = require('../../services/CompanyService')
 var logger = require('../../utils/logger')
 var monetizedCollection = require('./monetizedCollection')
 var removeUneededFields = require('../../utils/removeUneededFields')
-var setPromotedOrder = require('../../utils/helperFunctions').setPromotedOrder
+//var setPromotedOrder = require('../../utils/helperFunctions').setPromotedOrder
 const recommendedMultiplier = require('../../utils/recommendedMultiplier').multiplier
 
 exports.list = async function (req, res) {
@@ -62,7 +62,8 @@ async function getPersonalLoanObjects (loans) {
 		loan.repaymentType = changeCase.titleCase(loan.repaymentType)
 		loan.securedType = changeCase.titleCase(loan.securedType)
 		loan.company = CompanyService.fixLogoUrl(loan.company)
-		setPromotedOrder(loan)
+		// setPromotedOrder(loan)
+		loan.promotedOrder = 100
 
 		// qualification data
 		loan.qualifications = qualifications.filter((qualification) => {
