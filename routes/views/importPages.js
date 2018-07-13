@@ -2,7 +2,7 @@ const keystone = require('keystone')
 const csvtojson = require('../../utils/csvToJson')
 const keystoneUpdate = require('../../utils/helperFunctions').keystoneUpdate
 const checkCSVMissingHeader = require('../../utils/csv').checkCSVMissingHeader
-const verticals = [...require('../../models/helpers/verticals'), {value: 'nonspecific', label: 'Non Specific'}, {value: 'online-trading', label: 'Online Trading'}]
+const verticals = [...require('../../models/helpers/verticals'), {value: 'nonspecific', label: 'Non Specific'}]
 
 exports.screen =  (req, res) => {
 	let view = new keystone.View(req, res)
@@ -50,7 +50,7 @@ async function updatePages (pages, req) {
 			return
 		}
 		if (!vertical) {
-			errors.push(`page details with url ${page.url} has an invalid vertical ${vertical}`)
+			errors.push(`page details with url ${page.url} has an invalid vertical`)
 			return
 		}
 		page.vertical = vertical.value
