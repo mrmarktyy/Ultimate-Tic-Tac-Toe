@@ -86,7 +86,7 @@ keystone.set('nav', {
   notifications: 'Notifications',
 	promotedProducts: ['PromotedProduct'],
 	superannuations: ['FundGroup', 'Superannuation'],
-	pages: ['Pages', 'Link'],
+	pages: ['Pages', 'Link', 'LongTailKeywords'],
 	termDeposits: ['TermDepositCompany', 'TermDeposit', 'TermDepositTier', 'TermDepositSpecial'],
 })
 
