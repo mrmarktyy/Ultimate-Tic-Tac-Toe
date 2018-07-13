@@ -11,16 +11,17 @@ module.exports = async function () {
 	try {
 		const keywords = await fetchLongTailData(process.env.LONGTAIL_UX_KEYWORD_API)
 		await updateUltimatePages(keywords.data)
-		connection.close()
 	} catch (error) {
 		console.log("Error: ", error)
 	}
+	connection.close()
 }()
 
 async function updateUltimatePages(keywords) {
-	return await Promise.all(keywords.map(async(keyword) => {
-		const url = keyword.attributes.url
-		const longTailUxResponse = await fetchLongTailData(`${process.env.LONGTAIL_UX_SEARCH_API}/${url}`)
+	return await Promise.all(getDelayedPromises(keywords).map(async(keyword) => {
+		const resolvedKeyword = await keyword
+		const url = resolvedKeyword.attributes.url
+		const longTailUxResponse =  url && await fetchLongTailData(`${process.env.LONGTAIL_UX_SEARCH_API}/${url}`)
 		if (longTailUxResponse) {
 			const longTailPageData = await processLongTailResponse(longTailUxResponse)
 			await Pages.model.findOneAndUpdate({url}, {$set: longTailPageData}).exec()
@@ -29,9 +30,18 @@ async function updateUltimatePages(keywords) {
 	}))
 }
 
+function getDelayedPromises(keywords) {
+	return keywords.map(keyword => {
+		return new Promise(function (resolve) {
+			setTimeout(function () {
+				return resolve(keyword);
+			}, 100);
+		});
+	})
+}
 async function processLongTailResponse(response) {
 	const searchData = response.data[0]
-	const page = {}
+	const page = {longTailPopularSearches: [], longTailSimilarSearches: [], longTailArticles: []}
 	const includedSearchData = response.included
 	if (searchData) {
 		const relationships = searchData.relationships
