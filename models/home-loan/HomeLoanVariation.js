@@ -94,6 +94,12 @@ HomeLoanVariation.schema.pre('validate', async function (next) {
   if ((this.minLVR > this.maxLVR) && this.maxLVR != null) {
     next(Error('Max LVR can not less than Min LVR'))
   }
+  if (this.maxTotalLoanAmount != null && this.maxTotalLoanAmount % 1 != 0) {
+    next(Error('Max Total LoanAmount has to be an integer'))
+  }
+  if (this.minTotalLoanAmount != null && this.minTotalLoanAmount % 1 != 0) {
+    next(Error('Min Total LoanAmount has to be an integer'))
+  }
   if (this.introductoryRate > this.rate) {
     next(Error('Introductory Rate need to less or equal than Rate'))
   }
