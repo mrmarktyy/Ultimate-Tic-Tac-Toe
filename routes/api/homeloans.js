@@ -99,7 +99,7 @@ async function getHomeLoansObjects (homeLoans) {
   homeLoans.forEach((homeLoan) => {
     if (variations[homeLoan._id]) {
       let company = CompanyService.fixLogoUrl(homeLoan.company)
-      company = CompanyService.isBank(company)
+      company.isBank = company.classificationType.some((type) => type.toLowerCase().includes('bank'))
       if (company.logo && company.logo.url) {
         company.logo = company.logo.url
       }
