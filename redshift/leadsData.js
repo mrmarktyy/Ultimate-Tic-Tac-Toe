@@ -59,7 +59,12 @@ exports.leadsCsv = async (broker, startDate, endDate) => {
 	}
 
 	const rows = await auroraQuery(command, params)
-	const data = _.map(rows, (row) => _.omit(row, ['updated_at']))
+	const data = _.map(rows, (row) => {
+		const data = _.omit(row, ['updated_at'])
+		data.productUUID = _.get(row, 'product.uuid', '')
+		data.productName = _.get(row, 'product.name', '')
+		return data
+	})
 	if (!data.length) {
 		return `No records for ${broker} in between ${startDate} and ${endDate}`
 	}
