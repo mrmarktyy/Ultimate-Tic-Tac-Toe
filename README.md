@@ -36,4 +36,4 @@ See [confluence page](https://ratecityconfluence.atlassian.net/wiki/display/IN/K
 
 * Restore the dump to your local or remote
 
-  `mongorestore --db ratecity-data tmp/dump/ratecity-data`
+  `mongorestore --db ratecity-data tmp/dump/ratecity-data` --drop
