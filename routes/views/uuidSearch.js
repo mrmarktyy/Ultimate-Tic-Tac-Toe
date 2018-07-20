@@ -1,7 +1,6 @@
 'use strict'
 const keystone = require('keystone')
 const ALLVERTICALS = require('../../models/helpers/salesforceVerticals')
-var _ = require('lodash')
 
 exports.screen = (req, res) => {
   var view = new keystone.View(req, res)
@@ -31,8 +30,8 @@ async function collectionSearch (uuid) {
   for (let vertical in verticals) {
     let {collection, findClause} = verticals[vertical]
     let model = await keystone.list(collection).model // eslint-disable-line babel/no-await-in-loop
-    findClause = _.merge({}, {uuid: uuid}, findClause || {})
-    let record = await model.findOne(findClause).lean().exec() || null // eslint-disable-line babel/no-await-in-loop
+    let uuidClause = Object.assign({}, {uuid: uuid}, findClause || {})
+    let record = await model.findOne(uuidClause).lean().exec() || null // eslint-disable-line babel/no-await-in-loop
     if (record) {
       let {name, slug, _id} = record
       data = {
