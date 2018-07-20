@@ -14,7 +14,7 @@ exports.monthlyClicksMail = async function ({month, year}) {
 	let dt = moment(`1-${month}-${year}`, 'DD-MMM-YYYY')
 	let startdate = dt.format('YYYY-MM-DD')
 	let enddate = dt.add(1, 'months').format('YYYY-MM-DD')
-	
+
   let csv = await monthlyClicksCsv(startdate, enddate)
   let fileName = `monthly-clicks-${month}-${year}.csv`
   fs.writeFileSync(filePath + fileName, csv)
@@ -58,8 +58,8 @@ async function getProducts () {
   for (let vertical in ALLVERTICALS) {
     let {collection, findClause} = ALLVERTICALS[vertical]
     let model = await keystone.list(collection).model // eslint-disable-line babel/no-await-in-loop
-    findClause = findClause || {}
-    records = records.concat(await model.find(findClause).populate('company').lean().exec()) // eslint-disable-line babel/no-await-in-loop
+    let productClause = findClause || {}
+    records = records.concat(await model.find(productClause).populate('company').lean().exec()) // eslint-disable-line babel/no-await-in-loop
   }
   let recordsObj = records.reduce((result, product) =>{
     result[product.uuid] = product
