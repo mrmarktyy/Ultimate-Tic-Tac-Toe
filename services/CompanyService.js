@@ -1,9 +1,3 @@
-const bankTypes = [
-	'regional bank',
-	'major bank',
-	'foreign bank',
-]
-
 exports.fixLogoUrl = function (company) {
 	if (company.logo) {
 		if (company.logo.url) {
@@ -14,15 +8,4 @@ exports.fixLogoUrl = function (company) {
 		}
 	}
 	return company
-}
-
-exports.isBank = function (company) {
-  if (company.type) {
-    company.isBank = false
-		company.bankType = company.type
-    if (bankTypes.includes(company.type.toLowerCase())) {
-      company.isBank = true
-    }
-  }
-  return company
 }
