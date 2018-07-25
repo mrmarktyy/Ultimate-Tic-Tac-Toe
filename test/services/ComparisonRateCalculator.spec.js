@@ -15,7 +15,7 @@ describe('Personal Loan Comparison Rate Calculator', () => {
 				totalEndOfLoanFees: 20,
 			}
 			let cr = ComparisonRateCalculator.calculatePersonalLoanComparisonRate(data)
-			assert.equal(cr, 6.88)
+			assert.equal(cr, 5.22)
 		})
 	})
 
@@ -31,7 +31,7 @@ describe('Personal Loan Comparison Rate Calculator', () => {
 				totalEndOfLoanFees: 20,
 			}
 			let cr = ComparisonRateCalculator.calculatePersonalLoanComparisonRate(data)
-			assert.equal(cr, 5.49)
+			assert.equal(cr, 4.31)
 		})
 	})
 })

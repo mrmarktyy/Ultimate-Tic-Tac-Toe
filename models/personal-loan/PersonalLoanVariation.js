@@ -136,8 +136,8 @@ PersonalLoanVariation.schema.pre('save', async function (next) {
 		}
 		if (personalLoan.isPersonalLoan === availableOptions.yes) {
 			loan.totalUpfrontFees = personalLoan.personalLoanTotalUpfrontFee
-			if (this.generateRate) {
-				loan.totalUpfrontFees += this.rangeMinFee
+			if (this.riskAssuranceFee) {
+				loan.totalUpfrontFees += loan.riskAssuranceFee
 			}
 			this.comparisonRatePersonal = ComparisonRateCalculator.calculatePersonalLoanComparisonRate(loan)
 			let loan5Years = Object.assign(
@@ -146,9 +146,12 @@ PersonalLoanVariation.schema.pre('save', async function (next) {
 				{
 					loanAmount: PLConstant.PERSONAL_LOAN_30000_LOAN_AMOUNT,
 					loanTermInMonth: PLConstant.PERSONAL_LOAN_5YEAR_LOAN_TERM,
-					totalUpfrontFees: this.generateRate ? personalLoan.personalLoanTotalUpfrontFee30000 + this.rangeMinFee: personalLoan.personalLoanTotalUpfrontFee30000,
 				}
 			)
+			loan5Years.totalUpfrontFees = personalLoan.personalLoanTotalUpfrontFee
+			if (this.riskAssuranceFee) {
+				loan5Years.totalUpfrontFees += loan5Years.riskAssuranceFee
+			}
 			this.comparisonRatePersonal5Years = ComparisonRateCalculator.calculatePersonalLoanComparisonRate(loan5Years)
 			let maxLoan5Years = Object.assign(
 				{},
@@ -159,6 +162,9 @@ PersonalLoanVariation.schema.pre('save', async function (next) {
 					riskAssuranceFee: this.riskAssuranceFee ? this.riskAssuranceFee * (1 + this.generateRange/100) : 0,
 				}
 			)
+			if (this.riskAssuranceFee) {
+				maxLoan5Years.totalUpfrontFees += maxLoan5Years.riskAssuranceFee
+			}
 			this.maxComparisonRate = ComparisonRateCalculator.calculatePersonalLoanComparisonRate(maxLoan5Years)
 		} else {
 			this.comparisonRatePersonal = null
