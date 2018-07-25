@@ -10,7 +10,6 @@ var CompanyService = require('../../services/CompanyService')
 var logger = require('../../utils/logger')
 var monetizedCollection = require('./monetizedCollection')
 var removeUneededFields = require('../../utils/removeUneededFields')
-//var setPromotedOrder = require('../../utils/helperFunctions').setPromotedOrder
 const recommendedMultiplier = require('../../utils/recommendedMultiplier').multiplier
 
 exports.list = async function (req, res) {

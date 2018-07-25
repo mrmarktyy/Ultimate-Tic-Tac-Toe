@@ -24,10 +24,13 @@ module.exports = async function () {
         introTermInMonth: variation.introTerm,
         totalMonthlyFees: variation.product.totalMonthlyFee,
         totalYearlyFees: variation.product.totalYearlyFee,
-        totalUpfrontFees: variation.generateRate ? variation.product.personalLoanTotalUpfrontFee30000 + variation.rangeMinFee: variation.product.personalLoanTotalUpfrontFee30000,
+        totalUpfrontFees: variation.product.personalLoanTotalUpfrontFee30000,
         loanAmount: 30000,
         loanTermInMonth: 60,
         riskAssuranceFee: variation.riskAssuranceFee ? variation.riskAssuranceFee * (1 - variation.generateRange/100) : 0
+      }
+      if (variation.riskAssuranceFee) {
+        loan.totalUpfrontFees += loan.riskAssuranceFee
       }
       let comp5Years = ComparisonRateCalculator.calculatePersonalLoanComparisonRate(loan)
       let maxLoan = Object.assign(
@@ -39,6 +42,9 @@ module.exports = async function () {
           riskAssuranceFee: variation.riskAssuranceFee ? variation.riskAssuranceFee * (1 + variation.generateRange/100) : 0,
         }
       )
+      if (variation.riskAssuranceFee) {
+        maxLoan.totalUpfrontFees += maxLoan.riskAssuranceFee
+      }
       let maxComparisonRate = ComparisonRateCalculator.calculatePersonalLoanComparisonRate(maxLoan)
       await PersonalLoanVariation.model.update({_id: mongoose.Types.ObjectId(variation._id)}, {$set: {comparisonRatePersonal5Years: comp5Years, maxComparisonRate: maxComparisonRate}}, {}).exec() // eslint-disable-line babel/no-await-in-loop
       console.log(loan)
