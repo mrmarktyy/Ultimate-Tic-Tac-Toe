@@ -36,7 +36,7 @@ HomeLoanVariation.add({
   providerProductName: {
     type: Types.Relationship,
     ref: 'ProviderProductName',
-    required: false,
+    required: true,
     initial: true,
     index: true,
     noedit: false,
