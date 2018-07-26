@@ -22,7 +22,7 @@ ProviderProductName.add({
   slug: { type: Types.Text, index: true, initial: true },
 })
 
-// ProviderProductName.schema.index({ company: 1, slug: 1 }, { unique: true })
+ProviderProductName.schema.index({ company: 1, slug: 1 }, { unique: true })
 
 ProviderProductName.relationship({ path: 'homeLoanVariations', ref: 'HomeLoanVariation', refPath: 'providerProductName' })
 
