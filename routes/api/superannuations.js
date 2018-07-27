@@ -64,6 +64,7 @@ async function getSuperannuationObjects (superannuations) {
 		product.industryAvgFee50k = parseFloat(superannuation.industry_avg_fee || 0)
 		product.industryAvgFee100k = parseFloat(superannuation.industry_avg_fee_100k || 0)
 		product.assetAdminFee = parseFloat(superannuation.asset_admin_fee || 0)
+    product.indirectCostRatio = parseFloat(superannuation.indirect_cost_ratio || 0)
 		product.investmentFee = parseFloat(superannuation.investment_fee || 0)
 		product.switchingFee = parseFloat(superannuation.switching_fee || 0)
 		product.withdrawalFee = parseFloat(superannuation.withdrawal_fee || 0)

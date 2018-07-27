@@ -64,6 +64,7 @@ async function getPensionObjects (pensions) {
 		product.industryAvgFee50k = parseFloat(pension.industry_avg_fee || 0)
 		product.industryAvgFee100k = parseFloat(pension.industry_avg_fee_100k || 0)
 		product.assetAdminFee = parseFloat(pension.asset_admin_fee || 0)
+		product.indirectCostRatio = parseFloat(pension.indirect_cost_ratio || 0)
 		product.investmentFee = parseFloat(pension.investment_fee || 0)
 		product.switchingFee = parseFloat(pension.switching_fee || 0)
 		product.withdrawalFee = parseFloat(pension.withdrawal_fee || 0)
