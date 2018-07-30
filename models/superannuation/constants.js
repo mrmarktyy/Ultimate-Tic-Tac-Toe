@@ -251,8 +251,8 @@ exports.getYears = function (year, month) {
 exports.ratings = [
   { name: 'Platinum', score: 100, regx: new RegExp('platinum', 'i'), url: '//production-content-assets.ratecity.com.au/20180720122251/SR2018_Pen-Platinum_Lo-Res_c.jpg' },
   { name: 'Gold', score: 95, regx: new RegExp('(?!my)gold', 'i'), url: '//production-content-assets.ratecity.com.au/20180720122250/SR2018_Choice-Gold_RGB_c.jpg' },
-  { name: 'Silver', score: 90, regx: new RegExp('(?!my)silver', 'i'), url: '//production-content-assets.ratecity.com.au/20171020103950/silver-9613028d354ddf80fbe37afc60fb33a2.jpg' },
-  { name: 'Other', score: 85, regx: new RegExp('(?!my)other', 'i'), url: '//production-content-assets.ratecity.com.au/20171020104132/other-46f1b36da21e24e41561c6d205dd3f7d.jpg' },
+  { name: 'Silver', score: 90, regx: new RegExp('(?!my)silver', 'i'), url: '//production-content-assets.ratecity.com.au/20180727093019/SR2018_Choice-Silver_Hi-Res-c.jpg' },
+  { name: 'Other', score: 85, regx: new RegExp('(?!my)other', 'i'), url: '//production-content-assets.ratecity.com.au/20180727093025/SR2018_Choice-Other_Hi-Res_c.jpg' },
   { name: 'MySuper Platinum', score: 100, regx: new RegExp('myplat', 'i'), url: '//production-content-assets.ratecity.com.au/20171020102043/mysuper-platinum-3b620c9ddf266289b03493a1321c5374.jpg' },
   { name: 'MySuper Gold', score: 95, regx: new RegExp('mygold', 'i'), url: '//production-content-assets.ratecity.com.au/20171020102509/mysuper-gold-666390aea5ca64f1db3f57812a89c2dc.jpg' },
   { name: 'MySuper Silver', score: 90, regx: new RegExp('mysilver', 'i'), url: '//production-content-assets.ratecity.com.au/20171020111657/mysuper-silver-963c5b281522e5f154e977757dcca3c81.jpg' },
