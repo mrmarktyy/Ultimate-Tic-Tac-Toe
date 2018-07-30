@@ -53,6 +53,7 @@ exports.fields = {
   w92_rnage_contribution_fee: 'rnage_contribution_fee',
   w93_withdrawal_fee: 'withdrawal_fee',
   w94_asset_admin_fee: 'asset_admin_fee',
+  w95a_icr_fee: 'indirect_cost_ratio',
   w95_investment_fee: 'investment_fee',
   w96_switching_fee: 'switching_fee',
   w97_trustee_fee: 'trustee_fee',
