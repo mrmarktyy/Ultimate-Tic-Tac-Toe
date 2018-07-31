@@ -1,4 +1,5 @@
 const _ = require('lodash')
+const keystone = require('keystone')
 const auroraQuery = require('../utils/auroraQuery')
 const json2csv = require('json2csv')
 
@@ -68,6 +69,48 @@ exports.leadsCsv = async (broker, startDate, endDate) => {
 	if (!data.length) {
 		return `No records for ${broker} in between ${startDate} and ${endDate}`
 	}
+
+	return json2csv({ data })
+}
+
+const findProduct = async (uuid) => {
+	const model = await keystone.list('PersonalLoan').model
+	const clause = { isPersonalLoan: 'YES', uuid }
+	return await model.findOne(clause).populate('company').lean().exec() || {}
+}
+
+exports.marketplaceCsv = async (startDate, endDate) => {
+	const params = [startDate, endDate]
+	const command = `
+		SELECT u.first_name, u.last_name, l.email, product->>'applied' AS products FROM rc_leads AS l
+		LEFT JOIN rc_users AS u ON l.email = u.email
+		WHERE
+		l.created_at >= $1 AND
+		l.created_at < $2 AND
+		l.product->>'applied' IS NOT NULL
+		ORDER BY l.created_at DESC;
+	`
+	const rows = await auroraQuery(command, params)
+	if (!rows.length) {
+		return `No marketplace leads found in between ${startDate} and ${endDate}`
+	}
+	const uuid = new Set()
+	rows.forEach((row) => {
+		row.products = JSON.parse(row.products)
+		Object.keys(row.products).forEach((id) => uuid.add(id))
+	})
+	const lenders = {}
+	await Promise.all(
+		Array.from(uuid).map(async (id) => {
+			const product = await findProduct(id)
+			lenders[id] = product.company.slug
+		})
+	)
+	const data = rows.map((row) => {
+		row.broker = Object.keys(row.products).map((id) => lenders[id]).join(',')
+		delete row.products
+		return row
+	})
 
 	return json2csv({ data })
 }
