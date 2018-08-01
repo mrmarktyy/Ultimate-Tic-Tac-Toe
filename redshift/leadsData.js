@@ -82,7 +82,7 @@ const findProduct = async (uuid) => {
 exports.marketplaceCsv = async (startDate, endDate) => {
 	const params = [startDate, endDate]
 	const command = `
-		SELECT u.first_name, u.last_name, l.email, product->>'applied' AS products, l.created_at AS date FROM rc_leads AS l
+		SELECT u.first_name, u.last_name, l.email, product->>'applied' AS products, l.created_at AS date, l.utm_source FROM rc_leads AS l
 		LEFT JOIN rc_users AS u ON l.email = u.email
 		WHERE
 		l.created_at >= $1 AND
