@@ -3,7 +3,7 @@ extends ../layouts/default
 block content
 	.container
 		h1 Export Leads
-		p Select a Broker and a month
+		p Select a broker and a month
 		.row
 			.col-sm-12
 				form(class='form-inline', action='/monthly-leads-download', method='post')
@@ -20,9 +20,23 @@ block content
 						.col-sm-12
 								&nbsp;
 							button.btn.btn-large.btn-primary(type="submit") Export Leads
+		h1 Export Marketplace Leads
+		.row
+			.col-sm-12
+				form(class='form-inline', action='/marketplace-leads-download', method='post')
+					.form-group
+						p
+							label From Date
+							input(type='text', name='fromdate', id='from-date', autocomplete='off')
+							label To Date
+							input(type='text', name='todate', id='to-date', autocomplete='off')
+						p
+							button.btn.btn-large.btn-primary(type="submit") Export Marketplace Leads
 block js
 	script.
 		$(function () {
 			$('#fromdate').datepicker({dateFormat: 'yy-mm-dd'});
 			$('#todate').datepicker({dateFormat: 'yy-mm-dd'});
+			$('#from-date').datepicker({dateFormat: 'yy-mm-dd'});
+			$('#to-date').datepicker({dateFormat: 'yy-mm-dd'});
 		});
