@@ -44,7 +44,6 @@ module.exports = async function () {
       obj.minimumAgeRestrictions = item.minimumAgeRestrictions
       obj.maximumAgeRestrictions = item.maximumAgeRestrictions
       obj.minimumOpeningDeposit = item.minimumOpeningDeposit
-      obj.maximumOpeningDeposit = item.maximumOpeningDeposit
       obj.linkedAccountRequired = item.linkedAccountRequired
       obj.isOnlineOnly = item.isOnlineOnly
       obj.hasAtmAccess = item.hasAtmAccess
