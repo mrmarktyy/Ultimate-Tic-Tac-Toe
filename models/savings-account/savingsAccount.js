@@ -35,7 +35,6 @@ SavingsAccount.add({
   minimumAgeRestrictions: { type: Types.Number, min: 0 },
   maximumAgeRestrictions: { type: Types.Number },
   minimumOpeningDeposit: { type: Types.Number, required: true, initial: true },
-  maximumOpeningDeposit: { type: Types.Number, required: true, initial: true },
   linkedAccountRequired: { type: Types.Select, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown },
   isOnlineOnly: { type: Types.Select, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown },
   hasAtmAccess: { type: Types.Select, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown },

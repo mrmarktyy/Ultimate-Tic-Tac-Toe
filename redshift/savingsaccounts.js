@@ -61,7 +61,6 @@ async function prepDataAndPushToRedshift (date, savingsAccounts, savingsAccountT
     product.minimumagerestrictions = account.minimumAgeRestrictions ? account.minimumAgeRestrictions : 0
     product.maximumagerestrictions = account.maximumAgeRestrictions ? account.maximumAgeRestrictions : null
     product.minimumopeningdeposit = account.minimumOpeningDeposit
-    product.maximumopeningdeposit = account.maximumOpeningDeposit
     product.linkedaccountrequired = account.linkedAccountRequired
     product.isonlineonly = account.isOnlineOnly
     product.hasatmaccess = account.hasAtmAccess
@@ -112,7 +111,7 @@ async function prepDataAndPushToRedshift (date, savingsAccounts, savingsAccountT
     'othernames', 'displayname', 'gotositeenabled', 'gotositeurl', 'paymenttype',
     'promotedorder', 'isspecial', 'isrcspecial', 'offerExpires', 'ecpc',
     'otherbenefits', 'otherrestrictions', 'minimumagerestrictions',
-    'maximumagerestrictions', 'minimumopeningdeposit','maximumopeningdeposit', 'linkedaccountrequired',
+    'maximumagerestrictions', 'minimumopeningdeposit', 'linkedaccountrequired',
     'isonlineonly', 'hasatmaccess', 'haseftposfacility', 'hasinternetfacility',
     'hasphonefacility', 'hasbranchaccess', 'accountkeepingfees',
     'accountkeepingfeesfrequency', 'internettransactionfee',
