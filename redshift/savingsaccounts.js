@@ -10,7 +10,7 @@ const redshiftQuery = require('../utils/redshiftQuery')
 
 var SavingsAccount = keystoneShell.list('SavingsAccount')
 var SavingsAccountTier = keystoneShell.list('SavingsAccountTier')
-var Monetize = keystoneShell.list('Monetize')
+const monetizedCollection = require('../routes/api/monetizedCollection')
 
 module.exports = async function () {
   let connection = await mongoosePromise.connect()
@@ -32,7 +32,7 @@ module.exports = async function () {
 async function prepDataAndPushToRedshift (date, savingsAccounts, savingsAccountTiers) {
   const collectionDate = moment(date).format('YYYY-MM-DD')
 
-  const monetized = await Monetize.model.find({veritcal: 'Savings Accounts'}).lean().exec()
+  const monetized = await monetizedCollection('Savings Accounts')
   const products = []
   const variations = []
   const filename = `savings-accounts-${collectionDate}`
@@ -48,8 +48,8 @@ async function prepDataAndPushToRedshift (date, savingsAccounts, savingsAccountT
     product.companyname = account.company.name
     product.othernames = account.otherNames.toString()
     product.displayname = account.displayName ? account.displayName : null
-    product.gotositeenabled = monetized[account._id] ? monetized[account._id].enabled : false
     product.gotositeurl = monetized[account._id] ? monetized[account._id].applyUrl : null
+    product.gotositeenabled = monetized[account._id] ? monetized[account._id].enabled : false
     product.paymenttype =  monetized[account._id] ? monetized[account._id].paymentType : null
     product.promotedorder = account.promotedOrder
     product.isspecial = account.isSpecial
@@ -108,7 +108,7 @@ async function prepDataAndPushToRedshift (date, savingsAccounts, savingsAccountT
   })
 
   const headers = [ 'collectiondate', 'savingsaccountid', 'uuid', 'name', 'slug', 'companyname',
-    'othernames', 'displayname', 'gotositeenabled', 'gotositeurl', 'paymenttype',
+    'othernames', 'displayname', 'gotositeurl', 'gotositeenabled', 'paymenttype',
     'promotedorder', 'isspecial', 'isrcspecial', 'offerExpires', 'ecpc',
     'otherbenefits', 'otherrestrictions', 'minimumagerestrictions',
     'maximumagerestrictions', 'minimumopeningdeposit', 'linkedaccountrequired',
