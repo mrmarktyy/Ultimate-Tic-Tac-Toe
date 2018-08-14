@@ -22,7 +22,7 @@ module.exports = async function (req, res) {
 						ids.push(data._id)
 					}
 				}
-				Pages.model.findOneAndUpdate({_id: pageModel._id}, {$set: {links: ids}}).exec()
+				await Pages.model.findOneAndUpdate({_id: pageModel._id}, {$set: {links: ids}}).exec()
 			}
 		}
 		res.status(200).jsonp({success: 'Links updated successfully'})
