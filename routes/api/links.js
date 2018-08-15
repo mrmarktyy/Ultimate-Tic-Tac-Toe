@@ -9,22 +9,25 @@ module.exports = async function (req, res) {
 	try {
 		for (let url of urls) {
 			const pageModel = await Pages.model.findOne({url}).populate('links').lean().exec()
-			const links = pages[url]
-			const pageLinks = pageModel.links || []
-			await removeLinksIfPresent(pageLinks)
-			const ids = []
-			for (link of links) {
-				link.page = pageModel._id
-				const newLink = new Link.model(link)
-				const data = await newLink.save()
-				if (data && data._id) {
-					ids.push(data._id)
+			if(pageModel){
+				const links = pages[url]
+				const pageLinks = pageModel.links || []
+				await removeLinksIfPresent(pageLinks)
+				const ids = []
+				for (link of links) {
+					link.page = pageModel._id
+					const newLink = new Link.model(link)
+					const data = await newLink.save()
+					if (data && data._id) {
+						ids.push(data._id)
+					}
 				}
+				await Pages.model.findOneAndUpdate({_id: pageModel._id}, {$set: {links: ids}}).exec()
 			}
-			Pages.model.findOneAndUpdate({_id: pageModel._id}, {$set: {links: ids}}).exec()
 		}
 		res.status(200).jsonp({success: 'Links updated successfully'})
 	} catch (err) {
+		console.log(err)
 		res.status(400).jsonp({error: 'Error in updating links'})
 	}
 }
