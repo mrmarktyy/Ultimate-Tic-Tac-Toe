@@ -1,12 +1,12 @@
 const keystone = require('keystone')
 const Types = keystone.Field.Types
-const specialCommonAttributes = require('../common/SpecialCommonAttributes')
+const specialPersonalLoanAttributes = require('../common/SpecialPersonalLoanAttributes')
 
 const PersonalLoanSpecial = new keystone.List('PersonalLoanSpecial', {
   track: true,
 })
 
-PersonalLoanSpecial.add(specialCommonAttributes)
+PersonalLoanSpecial.add(specialPersonalLoanAttributes)
 PersonalLoanSpecial.add({
   company: {
     type: Types.Relationship,
