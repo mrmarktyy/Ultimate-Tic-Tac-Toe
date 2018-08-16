@@ -144,18 +144,19 @@ HomeLoanVariation.schema.pre('save', async function (next) {
   }
   let fees = await Fee.model.find({product: this.product}).exec()
   fees.forEach((fee) => {
+    let fixedCost = fee.fixedCost? fee.fixedCost : 0
     if (['SETTLEMENT_FEE', 'VALUATION_FEE', 'LEGAL_FEE', 'APPLICATION_FEE',
         'MANDATORY_RATE_LOCK_FEE'].indexOf(fee.feeType) >= 0) {
-      loan.totalUpfrontFees += fee.fixedCost
+      loan.totalUpfrontFees += fixedCost
     }
     if (fee.feeType === 'DISCHARGE_FEE') {
-      loan.totalEndOfLoanFees += fee.fixedCost
+      loan.totalEndOfLoanFees += fixedCost
     }
     if (fee.feeType === 'ONGOING_FEE' && fee.frequency ==='ANNUALLY') {
-      loan.totalYearlyFees += fee.fixedCost
+      loan.totalYearlyFees += fixedCost
     }
     if (fee.feeType === 'ONGOING_FEE' && fee.frequency ==='MONTHLY') {
-      loan.totalMonthlyFees  += fee.fixedCost
+      loan.totalMonthlyFees  += fixedCost
     }
   })
 
