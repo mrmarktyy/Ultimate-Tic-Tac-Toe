@@ -4,7 +4,7 @@ const Types = keystone.Field.Types
 module.exports = {
   name: {type: Types.Text, required: true, initial: true, index: true},
   type: {
-    type: Types.Select,
+    type: Types.MultiSelect,
     options: [
       'Cashback', 'Rewards', 'Free Gifts', 'Other', 'Instant Approval',
       'Paperless Approval', 'Funds Available in 24 hours',
