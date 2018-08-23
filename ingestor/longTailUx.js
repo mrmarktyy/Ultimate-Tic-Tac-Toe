@@ -14,9 +14,11 @@ module.exports = async function () {
 		const pages = []
 		const keywords = await fetchLongTailPaginatedPage(pages)
 		await updateUltimatePages(keywords)
-	} catch (error) {console.log("Error: ", error)}
+	} catch (error)  {
+		console.log("Error: ", error)
+	}
 	connection.close()
-}()
+}
 
 async function fetchLongTailPaginatedPage(pages) {
 	let limit = 1000, offset = 0, totalPage = 0
@@ -25,7 +27,7 @@ async function fetchLongTailPaginatedPage(pages) {
 		pages.push(...keywords.data)
 		totalPage = keywords.meta.total
 		offset += keywords.data.length
-	} while (pages.length < totalPage);
+	} while (pages.length < totalPage)
 	console.log("Total Pages :", totalPage)
 	return pages
 }
@@ -51,6 +53,7 @@ async function updateUltimatePages(keywords) {
 				console.log(err);
 				reject()
 			}
+			console.log('finished')
 			resolve()
 		})
 	})
@@ -122,7 +125,6 @@ function extractItemContent(items, includedSearchData) {
 	return itemResult
 }
 
-
 async function fetchLongTailData(url) {
 	const response = await fetch(url, {
 		method: 'GET',
@@ -143,10 +145,10 @@ async function insertLongTailUxData(data) {
 	const options = {
 		upsert: true,
 		new: true,
-		setDefaultsOnInsert: true
-	};
+		setDefaultsOnInsert: true,
+	}
 	return LongTailKeywords.model.findOneAndUpdate({
 		longTailId: data.longTailId,
-		section: data.section
+		section: data.section,
 	}, data, options).exec()
 }

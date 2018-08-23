@@ -14,11 +14,13 @@ module.exports = async function () {
 	try {
 		const pages = await fetchPages(`${process.env.RATECITY_PAGE_API}?page=1&per_page=9000&showAll=true`)
 		await updateUltimatePages(pages.hits)
-	} catch (error) {console.log("Error: ", error)}
+	} catch (error) {
+		console.log('Error: ', error)
+	}
 	connection.close()
-}()
+}
 
-async function updateUltimatePages(pages) {
+async function updateUltimatePages (pages) {
 	return new Promise((resolve, reject) => {
 		async.mapLimit(pages, 15, async function (page, cb) {
 			try {
@@ -28,7 +30,7 @@ async function updateUltimatePages(pages) {
 				if (isCompanyPage || vertical) {
 					if (_.isEmpty(resolvedPage.keywords)) {
 						const url = resolvedPage.url
-						resolvedPage.keywords = _.lowerCase(url.replace(/\/|-/g, " "))
+						resolvedPage.keywords = _.lowerCase(url.replace(/\/|-/g, ' '))
 					}
 					if (resolvedPage.variant === 'Whitelabel Search') {
 						resolvedPage.ignoreSeoOptimisation = true
@@ -39,18 +41,23 @@ async function updateUltimatePages(pages) {
 					resolvedPage.vertical = isCompanyPage ? 'default' : vertical.value
 					await insertPage(resolvedPage)
 				}
-			} catch (e) {console.log(e)}
-			return;
+			} catch (e) {
+				console.log(e)
+			}
+			return
 		}, (err) => {
-			if (err) {console.log(err);reject()}
+			if (err) {
+				console.log(err)
+				reject()
+			}
 			resolve()
 		})
 	})
 }
 
-async function fetchPages(url) {
+async function fetchPages (url) {
 	const response = await fetch(url, {
-		method: 'GET'
+		method: 'GET',
 	})
 	if (response.status !== 200) {
 		console.log(`${url} returned status: ${response.status}`)
@@ -59,13 +66,13 @@ async function fetchPages(url) {
 	return await response.json()
 }
 
-async function insertPage(page) {
+async function insertPage (page) {
 	let pagesData = await Pages.model.findOne({'url': page.url}).exec()
 	if (!pagesData) {
-		process.stdout.write("New Page: " + page.url + "\r");
+		process.stdout.write('New Page: ' + page.url + '\r')
 		page.uuid = uuid.v4()
 		pagesData = new Pages.model(page)
 		return await pagesData.save()
 	}
-	return;
+	return
 }

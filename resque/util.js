@@ -15,6 +15,8 @@ var salesforceCompanies = require('../resqueJobs/salesforcePushCompanies')
 var savingsAccountsToRedshift = require('../resqueJobs/loadSavingsAccountsToRedshift')
 var bankAccountsToRedshift = require('../resqueJobs/loadBankAccountsToRedshift')
 var termDepositsToRedshift = require('../resqueJobs/loadTermDepositsToRedshift')
+var ingestLongtailux = require('../resqueJobs/ingestLongtailux')
+var ingestPages = require('../resqueJobs/ingestPages')
 
 var blazePages = require('../resqueJobs/blazePages')
 
@@ -26,19 +28,21 @@ const connectionDetails = {
 }
 
 const jobs = {
-  'monthlyClickCount': monthlyClickCount,
-  'homeLoansToRedshift': homeLoansToRedshift,
-  'paymentMonetizationTypes': paymentMonetizationTypes,
-  'personalLoansToRedshift': personalLoansToRedshift,
+  'bankAccountsToRedshift': bankAccountsToRedshift,
+  'blazePages': blazePages,
   'creditCardsToRedshift': creditCardsToRedshift,
   'emailMonthlyClicks': emailMonthlyClicks,
   'emailDataReport': emailDataReport,
+  'homeLoansToRedshift': homeLoansToRedshift,
+  'ingestPages': ingestPages,
+  'ingestLongtailux': ingestLongtailux,
+  'monthlyClickCount': monthlyClickCount,
+  'paymentMonetizationTypes': paymentMonetizationTypes,
+  'personalLoansToRedshift': personalLoansToRedshift,
   'salesforceProducts': salesforceProducts,
   'salesforceCompanies': salesforceCompanies,
   'savingsAccountsToRedshift': savingsAccountsToRedshift,
   'termDepositsToRedshift': termDepositsToRedshift,
-  'bankAccountsToRedshift': bankAccountsToRedshift,
-  'blazePages': blazePages,
 }
 
 let scheduler = new Resque.Scheduler({connection: connectionDetails})
