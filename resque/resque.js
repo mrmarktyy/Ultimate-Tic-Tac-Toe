@@ -68,6 +68,22 @@ async function startResque () {
       await queue.enqueue('ultimate', 'termDepositsToRedshift')
     }
   })
+  schedule.scheduleJob('39 15 * * *', async () => {
+    if (scheduler.master) {
+      await queue.enqueue('ultimate', 'blazePages')
+    }
+  })
+  schedule.scheduleJob('10 7 * * *', async () => {
+    if (scheduler.master) {
+      await queue.enqueue('ultimate', 'ingestLongtailux')
+    }
+  })
+  schedule.scheduleJob('20 7 * * *', async () => {
+    if (scheduler.master) {
+      await queue.enqueue('ultimate', 'ingestPages')
+    }
+  })
+  // hourly
   schedule.scheduleJob('25 * * * *', async () => {
     if (scheduler.master) {
       await queue.enqueue('ultimate', 'salesforceCompanies')
@@ -82,11 +98,6 @@ async function startResque () {
   schedule.scheduleJob('0 6 1 * *', async () => {
     if (scheduler.master) {
       await queue.enqueue('ultimate', 'emailMonthlyClicks')
-    }
-  })
-  schedule.scheduleJob('39 15 * * *', async () => {
-    if (scheduler.master) {
-      await queue.enqueue('ultimate', 'blazePages')
     }
   })
 
