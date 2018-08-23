@@ -73,6 +73,10 @@ CreditCardSpecial.schema.pre('validate', async function (next) {
 })
 
 CreditCardSpecial.schema.pre('save', function (next) {
+  if (this.removeSpecialsEndDate) {
+    this.endDate = null
+  }
+  this.removeSpecialsEndDate = undefined
   if (this.type.length === 1 && this.defaultType !== this.type[0]) {
     this.defaultType = this.type[0]
   }
