@@ -52,6 +52,7 @@ async function prepareDataForRedshift (homeloans) {
       isRCSpecial,
       repaymentTypes,
       isPackage,
+      applicationOptions,
       isBasicVariable,
       isBridgingLoan,
       otherBenefits,
@@ -95,6 +96,7 @@ async function prepareDataForRedshift (homeloans) {
       product.annualfees = getFeeCostsWithFreq(fees, 'ONGOING_FEE', 'ANNUALLY')
       product.monthlyfees = getFeeCostsWithFreq(fees, 'ONGOING_FEE', 'MONTHLY')
       product.applicationfees = upfrontFeesObj.applicationFee
+      product.applicationoptions = applicationOptions
       product.legalfee = upfrontFeesObj.legalFee
       product.maxlvr = variation.maxLVR || null
       product.minlvr = variation.minLVR || null
@@ -132,6 +134,7 @@ async function prepareDataForRedshift (homeloans) {
       product.valuationfee = upfrontFeesObj.valuationFee
       product.minloanterm = conditionValue(conditions, 'LOAN_TERM', 'minAmount') / 12
       product.maxloanterm = conditionValue(conditions, 'LOAN_TERM', 'maxAmount') / 12 || 45
+      product.lenghtofiorepayment = conditionValue(conditions, 'LENGTH_OF_IO_REPAYMENT', 'maxAmount') /12 || 0
       product.minredrawamount = redrawFacilityObj.minRedrawAmount
       product.maxredrawamount = redrawFacilityObj.maxRedrawAmount
       product.redrawactivationfee = redrawFacilityObj.redrawActivationFee
@@ -145,6 +148,8 @@ async function prepareDataForRedshift (homeloans) {
       product.hasphonewithdrawals = featureExists(features, 'HAS_PHONE_WITHDRAWALS')
       product.hasinternetwithdrawals = featureExists(features, 'HAS_INTERNET_WITHDRAWALS')
       product.hasrepayholiday = featureExists(features, 'HAS_REPAY_HOLIDAY')
+      product.hasloyaltydiscount = featureExists(features, 'HAS_LOYALTY_DISCOUNT')
+      product.hastopup = featureExists(features, 'HAS_TOPUP')
       product.optionalratelockfee = getFeeCosts(fees, 'OPTIONAL_RATE_LOCK_FEE').cost || null
       product.mandatoryratelockfee = getFeeCosts(fees, 'MANDATORY_RATE_LOCK_FEE').cost || null
       product.penaltyFeeIfMaxAmountExceeded = repaymentObj.penaltyFeeIfMaxAmountExceeded
