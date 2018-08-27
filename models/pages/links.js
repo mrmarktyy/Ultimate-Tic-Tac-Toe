@@ -7,7 +7,6 @@ var Link = new keystone.List('Link', {track: true}).add({
 	page: {type: Types.Relationship, ref: 'Pages', initial: true, required: true},
 })
 
-Link.schema.index({ name: 1, page: 1}, { unique: true });
 Link.relationship({path: 'pages', ref: 'Pages', refPath: 'links'});
 Link.defaultColumns = 'name, url, page'
 Link.register()
