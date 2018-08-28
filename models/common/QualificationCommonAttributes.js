@@ -15,10 +15,8 @@ module.exports = {
   minEmploymentLengthSoleTrader: { type: Types.Number, label: 'min Emp Len Sole Trader' },
   minEmploymentLengthCasual: { type: Types.Number, label: 'min Emp Len Casual' },
   isOnProbationAccepted: { type: Types.Boolean, indent: true, default: true },
-  minEquifaxScore: { type: Types.Number },
   minExperianScore: { type: Types.Number },
   minDunBradstreetScore: { type: Types.Number },
-  minIncomeRequired: { type: Types.Number },
   isGovernmentIncomeAccepted: { type: Types.Boolean, indent: true, default: true },
   isMoreThan50GovernmentIncomeAccepted: { type: Types.Boolean, indent: true, default: false },
   residency: {
