@@ -132,5 +132,8 @@ exports = module.exports = function (app) {
 	app.get('/api/term-deposits', keystone.middleware.api, routes.api.termDeposit.list)
 
 	// APIs
-	app.get('/api/externalApis', keystone.middleware.api, routes.api.externalApis.list)
+  app.get('/api/externalApis', keystone.middleware.api, routes.api.externalApis.list)
+
+  // leaderboards
+	app.get('/api/leaderboards', keystone.middleware.api, routes.api.leaderboards.list)
 }

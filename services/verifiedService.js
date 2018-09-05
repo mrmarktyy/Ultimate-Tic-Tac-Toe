@@ -1,5 +1,5 @@
 var mongoose = require('mongoose')
-var  keystone = require('keystone')
+var keystone = require('keystone')
 module.exports = async function (model) {
 	let collectionName = model.constructor.modelName
 	let Model = mongoose.model(collectionName)
@@ -7,7 +7,7 @@ module.exports = async function (model) {
 		await Model.findOneAndUpdate({ _id: model._id }, {
 			verifiedBy: model.updatedBy,
 			verifiedAt: model.updatedAt,
-			verified: false
+			verified: false,
 		}).lean().exec()
 	}
 	return model
