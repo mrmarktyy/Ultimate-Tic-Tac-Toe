@@ -30,6 +30,7 @@ Company.add({
 	},
 	isDiscontinued: { type: Types.Boolean, indent: true, default: false },
 	abnOrAcn: { type: Types.Number },
+	userHasOffers: { type: Types.Boolean, indent: true, default: false },
 	phoneNumber: { type: Types.Text },
 	acl: { type: Types.Number },
 	afsl: { type: Types.Number },
