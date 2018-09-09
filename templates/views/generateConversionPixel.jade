@@ -1,0 +1,17 @@
+extends ../layouts/default
+
+block content
+	.container
+		.row
+			h1 Generate Conversion Pixel
+			p Find a company, click button to companies conversion pixel report
+			.row
+				.col-sm-8
+					form(action='/import/generate-conversion-pixel-email', method='post')
+						.form-group
+							label Company
+							select(name='companyName').form-control
+								each company in companies
+									option(value=company.uuid) #{company.name}
+
+						button.btn.btn-large.btn-primary(type="submit") Pixel Conversion
