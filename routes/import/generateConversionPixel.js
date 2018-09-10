@@ -24,8 +24,10 @@ exports = module.exports = async(req, res) => {
 				const path = await downloadPixelReport(companyName)
 				await emailLoggedInUser(email, path, companyName)
 			}
+			req.flash('success', 'Email containing conversion pixel report has been sent to your email id')
+		}else{
+			req.flash('error', 'company not found')
 		}
-		req.flash('success', 'Email containing conversion pixel report has been sent to your email id')
 		return res.redirect('/generate-conversion-pixel')
 	} catch (error) {
 		logger.error(err)

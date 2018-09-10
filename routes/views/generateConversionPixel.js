@@ -8,7 +8,7 @@ exports = module.exports = async(req, res) => {
 	locals.section = 'ConversionPixel'
 	view.on('init', async(next) => {
 		let companies = await Company.model.find({$or: [{isDiscontinued: false}, {isDiscontinued: {$exists: false}}]}).lean().exec()
-		locals.companies = _.sortBy(companies, 'name')
+		locals.companies = _.sortBy(companies.filter(company => company.userHasOffers), 'name')
 		locals.loggedIn = !!locals.user
 		next()
 	})
