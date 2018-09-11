@@ -2,6 +2,7 @@ var keystone = require('keystone')
 var _ = require('lodash')
 var HomeLoan = keystone.list('HomeLoan')
 var HomeLoanVariation = keystone.list('HomeLoanVariation')
+var ProviderProductName = keystone.list('ProviderProductName')
 var OffsetAccount = keystone.list('OffsetAccount')
 var RedrawFacility = keystone.list('RedrawFacility')
 var Fee = keystone.list('Fee')
@@ -127,4 +128,17 @@ async function getHomeLoansObjects (homeLoans) {
     result.push(response[key])
   }
   return result
+}
+
+exports.listProviderProducts = async function (req, res) {
+  await ProviderProductName.model
+    .find()
+    .lean()
+    .exec((err, records) => {
+      if (err) {
+        logger.error('database error on home loan api fetching ProviderProductName')
+        return 'database error'
+      }
+      res.jsonp(records.map((r) => _.omit(r, ['_id', '__v', 'updatedAt', 'createdAt'])))
+    })
 }
