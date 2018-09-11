@@ -32,6 +32,7 @@ exports = module.exports = function (app) {
   app.get('/company-redirects', middleware.requireUser, middleware.itUser, routes.views.companyRedirects.screen)
   app.post('/redirects', middleware.requireUser, middleware.itUser, routes.views.companyRedirects.redirects)
   app.get('/import-rates', middleware.requireUser, routes.views.importRates)
+	app.get('/generate-conversion-pixel', middleware.requireUser, routes.views.generateConversionPixel)
   app.get('/click-report-export', middleware.requireUser, routes.views.clickReport.screen)
   app.post('/click-report-download', middleware.requireUser, routes.views.clickReport.download)
   app.post('/salesforce-push/company', middleware.requireUser, routes.views.salesforcePush.pushCompanies)
@@ -49,6 +50,7 @@ exports = module.exports = function (app) {
 	app.post('/find-company-uuid', middleware.requireUser, middleware.itUser, routes.views.companyRedirects.getCompany)
   //downloads
   app.post('/import/homeloan-download-rates', routes.import.homeloanRates.downloadCsv)
+	app.post('/import/generate-conversion-pixel-email', routes.import.generateConversionPixel)
   app.post('/import/homeloan-upload-rates', routes.import.homeloanRates.uploadCsv)
   app.post('/import/superannuation-upload-rates', routes.import.superannuationRates.uploadCsv)
   app.post('/import/bank-accounts-upload-rates', routes.import.bankAccountsRates.uploadCsv)

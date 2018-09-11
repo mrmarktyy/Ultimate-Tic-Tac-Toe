@@ -10,6 +10,7 @@ exports.initLocals = function (req, res, next) {
 		{ label: 'Import ECPC', key: 'importEcpc', href: '/import-ecpc' },
 		{ label: 'Export Leads', key: 'exportLeads', href: '/monthly-leads-export' },
 		{ label: 'Import Pages', key: 'importPages', href: '/import-pages' },
+		{ label: 'Generate Conversion Pixel', key: 'generateConversionPixel', href: '/generate-conversion-pixel' },
 		{ label: 'Admin', dropdown: true, items: [
 				{ label: 'Salesforce Push', key: 'salesforcePush', href: '/salesforce-push' },
 				{ label: 'UUID Search', key: 'uuidSearch', href: '/uuid-search' },
