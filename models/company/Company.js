@@ -16,6 +16,11 @@ Company.add({
 	name: { type: Types.Text, required: true, index: true, unique: true },
 	displayName: { type: Types.Text, required: true, initial: true },
 	shortName: { type: Types.Text },
+  backgroudColor: { type: Types.Text },
+  boostScore: { type: Types.Number },
+  tier: { type: Types.Select, options: ['1', '2', '3'], initial: true },
+  textColor: { type: Types.Text },
+  favicon: imageStorage('company'),
 	parentCompany: { type: Types.Relationship, ref: 'Company' },
 	otherNames: { type: Types.TextArray },
 	displayClassification: {

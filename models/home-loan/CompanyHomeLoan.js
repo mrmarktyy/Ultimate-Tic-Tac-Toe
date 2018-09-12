@@ -33,6 +33,8 @@ CompanyHomeLoan.add({
 	howToApplyBlurb: {type: Types.Code, height: 250, language: 'html'},
 	eligibilityBlurb: {type: Types.Code, height: 150, language: 'html'},
   productReview: { type: Types.Url },
+	boostScore: { type: Types.Number },
+  tier: { type: Types.Select, options: ['1', '2', '3'], initial: true },
 })
 
 CompanyHomeLoan.schema.pre('save', async function (next) {

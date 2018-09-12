@@ -33,6 +33,8 @@ CompanyCreditCard.add({
 	hasRepaymentWidget: {type: Types.Boolean, indent: true, default: false},
 	blurb: { type: Types.Code, height: 250, language: 'html' },
   productReview: { type: Types.Url },
+  boostScore: { type: Types.Number },
+  tier: { type: Types.Select, options: ['1', '2', '3'], initial: true },
 })
 
 CompanyCreditCard.relationship({ path: 'ChangeLogs', ref: 'ChangeLog', refPath: 'model', many: true })

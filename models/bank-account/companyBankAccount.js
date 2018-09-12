@@ -20,6 +20,8 @@ CompanyBankAccount.add({
 	networkATM: { type: Types.Text },
 	branches: { type: Types.Text },
   productReview: { type: Types.Url },
+  boostScore: { type: Types.Number },
+  tier: { type: Types.Select, options: ['1', '2', '3'], initial: true },
 })
 
 CompanyBankAccount.relationship({ path: 'ChangeLogs', ref: 'ChangeLog', refPath: 'model', many: true })
