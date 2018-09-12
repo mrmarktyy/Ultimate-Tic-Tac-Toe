@@ -12,6 +12,7 @@ const allSpecials = [
 
 exports.list = async function (req, res) {
   let specials = await getSpecials()
+  let vertical = req.params.vertical || ''
 
   for (let special in specials) {
     specials[special] = specials[special].map((item) => {
@@ -61,7 +62,7 @@ exports.list = async function (req, res) {
     })
   }
 
-  res.json(specials)
+  res.json(specials[vertical] || specials)
 }
 
 async function getSpecials () {

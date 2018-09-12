@@ -91,6 +91,7 @@ exports = module.exports = function (app) {
   app.get('/api/sale-event-leads.csv', keystone.middleware.api, routes.api.leads.csv)
 
   // Specials
+  app.get('/api/specials/:vertical', keystone.middleware.api, routes.api.specials.list)
   app.get('/api/specials', keystone.middleware.api, routes.api.specials.list)
 
   //Brokers
