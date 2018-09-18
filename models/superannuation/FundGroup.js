@@ -14,6 +14,8 @@ FundGroup.add({
 	slug: { type: Types.Text, index: true, initial: true },
 	name: { type: Types.Text },
 	type: { type: Types.Text },
+	boostScore: { type: Types.Number },
+  tier: { type: Types.Select, options: ['1', '2', '3'], initial: true },
 	company: {
 		type: Types.Relationship,
 		ref: 'Company',
