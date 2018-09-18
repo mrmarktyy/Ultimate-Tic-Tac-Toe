@@ -1,5 +1,5 @@
 // import { toTwoDecimal, PMT } from '../comparisonRateCalculatorUtils'
-const calculatorUtils = require('../comparisonRateCalculator')
+const calculatorUtils = require('../ComparisonRateCalculator')
 const toTwoDecimal = calculatorUtils.toTwoDecimal
 const PMT = calculatorUtils.PMT
 

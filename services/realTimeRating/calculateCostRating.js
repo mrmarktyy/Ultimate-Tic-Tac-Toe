@@ -1,4 +1,4 @@
-const round = require('../comparisonRateCalculator').round
+const round = require('../ComparisonRateCalculator').round
 
 module.exports =  function (averageMonthlyCost, lowestMonthlyCost) {
   const maxScore = 10
