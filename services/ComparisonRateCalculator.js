@@ -41,7 +41,7 @@ function toTwoDecimal (number) {
 	return Number(Math.round(parseFloat(number) + 'e2') + 'e-2')
 }
 
-exports.calculateHomeLoanComparisonRate = function (data = {}) {
+function calculateHomeLoanComparisonRate (data = {}) {
 	let {
 		yearlyRate = 0,
 		yearlyIntroRate = 0,
@@ -60,7 +60,7 @@ exports.calculateHomeLoanComparisonRate = function (data = {}) {
 	return calculateComparisonRate(monthlyRate, loanAmount, loanTermInMonth, monthlyIntroRate, introTermInMonth, totalUpfrontFees, totalMonthlyFees, totalYearlyFees, totalEndOfLoanFees)
 }
 
-exports.calculatePersonalLoanComparisonRate = function (data = {}) {
+function calculatePersonalLoanComparisonRate (data = {}) {
 	let {
 		yearlyRate = 0,
 		yearlyIntroRate = 0,
@@ -87,7 +87,7 @@ exports.calculatePersonalLoanComparisonRate = function (data = {}) {
 	return calculateComparisonRate(monthlyRate, loanAmount, loanTermInMonth, monthlyIntroRate, introTermInMonth, totalUpfrontFees, totalMonthlyFees, totalYearlyFees, totalEndOfLoanFees)
 }
 
-exports.calculateCarlLoanComparisonRate = function (data) {
+function calculateCarlLoanComparisonRate (data) {
 	let {
 		yearlyRate = 0,
 		yearlyIntroRate = 0,
@@ -149,4 +149,19 @@ function IRR (CArray) {
   // let raw = parseFloat(guess * 100).toFixed(2)
   // return parseFloat(raw) // more precise if we ever want it.
   return guess * 100
+}
+
+function round (value, precision) {
+  let multiplier = Math.pow(10, precision || 0)
+  return Math.round(value * multiplier) / multiplier
+}
+
+module.exports = {
+	calculateHomeLoanComparisonRate,
+	calculatePersonalLoanComparisonRate,
+	calculateCarlLoanComparisonRate,
+	toTwoDecimal,
+	round,
+	PMT,
+	IRR,
 }

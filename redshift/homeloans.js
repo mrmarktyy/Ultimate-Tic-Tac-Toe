@@ -7,6 +7,7 @@ const moment = require('moment')
 const recommendedMultiplier = require('../utils/recommendedMultiplier').multiplier
 const awsUploadToS3 = require('../utils/awsUploadToS3')
 const redshiftQuery = require('../utils/redshiftQuery')
+const homeLoanRatingCalculator = require('../services/realTimeRating/homeLoanRatingCalculator')
 
 module.exports = async function () {
   try {
@@ -194,7 +195,9 @@ async function prepareDataForRedshift (homeloans) {
     })
   })
 
-  insertIntoRedshift(homeLoanProducts, filename)
+  await insertIntoRedshift(homeLoanProducts, filename)
+  await homeLoanRatingCalculator.processRedshiftHomeLoans({startDate: collectionDate})
+  await homeLoanRatingCalculator.rollingDelete(collectionDate)
 }
 
 async function insertIntoRedshift (rows, filename) {
