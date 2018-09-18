@@ -1,4 +1,4 @@
-const round = require('../comparisonRateCalculator').round
+const round = require('../ComparisonRateCalculator').round
 
 module.exports = function (flexibilityScore, highestFlexibilityScore, lowestFlexibilityScore) {
   if (highestFlexibilityScore === lowestFlexibilityScore) {

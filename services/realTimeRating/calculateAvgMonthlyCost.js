@@ -1,7 +1,6 @@
 const calculateRepaymentsIO = require('./calculateRepaymentsIO')
 const calculateRepaymentsPI = require('./calculateRepaymentsPI')
-// const round { round } from '../comparisonRateCalculatorUtils'
-const calculatorUtils = require('../comparisonRateCalculator')
+const calculatorUtils = require('../ComparisonRateCalculator')
 
 module.exports = function (data, userLoanTermInMonth, type) {
   let repayments
