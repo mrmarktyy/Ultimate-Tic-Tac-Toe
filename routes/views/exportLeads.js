@@ -7,6 +7,7 @@ exports.screen = async (req, res) => {
 	let view = new keystone.View(req, res)
 	var locals = res.locals
 	locals.section = 'home'
+	locals.userTypes = ['All', 'Internal', 'Bot', 'Spam']
 	view.on('init', async (next) => {
 		let brokers = await Broker.model.find().exec()
 		locals.brokers = brokers
@@ -20,8 +21,9 @@ exports.download = async (req, res) => {
 	let broker = req.body.broker
 	let fromDate = req.body.fromdate
 	let toDate = req.body.todate
+	let userType = req.body.user_type
 	toDate = moment(toDate).add(1, 'days').format('YYYY-MM-DD')
-	let csv = await leadsCsv(broker, fromDate, toDate)
+	let csv = await leadsCsv(broker, fromDate, toDate, userType)
 	let fileName = `monthly-leads-${fromDate}-${toDate}-${broker}.csv`
 	res.set({'Content-Disposition': `attachment; filename= ${fileName}`})
 	res.set('Content-Type', 'text/csv')

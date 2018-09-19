@@ -12,6 +12,5 @@ exports.list = async function (req, res) {
 			}
 			return users
 		})
-	console.log('blacklistedUsers', blacklistedUsers)
 	res.send(blacklistedUsers)
 }

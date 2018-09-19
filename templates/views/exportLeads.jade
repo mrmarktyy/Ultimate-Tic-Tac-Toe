@@ -16,6 +16,10 @@ block content
 						input(type='text', name='fromdate', id='fromdate', autocomplete='off')
 						label To Date
 						input(type='text', name='todate', id='todate', autocomplete='off')
+						label User Type
+						select(name='user_type').form-control
+							each userType in userTypes
+								option(value=userType) #{userType}
 						.row
 						.col-sm-12
 								&nbsp;
