@@ -22,11 +22,11 @@ CompanyBankAccount.add({
   productReview: { type: Types.Url },
   boostScore: { type: Types.Number },
   tier: { type: Types.Select, options: [
-    {value: 0, label: 'None'},
-    {value: 1, label: '1'},
-    {value: 2, label: '2'},
-    {value: 3, label: '3'}],
-    initial: true, default: 0,
+    {value: 'null', label: 'None'},
+    {value: '1', label: '1'},
+    {value: '2', label: '2'},
+    {value: '3', label: '3'}],
+    initial: true, default: 'null',
   },
 })
 
