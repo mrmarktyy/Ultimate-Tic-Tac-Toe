@@ -13,8 +13,6 @@ var pushCompanies = async function () {
 	let connection = await mongoosePromise.connect()
 	try {
 		let companies = await Company.model.find().lean()
-		const fundGroups = await FundGroup.model.find().lean()
-		companies = companies.concat(fundGroups || [])
 		await client.pushCompanies(companies)
 		connection.close()
 	} catch (error) {
