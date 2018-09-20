@@ -140,4 +140,8 @@ exports = module.exports = function (app) {
 
   // leaderboards
 	app.get('/api/leaderboards', keystone.middleware.api, routes.api.leaderboards.list)
+	app.get('/api/externalApis', keystone.middleware.api, routes.api.externalApis.list)
+
+	//Blacklist User
+	app.get('/api/blacklist-user', keystone.middleware.api, routes.api.blacklistUser.list)
 }

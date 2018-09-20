@@ -20,12 +20,19 @@ const selectBuilder = () => {
 	}).join(',')
 }
 
-exports.leadsCsv = async (broker, startDate, endDate) => {
-	let command, params
+exports.leadsCsv = async (broker, startDate, endDate, userType) => {
+	let command, params, filterUserType = '', filterBroker = ''
 	const selector = selectBuilder()
-
-	if (broker === 'All') {
-		command = `
+	params = [startDate, endDate]
+	if(broker !== 'All') {
+		params.push(broker)
+		filterBroker = 'AND broker = $'+params.length
+	}
+	if (userType !== 'All') {
+		params.push(userType)
+		filterUserType = 'AND rc_leads.user_type = $'+params.length
+	}
+	command = `
 			SELECT rc_leads.*,
 			${selector}
 			FROM rc_leads
@@ -37,27 +44,10 @@ exports.leadsCsv = async (broker, startDate, endDate) => {
 			WHERE
 			rc_leads.created_at >= $1 AND
 			rc_leads.created_at < $2
-			ORDER BY rc_leads.created_at DESC
-		`
-		params = [startDate, endDate]
-	} else {
-		command = `
-			SELECT rc_leads.*,
-			${selector}
-			FROM rc_leads
-			LEFT JOIN rc_leads_pl ON rc_leads.id = rc_leads_pl.id
-			LEFT JOIN rc_leads_hl ON rc_leads.id = rc_leads_hl.id
-			LEFT JOIN rc_leads_cl ON rc_leads.id = rc_leads_cl.id
-			LEFT JOIN rc_leads_sp ON rc_leads.id = rc_leads_sp.id
-			LEFT JOIN rc_users ON rc_leads.email = rc_users.email
-			WHERE
-			rc_leads.created_at >= $1 AND
-			rc_leads.created_at < $2 AND
-			broker = $3
+			${filterBroker}
+			${filterUserType}
 			ORDER BY rc_leads.created_at DESC
   	`
-		params = [startDate, endDate, broker]
-	}
 
 	const rows = await auroraQuery(command, params)
 	const data = _.map(rows, (row) => {

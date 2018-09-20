@@ -10,7 +10,7 @@ var BlacklistUser = new keystone.List('BlacklistUser', {
 
 BlacklistUser.add({
 	uuid: {type: Types.Text, initial: true, noedit: true, unique: true},
-	type: {type: Types.Select, required: true, options: ['Email', 'Phone', 'IP Address'], initial: true},
+	sourceType: {type: Types.Select, required: true, options: ['Email', 'Phone', 'IP Address'], initial: true},
 	value: {type: Types.Text, required: true, initial: true},
 	category: {type: Types.Select, required: true, options: ['Spam', 'Internal', 'Bot'], initial: true},
 })
@@ -27,5 +27,5 @@ BlacklistUser.schema.post('save', async function () {
 	await verifiedService(this)
 })
 
-BlacklistUser.defaultColumns = 'uuid, type, value, category'
+BlacklistUser.defaultColumns = 'uuid, sourceType, value, category'
 BlacklistUser.register()
