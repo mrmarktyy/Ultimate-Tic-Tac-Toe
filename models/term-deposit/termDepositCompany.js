@@ -19,7 +19,13 @@ TermDepositCompany.add({
 	removeBig4ComparisonProduct: {type: Types.Boolean, indent: true, default: false, initial: true},
 	hasRepaymentWidget: {type: Types.Boolean, indent: true, default: false, initial: true},
   boostScore: { type: Types.Number },
-  tier: { type: Types.Select, options: ['1', '2', '3'], initial: true },
+  tier: { type: Types.Select, options: [
+    {value: 0, label: 'None'},
+    {value: 1, label: '1'},
+    {value: 2, label: '2'},
+    {value: 3, label: '3'}],
+    initial: true, default: 0,
+  },
 	blurb: { type: Types.Code, height: 250, language: 'html' },
 })
 
