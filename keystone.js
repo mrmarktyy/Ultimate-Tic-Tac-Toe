@@ -88,6 +88,7 @@ keystone.set('nav', {
 	superannuations: ['FundGroup', 'Superannuation'],
 	pages: ['Pages', 'Link', 'LongTailKeywords'],
 	termDeposits: ['TermDepositCompany', 'TermDeposit', 'TermDepositTier', 'TermDepositSpecial'],
+	blacklistUsers: ['BlacklistUser'],
 })
 
 keystone.set('cors allow origin', true)
