@@ -3,4 +3,5 @@ module.exports = {
   unknown: 'UNKNOWN',
   yes: 'YES',
   no: 'NO',
+  yesNo: 'YES, NO',
 }
