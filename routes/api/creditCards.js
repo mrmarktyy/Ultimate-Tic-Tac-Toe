@@ -183,7 +183,7 @@ function fixCardArtUrl (url) {
   if (url) {
     url = url
     	.replace(/^https?:/, '')
-    	.replace('res.cloudinary.com', '//production-ultimate-assets.ratecity.com.au')
+      .replace('res.cloudinary.com/ratecity/image/upload', '//production-ultimate-assets.ratecity.com.au/ratecity/image/upload/f_auto')
   }
   return url
 }
