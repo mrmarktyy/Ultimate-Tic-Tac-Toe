@@ -98,6 +98,8 @@ async function prepDataAndPushToRedshift (date, personalLoans, personalLoanVaria
     earlyExitPenaltyFeePeriod: 0,
     extraRepaymentDollarLimits: 0,
     extraRepaymentDollarLimitsPeriod: 0,
+    extraRepaymentPercentageLimits: 0,
+    extraRepaymentPercentageLimitsPeriod: 0,
     hasEarlyExitPenaltyFeesVaries: 'UNKNOWN',
     otherFees: 0.0,
     personalisedFeeMinimum: 0,
@@ -163,6 +165,8 @@ async function prepDataAndPushToRedshift (date, personalLoans, personalLoanVaria
     product.repaymentFreq = loan.repaymentFrequency
     product.extraRepaymentDollarLimits = loan.extraRepaymentDollarLimits
     product.extraRepaymentDollarLimitsPeriod = loan.extraRepaymentDollarLimitsPeriod
+    product.extraRepaymentPercentageLimits = loan.extraRepaymentPercentageLimits
+    product.extraRepaymentPercentageLimitsPeriod = loan.extraRepaymentPercentageLimitsPeriod
     product.hasEarlyExitPenalty = loan.hasEarlyExitPenalty === 'UNKNOWN' ? null : loan.hasEarlyExitPenalty
     product.earlyExitPenaltyFee = loan.earlyExitPenaltyFee
     product.missedPaymentPenalty = loan.missedPaymentPenalty
@@ -249,7 +253,7 @@ async function prepDataAndPushToRedshift (date, personalLoans, personalLoanVaria
     'isWeddingAllowed', 'allPurposesAllowed', 'otherPurposes', 'encumbranceCheckFees',
     'redrawActivationFee', 'minRedrawAmount', 'hasEarlyExitPenalty', 'missedPaymentPenalty',
     'earlyExitPenaltyFee', 'earlyExitPenaltyFeePeriod', 'extraRepaymentDollarLimits',
-    'extraRepaymentDollarLimitsPeriod',
+    'extraRepaymentDollarLimitsPeriod', 'extraRepaymentPercentageLimits', 'extraRepaymentPercentageLimitsPeriod',
     'hasEarlyExitPenaltyFeesVaries', 'otherFees', 'personalisedFeeMinimum',
     'personalisedFeeMaximum', 'personalisedFeeName', 'hasQualification', 'qualificationName',
     'employmentStatus', 'minEmploymentLengthFullTime',
