@@ -8,7 +8,7 @@ module.exports = {
     options: [
       'Cashback', 'Rewards', 'Free Gifts', 'Other', 'Instant Approval',
       'Paperless Approval', 'Funds Available in 24 hours',
-      'Funds Available in 48 hours', 'Funds Available in 72 hours',
+      'Funds Available in 48 hours', 'Funds Available in 72 hours', 'Guarantor Required',
     ],
     required: true,
     initial: true,
