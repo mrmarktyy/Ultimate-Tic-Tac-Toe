@@ -144,4 +144,7 @@ exports = module.exports = function (app) {
 
 	//Blacklist User
 	app.get('/api/blacklist-user', keystone.middleware.api, routes.api.blacklistUser.list)
+
+	//Coefficients
+	app.get('/api/coefficients', keystone.middleware.api, routes.api.coefficients.list)
 }

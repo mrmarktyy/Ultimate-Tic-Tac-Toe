@@ -89,6 +89,7 @@ keystone.set('nav', {
 	pages: ['Pages', 'Link', 'LongTailKeywords'],
 	termDeposits: ['TermDepositCompany', 'TermDeposit', 'TermDepositTier', 'TermDepositSpecial'],
 	blacklistUsers: ['BlacklistUser'],
+	coefficients: ['Coefficient'],
 })
 
 keystone.set('cors allow origin', true)
