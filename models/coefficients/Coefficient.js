@@ -13,7 +13,8 @@ Coefficient.add({
 	ecpc: {type: Types.Number, default: 0.0, initial: true},
 	budgetRemaining: {type: Types.Number, default: 0.0, initial: true},
 	productRating: {type: Types.Number, default: 0.0, initial: true},
+	intercept: {type: Types.Number, default: 0.0, initial: true},
 })
 
-Coefficient.defaultColumns = 'vertical, companyBoostScore, clickRatio, ecpc, budgetRemaining, productRating'
+Coefficient.defaultColumns = 'vertical, companyBoostScore, clickRatio, ecpc, budgetRemaining, productRating, intercept'
 Coefficient.register()
