@@ -1,4 +1,5 @@
 require('dotenv').config()
+var _ = require('lodash')
 
 var keystoneShell = require('../utils/keystoneShell')
 var mongoosePromise = require('../utils/mongoosePromise')
@@ -7,6 +8,7 @@ const json2csv = require('json2csv')
 const moment = require('moment')
 const awsUploadToS3 = require('../utils/awsUploadToS3')
 const redshiftQuery = require('../utils/redshiftQuery')
+const monetizedCollection = require('../routes/api/monetizedCollection')
 
 var PersonalLoan = keystoneShell.list('PersonalLoan')
 var PersonalLoanVariation = keystoneShell.list('PersonalLoanVariation')
@@ -19,6 +21,7 @@ module.exports = async function () {
     const personalLoanVariations = await PersonalLoanVariation.model.find({}).populate('product').lean().exec()
     const qualifications = await PersonalLoanQualification.model.find().populate('knockouts').lean().exec()
     const date = moment()
+
     await prepDataAndPushToRedshift(date, personalLoans, personalLoanVariations, qualifications)
 
     connection.close()
@@ -31,6 +34,10 @@ module.exports = async function () {
 
 async function prepDataAndPushToRedshift (date, personalLoans, personalLoanVariations, qualifications) {
   const collectionDate = moment(date).format('YYYY-MM-DD')
+
+  const monetizeCarLoans = await monetizedCollection('Car Loans')
+  const monetizePersonalLoans = await monetizedCollection('Personal Loans')
+  const monetizedList = _.merge({}, monetizeCarLoans, monetizePersonalLoans)
 
   const personalLoanProducts = []
   const personalLoanProductVariations = []
@@ -121,6 +128,9 @@ async function prepDataAndPushToRedshift (date, personalLoans, personalLoanVaria
     isMoreThan50GovernmentIncomeAccepted: false,
     residency: '',
     knockouts: '',
+    gotoSiteUrl: '',
+    gotoSiteEnabled: false,
+    paymentType: null,
     isDiscontinued: false,
     filename: filename,
   }
@@ -194,6 +204,14 @@ async function prepDataAndPushToRedshift (date, personalLoans, personalLoanVaria
       product.residency = qualification.residency
       product.knockouts = qualification.knockouts ? qualification.knockouts.map((knockout) => knockout.name) : ''
     }
+
+        // monetize data
+    let monetize = monetizedList[loan._id]
+
+    product.gotoSiteUrl = monetize ? monetize.applyUrl : null
+    product.gotoSiteEnabled = monetize ? monetize.enabled : false
+    product.paymentType = monetize ? monetize.paymentType : null
+
     product.isDiscontinued = loan.isDiscontinued
 
     personalLoanProducts.push(product)
@@ -262,6 +280,7 @@ async function prepDataAndPushToRedshift (date, personalLoans, personalLoanVaria
     'isOnProbationAccepted', 'minExperianScore',
     'minDunBradstreetScore', 'isGovernmentIncomeAccepted',
     'isMoreThan50GovernmentIncomeAccepted', 'residency', 'knockouts',
+    'gotoSiteUrl', 'gotoSiteEnabled', 'paymentType',
     'isDiscontinued', 'filename',
   ]
 
