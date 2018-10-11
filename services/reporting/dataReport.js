@@ -9,6 +9,7 @@ const badslugs = require('./dataReportAttachments/badslugs')
 const noProviderProductName = require('./dataReportAttachments/noProviderProductName')
 const noCompanyInFundgroup = require('./dataReportAttachments/noCompanyInFundgroup')
 const noRedshiftHistory = require('./dataReportAttachments/noRedshiftHistory')
+const discontinuedHomeLoanRevert = require('./dataReportAttachments/discontinuedHomeLoanRevert')
 
 async function dataReport () {
   let connection = await mongoosePromise.connect()
@@ -18,6 +19,7 @@ async function dataReport () {
     attachments.push(await noProviderProductName(filePath))
     attachments.push(await noCompanyInFundgroup(filePath))
     attachments.push(await noRedshiftHistory(filePath))
+    attachments.push(await discontinuedHomeLoanRevert(filePath))
     attachments = attachments.filter((a) => { return a !== null })
     emailDataTeam(attachments)
 
