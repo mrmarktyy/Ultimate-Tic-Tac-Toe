@@ -15,6 +15,7 @@ var salesforceCompanies = require('../resqueJobs/salesforcePushCompanies')
 var savingsAccountsToRedshift = require('../resqueJobs/loadSavingsAccountsToRedshift')
 var bankAccountsToRedshift = require('../resqueJobs/loadBankAccountsToRedshift')
 var termDepositsToRedshift = require('../resqueJobs/loadTermDepositsToRedshift')
+var monetisedEventsToRedshift = require('../resqueJobs/loadmonetisedEventToRedshift')
 var ingestLongtailux = require('../resqueJobs/ingestLongtailux')
 var ingestPages = require('../resqueJobs/ingestPages')
 
@@ -37,6 +38,7 @@ const jobs = {
   'ingestPages': ingestPages,
   'ingestLongtailux': ingestLongtailux,
   'monthlyClickCount': monthlyClickCount,
+  'monetisedEventsToRedshift': monetisedEventsToRedshift,
   'paymentMonetizationTypes': paymentMonetizationTypes,
   'personalLoansToRedshift': personalLoansToRedshift,
   'salesforceProducts': salesforceProducts,

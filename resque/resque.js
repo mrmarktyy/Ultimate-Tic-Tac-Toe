@@ -23,6 +23,11 @@ async function startResque () {
   logger.info('cleaned old workers')
 
   // Daily
+  schedule.scheduleJob('00 01 * * *', async () => {
+    if (scheduler.master) {
+      await queue.enqueue('ultimate', 'monetisedEventsToRedshift')
+    }
+  })
   schedule.scheduleJob('50 5 * * 1-5', async () => {
     if (scheduler.master && !stagingEnv.exec(process.env.BLAZE)) {
       await queue.enqueue('ultimate', 'emailDataReport')
