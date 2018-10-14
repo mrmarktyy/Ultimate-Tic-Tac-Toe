@@ -15,7 +15,7 @@ var salesforceCompanies = require('../resqueJobs/salesforcePushCompanies')
 var savingsAccountsToRedshift = require('../resqueJobs/loadSavingsAccountsToRedshift')
 var bankAccountsToRedshift = require('../resqueJobs/loadBankAccountsToRedshift')
 var termDepositsToRedshift = require('../resqueJobs/loadTermDepositsToRedshift')
-var monetisedEventsToRedshift = require('../resqueJobs/loadmonetisedEventToRedshift')
+var monetisedEventsToRedshift = require('../resqueJobs/loadMonetisedEventToRedshift')
 var ingestLongtailux = require('../resqueJobs/ingestLongtailux')
 var ingestPages = require('../resqueJobs/ingestPages')
 
