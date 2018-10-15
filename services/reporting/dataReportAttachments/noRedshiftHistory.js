@@ -12,7 +12,7 @@ async function redshiftHistory (filePath) {
   let tableListQuery = 'select distinct(tablename) from pg_table_def ' +
     ' where schemaname = $1 ' +
     ' and tablename like $2 ' +
-    ' and not like $3 order by tablename'
+    ' and tablename not like $3 order by tablename'
   let tableNames = await redshiftQuery(tableListQuery, ['public', '%history', '%_event%'])
   let badtables = []
   for (let i=0; i < tableNames.length; i++) {
