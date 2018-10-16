@@ -4,7 +4,7 @@ const newRedshiftQuery = require('../utils/newRedshiftQuery')
 const moment = require('moment')
 
 module.exports = async function () {
-  let datehour = moment().subtract(1, 'hour').format('YYYY-MM-DD HH:00:00')
+  let datehour = moment().subtract(1, 'hour').format('YYYY-MM-DD HH')
   let s3file = `s3://ratecity-redshift/old_apply_clicks_raw/${process.env.NEW_REDSHIFT_DATABASE}/old_apply_clicks_raw_${datehour}`
   let unload = `
     unload ('select * from apply_clicks_raw where datetime like \\'${datehour}%\\' ')
