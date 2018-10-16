@@ -99,6 +99,11 @@ async function startResque () {
       await queue.enqueue('ultimate', 'salesforceProducts')
     }
   })
+  schedule.scheduleJob('02 * * * *', async () => {
+    if (scheduler.master) {
+      await queue.enqueue('ultimate', 'copyOldApplyClicksToNewRedshiftJob')
+    }
+  })
   // monthy
   schedule.scheduleJob('0 6 1 * *', async () => {
     if (scheduler.master) {
