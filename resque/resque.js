@@ -88,6 +88,11 @@ async function startResque () {
       await queue.enqueue('ultimate', 'ingestPages')
     }
   })
+  schedule.scheduleJob('10 11 * * *', async () => {
+    if (scheduler.master) {
+      await queue.enqueue('ultimate', 'copyConversionsNewToNewRedshiftJob')
+    }
+  })
   // hourly
   schedule.scheduleJob('25 * * * *', async () => {
     if (scheduler.master) {
@@ -102,6 +107,11 @@ async function startResque () {
   schedule.scheduleJob('02 * * * *', async () => {
     if (scheduler.master) {
       await queue.enqueue('ultimate', 'copyOldApplyClicksToNewRedshiftJob')
+    }
+  })
+  schedule.scheduleJob('00 * * * *', async () => {
+    if (scheduler.master) {
+      await queue.enqueue('ultimate', 'copyHasoffersConversionsToNewRedshiftJob')
     }
   })
   // monthy
