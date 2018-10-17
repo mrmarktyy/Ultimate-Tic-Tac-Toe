@@ -7,6 +7,8 @@ var monthlyClickCount = require('../resqueJobs/importMonthlyClickCount')
 var paymentMonetizationTypes = require('../resqueJobs/importPaymentMonetizationTypes')
 var homeLoansToRedshift = require('../resqueJobs/loadHomeLoansToRedshift')
 var personalLoansToRedshift = require('../resqueJobs/loadPersonalLoansToRedshift')
+var copyConversionsNewToNewRedshiftJob = require('../resqueJobs/copyConversionsNewToNewRedshiftJob')
+var copyHasoffersConversionsToNewRedshiftJob = require('../resqueJobs/copyHasoffersConversionsToNewRedshiftJob')
 var copyOldApplyClicksToNewRedshiftJob = require('../resqueJobs/copyOldApplyClicksToNewRedshiftJob')
 var creditCardsToRedshift = require('../resqueJobs/loadCreditCardsToRedshift')
 var emailMonthlyClicks = require('../resqueJobs/monthlyClicks')
@@ -32,6 +34,8 @@ const connectionDetails = {
 const jobs = {
   'bankAccountsToRedshift': bankAccountsToRedshift,
   'blazePages': blazePages,
+  'copyConversionsNewToNewRedshiftJob': copyConversionsNewToNewRedshiftJob,
+  'copyHasoffersConversionsToNewRedshiftJob': copyHasoffersConversionsToNewRedshiftJob,
   'copyOldApplyClicksToNewRedshiftJob': copyOldApplyClicksToNewRedshiftJob,
   'creditCardsToRedshift': creditCardsToRedshift,
   'emailMonthlyClicks': emailMonthlyClicks,
