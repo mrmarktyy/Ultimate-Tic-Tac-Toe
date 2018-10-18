@@ -1,11 +1,12 @@
 language: node_js
 dist: trusty
+sudo: required
 node_js:
-- '7.4'
+- 8.9.4
 before_install:
 - cp .env.example .env
 before_script:
-- sleep 10
+- sleep 1
 cache:
   directories:
   - node_modules
@@ -28,6 +29,8 @@ jobs:
       secret_access_key:
         secure: eysU+GH5zRBQd5MB0lDWpUEk0q1PgEc4OISU3uU1YM7nDWTLEBUHEzMjFcuiXwwFgYa4FIs/ZZhwZzll+30Myz7tByRJh+qA4qd3JgtGGzvnfX9ag6STePvy/OBVuPuR5WnX7+pznQxetsihbHorU2nm9rGPBaq8IaWC5jnPMIsBhV64C3hVsbVQZ2ouhuNF3awiYk+ntVrI4WEAjy1OGGrSEvvYBHDG+6H1/1I980m05DAtoRHgCHX0YZELXXohNoPC0m+6fQ9EApgUlv+NrOJW6mhw5KqDISQbzDY0wPdZSVXI7Gxd7Aauie+CWSumGgnLBasmzWPZ39672mZ4EJMdtk+kt+asfmPh8gYqPRU2smeHMKHErGYp6wkQPLMkUNC5gixbh1jL7M82a3y/lDYAtURinQHQQtvhcq/eNGuwWbns6lSTZVwAGNGLZEMMIpy0u0LDI1KJdXQkAyR1gqsFSbzENTx/mNv4ezaobZ9F1ApMFT1EN7Sk3HQCr5lxYV0ijAioVduLBDvT3U5B0x/xLXQGBWi9T9zwZJq+R0I0ewA7pvGj6z/trNAbbBm/EknE22TisWJDPKWY6XWcVLEtNHNV987m+clS6uUdA7TARTZ70bLjGAqt96H0Se9pUTFchCesHRdd/sV8p43Wl6QLs9mqRSdIQDAxKIJ8H+M=
       bucket: production-ultimate-assets
+      skip_cleanup: true
+      region: ap-southeast-2
       local-dir: /tmp/ultimate
       upload-dir: deploy
       on:
