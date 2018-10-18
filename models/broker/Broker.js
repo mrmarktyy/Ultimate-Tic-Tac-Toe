@@ -36,6 +36,7 @@ var Broker = new keystone.List('Broker', {track: true}).add({
 	tiles: {type: Types.Relationship, ref: 'Tile', many: true},
 	testimonials: {type: Types.Relationship, ref: 'Testimonial', many: true},
 	companies: {type: Types.Relationship, ref: 'Company', many: true},
+	useAsGuide: {type: Types.Boolean},
 })
 
 Broker.add(shareOfVoiceAttributes)
