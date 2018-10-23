@@ -16,7 +16,8 @@ Company.add({
 	name: { type: Types.Text, required: true, index: true, unique: true },
 	displayName: { type: Types.Text, required: true, initial: true },
 	shortName: { type: Types.Text },
-  backgroudColor: { type: Types.Text },
+  primaryColor: { type: Types.Text },
+  secondaryColor: { type: Types.Text },
   boostScore: { type: Types.Number },
   tier: { type: Types.Select, options: [
     {value: 'null', label: 'None'},
