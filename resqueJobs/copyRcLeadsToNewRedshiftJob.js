@@ -1,5 +1,5 @@
 var logger = require('../utils/logger')
-var copyRcLeadsToNewRedshift = require('../redshift/copyRcLeadsToNewRedshift')
+var copyRcLeadsToNewRedshift = require('../redshift/copyRcleadsToNewRedshift')
 
 const copyRcLeadsToNewRedshiftJob = {
   plugins: ['QueueLock'],
