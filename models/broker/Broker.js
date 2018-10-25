@@ -16,6 +16,7 @@ var Broker = new keystone.List('Broker', {track: true}).add({
 	acl: {type: Types.Text},
 	abn: {type: Types.Text},
 	cid: {type: Types.Text},
+	formHeader: {type: Types.Text},
 	title: {type: Types.Text},
 	description: {type: Types.Code, height: 250, language: 'html'},
 	about: {type: Types.Code, height: 250, language: 'html'},
