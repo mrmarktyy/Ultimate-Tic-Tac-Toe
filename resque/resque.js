@@ -109,6 +109,12 @@ async function startResque () {
       await queue.enqueue('ultimate', 'copyOldApplyClicksToNewRedshiftJob')
     }
   })
+  schedule.scheduleJob('04 * * * *', async () => {
+    if (scheduler.master) {
+      await queue.enqueue('ultimate', 'copyRcLeadsToNewRedshiftJob')
+    }
+  })
+
   schedule.scheduleJob('00 * * * *', async () => {
     if (scheduler.master) {
       await queue.enqueue('ultimate', 'copyHasoffersConversionsToNewRedshiftJob')
