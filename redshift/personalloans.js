@@ -158,6 +158,10 @@ async function prepDataAndPushToRedshift (date, personalLoans, personalLoanVaria
     product.ongoingFees = loan.ongoingFees
     product.ongoingFeesFrequency = loan.ongoingFeesFrequency
     product.docReleaseFees = loan.docReleaseFees
+    product.isSecuredByVehicle = loan.isSecuredByVehicle
+    product.isSecuredByProperty = loan.isSecuredByProperty
+    product.isSecuredByDeposit = loan.isSecuredByDeposit
+    product.securedByOthers = loan.securedByOthers
     product.isSelfEmploymentAccepted = loan.isSelfEmploymentAccepted
     product.isNewCarAllowed = loan.isNewCarAllowed
     product.isUsedCarAllowed = loan.isUsedCarAllowed
