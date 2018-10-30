@@ -87,10 +87,7 @@ async function processLongTailResponse(response) {
 			return savedFaqs._id
 		}))
 
-		page.longTailFaqs = await Promise.all(items.faqs.map(async(result) => {
-			const savedArticle = await insertLongTailUxData(result)
-			return savedArticle._id
-		}))
+		page.longTailFaqs = items.faqs || []
 	}
 	return page
 }
@@ -115,8 +112,7 @@ function extractItemContent(items, includedSearchData) {
 			...savedItem
 		}
 		if (longTailItem.faq_type) {
-			articleData.type = longTailItem.faq_type
-			itemResult.faqs.length <= 9 && itemResult.faqs.push(articleData)
+			itemResult.faqs.length <= 9 && itemResult.faqs.push(longTailItem.id)
 		} else if (longTailItem.article_type) {
 			articleData.type = longTailItem.article_type
 			itemResult.articles.length <= 9 && itemResult.articles.push(articleData)

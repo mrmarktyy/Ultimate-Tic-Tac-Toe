@@ -28,7 +28,7 @@ const Pages = new keystone.List('Pages', {track: true,   map: { name: 'url' },})
 	longTailPopularSearches: {type: Types.Relationship, ref: 'LongTailKeywords', many: true},
 	longTailSimilarSearches: {type: Types.Relationship, ref: 'LongTailKeywords', many: true},
 	longTailArticles: {type: Types.Relationship, ref: 'LongTailKeywords', many: true},
-	longTailFaqs: {type: Types.Relationship, ref: 'LongTailKeywords', many: true},
+	longTailFaqs: {type: Types.TextArray},
 	wordDisclaimerRequired: { type: Types.Boolean, indent: false, default: false },
 	lowestRateProduct: { type: Types.Boolean, indent: false, default: false },
 	og: {
