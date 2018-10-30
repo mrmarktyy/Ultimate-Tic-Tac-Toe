@@ -12,7 +12,7 @@ const Pages = new keystone.List('Pages', {track: true,   map: { name: 'url' },})
 	tagline: {type: Types.Text, initial: true},
 	title: {type: Types.Text, initial: true},
 	popularSearchTitle: {type: Types.Text},
-	useGenericLabels: {type: Types.Boolean},
+	useGenericLabels: {type: Types.Boolean, default: false},
 	vertical: {type: Types.Select, options: verticals, initial: true, default: 'default'},
 	resultName: {type: Types.Text},
 	variant: {type: Types.Text},
