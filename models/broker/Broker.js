@@ -27,6 +27,7 @@ var Broker = new keystone.List('Broker', {track: true}).add({
 	logo: imageStorage('Broker'),
 	backgroundImage: imageStorage('brokerHeader'),
 	imageHeader: imageStorage('brokerHeader'),
+	guideImageHeader: imageStorage('brokerHeader'),
   isDiscontinued: {type: Types.Boolean, initial: true, require: true, index: true},
 	phone: {type: Types.Text},
 	default: {type: Types.Boolean, initial: true, require: true},
