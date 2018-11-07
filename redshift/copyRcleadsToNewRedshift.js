@@ -27,7 +27,7 @@ module.exports = async function () {
       utm_campaign,
       utm_medium,
       api_key,
-      product ->> 'products' as products,
+      substring(product::varchar from 1 for 4095) as products,
       substring(product ->> 'applied' from 1 for 2045) as applied,
       substring(product ->> 'attributes' from 1 for 2040) as attributes,
       substring(product ->> 'scores'  from 1 for 2045) as scores
