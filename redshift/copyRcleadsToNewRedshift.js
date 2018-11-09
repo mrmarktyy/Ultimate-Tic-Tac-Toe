@@ -30,7 +30,8 @@ module.exports = async function () {
       substring(product::varchar from 1 for 4095) as products,
       substring(product ->> 'applied' from 1 for 2045) as applied,
       substring(product ->> 'attributes' from 1 for 2040) as attributes,
-      substring(product ->> 'scores'  from 1 for 2045) as scores
+      substring(product ->> 'scores'  from 1 for 2045) as scores,
+      generated_source
     from rc_leads
     where updated_at >= \'${datehour}\'
   `
@@ -53,7 +54,7 @@ module.exports = async function () {
     copy aurora_rc_leads
     from '${s3file}'
     credentials 'aws_access_key_id=${process.env.S3_KEY};aws_secret_access_key=${process.env.S3_SECRET}'
-    CSV QUOTE '${String.fromCharCode(7)}' TRUNCATECOLUMNS
+    CSV QUOTE '${String.fromCharCode(7)}' TRUNCATECOLUMNS EMPTYASNULL
   `
   await newRedshiftQuery(insert, [])
 
