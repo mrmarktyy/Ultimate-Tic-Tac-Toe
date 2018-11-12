@@ -23,28 +23,29 @@ module.exports = async function () {
       where updated_at >= \'${datehour}\'
     `
     let marketplace = await auroraQuery(unload, [])
+    if (marketplace.length > 0) {
       let csv = json2csv({
         data: marketplace,
         fields: Object.keys(marketplace[0]),
         hasCSVColumnTitle: false,
         quotes: String.fromCharCode(7),
-    })
-    await awsUploadToS3(s3Extension, csv, 'ratecity-redshift')
+      })
+      await awsUploadToS3(s3Extension, csv, 'ratecity-redshift')
 
-    let deleteHourRecords = `
-      delete from aurora_marketplace_apply_clicks
-      where updated_at >= \'${datehour}\'
-    `
-    await newRedshiftQuery(deleteHourRecords, [])
+      let deleteHourRecords = `
+        delete from aurora_marketplace_apply_clicks
+        where updated_at >= \'${datehour}\'
+      `
+      await newRedshiftQuery(deleteHourRecords, [])
 
-    let insert = `
-      copy aurora_marketplace_apply_clicks
-      from '${s3file}'
-      credentials 'aws_access_key_id=${process.env.S3_KEY};aws_secret_access_key=${process.env.S3_SECRET}'
-      CSV QUOTE '${String.fromCharCode(7)}' TRUNCATECOLUMNS
-    `
-    await newRedshiftQuery(insert, [])
-
+      let insert = `
+        copy aurora_marketplace_apply_clicks
+        from '${s3file}'
+        credentials 'aws_access_key_id=${process.env.S3_KEY};aws_secret_access_key=${process.env.S3_SECRET}'
+        CSV QUOTE '${String.fromCharCode(7)}' TRUNCATECOLUMNS
+      `
+      await newRedshiftQuery(insert, [])
+    }
   } catch(error) {
     console.log(error)
   }
