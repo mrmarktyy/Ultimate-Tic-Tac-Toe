@@ -24,6 +24,7 @@ var Broker = new keystone.List('Broker', {track: true}).add({
 	disclaimer: {type: Types.Code, height: 250, language: 'html'},
 	guideDisplayName: {type: Types.Text},
 	guidePdfUrl: {type: Types.Text},
+	sendGuideEmail : {type: Types.Boolean, initial: true},
 	email: {type: Types.TextArray},
 	logo: imageStorage('Broker'),
 	backgroundImage: imageStorage('brokerBackgroundImage'),
