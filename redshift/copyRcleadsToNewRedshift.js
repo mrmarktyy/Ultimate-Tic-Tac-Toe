@@ -36,36 +36,37 @@ module.exports = async function () {
     where updated_at >= \'${datehour}\'
   `
   let leads = await auroraQuery(unload, [])
-  let csv = json2csv({
-        data: leads,
-        fields: Object.keys(leads[0]),
-        hasCSVColumnTitle: false,
-        quotes: String.fromCharCode(7),
-  })
-  await awsUploadToS3(s3Extension, csv, 'ratecity-redshift')
+  if (leads.length) {
+    let csv = json2csv({
+          data: leads,
+          fields: Object.keys(leads[0]),
+          hasCSVColumnTitle: false,
+          quotes: String.fromCharCode(7),
+    })
+    await awsUploadToS3(s3Extension, csv, 'ratecity-redshift')
 
-  let deleteHourRecords = `
-    delete from aurora_rc_leads
-    where updated_at >= \'${datehour}\'
-  `
-  await newRedshiftQuery(deleteHourRecords, [])
+    let deleteHourRecords = `
+      delete from aurora_rc_leads
+      where updated_at >= \'${datehour}\'
+    `
+    await newRedshiftQuery(deleteHourRecords, [])
 
-  let insert = `
-    copy aurora_rc_leads
-    from '${s3file}'
-    credentials 'aws_access_key_id=${process.env.S3_KEY};aws_secret_access_key=${process.env.S3_SECRET}'
-    CSV QUOTE '${String.fromCharCode(7)}' TRUNCATECOLUMNS EMPTYASNULL
-  `
-  await newRedshiftQuery(insert, [])
+    let insert = `
+      copy aurora_rc_leads
+      from '${s3file}'
+      credentials 'aws_access_key_id=${process.env.S3_KEY};aws_secret_access_key=${process.env.S3_SECRET}'
+      CSV QUOTE '${String.fromCharCode(7)}' TRUNCATECOLUMNS EMPTYASNULL
+    `
+    await newRedshiftQuery(insert, [])
 
-  let deleteOldDupes = `
-    delete from aurora_rc_leads
-    where updated_at != (
-      select max(newrec.updated_at)
-      from aurora_rc_leads newrec
-      where newrec.id = aurora_rc_leads.id
-    )
-  `
-  await newRedshiftQuery(deleteOldDupes, [])
-
+    let deleteOldDupes = `
+      delete from aurora_rc_leads
+      where updated_at != (
+        select max(newrec.updated_at)
+        from aurora_rc_leads newrec
+        where newrec.id = aurora_rc_leads.id
+      )
+    `
+    await newRedshiftQuery(deleteOldDupes, [])
+  }
 }
