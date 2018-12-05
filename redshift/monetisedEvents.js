@@ -2,7 +2,7 @@
 require('dotenv').config()
 const json2csv = require('json2csv')
 const awsUploadToS3 = require('../utils/awsUploadToS3')
-const redshiftQuery = require('../utils/redshiftQuery')
+const redshiftQuery = require('../utils/ratecityRedshiftQuery')
 const moment = require('moment')
 var keystoneShell = require('../utils/keystoneShell')
 var mongoosePromise = require('../utils/mongoosePromise')
@@ -52,11 +52,11 @@ async function monetisedRecords () {
 async function insertIntoRedshift (rows, headers, filename, table) {
   if (rows.length > 0) {
     let csv = json2csv({data: rows, fields: headers, hasCSVColumnTitle: false})
-    await awsUploadToS3(`rc_monetised_event_history/${process.env.REDSHIFT_DATABASE}/${filename}`, csv, 'ratecity-redshift')
+    await awsUploadToS3(`rc_monetised_event_history/${process.env.REDSHIFT_DATABASE}/${filename}`, csv, 'redshift-2node')
 
     let command = `delete from ${table} where filename = $1`
     await redshiftQuery(command, [filename])
-    command = `copy ${table} from 's3://ratecity-redshift/rc_monetised_event_history/${process.env.REDSHIFT_DATABASE}/${filename}' credentials 'aws_access_key_id=${process.env.S3_KEY};aws_secret_access_key=${process.env.S3_SECRET}' EMPTYASNULL CSV ACCEPTINVCHARS TRUNCATECOLUMNS`
+    command = `copy ${table} from 's3://redshift-2node/rc_monetised_event_history/${process.env.REDSHIFT_DATABASE}/${filename}' credentials 'aws_access_key_id=${process.env.S3_KEY};aws_secret_access_key=${process.env.S3_SECRET}' EMPTYASNULL CSV ACCEPTINVCHARS TRUNCATECOLUMNS`
     await redshiftQuery(command)
   }
 }

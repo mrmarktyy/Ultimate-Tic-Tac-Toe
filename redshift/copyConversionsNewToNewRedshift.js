@@ -10,7 +10,7 @@ module.exports = async function () {
     unload ('select * from conversions_new where conversion_datetime >= \\'${startDate}%\\' ')
     to '${s3file}'
     credentials 'aws_access_key_id=${process.env.S3_KEY};aws_secret_access_key=${process.env.S3_SECRET}'
-    GZIP ESCAPE MAXFILESIZE 2 GB ALLOWOVERWRITE
+    GZIP ESCAPE ALLOWOVERWRITE PARALLEL OFF
   `
   await redshiftQuery(unload, [])
 

@@ -6,7 +6,7 @@ var logger = require('../utils/logger')
 const json2csv = require('json2csv')
 const moment = require('moment')
 const awsUploadToS3 = require('../utils/awsUploadToS3')
-const redshiftQuery = require('../utils/redshiftQuery')
+const redshiftQuery = require('../utils/ratecityRedshiftQuery')
 
 const monetizedCollection = require('../routes/api/monetizedCollection')
 var CreditCard = keystoneShell.list('CreditCard')
@@ -330,11 +330,11 @@ function getRedeption (redemptionProgram, redemptions) {
 async function insertIntoRedshift (rows, headers, filename, table) {
   if (rows.length > 0) {
     let csv = json2csv({data: rows, fields: headers, hasCSVColumnTitle: false})
-    await awsUploadToS3(`credit-cards-history/${process.env.REDSHIFT_DATABASE}/${filename}`, csv, 'ratecity-redshift')
+    await awsUploadToS3(`credit-cards-history/${process.env.REDSHIFT_DATABASE}/${filename}`, csv, 'redshift-2node')
 
     let command = `delete from ${table} where filename = $1`
     await redshiftQuery(command, [filename])
-    command = `copy ${table} from 's3://ratecity-redshift/credit-cards-history/${process.env.REDSHIFT_DATABASE}/${filename}' credentials 'aws_access_key_id=${process.env.S3_KEY};aws_secret_access_key=${process.env.S3_SECRET}' EMPTYASNULL CSV ACCEPTINVCHARS TRUNCATECOLUMNS`
+    command = `copy ${table} from 's3://redshift-2node/credit-cards-history/${process.env.REDSHIFT_DATABASE}/${filename}' credentials 'aws_access_key_id=${process.env.S3_KEY};aws_secret_access_key=${process.env.S3_SECRET}' EMPTYASNULL CSV ACCEPTINVCHARS TRUNCATECOLUMNS`
     await redshiftQuery(command)
   }
 }

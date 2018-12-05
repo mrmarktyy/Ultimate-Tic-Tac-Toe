@@ -1,6 +1,6 @@
 require('dotenv').config()
 
-const redshiftQuery = require('../../../utils/redshiftQuery')
+const redshiftQuery = require('../../../utils/ratecityRedshiftQuery')
 const json2csv = require('json2csv')
 const fs = require('fs')
 const moment = require('moment')

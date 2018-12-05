@@ -10,7 +10,7 @@ const calculateCostRating = require('./calculateCostRating')
 const json2csv = require('json2csv')
 const awsUploadToS3 = require('../../utils/awsUploadToS3')
 const moment = require('moment')
-const redshiftQuery = require('../../utils/redshiftQuery')
+const redshiftQuery = require('../../utils/ratecityRedshiftQuery')
 
 const USER_LOAN_TERM_IN_MONTHS = 60
 
@@ -212,11 +212,11 @@ async function insertIntoRedshift (startDate, endDate, rows) {
     let head = headers(rows[0])
     let csv = json2csv({data: rows, fields: head, hasCSVColumnTitle: false})
     let filepath = `home-loans-ratings-history/${process.env.REDSHIFT_DATABASE}/${filename}.csv`
-    await awsUploadToS3(filepath, csv, 'ratecity-redshift')
+    await awsUploadToS3(filepath, csv, 'redshift-2node')
 
     let command = `delete from ${table} where collectionDate between $1 and $2`
     await redshiftQuery(command, [startDate, endDate])
-    command = `copy ${table} from 's3://ratecity-redshift/${filepath}' credentials 'aws_access_key_id=${process.env.S3_KEY};aws_secret_access_key=${process.env.S3_SECRET}' NULL AS 'null' CSV ACCEPTINVCHARS TRUNCATECOLUMNS`
+    command = `copy ${table} from 's3://redshift-2node/${filepath}' credentials 'aws_access_key_id=${process.env.S3_KEY};aws_secret_access_key=${process.env.S3_SECRET}' NULL AS 'null' CSV ACCEPTINVCHARS TRUNCATECOLUMNS`
     await redshiftQuery(command)
   }
 }

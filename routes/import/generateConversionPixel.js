@@ -21,8 +21,8 @@ exports = module.exports = async(req, res) => {
 			if (offer) {
 				const response = await createConversionPixel(offer.generateConversionPixels)
 				logger.info(response)
-				const path = await downloadPixelReport(companyName)
-				await emailLoggedInUser(email, path, companyName)
+				const path = await downloadPixelReport(offer.companyName)
+				await emailLoggedInUser(email, path, offer.companyName)
 			}
 			req.flash('success', 'Email containing conversion pixel report has been sent to your email id')
 		}else{
@@ -30,7 +30,7 @@ exports = module.exports = async(req, res) => {
 		}
 		return res.redirect('/generate-conversion-pixel')
 	} catch (error) {
-		logger.error(err)
+		logger.error(error)
 		req.flash('error', error.message)
 		return res.redirect('/generate-conversion-pixel')
 	}

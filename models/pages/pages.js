@@ -12,6 +12,7 @@ const Pages = new keystone.List('Pages', {track: true,   map: { name: 'url' },})
 	tagline: {type: Types.Text, initial: true},
 	title: {type: Types.Text, initial: true},
 	popularSearchTitle: {type: Types.Text},
+	useGenericLabels: {type: Types.Boolean, default: false},
 	vertical: {type: Types.Select, options: verticals, initial: true, default: 'default'},
 	resultName: {type: Types.Text},
 	variant: {type: Types.Text},
@@ -27,7 +28,7 @@ const Pages = new keystone.List('Pages', {track: true,   map: { name: 'url' },})
 	longTailPopularSearches: {type: Types.Relationship, ref: 'LongTailKeywords', many: true},
 	longTailSimilarSearches: {type: Types.Relationship, ref: 'LongTailKeywords', many: true},
 	longTailArticles: {type: Types.Relationship, ref: 'LongTailKeywords', many: true},
-	longTailFaqs: {type: Types.Relationship, ref: 'LongTailKeywords', many: true},
+	longTailFaqs: {type: Types.TextArray},
 	wordDisclaimerRequired: { type: Types.Boolean, indent: false, default: false },
 	lowestRateProduct: { type: Types.Boolean, indent: false, default: false },
 	og: {
