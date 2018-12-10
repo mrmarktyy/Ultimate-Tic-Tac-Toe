@@ -97,7 +97,7 @@ CreditCard.add({
 	minimumIncome: { type: Types.Number, min: 0 },
 	minimumCreditRating: { type: Types.Text },
   eligibilityConditions: { type: Types.Text },
-  Residency: {
+  residency: {
 		type: Types.MultiSelect,
 		options: ['Australia Citizen', 'Permanent Resident', 'Business Long Stay Visa', 'Temporary Visa 12 Months Valid','457 Visa holder'],
     emptyOption: false,
