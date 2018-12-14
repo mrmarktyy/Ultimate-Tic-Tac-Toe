@@ -1,4 +1,5 @@
 var keystone = require('keystone')
+const _ = require('lodash')
 var CompanyService = require('../../services/CompanyService')
 
 const CreditCard = keystone.list('CreditCard')
@@ -45,7 +46,7 @@ exports.list = async function (req, res) {
   let removeFields = { updatedAt: 0, updatedBy: 0, isMonetized: 0, __v: 0, createdAt: 0, createdBy: 0 }
   let removePopulatedFields = '-updatedAt -updatedBy -__v  -createdAt -createdBy'
   let monetizedList = await monetizedCollection('Credit Cards')
-  let companyVerticalData = await CompanyCreditCard.model.find().populate('big4ComparisonProduct').lean().exec()
+  let companyVerticalData = await CompanyCreditCard.model.find().populate('company big4ComparisonProduct').lean().exec()
   companyVerticalData.forEach((obj) => {
      obj.big4ComparisonProductUuid = obj.big4ComparisonProduct ? obj.big4ComparisonProduct.uuid : null
   })
@@ -85,7 +86,7 @@ exports.list = async function (req, res) {
       company.logo = company.logo.url
     }
     card.company  = company
-    card.companyVertical = companyVerticalData
+    card.companyVertical = _.first(companyVerticalData.filter((companyVertical) => card.company.uuid == companyVertical.company.uuid))
 
     let monetize = monetizedList[card._id]
     card.gotoSiteUrl = monetize ? monetize.applyUrl : null
