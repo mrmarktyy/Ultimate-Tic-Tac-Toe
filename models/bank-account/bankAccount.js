@@ -74,6 +74,7 @@ BankAccount.add({
 })
 BankAccount.add(verifiedCommonAttribute)
 BankAccount.relationship({ path: 'ChangeLogs', ref: 'ChangeLog', refPath: 'model', many: true })
+BankAccount.relationship({ path: 'bankAccountSpecial', ref: 'BankAccountSpecial', refPath: 'product' })
 BankAccount.schema.index({ company: 1, name: 1 }, { unique: true })
 BankAccount.schema.index({ company: 1, slug: 1 }, { unique: true })
 
