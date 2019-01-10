@@ -7,6 +7,7 @@ exports.list = async function (req, res) {
 	brokers = brokers.map((broker) => {
 		broker.logo = broker.logo && fixUrl(broker.logo.url)
 		broker.imageHeader = broker.imageHeader && broker.imageHeader.url
+		broker.photo = broker.photo && broker.photo.url
 		if (broker.companies) {
 			broker.companies = broker.companies.map((company) => CompanyService.fixLogoUrl(company))
 		}
