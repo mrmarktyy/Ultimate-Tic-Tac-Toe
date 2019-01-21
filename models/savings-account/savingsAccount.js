@@ -53,6 +53,8 @@ SavingsAccount.add({
   atmWithdrawalFee: { type: Types.Number, min: 0 },
 	jointApplicationAvailable: { type: Types.Select, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.yes },
 	unlimitedWithdrawals: { type: Types.Select, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.yes },
+  hasNoOverseasAtmFees: { type: Types.Boolean, indent: true, default: false },
+  hasNoInternationalTransactionFees: { type: Types.Boolean, indent: true, default: false },
   monthlyClicks: {type: Types.Number, noedit: true, min: 0, default: 0},
 })
 
