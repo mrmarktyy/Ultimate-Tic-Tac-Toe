@@ -30,8 +30,17 @@ HomeLoanSpecial.add({
     initial: true,
     index: true,
     filters: { company: ':company' },
-  },
-
+	},
+	cashBack: { type: Types.Number },
+	bonusFFPoints: { type: Types.Number, label: 'Bonus FF Points' },
+	bonusFFPointsPer100kLoan: { type: Types.Number, label: 'Bonus FF Points Per 100' },
+	FFRedemptionProgram: {
+		type: Types.Relationship,
+		ref: 'Program',
+		required: false,
+		index: true,
+		label: 'FF Redemption Program',
+	},
 })
 
 HomeLoanSpecial.defaultColumns = 'name, type, introText, blurb'
