@@ -56,8 +56,11 @@ exports.list = async function (req, res) {
       specialObj.name = item.name
       specialObj.startDate = item.startDate
       specialObj.endDate = item.endDate
-			specialObj.promotedOrder = item.promotedOrder
-
+      specialObj.promotedOrder = item.promotedOrder
+      specialObj.cashBack = item.cashBack
+      specialObj.bonusFFPoints = item.bonusFFPoints
+      specialObj.bonusFFPointsPer100kLoan = item.bonusFFPointsPer100kLoan
+      specialObj.FFRedemptionProgram = item.FFRedemptionProgram ? item.FFRedemptionProgram.name : null
       return specialObj
     })
   }
@@ -76,7 +79,7 @@ async function getSpecials () {
         {startDate: {$lte: new Date()}, endDate: {$exists: false}},
       ],
 		}, {updatedBy: 0, updatedAt: 0, createdBy: 0, createdAt: 0}) //eslint-disable-line
-    .populate('company product variation')
+    .populate('company product variation FFRedemptionProgram')
     .lean()
     .exec((err, data) => {
       if (err) {
