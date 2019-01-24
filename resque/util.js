@@ -18,6 +18,7 @@ var emailDataReport = require('../resqueJobs/dataReportJob')
 var salesforceProducts = require('../resqueJobs/salesforcePushProducts')
 var salesforceCompanies = require('../resqueJobs/salesforcePushCompanies')
 var savingsAccountsToRedshift = require('../resqueJobs/loadSavingsAccountsToRedshift')
+var specialsToRedshift = require('../resqueJobs/loadSpecialsToRedshift')
 var bankAccountsToRedshift = require('../resqueJobs/loadBankAccountsToRedshift')
 var termDepositsToRedshift = require('../resqueJobs/loadTermDepositsToRedshift')
 var monetisedEventsToRedshift = require('../resqueJobs/loadMonetisedEventToRedshift')
@@ -54,6 +55,7 @@ const jobs = {
   'salesforceProducts': salesforceProducts,
   'salesforceCompanies': salesforceCompanies,
   'savingsAccountsToRedshift': savingsAccountsToRedshift,
+  'specialsToRedshift': specialsToRedshift,
   'termDepositsToRedshift': termDepositsToRedshift,
 }
 
