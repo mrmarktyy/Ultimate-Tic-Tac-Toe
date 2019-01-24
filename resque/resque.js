@@ -48,6 +48,11 @@ async function startResque () {
       await queue.enqueue('ultimate', 'paymentMonetizationTypes')
     }
   })
+  schedule.scheduleJob('40 18 * * *', async () => {
+    if (scheduler.master) {
+       await queue.enqueue('ultimate', 'specialsToRedshift')
+     }
+   })
   schedule.scheduleJob('52 18 * * *', async () => {
    if (scheduler.master) {
       await queue.enqueue('ultimate', 'homeLoansToRedshift')
@@ -58,6 +63,7 @@ async function startResque () {
       await queue.enqueue('ultimate', 'savingsAccountsToRedshift')
     }
   })
+
   schedule.scheduleJob('20 19 * * *', async () => {
     if (scheduler.master) {
       await queue.enqueue('ultimate', 'creditCardsToRedshift')
@@ -131,7 +137,6 @@ async function startResque () {
       await queue.enqueue('ultimate', 'emailMonthlyClicks')
     }
   })
-
   const shutdown = async () => {
     await scheduler.end()
     await worker.end()
