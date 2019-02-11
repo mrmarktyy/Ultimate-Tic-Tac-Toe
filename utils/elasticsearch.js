@@ -10,7 +10,7 @@ var log = {
 var client = new elasticsearch.Client({
   host: process.env.ELASTICSEARCH_URL,
   log: log,
-  apiVersion: '2.4',
+  apiVersion: '5.6',
   createNodeAgent (connection, config) {
     return new AgentKeepAlive(connection.makeAgentConfig(config))
   },
