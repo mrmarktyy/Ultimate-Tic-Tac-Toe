@@ -34,7 +34,7 @@ async function getPensionObjects (pensions) {
 		product['5YearAnnualisedPerformance'] = parseFloat(pension['5_year_annualised_performance'] || 0)
 		product['5YearAnnualisedPerformanceAvg'] = parseFloat(pension['5_year_annualised_performance_avg'] || 0)
 		product.basicFee = parseFloat(pension.basic_fee_50k || 0)
-		const rating = getMatchedElment(ratings, pension.rating_image)
+		const rating = getMatchedRating(ratings, pension)
 		product.rating = rating.name || null
 		product.ratingScore = rating.score || null
 		product.productUrl = `/pension-funds/${pension.fundgroup.slug}/${pension.slug}`
@@ -117,7 +117,7 @@ async function getPensionObjects (pensions) {
 		product.targetMarket = pension.target_market
 		product.publicOffer = pension.public_offer === 'Yes'
 		product.productType = pension.fund_type
-		product.awards = _.map(getMatchedElments(ratings, pension.rating_image), (rating) => (_.pick(rating, ['name', 'url'])))
+		product.awards = _.map(getMatchedRatings(ratings, pension), (rating) => (_.pick(rating, ['name', 'url'])))
     product.popularityScore = (product.monthlyClicks ? product.monthlyClicks * recommendedMultiplier : 0)
     delete product.monthlyClicks
 		return product
@@ -126,6 +126,20 @@ async function getPensionObjects (pensions) {
 
 function getMatchedElments (arr, source) {
 	return _.filter(arr, (value) => value.regx.test(source))
+}
+
+function getMatchedRatings (arr, pension) {
+	return _.filter(arr, (item) => {
+		if (!item.type || pension[item.type]) {
+			const abbrs = pension.rating_image ? pension.rating_image.toLowerCase().split(',').map((abbr) => abbr.trim()) : []
+			return _.includes(abbrs, item.abbr)
+		}
+		return false
+	})
+}
+
+function getMatchedRating (arr, pension) {
+	return _.last(getMatchedRatings(arr, pension)) || {}
 }
 
 function getMatchedElment (arr, source) {

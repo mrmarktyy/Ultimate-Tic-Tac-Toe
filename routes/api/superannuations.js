@@ -34,7 +34,7 @@ async function getSuperannuationObjects (superannuations) {
 		product['5YearAnnualisedPerformance'] = parseFloat(superannuation['5_year_annualised_performance'] || 0)
 		product['5YearAnnualisedPerformanceAvg'] = parseFloat(superannuation['5_year_annualised_performance_avg'] || 0)
 		product.basicFee = parseFloat(superannuation.basic_fee_50k || 0)
-		const rating = getMatchedElment(ratings, superannuation.rating_image)
+		const rating = getMatchedRating(ratings, superannuation)
 		product.rating = rating.name || null
 		product.ratingScore = rating.score || null
 		product.productUrl = `/superannuation/${superannuation.fundgroup.slug}/${superannuation.slug}`
@@ -117,11 +117,25 @@ async function getSuperannuationObjects (superannuations) {
 		product.targetMarket = superannuation.target_market
 		product.publicOffer = superannuation.public_offer === 'Yes'
 		product.productType = superannuation.fund_type
-		product.awards = _.map(getMatchedElments(ratings, superannuation.rating_image), (rating) => (_.pick(rating, ['name', 'url'])))
+		product.awards = _.map(getMatchedRatings(ratings, superannuation), (rating) => (_.pick(rating, ['name', 'url'])))
     product.popularityScore = (product.monthlyClicks ? product.monthlyClicks * recommendedMultiplier : 0)
 		delete product.monthlyClicks
     return product
 	})
+}
+
+function getMatchedRatings (arr, superannuation) {
+	return _.filter(arr, (item) => {
+		if (!item.type || superannuation[item.type]) {
+			const abbrs = superannuation.rating_image ? superannuation.rating_image.toLowerCase().split(',').map((abbr) => abbr.trim()) : []
+			return _.includes(abbrs, item.abbr)
+		}
+		return false
+	})
+}
+
+function getMatchedRating (arr, superannuation) {
+	return _.last(getMatchedRatings(arr, superannuation)) || {}
 }
 
 function getMatchedElments (arr, source) {
