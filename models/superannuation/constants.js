@@ -249,13 +249,13 @@ exports.getYears = function (year, month) {
 }
 
 exports.ratings = [
-  { name: 'Platinum', score: 100, abbr: 'platinum', url: '//production-content-assets.ratecity.com.au/20190213124043/SR2019_HiRes_BDR_Choice-Platinum.jpg', type: 'superannuation' },
+  { name: 'MyChoice Platinum', score: 100, abbr: 'platinum', url: '//production-content-assets.ratecity.com.au/20190213124043/SR2019_HiRes_BDR_Choice-Platinum.jpg', type: 'superannuation' },
   { name: 'Platinum', score: 100, abbr: 'platinum', url: '//production-content-assets.ratecity.com.au/20190214081728/SR2019_HiRes_BDR_Pen-Platinum.jpg', type: 'pension' },
-  { name: 'Gold', score: 95, abbr: 'gold', url: '//production-content-assets.ratecity.com.au/20190213103639/SR2019_HiRes_BDR_Choice-Gold.jpg', type: 'superannuation' },
+  { name: 'MyChoice Gold', score: 95, abbr: 'gold', url: '//production-content-assets.ratecity.com.au/20190213103639/SR2019_HiRes_BDR_Choice-Gold.jpg', type: 'superannuation' },
   { name: 'Gold', score: 95, abbr: 'gold', url: '//production-content-assets.ratecity.com.au/20190214082015/SR2019_HiRes_BDR_Pen-Gold.jpg', type: 'pension' },
-  { name: 'Silver', score: 90, abbr: 'silver', url: '//production-content-assets.ratecity.com.au/20190213124816/SR2019_HiRes_BDR_Choice-Silver.jpg', type: 'superannuation' },
+  { name: 'MyChoice Silver', score: 90, abbr: 'silver', url: '//production-content-assets.ratecity.com.au/20190213124816/SR2019_HiRes_BDR_Choice-Silver.jpg', type: 'superannuation' },
   { name: 'Silver', score: 90, abbr: 'silver', url: '//production-content-assets.ratecity.com.au/20190214082259/SR2019_HiRes_BDR_Pen-Silver.jpg', type: 'pension' },
-  { name: 'Other', score: 85, abbr: 'other', url: '//production-content-assets.ratecity.com.au/20190213123538/SR2019_HiRes_BDR_Choice-Other.jpg', type: 'superannuation' },
+  { name: 'MyChoice Other', score: 85, abbr: 'other', url: '//production-content-assets.ratecity.com.au/20190213123538/SR2019_HiRes_BDR_Choice-Other.jpg', type: 'superannuation' },
   { name: 'Other', score: 85, abbr: 'other', url: '//production-content-assets.ratecity.com.au/20190214082641/SR2019_HiRes_BDR_Pen-Other.jpg', type: 'pension' },
   { name: 'MySuper Platinum', score: 100, abbr: 'myplat', url: '//production-content-assets.ratecity.com.au/20190213105910/SR2019_HiRes_BDR_MySuper-Platinum.jpg', type: null },
   { name: 'MySuper Gold', score: 95, abbr: 'mygold', url: '//production-content-assets.ratecity.com.au/20190213105406/SR2019_HiRes_BDR_MySuper-Gold.jpg', type: null },
