@@ -13,6 +13,8 @@ Leaderboard.add({
 	internalName: { type: Types.Text, required: true, index: true, unique: true, initial: true },
 	slug: { type: Types.Text, required: true, index: true, unique: true, initial: true },
 	displayName: { type: Types.Text, required: true, initial: true },
+	displayOrder: { type: Types.Number, required: true, initial: true },
+	ultimateFilterCriteria: { type: Types.Text, required: true, initial: true },
 	description: { type: Types.Text, initial: true },
 	searchCriteria: { type: Types.Text, initial: true },
 	filterAttributes: { type: Types.Text, initial: true },
