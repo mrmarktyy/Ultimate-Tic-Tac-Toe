@@ -29,7 +29,7 @@ EarnRate.add({
   spendAt: { type: Types.Text, initial: true, required: true },
   cardType: {
     type: Types.Select,
-    options: ['Visa', 'MasterCard', 'AMEX', 'Diners Club', 'Visa & AMEX', 'MasterCard & AMEX'],
+    options: ['Visa', 'Mastercard', 'AMEX', 'Diners Club', 'Visa & AMEX', 'Mastercard & AMEX'],
     required: true,
     initial: true,
   },
