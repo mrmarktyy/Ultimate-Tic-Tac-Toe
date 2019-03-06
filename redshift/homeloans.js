@@ -79,6 +79,7 @@ async function prepareDataForRedshift (homeloans) {
       product.updatedat = variation.updatedAt ? moment(variation.updatedAt).format('YYYY-MM-DD HH:mm:ss') : null
       product.productname = name
       product.variationname = variation.name
+      product.providerproductuuid = variation.providerProductName ? variation.providerProductName.uuid : null
       product.providerproductname = variation.providerProductName ? variation.providerProductName.name : null
       product.gotositeenabled = variation.gotoSiteEnabled
       product.gotositeurl = variation.gotoSiteUrl
