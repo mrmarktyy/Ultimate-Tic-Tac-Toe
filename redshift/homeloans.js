@@ -8,6 +8,7 @@ const recommendedMultiplier = require('../utils/recommendedMultiplier').multipli
 const awsUploadToS3 = require('../utils/awsUploadToS3')
 const redshiftQuery = require('../utils/ratecityRedshiftQuery')
 const homeLoanRatingCalculator = require('../services/realTimeRating/homeLoanRatingCalculator')
+const leaderDashBoard = require('../services/realTimeRating/leaderDashBoard.js')
 
 module.exports = async function () {
   try {
@@ -199,6 +200,9 @@ async function prepareDataForRedshift (homeloans) {
   await insertIntoRedshift(homeLoanProducts, filename)
   await homeLoanRatingCalculator.processRedshiftHomeLoans({startDate: collectionDate})
   await homeLoanRatingCalculator.rollingDelete(collectionDate)
+  let dashboard = new leaderDashBoard()
+  await dashboard.process({collectionDate})
+  await homeLoanRatingCalculator.rollingDelete()
 }
 
 async function insertIntoRedshift (rows, filename) {
