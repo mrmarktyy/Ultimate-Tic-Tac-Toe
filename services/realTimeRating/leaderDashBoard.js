@@ -1,5 +1,5 @@
 // node ./services/realTimeRating/leaderDashBoard.js
-// coefficents have no date!
+
 const redshiftQuery = require('../../utils/ratecityRedshiftQuery')
 const awsUploadToS3 = require('../../utils/awsUploadToS3')
 const json2csv = require('json2csv')
@@ -10,20 +10,28 @@ const moment = require('moment')
 
 class leaderDashBoard {
 	constructor () {
-    this.collectionDate = ''
+    this.collectionDate = '2018-01-01' //placeholding value
     this.homeLoanRatings = []
     this.currentLeaderboard = ''
     this.previousLeaderDashBoard = ''
   }
 
-  async process (collectionDate = moment().format('YYYY-MM-DD')) {
+  async process (leaderData) {
+    let {
+      collectionDate = moment().format('YYYY-MM-DD'),
+      leaderboardSlugs = [],
+    } = leaderData
+    console.log('processing leaderDashBoard')
     this.collectionDate = collectionDate
+    let leaderboardFilter = {flexibilityWeighting: 0.3}
+    if (leaderboardSlugs.length) {
+     Object.assign(leaderboardFilter, {slug: {$in: leaderboardSlugs}})
+    }
+
     let connection = await mongoosePromise.connect()
     try {
-      // let leaderboards = await Leaderboard.model.find({ultimateFilterCriteria: {$ne: null}, $where: 'this.ultimateFilterCriteria.length > 1'}).lean().exec()
-      // let leaderboards = await Leaderboard.model.find({slug: 'best-owner-occupied-big-deposit'}).lean().exec()
-      // let leaderboards = await Leaderboard.model.find({slug: 'best'}).lean().exec()
-      let leaderboards = await Leaderboard.model.find({flexibilityWeighting: 0.3}).lean().exec()
+      let leaderboards = await Leaderboard.model.find(leaderboardFilter).lean().exec()
+
       for (let i=0; leaderboards.length > i; i++) {
         let dashboardRankings = []
         this.currentLeaderboard = leaderboards[i]
@@ -31,7 +39,7 @@ class leaderDashBoard {
         dashboardRankings = this.leaderRank(this.currentLeaderboard.ultimateFilterCriteria.includes(`homeloantype = 'FIXED'`))
         dashboardRankings = await this.addPreviousPosition(dashboardRankings)
         if (dashboardRankings.length) {
-          let filename = `dashboard_${this.collectionDate}_${this.currentLeaderboard.slug}`
+          let filename = `dashboard_${this.collectionDate}_${this.currentLeaderboard.slug}.csv`
           await this.insertIntoRedshift(dashboardRankings, Object.keys(dashboardRankings[0]), filename, 'dashboard_ranking_history')
         }
       }
@@ -52,7 +60,6 @@ class leaderDashBoard {
       where h.collectiondate = '${this.collectionDate}'
       and ${this.currentLeaderboard.ultimateFilterCriteria}
     `
-    console.log(this.currentLeaderboard.slug)
     let ratings = await redshiftQuery(sql)
     console.log(sql)
     console.log(ratings.length)
@@ -81,6 +88,7 @@ class leaderDashBoard {
         collectiondate: moment(rating.collectiondate).format('YYYY-MM-DD'), 
         uuid: rating.uuid,
         variationuuid: rating.variationuuid,
+        provideruuid: rating.providerproductuuid,
         userloanamount: rating.userloanamount,
         averagemonthlycost: parseFloat(averagemonthlycost),
         costrating: parseFloat(costrating),
@@ -91,21 +99,21 @@ class leaderDashBoard {
         overallrating: Math.round(overallRating * 100)/100,
         variationposition: 0,
         variationsince: 0,
-        productposition: 0,
-        productsince: 0
+        providerproductposition: 0,
+        providerproductsince: 0,
       }
       records.push(obj)
     })
 
-    let productUUIDs = []
+    let providerUUIDs = []
     records = records.sort((a, b) => a.overallrating == b.overallrating ? 0 : +(b.overallrating > a.overallrating) || -1 )
     records = records.map((record, index) => {
-      let productposition = 0
-      if (!productUUIDs.includes(record.uuid)) {
-        productUUIDs.push(record.uuid)
-        productposition = productUUIDs.length
+      let providerproductposition = 0
+      if (!providerUUIDs.includes(record.provideruuid)) {
+        providerUUIDs.push(record.provideruuid)
+        providerproductposition = providerUUIDs.length
       }
-      return Object.assign(record, {variationposition: index + 1, productposition: productposition})
+      return Object.assign(record, {variationposition: index + 1, providerproductposition: providerproductposition})
     })
     return records
   }
@@ -116,7 +124,7 @@ class leaderDashBoard {
       select * from dashboard_ranking_history
       where collectionDate = '${previousDate}'
       and slug = '${this.currentLeaderboard.slug}'
-      order by productposition desc
+      order by providerproductposition desc
     `
     let previousDash = await redshiftQuery(sql)
     if (previousDash.length) {
@@ -129,15 +137,15 @@ class leaderDashBoard {
           varationdays = previous.variationsince + 1
         }
         let productdays = 0
-        if (record.productposition) {
+        if (record.providerproductposition) {
           previous = previousDash.find((prev) => {
-            return (prev.slug === record.slug && prev.uuid === record.uuid && prev.productposition === record.productposition)
+            return (prev.slug === record.slug && prev.uuid === record.uuid && prev.providerproductposition === record.providerproductposition)
           })
           if (previous) {
-            productdays = previous.productsince + 1
+            productdays = previous.providerproductsince + 1
           }
         }
-        return Object.assign(record, {variationsince: varationdays, productsince: productdays})
+        return Object.assign(record, {variationsince: varationdays, providerproductsince: productdays})
       })
     }
     return records
@@ -154,19 +162,30 @@ class leaderDashBoard {
       await redshiftQuery(command)
     }
   }
+
+  async rollingDelete (days=180) {
+    let enddate = moment(this.collectionDate).subtract(days, 'days').format('YYYY-MM-DD')
+    let command = `delete from dashboard_ranking_history where collectiondate < '${enddate}'`
+    await redshiftQuery(command)
+  }
 }
 
 async function runDashboard () {
   let current = moment('2018-09-28')
   // current = moment('2018-11-26')
-  // let endDate = '2018-09-28'
-  let endDate = '2019-02-28'
+  let endDate = '2018-09-28'
+  // let endDate = '2019-03-05'
   let dashboard = new leaderDashBoard()
+  dashboard.rollingDelete()
   while (current.isSameOrBefore(endDate)) {
-    await dashboard.process(current.format('YYYY-MM-DD'))
+    await dashboard.process({collectionDate: current.format('YYYY-MM-DD')})
+    // await dashboard.process({collectionDate: current.format('YYYY-MM-DD'), leaderboardSlugs: ['best-major-bank']})
     current = current.add(1, 'day')
   }
   console.log('ran dashboard')
+  return 0
 }
 
-runDashboard()
+// runDashboard()
+
+module.exports = leaderDashBoard
