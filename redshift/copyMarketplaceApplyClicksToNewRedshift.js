@@ -1,6 +1,7 @@
 require('dotenv').config()
 const auroraQuery = require('../utils/auroraQuery')
 const newRedshiftQuery = require('../utils/newRedshiftQuery')
+const ratecityRedshiftQuery = require('../utils/ratecityRedshiftQuery')
 const moment = require('moment')
 const json2csv = require('json2csv')
 const awsUploadToS3 = require('../utils/awsUploadToS3')
@@ -37,6 +38,7 @@ module.exports = async function () {
         where updated_at >= \'${datehour}\'
       `
       await newRedshiftQuery(deleteHourRecords, [])
+      await ratecityRedshiftQuery(deleteHourRecords, [])
 
       let insert = `
         copy aurora_marketplace_apply_clicks
@@ -45,6 +47,7 @@ module.exports = async function () {
         CSV QUOTE '${String.fromCharCode(7)}' TRUNCATECOLUMNS
       `
       await newRedshiftQuery(insert, [])
+      await ratecityRedshiftQuery(insert, [])
     }
   } catch(error) {
     console.log(error)
