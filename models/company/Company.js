@@ -38,7 +38,7 @@ Company.add({
 	},
 	classificationType: {
 		type: Types.MultiSelect,
-		options: 'Bank, Mutual, Mutual Bank, Major Bank, Minor Bank, Finance Company, Peer-to-Peer, Online Only',
+		options: 'Bank, Mutual, Mutual Bank, Major Bank, Minor Bank, Finance Company, Peer-to-Peer, Online Only, Super',
 	},
 	isDiscontinued: { type: Types.Boolean, indent: true, default: false },
 	abnOrAcn: { type: Types.Number },
