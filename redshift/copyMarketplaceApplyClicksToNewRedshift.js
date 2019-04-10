@@ -19,7 +19,8 @@ module.exports = async function () {
         product_uuid,
         email,
         to_char(created_at, 'YYYY-MM-DD HH24:MI:SSOF') as created_at,
-        to_char(updated_at, 'YYYY-MM-DD HH24:MI:SSOF') as updated_at
+        to_char(updated_at, 'YYYY-MM-DD HH24:MI:SSOF') as updated_at,
+        system_generated
       from rc_marketplace_apply_clicks
       where updated_at >= \'${datehour}\'
     `
@@ -31,7 +32,7 @@ module.exports = async function () {
         hasCSVColumnTitle: false,
         quotes: String.fromCharCode(7),
       })
-      await awsUploadToS3(s3Extension, csv, 'ratecity-redshift')
+      await awsUploadToS3(s3Extension, csv, bucket)
 
       let deleteHourRecords = `
         delete from aurora_marketplace_apply_clicks
@@ -47,6 +48,16 @@ module.exports = async function () {
         CSV QUOTE '${String.fromCharCode(7)}' TRUNCATECOLUMNS
       `
       await newRedshiftQuery(insert, [])
+
+      bucket = `redshift-2node`
+      s3file = `s3://${bucket}/${s3Extension}`
+      await awsUploadToS3(s3Extension, csv, bucket)
+      insert = `
+        copy aurora_marketplace_apply_clicks
+        from '${s3file}'
+        credentials 'aws_access_key_id=${process.env.S3_KEY};aws_secret_access_key=${process.env.S3_SECRET}'
+        CSV QUOTE '${String.fromCharCode(7)}' TRUNCATECOLUMNS
+      `
       await ratecityRedshiftQuery(insert, [])
     }
   } catch(error) {
