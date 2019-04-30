@@ -50,6 +50,7 @@ async function upsertSuperannuation (list, {type, fy, month}) {
 			superannuation.name = product.product_name
 			superannuation.fy = fy
 			superannuation.month = month
+			superannuation.isDiscontinued = false
 			newProductIds.push(product.product_id)
 
 			let fundGroup = await FundGroup.model.findOne({groupCode: superannuation.group_code}, '_id').exec()
