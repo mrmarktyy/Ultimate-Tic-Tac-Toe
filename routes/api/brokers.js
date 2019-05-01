@@ -26,7 +26,7 @@ exports.list = async function (req, res) {
 		broker.testimonials = fixUrls(broker.testimonials, 'href')
 		if(broker.useProductUUID && broker.productUUID) {
 			let productDetail = await keystone.list(verticalModelMapping[broker.vertical]).model.findOne({ uuid: broker.productUUID }, {name: 1, uuid: 1, _id: 0}).lean().exec()
-			broker.product = {
+			broker.defaultProduct = {
 				...productDetail
 			};
 		}
