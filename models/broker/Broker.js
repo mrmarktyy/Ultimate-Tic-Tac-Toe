@@ -31,7 +31,7 @@ var Broker = new keystone.List('Broker', {track: true}).add({
 	imageHeader: imageStorage('brokerHeader'),
 	guideImageHeader: imageStorage('brokerHeader'),
 	photo: imageStorage('brokerPhoto'),
-  isDiscontinued: {type: Types.Boolean, initial: true, require: true, index: true},
+  	isDiscontinued: {type: Types.Boolean, initial: true, require: true, index: true},
 	phone: {type: Types.Text},
 	default: {type: Types.Boolean, initial: true, require: true},
 	pros: {type: Types.TextArray},
@@ -40,6 +40,8 @@ var Broker = new keystone.List('Broker', {track: true}).add({
 	tiles: {type: Types.Relationship, ref: 'Tile', many: true},
 	testimonials: {type: Types.Relationship, ref: 'Testimonial', many: true},
 	companies: {type: Types.Relationship, ref: 'Company', many: true},
+	useProductUUID: {type: Types.Boolean},
+	productUUID: {type: Types.Text}
 })
 
 Broker.add(shareOfVoiceAttributes)
