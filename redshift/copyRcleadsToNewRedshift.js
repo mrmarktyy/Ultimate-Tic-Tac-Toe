@@ -60,6 +60,17 @@ module.exports = async function () {
       CSV QUOTE '${String.fromCharCode(7)}' TRUNCATECOLUMNS EMPTYASNULL
     `
     await newRedshiftQuery(insert, [])
+
+    bucket = `redshift-2node`
+    s3file = `s3://${bucket}/${s3Extension}`
+    insert = `
+      copy aurora_rc_leads
+      from '${s3file}'
+      credentials 'aws_access_key_id=${process.env.S3_KEY};aws_secret_access_key=${process.env.S3_SECRET}'
+      CSV QUOTE '${String.fromCharCode(7)}' TRUNCATECOLUMNS EMPTYASNULL
+    `
+
+    await awsUploadToS3(s3Extension, csv, bucket)
     await ratecityRedshiftQuery(insert, [])
 
     let deleteOldDupes = `
