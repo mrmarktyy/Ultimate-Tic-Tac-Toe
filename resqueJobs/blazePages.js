@@ -25,6 +25,12 @@ const blazePages = {
         return item
       }).filter((hit) => hit !== null)
 
+      pagesData = [
+        ...pagesData,
+        { value: '/home-loans/chance-to-win-million-dollars', label: '/home-loans/chance-to-win-million-dollars' },
+        { value: '/home-loans/it-pays-to-check', label: '/home-loans/it-pays-to-check' },
+      ]
+
       pagesData.sort((a, b) => (a.value > b.value) - (a.value < b.value))
 
       jsonfile.writeFileSync('data/blazePages.json', pagesData)
