@@ -29,6 +29,11 @@ HomeLoanRateChange.add({
 		initial: true,
 		required: true,
 	},
+	comment: {
+		type: Types.Text,
+		initial: true,
+		required: false,
+	},
 })
 
 HomeLoanRateChange.schema.pre('save', async function (next) {
