@@ -192,7 +192,8 @@ async function prepareDataForRedshift (homeloans) {
       product.saapplicable = stateApplicable(states, 'SA')
       product.actapplicable = stateApplicable(states, 'ACT')
       product.filename = filename
-
+      product.officaladvertisedrate = variation.officalAdvertisedRate ? moment(variation.officalAdvertisedRate).format('YYYY-MM-DD') : null
+      product.officalintrorate = variation.officalIntroRate ? moment(variation.officalIntroRate).format('YYYY-MM-DD') : null
       homeLoanProducts.push(product)
     })
   })

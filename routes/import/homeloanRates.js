@@ -1,5 +1,6 @@
 const keystone = require('keystone')
 const json2csv = require('json2csv')
+const moment = require('moment')
 const csvtojson = require('../../utils/csvToJson')
 const _ = require('lodash')
 
@@ -25,12 +26,19 @@ const headings = [
   {label: 'RevertRate', value: 'revertRate', update: true},
   {label: 'RevertVariationUUID', value: 'revertVariation.uuid', update: false},
   {label: 'IsMonetized', value: 'isMonetized', update: false},
+  {label: 'OfficalAdvertisedRate', value: 'officalAdvertisedRate', update: true},
+  {label: 'OfficalIntroRate', value: 'officalIntroRate', update: true},
 ]
 
 exports.downloadCsv = async (req, res) => {
   let companyUuid = req.body.companyName
   let companyId = await Company.model.findOne({uuid: companyUuid}, {_id: 1})
   let variations = await HomeLoanVariation.model.find({isDiscontinued: false, company: companyId}).populate('company product revertVariation').lean().exec()
+  variations = variations.map((variation) => {
+    variation.officalAdvertisedRate = variation.officalAdvertisedRate ? moment(variation.officalAdvertisedRate).format('YYYY-MM-DD'): variation.officalAdvertisedRate
+    variation.officalIntroRate = variation.officalIntroRate ? moment(variation.officalIntroRate).format('YYYY-MM-DD') : variation.officalIntroRate
+    return variation
+  })
   let csv = json2csv({data: variations, fields: headings})
 
   res.set({'Content-Disposition': 'attachment; filename=homeloanvariations.csv'})
@@ -90,8 +98,12 @@ async function updateFields (item) {
     let updateablekeys =  headings.filter((field) => field.update).map((field) => field.label)
     let selectedKeys = updateablekeys.filter((e) => itemKeys.indexOf(e) > 0)
     let update = {}
+    const dateKeys = ['OfficalAdvertisedRate', 'OfficalIntroRate']
     selectedKeys.forEach((key) =>{
-      let value = item[key] === '' ? null : parseFloat(item[key])
+      let value = item[key]
+      if (dateKeys.indexOf(key) == -1) {
+        value = item[key] === '' ? null : parseFloat(item[key])
+      }
       update[nameConversion[key]] = value
     })
     if (itemKeys.indexOf('RevertVariationUUID') >= 0) {
