@@ -33,8 +33,6 @@ exports = module.exports = function (app) {
   app.post('/redirects', middleware.requireUser, middleware.itUser, routes.views.companyRedirects.redirects)
   app.get('/import-rates', middleware.requireUser, routes.views.importRates)
 	app.get('/generate-conversion-pixel', middleware.requireUser, routes.views.generateConversionPixel)
-  app.get('/click-report-export', middleware.requireUser, routes.views.clickReport.screen)
-  app.post('/click-report-download', middleware.requireUser, routes.views.clickReport.download)
   app.post('/salesforce-push/company', middleware.requireUser, routes.views.salesforcePush.pushCompanies)
   app.post('/salesforce-push/product', middleware.requireUser, routes.views.salesforcePush.pushProducts)
   app.get('/salesforce-push', middleware.requireUser, routes.views.salesforcePush.screen)
@@ -74,7 +72,7 @@ exports = module.exports = function (app) {
   app.get('/api/homeloans/extra', keystone.middleware.api, routes.api.homeloans.listWIthExtraData)
   app.get('/api/homeloans/products', keystone.middleware.api, routes.api.homeloans.listProviderProducts)
   app.get('/api/homeloanRateChange', keystone.middleware.api, routes.api.homeloanRateChange.list)
-  
+
   // Personal Loan
   app.get('/api/personalloans', keystone.middleware.api, routes.api.personalloans.list)
   app.get('/api/personalloans/:id', keystone.middleware.api, routes.api.personalloans.one)
@@ -82,16 +80,8 @@ exports = module.exports = function (app) {
   // Featured Product
   app.get('/api/featured-products', keystone.middleware.api, routes.api.featuredProducts.list)
 
-  app.get('/api/reporting', keystone.middleware.api, routes.api.reporting.json)
-  app.get('/api/reporting.json', keystone.middleware.api, routes.api.reporting.json)
-  app.get('/api/reporting.csv', keystone.middleware.api, routes.api.reporting.csv)
-
   // Sale Event Product
   app.get('/api/sale-event-products', keystone.middleware.api, routes.api.saleEventProducts.list)
-
-  app.get('/api/sale-event-leads', keystone.middleware.api, routes.api.leads.json)
-  app.get('/api/sale-event-leads.json', keystone.middleware.api, routes.api.leads.json)
-  app.get('/api/sale-event-leads.csv', keystone.middleware.api, routes.api.leads.csv)
 
   // Specials
   app.get('/api/specials/:vertical', keystone.middleware.api, routes.api.specials.list)

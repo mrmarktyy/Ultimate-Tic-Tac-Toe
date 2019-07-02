@@ -7,10 +7,7 @@ var monthlyClickCount = require('../resqueJobs/importMonthlyClickCount')
 var paymentMonetizationTypes = require('../resqueJobs/importPaymentMonetizationTypes')
 var homeLoansToRedshift = require('../resqueJobs/loadHomeLoansToRedshift')
 var personalLoansToRedshift = require('../resqueJobs/loadPersonalLoansToRedshift')
-var copyConversionsNewToNewRedshiftJob = require('../resqueJobs/copyConversionsNewToNewRedshiftJob')
-var copyHasoffersConversionsToNewRedshiftJob = require('../resqueJobs/copyHasoffersConversionsToNewRedshiftJob')
 var copyMarketplaceApplyClicksToNewRedshiftJob = require('../resqueJobs/copyMarketplaceApplyClicksToNewRedshiftJob')
-var copyOldApplyClicksToNewRedshiftJob = require('../resqueJobs/copyOldApplyClicksToNewRedshiftJob')
 var copyRcLeadsToNewRedshiftJob = require('../resqueJobs/copyRcLeadsToNewRedshiftJob')
 var creditCardsToRedshift = require('../resqueJobs/loadCreditCardsToRedshift')
 var emailMonthlyClicks = require('../resqueJobs/monthlyClicks')
@@ -37,10 +34,7 @@ const connectionDetails = {
 const jobs = {
   'bankAccountsToRedshift': bankAccountsToRedshift,
   'blazePages': blazePages,
-  'copyConversionsNewToNewRedshiftJob': copyConversionsNewToNewRedshiftJob,
-  'copyHasoffersConversionsToNewRedshiftJob': copyHasoffersConversionsToNewRedshiftJob,
   'copyMarketplaceApplyClicksToNewRedshiftJob': copyMarketplaceApplyClicksToNewRedshiftJob,
-  'copyOldApplyClicksToNewRedshiftJob': copyOldApplyClicksToNewRedshiftJob,
   'copyRcLeadsToNewRedshiftJob': copyRcLeadsToNewRedshiftJob,
   'creditCardsToRedshift': creditCardsToRedshift,
   'emailMonthlyClicks': emailMonthlyClicks,
