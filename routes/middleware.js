@@ -15,6 +15,7 @@ exports.initLocals = function (req, res, next) {
 				{ label: 'Salesforce Push', key: 'salesforcePush', href: '/salesforce-push' },
 				{ label: 'UUID Search', key: 'uuidSearch', href: '/uuid-search' },
 				{ label: 'Company Redirects', key: 'companyRedirects', href: '/company-redirects' },
+				{ label: 'Cloudflare', key: 'cloudflare', href: '/cloudflare' },
 			],
 		},
 	]
