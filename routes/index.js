@@ -46,6 +46,8 @@ exports = module.exports = function (app) {
 	app.get('/import-pages', middleware.requireUser, routes.views.importPages.screen)
 	app.post('/import-page/uploads', middleware.requireUser, routes.views.importPages.uploadFile)
   app.get('/uuid-search', middleware.requireUser, routes.views.uuidSearch.screen)
+  app.get('/cloudflare', middleware.requireUser, routes.views.cloudflare.screen)
+  app.post('/cloudflare-flush-cache-tags', middleware.requireUser, routes.views.cloudflare.flushByCacheTag)
   app.post('/find-uuid', middleware.requireUser, routes.views.uuidSearch.findUuid)
 	app.post('/find-company-uuid', middleware.requireUser, middleware.itUser, routes.views.companyRedirects.getCompany)
   //downloads
@@ -74,7 +76,7 @@ exports = module.exports = function (app) {
   app.get('/api/homeloans/extra', keystone.middleware.api, routes.api.homeloans.listWIthExtraData)
   app.get('/api/homeloans/products', keystone.middleware.api, routes.api.homeloans.listProviderProducts)
   app.get('/api/homeloanRateChange', keystone.middleware.api, routes.api.homeloanRateChange.list)
-  
+
   // Personal Loan
   app.get('/api/personalloans', keystone.middleware.api, routes.api.personalloans.list)
   app.get('/api/personalloans/:id', keystone.middleware.api, routes.api.personalloans.one)
