@@ -94,11 +94,6 @@ async function startResque () {
       await queue.enqueue('ultimate', 'ingestPages')
     }
   })
-  schedule.scheduleJob('10 11 * * *', async () => {
-    if (scheduler.master) {
-      await queue.enqueue('ultimate', 'copyConversionsNewToNewRedshiftJob')
-    }
-  })
   // hourly
   schedule.scheduleJob('25 * * * *', async () => {
     if (scheduler.master) {
@@ -108,11 +103,6 @@ async function startResque () {
   schedule.scheduleJob('28 * * * *', async () => {
     if (scheduler.master) {
       await queue.enqueue('ultimate', 'salesforceProducts')
-    }
-  })
-  schedule.scheduleJob('05 * * * *', async () => {
-    if (scheduler.master) {
-      await queue.enqueue('ultimate', 'copyOldApplyClicksToNewRedshiftJob')
     }
   })
   schedule.scheduleJob('04 * * * *', async () => {
@@ -126,11 +116,6 @@ async function startResque () {
     }
   })
 
-  schedule.scheduleJob('00 * * * *', async () => {
-    if (scheduler.master) {
-      await queue.enqueue('ultimate', 'copyHasoffersConversionsToNewRedshiftJob')
-    }
-  })
   // monthy
   schedule.scheduleJob('0 6 1 * *', async () => {
     if (scheduler.master) {
