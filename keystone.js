@@ -77,6 +77,7 @@ keystone.set('nav', {
 	bankAccount: ['CompanyBankAccount', 'BankAccount', 'BankAccountSpecial'],
   sponsoredLinks: 'SponsoredLink',
   featuredProducts: 'FeaturedProduct',
+  partners: ['Partner', 'PartnerProduct'],
   saleEventProducts: ['SaleEventProduct', 'SaleEventProductField'],
   feeds: ['ProductFeedInclusion', 'ProductFeed', 'WidgetImage'],
   users: 'users',
