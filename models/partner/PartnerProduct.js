@@ -25,7 +25,7 @@ PartnerProduct.add({
   parentUuid: { type: Types.Text, required: true, initial: true },
   uuid: { type: Types.Text, noedit: true },
   vertical: { type: Types.Select, options: verticals, noedit: true },
-  applyUrl: { type: Types.Url, required: true, initial: true },
+  gotoSiteUrl: { type: Types.Url, required: true, initial: true },
   isPhantomProduct: { type: Types.Boolean, indent: true, default: true },
   isBlacklisted: { type: Types.Boolean, indent: true, default: false },
   isDiscontinued: { type: Types.Boolean, indent: true, default: false },
@@ -63,6 +63,11 @@ PartnerProduct.schema.pre('save', async function (next) {
   await changeLogService(this)
   next()
 })
+
+PartnerProduct.schema.methods.remove = function (callback) {
+  this.isDiscontinued = true
+  return this.save(callback)
+}
 
 PartnerProduct.defaultSort = 'isDiscontinued'
 PartnerProduct.defaultColumns = 'name, partner, parentUuid, uuid, vertical'
