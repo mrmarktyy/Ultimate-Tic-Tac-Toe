@@ -27,6 +27,7 @@ PartnerProduct.add({
   vertical: { type: Types.Select, options: verticals, noedit: true },
   applyUrl: { type: Types.Url, required: true, initial: true },
   isPhantomProduct: { type: Types.Boolean, indent: true, default: true },
+  isBlacklisted: { type: Types.Boolean, indent: true, default: false },
   isDiscontinued: { type: Types.Boolean, indent: true, default: false },
 })
 
