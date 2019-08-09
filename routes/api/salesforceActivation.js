@@ -2,6 +2,7 @@ var keystone = require('keystone')
 var salesforceVerticals = require('../../models/helpers/salesforceVerticals')
 var mongoose = require('mongoose')
 var Monetize = keystone.list('Monetize').model
+var PartnerProduct = keystone.list('PartnerProduct')
 var Log = keystone.list('Log')
 var logger = require('../../utils/logger')
 
@@ -13,82 +14,53 @@ function log (event, response) {
   })
 }
 
-exports.monetize = function (req, res) {
-  log('salesforce-incoming', req.body)
+exports.monetize = async function (req, res) {
+  try {
+    log('salesforce-incoming', req.body)
 
-  let products = req.body
-  let missingUUIDs = []
-  let promise
-  let promises = []
+    let products = req.body
+    let missingUUIDs = []
 
-  for (var i = 0; i < products.length; i++) {
-    let changeRequest = products[i]
-    let [ultimateVertical, collection] = translateSalesforceVertical(changeRequest.RC_Product_Type)
-    if (ultimateVertical === false) {
-      continue
-    }
-    let uuid = changeRequest.RC_Product_ID
-
-    let product = keystone.list(collection)
-    promise = product.model.findOne({ uuid: uuid }).populate('company')
-    .exec()
-    .then((product) => {
-      if (product === null) {
-        missingUUIDs.push(uuid)
-      } else {
-        let ProductModel = mongoose.model(collection)
-        return(ProductModel.findOneAndUpdate(
-          {
-            uuid: uuid,
-          },
-          {
-            isMonetized: changeRequest.RC_Active,
-          },
-          {
-            new: true,
-          }, (err) => {
-            if (err) {
-              let comment = 'database error on salesforce monetize display on product uuid ' + uuid + ' ' + err
-              throw comment
-            }
-            Monetize.findOneAndUpdate(
-            {
-              uuid: uuid,
-            },
-            {
-              vertical: ultimateVertical,
-              applyUrl: changeRequest.RC_Url,
-              product: product._id,
-              productName: product.name,
-              companyName: product.company.name,
-              enabled: changeRequest.RC_Active,
-              updatedAt: new Date().toISOString(),
-            },
-            {
-              new: true,
-              upsert: true,
-            }, (err) => {
-              if (err) {
-                let comment = 'database error on salesforce monetize update on uuid ' + uuid + ' ' + err
-                throw comment
-              }
-            }
-            )
-          }
-        ))
+    for (var i = 0; i < products.length; i++) {
+      let partnerProduct = null
+      let changeRequest = products[i]
+      let [ultimateVertical, collection] = translateSalesforceVertical(changeRequest.RC_Product_Type)
+      if (ultimateVertical === false) {
+        continue
       }
-    })
-    .catch((err) => {
-      logger.error(err)
-      let response = { error: err }
-      log('salesforce-response', response)
-      res.jsonp(response)
-    })
+      let uuid = changeRequest.RC_Product_ID
 
-    promises.push(promise)
+      let productModel = keystone.list(collection)
+      let product =  await productModel.model.findOne({ uuid: uuid }).populate('company').lean()
+      if (product) {
+        let ProductModel = mongoose.model(collection)
+        await ProductModel.findOneAndUpdate({uuid: uuid}, {isMonetized: changeRequest.RC_Active}, {new: true})
+      } else {
+        partnerProduct = await PartnerProduct.model.findOne({ uuid: uuid }).lean()
+        if (partnerProduct) {
+          product = await productModel.model.findOne({ uuid: partnerProduct.parentUuid }).populate('company').lean()
+        }
+      }
+      if (!product) {
+        missingUUIDs.push(uuid)
+        continue
+      }
 
-  }
-  Promise.all(promises).then(() => {
+      await Monetize.findOneAndUpdate(
+          { uuid: uuid },
+          {
+            vertical: ultimateVertical,
+            applyUrl: changeRequest.RC_Url,
+            product: partnerProduct ? partnerProduct._id : product._id,
+            productName: partnerProduct ? partnerProduct.name : product.name,
+            companyName: product.company.name,
+            enabled: changeRequest.RC_Active,
+            updatedAt: new Date().toISOString(),
+          },
+          { upsert: true },
+        )
+    }
+
     if (missingUUIDs.length === 0) {
       let response = { text: 'OK' }
       log('salesforce-response', response)
@@ -98,7 +70,12 @@ exports.monetize = function (req, res) {
       log('salesforce-response', response)
       res.status(400).jsonp(response)
     }
-  })
+  } catch (err) {
+      logger.error(err)
+      let response = { error: err }
+      log('salesforce-response', response)
+      res.jsonp(response)
+  }
 }
 
 function translateSalesforceVertical (vertical) {
@@ -110,4 +87,3 @@ function translateSalesforceVertical (vertical) {
   }
   return [ultimateVertical, salesforceVerticals[ultimateVertical].collection]
 }
-

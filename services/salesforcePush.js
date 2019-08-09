@@ -4,9 +4,11 @@ var mongoose = require('mongoose')
 var logger = require('../utils/logger')
 var SalesforceClient = require('./salesforceClient')
 const salesforceVerticals = require('../models/helpers/salesforceVerticals')
+const verticals = require('../models/helpers/verticals')
 var Company = keystoneShell.list('Company')
-var FundGroup = keystoneShell.list('FundGroup')
 var Monetize = keystoneShell.list('Monetize').model
+var PartnerProduct = keystoneShell.list('PartnerProduct')
+
 var client = new SalesforceClient()
 
 var pushCompanies = async function () {
@@ -46,7 +48,7 @@ var pushProducts = async function () {
 var salesforceProductFactory = async function (vertical) {
 	const { collection, findClause, specificClause, salesforceVertical } = salesforceVerticals[vertical]
 	let ProductVertical = keystoneShell.list(collection)
-	let products = await (ProductVertical.model.find(specificClause || findClause).populate('company product').lean())
+  let products = await (ProductVertical.model.find(specificClause || findClause).populate('company product').lean())
 
 	for (var i = 0; i < products.length; i++) {
 		if (vertical == 'Home Loans' && !products[i].isDiscontinued && products[i].product.isDiscontinued) {
@@ -59,9 +61,33 @@ var salesforceProductFactory = async function (vertical) {
 			products[i].applyUrl = monetize.applyUrl
 			products[i].goToSite = monetize.enabled
 		}
-	}
-	let productsStatus = await (client.pushProducts(salesforceVertical, products))
-	return productsStatus
+  }
+  products.push([...await addPartnerProducts(vertical, products)])
+  let productsStatus = await (client.pushProducts(salesforceVertical, products))
+
+  return productsStatus
+}
+
+async function addPartnerProducts (vertical, products) {
+  let records = []
+  let verticalValue = verticals.find((record) => record.label === vertical).value
+  let partnerproducts = await PartnerProduct.model.find({isPhantomProduct: false, vertical: verticalValue}).lean()
+  if (partnerproducts) {
+    partnerproducts.forEach((pp) => {
+      let product = products.find((record) => { return record.uuid === pp.parentUuid })
+      if (product) {
+        records.push({
+          uuid: pp.uuid,
+          company: { uuid: product.company.uuid },
+          name: pp.name,
+          is_discontinued: product.isDiscontinued ? pp.isDiscontinued : false,
+          goToSite: product.goToSite,
+          applyUrl: pp.gotoSiteUrl,
+        })
+      }
+    })
+  }
+  return records
 }
 
 module.exports = {
