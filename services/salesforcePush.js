@@ -71,7 +71,9 @@ var salesforceProductFactory = async function (vertical) {
 async function addPartnerProducts (vertical, products) {
   let records = []
   let verticalValue = verticals.find((record) => record.label === vertical).value
-  let partnerproducts = await PartnerProduct.model.find({isPhantomProduct: false, vertical: verticalValue}).lean()
+  let partnerproducts = await PartnerProduct.model.find(
+     { vertical: verticalValue, isBlacklisted: false, isPhantomProduct: false },
+    ).lean()
   if (partnerproducts) {
     partnerproducts.forEach((pp) => {
       let product = products.find((record) => { return record.uuid === pp.parentUuid })
@@ -87,6 +89,7 @@ async function addPartnerProducts (vertical, products) {
       }
     })
   }
+
   return records
 }
 
