@@ -62,7 +62,11 @@ var salesforceProductFactory = async function (vertical) {
 			products[i].goToSite = monetize.enabled
 		}
   }
-  products.push([...await addPartnerProducts(vertical, products)])
+
+  let partnerProducts = await addPartnerProducts(vertical, products)
+  if (partnerProducts.length > 0 ) {
+    products.push(...partnerProducts)
+  }
   let productsStatus = await (client.pushProducts(salesforceVertical, products))
 
   return productsStatus
@@ -82,7 +86,7 @@ async function addPartnerProducts (vertical, products) {
           uuid: pp.uuid,
           company: { uuid: product.company.uuid },
           name: pp.name,
-          is_discontinued: product.isDiscontinued ? pp.isDiscontinued : false,
+          isDiscontinued: product.isDiscontinued ? pp.isDiscontinued : false,
           goToSite: product.goToSite,
           applyUrl: pp.gotoSiteUrl,
         })
