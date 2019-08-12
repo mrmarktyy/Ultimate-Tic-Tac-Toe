@@ -1,5 +1,4 @@
 const keystone = require('keystone')
-const removeUneededFields = require('../../utils/removeUneededFields')
 
 const PartnerProduct = keystone.list('PartnerProduct')
 
