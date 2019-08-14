@@ -22,12 +22,21 @@ PartnerProduct.add({
     noedit: false,
     many: true,
   },
+  company: {
+    type: Types.Relationship,
+    ref: 'Company',
+    required: false,
+    initial: false,
+    index: false,
+    noedit: true,
+  },
   parentUuid: { type: Types.Text, required: true, initial: true },
   uuid: { type: Types.Text, noedit: true },
   vertical: { type: Types.Select, options: verticals, noedit: true },
   gotoSiteUrl: { type: Types.Url, required: true, initial: true },
   isPhantomProduct: { type: Types.Boolean, indent: true, default: true },
   isBlacklisted: { type: Types.Boolean, indent: true, default: false },
+  notes: { type: Types.Textarea, initial: false },
   isDiscontinued: { type: Types.Boolean, indent: true, default: false },
 })
 
@@ -58,6 +67,9 @@ PartnerProduct.schema.pre('save', async function (next) {
   }
   this.vertical = verticals.find((record) => record.label === vertical).value
   let name = this.partners.length > 1 ? `Multi` : (await Partner.model.findOne({_id: mongoose.Types.ObjectId(this.partners[0])}).lean()).name
+  if (verticalProducts[0].company) {
+    this.company = verticalProducts[0].company._id
+  }
   this.name = name + ' - ' + verticalProducts[0].name
 
   await changeLogService(this)
@@ -70,5 +82,5 @@ PartnerProduct.schema.methods.remove = function (callback) {
 }
 
 PartnerProduct.defaultSort = 'isDiscontinued'
-PartnerProduct.defaultColumns = 'name, partner, parentUuid, uuid, vertical'
+PartnerProduct.defaultColumns = 'name, partners, company, parentUuid, uuid, vertical'
 PartnerProduct.register()
