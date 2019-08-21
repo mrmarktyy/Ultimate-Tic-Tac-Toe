@@ -108,9 +108,9 @@ HomeLoanVariation.schema.pre('validate', async function (next) {
   if (this.maxLVR != null && this.maxLVR % 1 != 0) {
     next(Error('max LVR has to be an integer'))
   }
-  if (this.introductoryRate > this.rate) {
-    next(Error('Introductory Rate need to less or equal than Rate'))
-  }
+  // if (this.introductoryRate > this.rate) {
+  //   next(Error('Introductory Rate need to less or equal than Rate'))
+  // }
 	if (this.fixMonth <= 0) {
 		let product = await keystone.list('HomeLoan').model.findOne({_id: this.product}).lean().exec()
 		product.homeLoanType === 'FIXED' && next(Error('Fix Month should greater than 0 for fixed home loans'))
