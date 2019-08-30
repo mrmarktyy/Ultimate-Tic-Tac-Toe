@@ -75,6 +75,9 @@ exports = module.exports = function (app) {
   app.get('/api/homeloans/products', keystone.middleware.api, routes.api.homeloans.listProviderProducts)
   app.get('/api/homeloanRateChange', keystone.middleware.api, routes.api.homeloanRateChange.list)
 
+  // Home Loan V2
+  app.get('/api/homeloansV2', keystone.middleware.api, routes.api.homeloansV2.list)
+
   // Personal Loan
   app.get('/api/personalloans', keystone.middleware.api, routes.api.personalloans.list)
   app.get('/api/personalloans/:id', keystone.middleware.api, routes.api.personalloans.one)
