@@ -67,7 +67,7 @@ class HomeLoanList {
     .populate({
       path: 'product', select: '-updatedAt -createdAt -createdBy -updatedBy -__v -verified -verifiedBy -verifiedAt -neo4jId -uuid -isDiscontinued -slug -name -company -displayName -promotedOrder'}
     )
-    .populate({ path: 'company', select: '_id name uuid logo favicon classificationType userHasOffers' })
+    .populate({ path: 'company', select: '_id name uuid logo favicon classificationType userHasOffers slug' })
     .populate({ path: 'revertVariation' })
     .lean()
 
