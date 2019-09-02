@@ -132,7 +132,8 @@ class HomeLoanList {
       }
     }
     variation.company_isBank = variation.company_classificationType.some((type) => type.toLowerCase().includes('bank'))
-
+    variation.company_hasOffersEnabled = variation.company_userHasOffers
+    delete variation.company_userHasOffers
     variation.gotoSiteUrl = null
     variation.gotoSiteEnabled = false
     variation.recommendScore = (variation.monthlyClicks ? variation.monthlyClicks * recommendedMultiplier : 0)
