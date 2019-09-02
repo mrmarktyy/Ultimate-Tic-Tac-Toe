@@ -187,9 +187,15 @@ CreditCard.schema.pre('save', async function (next) {
   next()
 })
 
-CreditCard.schema.post('save', async function () {
-	await verifiedService(this)
+CreditCard.schema.post('save', async function (doc, next) {
+  await verifiedService(this)
+  next()
 })
+
+CreditCard.schema.methods.remove = function (callback) {
+  this.isDiscontinued = true
+  return this.save(callback)
+}
 
 CreditCard.defaultSort = 'isDiscontinued'
 CreditCard.defaultColumns = 'name, company, uuid, isMonetized'
