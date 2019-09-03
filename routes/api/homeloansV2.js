@@ -124,13 +124,16 @@ class HomeLoanList {
 
   spawnVariation (variation, monetizedVariations, companyVerticals) {
     if (variation.company_logo) {
-      if (variation.company_logo.url) {
-        variation.company_logo.url = variation.company_logo.url.replace('http://res.cloudinary.com/ratecity/image/upload', '//production-ultimate-assets.ratecity.com.au/ratecity/image/upload/f_auto')
-      }
-      if (variation.company_logo.secure_url) {
-        variation.company_logo.secure_url = variation.company_logo.secure_url.replace('https://res.cloudinary.com', '//production-ultimate-assets.ratecity.com.au')
+      if (variation.company_logo) {
+        variation.company_logo = variation.company_logo.url.replace('http://res.cloudinary.com/ratecity/image/upload', '//production-ultimate-assets.ratecity.com.au/ratecity/image/upload/f_auto')
       }
     }
+    if (variation.company_favicon) {
+      if (variation.company_favicon) {
+        variation.company_favicon = variation.company_favicon.url
+      }
+    }
+
     variation.company_isBank = variation.company_classificationType.some((type) => type.toLowerCase().includes('bank'))
     variation.company_hasOffersEnabled = variation.company_userHasOffers
     delete variation.company_userHasOffers
@@ -155,7 +158,7 @@ class HomeLoanList {
     if (companyVerticals[variation.company_id]) {
       variation.big4ComparisonProduct = companyVerticals[variation.company_id][0].big4ComparisonProduct
     }
-    return _.omit(variation, ['company_logo.public_id', 'company_logo.version', 'company_logo.signature', 'company_logo.width', 'company_logo.height', 'company_logo.format', 'company_logo.resource_type', 'company_favicon.public_id', 'company_favicon.version', 'company_favicon.signature', 'company_favicon.width', 'company_favicon.height', 'company_favicon.format', 'company_favicon.resource_type'])
+    return variation
   }
 }
 
