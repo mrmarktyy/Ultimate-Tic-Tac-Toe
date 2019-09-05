@@ -77,6 +77,7 @@ exports = module.exports = function (app) {
 
   // Home Loan V2
   app.get('/api/homeloansV2', keystone.middleware.api, routes.api.homeloansV2.list)
+  app.get('/api/homeloansV2percentiles', keystone.middleware.api, routes.api.homeloansPercentiles.value)
 
   // Personal Loan
   app.get('/api/personalloans', keystone.middleware.api, routes.api.personalloans.list)
