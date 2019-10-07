@@ -49,7 +49,11 @@ exports.requireUser = function (req, res, next) {
 }
 
 exports.financeUser = function (req, res, next) {
-	const KEY_PEOPLE = ['ian.fletcher@ratecity.com.au', 'pravin.mahajan@ratecity.com.au', 'matthew.halpin@ratecity.com.au']
+	const KEY_PEOPLE = ['ian.fletcher@ratecity.com.au',
+	'pravin.mahajan@ratecity.com.au',
+	'matthew.halpin@ratecity.com.au',
+	'mahendra.duddempudi@ratecity.com.au',
+]
 	if (KEY_PEOPLE.includes(req.user.email) === false) {
 		req.flash('error', 'Only key people have access to this page.')
 		res.redirect('/')
