@@ -14,6 +14,15 @@ var FeaturedProduct = new keystone.List('FeaturedProduct', {
 
 FeaturedProduct.add({
 	uuid: {type: Types.Text, initial: true},
+	productName: {type: Types.Text, initial: true},
+	company: {
+		type: Types.Relationship,
+		ref: 'Company',
+		required: true,
+		initial: true,
+		index: true,
+		noedit: true,
+	},
 	vertical: {type: Types.Select, required: true, options: verticals, initial: true},
 	title: {type: Types.Text, required: true, initial: true, index: true},
 	description: {type: Types.Text, required: true, initial: true},
@@ -58,6 +67,6 @@ FeaturedProduct.schema.post('save', async function () {
 	await verifiedService(this)
 })
 
-FeaturedProduct.defaultColumns = 'uuid, vertical, title, notes, sortOrder, dateStart, dateEnd'
-FeaturedProduct.defaultSort = '-dateStart, vertical, sortOrder'
+FeaturedProduct.defaultColumns = 'uuid, vertical, title, notes, sortOrder, enabled, dateStart, dateEnd, company, shareOfVoiceValue'
+FeaturedProduct.defaultSort = '-enabled, vertical, -dateStart'
 FeaturedProduct.register()
