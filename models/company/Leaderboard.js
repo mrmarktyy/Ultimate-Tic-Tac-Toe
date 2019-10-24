@@ -15,7 +15,7 @@ Leaderboard.add({
 	displayName: { type: Types.Text, required: true, initial: true },
 	displayOrder: { type: Types.Number, required: true, initial: true },
 	ultimateFilterCriteria: { type: Types.Textarea, required: true, initial: true },
-	flexibilityWeighting: { type: Types.Number, required: true },
+	flexibilityWeighting: { type: Types.Number, required: true, initial: true, default: 0.3 },
 	description: { type: Types.Text, initial: true },
 	searchCriteria: { type: Types.Text, initial: true },
 	filterAttributes: { type: Types.Text, initial: true },
