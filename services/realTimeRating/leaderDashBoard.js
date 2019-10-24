@@ -22,7 +22,8 @@ class leaderDashBoard {
       leaderboardSlugs = [],
     } = leaderData
     this.collectionDate = collectionDate
-    let leaderboardFilter = {flexibilityWeighting: 0.3}
+//    let leaderboardFilter = {flexibilityWeighting: 0.3}
+    let leaderboardFilter = {}
     if (leaderboardSlugs.length) {
      Object.assign(leaderboardFilter, {slug: {$in: leaderboardSlugs}})
     }
@@ -185,16 +186,14 @@ class leaderDashBoard {
 }
 
 async function runDashboard () {
-  let current = moment('2018-09-28')
-  // current = moment('2018-11-26')
-  // let endDate = '2018-09-28'
-  let endDate = '2019-03-13'
+  let current = moment('2019-04-26')
+  let endDate = '2019-10-23'
   let dashboard = new leaderDashBoard()
   // await dashboard.process({collectionDate: endDate})
   // dashboard.rollingDelete()
   while (current.isSameOrBefore(endDate)) {
-    await dashboard.process({collectionDate: current.format('YYYY-MM-DD')})
-    // await dashboard.process({collectionDate: current.format('YYYY-MM-DD'), leaderboardSlugs: ['best-major-bank']})
+  //  await dashboard.process({collectionDate: current.format('YYYY-MM-DD')})
+    await dashboard.process({collectionDate: current.format('YYYY-MM-DD'), leaderboardSlugs: ['best-all-lvr-20-flex', 'best-20-lvr-20-flex', 'best-all-lvr-30-flex', 'best-20-lvr-30-flex']})
     current = current.add(1, 'day')
   }
   console.log('ran dashboard')
