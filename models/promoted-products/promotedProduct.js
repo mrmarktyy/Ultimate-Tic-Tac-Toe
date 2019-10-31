@@ -57,4 +57,5 @@ PromotedProduct.schema.post('save', async function () {
 })
 
 PromotedProduct.defaultColumns = 'uuid, vertical, title, order, dateStart, dateEnd, company'
+PromotedProduct.defaultSort = '-dateStart, vertical, order'
 PromotedProduct.register()
