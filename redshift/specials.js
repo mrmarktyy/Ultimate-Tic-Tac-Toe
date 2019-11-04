@@ -3,7 +3,6 @@ require('dotenv').config()
 var keystoneShell = require('../utils/keystoneShell')
 var mongoosePromise = require('../utils/mongoosePromise')
 
-const keystone = require('keystone')
 const json2csv = require('json2csv')
 const moment = require('moment')
 const awsUploadToS3 = require('../utils/awsUploadToS3')

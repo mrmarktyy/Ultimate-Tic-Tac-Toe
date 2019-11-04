@@ -1,7 +1,7 @@
 // node services/realTimeRating/homeLoanRatingCalculator.js
-// dont go over a month in one session
+// dont go over half a month in one session
 // manual run out this code at the bottom of the page.
-// processRedshiftHomeLoans({startDate: '2018-08-01', endDate: '2018-08-31'})
+// processRedshiftHomeLoans({startDate: '2019-05-01', endDate: '2019-05-16'})
 const calculateFlexScore = require('./calculateFlexScore')
 const calculateAvgMonthlyCost = require('./calculateAvgMonthlyCost')
 const calculateFlexRating = require('./calculateFlexRating')
@@ -25,15 +25,18 @@ async function processRedshiftHomeLoans (dateRange = {}) {
     }
     console.log(`started homeloan ratings history ${startDate} - ${endDate}`)
     let products = []
+    let specials = []
     let realTimeRatings = []
 
     const LOAN_AMOUNT_SERIES = loanAmountSeries()
     let currentDate = moment(startDate)
     while (currentDate.isSameOrBefore(moment(endDate))) {
       let currentDateString = currentDate.format('YYYY-MM-DD')
+      console.log(currentDateString)
       products = await pullProducts(currentDateString)
+      specials = await pullSpecials(currentDateString)
       for (let i = 0; LOAN_AMOUNT_SERIES.length > i; i++) {
-        let ratingSeries = await calculateProductRating(currentDateString, products, USER_LOAN_TERM_IN_MONTHS, LOAN_AMOUNT_SERIES[i])
+        let ratingSeries = await calculateProductRating(currentDateString, products, specials, USER_LOAN_TERM_IN_MONTHS, LOAN_AMOUNT_SERIES[i])
         realTimeRatings.push(...ratingSeries)
       }
       currentDate.add(1, 'day')
@@ -49,7 +52,7 @@ async function processRedshiftHomeLoans (dateRange = {}) {
   }
 }
 
-function calculateProductRating (currentDate, products, userLoanTermInMonth, userLoanAmount) {
+function calculateProductRating (currentDate, products, specials, userLoanTermInMonth, userLoanAmount) {
   let minFlexibility = 99999999
   let maxFlexibility = 0
   let lowestMonthlyCostDefault = 99999999
@@ -59,7 +62,10 @@ function calculateProductRating (currentDate, products, userLoanTermInMonth, use
 //  let remainingProducts = products.filter((product) => !(product.mintotalloanamount <= userLoanAmount && product.maxtotalloanamount >= userLoanAmount))
   let realTimeProducts = []
   filteredProducts.forEach((product) => {
+    let special = specials['company'][product.companyuuid] || specials['product'][product.uuid] || specials['variation'][product.variationuuid] || null
     let data = parseProductData(product)
+    data = {...data, ...getSpecialBenefit(special, userLoanAmount)}
+
     let flexibility = calculateFlexScore(product)
 
     data.loanTermInMonth = 360
@@ -121,6 +127,21 @@ function calculateProductRating (currentDate, products, userLoanTermInMonth, use
     realTimeProducts[i].flexibilityRating = calculateFlexRating(realTimeProducts[i].flexibilityScore, maxFlexibility, minFlexibility)
   }
   return realTimeProducts
+}
+
+function getSpecialBenefit (special, userLoanAmount) {
+  let cashBenefit = 0
+  if (special) {
+    cashBenefit = parseInt(special.cashback || 0)
+    let points = (special.bonusffpoints || 0)
+    if (special.bonusffpointsper100kloan) {
+      points = points + (Math.floor((userLoanAmount/100000) * special.bonusffpointsper100kloan))
+    }
+    if (points && (special.giftpoints || special.cashpoints)) {
+      cashBenefit = cashBenefit + ((Math.floor(points/(special.giftpoints || special.cashpoints)) * 100))
+    }
+  }
+  return {cashBenefit: cashBenefit}
 }
 
 function parseProductData (product) {
@@ -190,10 +211,49 @@ function parseProductData (product) {
 
 async function pullProducts (collectionDate) {
   let command = `
-    select * from home_loans_history where collectionDate = $1
-    and isDiscontinued = false
+    select hl.* from home_loans_history hl 
+    where hl.collectionDate = $1
+    and hl.isDiscontinued = false
   `
   return await redshiftQuery(command, [collectionDate])
+}
+
+async function pullSpecials (collectionDate) {
+  let command = `
+    select s.*,
+    case
+      when s.bonusffpoints > 0 or s.bonusffpointsper100kloan > 0 then
+        (select nvl(min(pointsrequired),0) from credit_cards_redemptions_history gift
+          where gift.collectiondate = s.collectiondate and gift.partnerprogram = s.ffredemptionprogram
+          and redemptionname = '$100 gift card')
+      else 0
+    end as giftpoints,
+    case
+      when s.bonusffpoints > 0 or s.bonusffpointsper100kloan > 0 then
+          (select nvl(min(pointsrequired),0) from credit_cards_redemptions_history gift
+          where gift.collectiondate = s.collectiondate and gift.partnerprogram = s.ffredemptionprogram
+          and redemptionname = '$100 cash back')
+      else 0
+    end as cashpoints
+    from specials_history s 
+    where s.collectionDate = $1 and s.type in ('Cashback', 'Rewards')
+    and vertical = $2
+  `
+  let records = await redshiftQuery(command, [collectionDate, 'HomeLoan'])
+
+  let specials = {company: {}, product: {}, variation: {}}
+  if (records.length > 0) {
+    records.forEach((record) => {
+      if (!!record.companyuuid & !record.productuuid & !record.variationuuid) {
+        specials['company'][record.companyuuid] = record
+      } else if (!!record.companyuuid & !!record.productuuid & !record.variationuuid) {
+        specials['product'][record.productuuid] = record
+      } else {
+        specials['variation'][record.variationuuid] = record
+      }
+    })
+  }
+  return specials
 }
 
 function loanAmountSeries () {
@@ -208,7 +268,7 @@ function loanAmountSeries () {
 async function insertIntoRedshift (startDate, endDate, rows) {
   if (rows.length > 0) {
     let filename = getFileName(startDate, endDate)
-    let table = 'home_loans_ratings_history'
+    let table = 'home_loans_ratings_history_ian'
     let head = headers(rows[0])
     let csv = json2csv({data: rows, fields: head, hasCSVColumnTitle: false})
     let filepath = `home-loans-ratings-history/${process.env.REDSHIFT_DATABASE}/${filename}.csv`
@@ -243,6 +303,8 @@ async function rollingDelete (collectionDate, days = 180) {
   let command = `delete from home_loans_ratings_history where collectionDate < $1`
   await redshiftQuery(command, [lastActiveDay])
 }
+
+processRedshiftHomeLoans({startDate: '2019-10-30', endDate: '2019-10-30'})
 
 module.exports = {
   processRedshiftHomeLoans,

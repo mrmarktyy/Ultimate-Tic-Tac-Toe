@@ -17,6 +17,7 @@ module.exports = function (data) {
     introLoan,
     fixedRate,
     fixedTermInMonth,
+    cashBenefit,
   } = data
 
   const repayments = []
@@ -66,11 +67,17 @@ module.exports = function (data) {
 
   const size = repayments.length - 1
 
+  let remainingBenefit = cashBenefit
   for (let i = 0; i <= size; i++) {
     if (i === 0) {
       repayments[i] = repayments[i] + totalUpfrontFees
     }
-    repayments[i] = repayments[i] + totalMonthlyFees // add monthly fee
+    repayments[i] = repayments[i] + totalMonthlyFees
+    if (remainingBenefit > 0) {
+      let remainder = -repayments[i] + remainingBenefit
+      repayments[i] = remainder > 0 ? 0 : repayments[i] - remainingBenefit
+      remainingBenefit = remainder
+    }
     if (i % 12 === 0) {
       repayments[i] = repayments[i] + totalYearlyFees// add yearly fee
     }
