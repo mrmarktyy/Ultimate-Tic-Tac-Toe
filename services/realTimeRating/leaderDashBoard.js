@@ -61,8 +61,8 @@ class leaderDashBoard {
       and ${this.currentLeaderboard.ultimateFilterCriteria}
     `
     let ratings = await redshiftQuery(sql)
-    console.log(sql)
-    console.log(ratings.length)
+    // console.log(sql)
+    // console.log(ratings.length)
     return ratings
   }
 
@@ -170,21 +170,19 @@ class leaderDashBoard {
   }
 }
 
-async function runDashboard () {
-  let current = moment('2018-09-28')
-  // current = moment('2018-11-26')
-  let endDate = '2018-09-28'
-  // let endDate = '2019-03-05'
-  let dashboard = new leaderDashBoard()
-  dashboard.rollingDelete()
-  while (current.isSameOrBefore(endDate)) {
-    await dashboard.process({collectionDate: current.format('YYYY-MM-DD')})
-    // await dashboard.process({collectionDate: current.format('YYYY-MM-DD'), leaderboardSlugs: ['best-major-bank']})
-    current = current.add(1, 'day')
-  }
-  console.log('ran dashboard')
-  return 0
-}
+// async function runDashboard () {
+//   let current = moment('2019-10-23')
+//   let endDate = '2019-10-24'
+//   let dashboard = new leaderDashBoard()
+//   dashboard.rollingDelete()
+//   while (current.isSameOrBefore(endDate)) {
+//   //  await dashboard.process({collectionDate: current.format('YYYY-MM-DD')})
+//     await dashboard.process({collectionDate: current.format('YYYY-MM-DD'), leaderboardSlugs: ['best-investment-purpose-20-lvr-20-flex', 'best-investment-purpose-20-lvr-30-flex']})
+//     current = current.add(1, 'day')
+//   }
+//   console.log('ran dashboard')
+//   return 0
+// }
 
 // runDashboard()
 
