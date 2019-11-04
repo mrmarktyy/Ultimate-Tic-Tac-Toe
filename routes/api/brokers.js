@@ -23,10 +23,10 @@ exports.list = async function (req, res) {
 			broker.companies = broker.companies.map((company) => CompanyService.fixLogoUrl(company))
 		}
 		if (broker.backgroundImage) {
-			broker.backgroundImage.url = broker.backgroundImage.url.replace('http://res.cloudinary.com/ratecity/image/upload', '//production-ultimate-assets.ratecity.com.au/ratecity/image/upload/f_auto')
+			broker.backgroundImage.url = broker.backgroundImage.url.replace('http://res.cloudinary.com/ratecity/image/upload', '//production-ultimate-assets.ratecity.com.au/ratecity/image/upload')
 		}
 		if (broker.guideImageHeader) {
-			broker.guideImageHeader.url = broker.guideImageHeader.url.replace('http://res.cloudinary.com/ratecity/image/upload', '//production-ultimate-assets.ratecity.com.au/ratecity/image/upload/f_auto')
+			broker.guideImageHeader.url = broker.guideImageHeader.url.replace('http://res.cloudinary.com/ratecity/image/upload', '//production-ultimate-assets.ratecity.com.au/ratecity/image/upload')
 		}
 		broker.tiles = fixUrls(broker.tiles, 'icon')
 		broker.testimonials = fixUrls(broker.testimonials, 'href')

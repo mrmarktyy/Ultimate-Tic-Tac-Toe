@@ -125,7 +125,7 @@ class HomeLoanList {
   spawnVariation (variation, monetizedVariations, companyVerticals) {
     if (variation.company_logo) {
       if (variation.company_logo) {
-        variation.company_logo = variation.company_logo.url.replace('http://res.cloudinary.com/ratecity/image/upload', '//production-ultimate-assets.ratecity.com.au/ratecity/image/upload/f_auto')
+        variation.company_logo = variation.company_logo.url.replace('http://res.cloudinary.com/ratecity/image/upload', '//production-ultimate-assets.ratecity.com.au/ratecity/image/upload')
       }
     }
     if (variation.company_favicon) {
