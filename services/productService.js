@@ -1,6 +1,6 @@
 require('dotenv').config()
 
-var keystoneShell = require('../utils/keystoneShell')
+var keystoneShell = require('../utils/keystoneShellx')
 const ALLVERTICALS = require('../models/helpers/salesforceVerticals')
 var _ = require('lodash')
 

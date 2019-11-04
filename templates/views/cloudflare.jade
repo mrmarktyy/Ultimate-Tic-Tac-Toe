@@ -1,0 +1,37 @@
+extends ../layouts/default
+
+block content
+  .container
+    h1 Flush Cloudflare Cache By Cache Tag
+    .row
+      .col-sm-8
+        .form-group
+          input(type="text", placeholder="Enter cache tags, separated by comma ", size="38", id='cache_tags', style='padding: 10px; width: 100%;')
+        button.btn.btn-large.btn-primary(style='margin-bottom: 20px;' id='flush') Flush
+
+    .row
+      .col-sm-8
+        #result
+
+block js
+    script.
+      const done = () => {
+        $('#result').empty()
+        $('#cache_tags').val('')
+      }
+
+      $(document).ready(function() {
+        $('#flush').click(function(e) {
+          const tags = $('#cache_tags').val()
+          if (!tags) return
+          $.ajax({
+            method: "POST",
+            url: "/cloudflare-flush-cache-tags",
+            data: { tags },
+          })
+            .done(function(data) {
+              done()
+              $('#result').append(`<pre><code>${JSON.stringify(data, null, 2).trim()}</code></pre>`)
+            })
+        })
+      })

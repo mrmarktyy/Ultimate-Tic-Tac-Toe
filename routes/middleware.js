@@ -6,7 +6,6 @@ var _ = require('lodash')
 exports.initLocals = function (req, res, next) {
 	res.locals.navLinks = [
 		{ label: 'Import Rates', key: 'importRates', href: '/import-rates' },
-		{ label: 'Click Report', key: 'monthlyClicks', href: '/click-report-export' },
 		{ label: 'Import ECPC', key: 'importEcpc', href: '/import-ecpc' },
 		{ label: 'Export Leads', key: 'exportLeads', href: '/monthly-leads-export' },
 		{ label: 'Import Pages', key: 'importPages', href: '/import-pages' },
@@ -15,6 +14,7 @@ exports.initLocals = function (req, res, next) {
 				{ label: 'Salesforce Push', key: 'salesforcePush', href: '/salesforce-push' },
 				{ label: 'UUID Search', key: 'uuidSearch', href: '/uuid-search' },
 				{ label: 'Company Redirects', key: 'companyRedirects', href: '/company-redirects' },
+				{ label: 'Cloudflare', key: 'cloudflare', href: '/cloudflare' },
 			],
 		},
 	]
@@ -49,7 +49,11 @@ exports.requireUser = function (req, res, next) {
 }
 
 exports.financeUser = function (req, res, next) {
-	const KEY_PEOPLE = ['ian.fletcher@ratecity.com.au', 'pravin.mahajan@ratecity.com.au', 'matthew.halpin@ratecity.com.au']
+	const KEY_PEOPLE = ['ian.fletcher@ratecity.com.au',
+	'pravin.mahajan@ratecity.com.au',
+	'matthew.halpin@ratecity.com.au',
+	'mahendra.duddempudi@ratecity.com.au',
+]
 	if (KEY_PEOPLE.includes(req.user.email) === false) {
 		req.flash('error', 'Only key people have access to this page.')
 		res.redirect('/')

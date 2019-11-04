@@ -21,9 +21,9 @@ class leaderDashBoard {
       collectionDate = moment().format('YYYY-MM-DD'),
       leaderboardSlugs = [],
     } = leaderData
-    console.log('processing leaderDashBoard')
     this.collectionDate = collectionDate
-    let leaderboardFilter = {flexibilityWeighting: 0.3}
+//    let leaderboardFilter = {flexibilityWeighting: 0.3}
+    let leaderboardFilter = {}
     if (leaderboardSlugs.length) {
      Object.assign(leaderboardFilter, {slug: {$in: leaderboardSlugs}})
     }
@@ -31,7 +31,6 @@ class leaderDashBoard {
     let connection = await mongoosePromise.connect()
     try {
       let leaderboards = await Leaderboard.model.find(leaderboardFilter).lean().exec()
-
       for (let i=0; leaderboards.length > i; i++) {
         let dashboardRankings = []
         this.currentLeaderboard = leaderboards[i]
@@ -98,8 +97,10 @@ class leaderDashBoard {
         flexibility: Math.round(flexibility * 100)/100,
         overallrating: Math.round(overallRating * 100)/100,
         variationposition: 0,
+        variationpositionprevious: 0,
         variationsince: 0,
         providerproductposition: 0,
+        providerproductpositionprevious: 0,
         providerproductsince: 0,
       }
       records.push(obj)
@@ -130,11 +131,19 @@ class leaderDashBoard {
     if (previousDash.length) {
       records = records.map((record) => {
         let varationdays = 0
+        let variationpositionprevious = 0
+        let providerproductpositionprevious = 0
         let previous = previousDash.find((prev) => {
           return (prev.slug === record.slug && prev.variationuuid === record.variationuuid && prev.variationposition === record.variationposition)
         })
         if (previous) {
           varationdays = previous.variationsince + 1
+          variationpositionprevious = previous.variationposition
+        } else {
+          previous = previousDash.find((prev) => {
+            return (prev.slug === record.slug && prev.variationuuid === record.variationuuid)
+          })
+          variationpositionprevious = previous ? previous.variationposition || 0 : 0
         }
         let productdays = 0
         if (record.providerproductposition) {
@@ -143,9 +152,15 @@ class leaderDashBoard {
           })
           if (previous) {
             productdays = previous.providerproductsince + 1
+            providerproductpositionprevious = previous.providerproductposition
+          } else {
+            previous = previousDash.find((prev) => {
+              return (prev.slug === record.slug && prev.uuid === record.uuid && prev.providerproductposition > 0)
+            })
+            providerproductpositionprevious = previous ? previous.providerproductposition || 0 : 0
           }
         }
-        return Object.assign(record, {variationsince: varationdays, providerproductsince: productdays})
+        return Object.assign(record, {variationpositionprevious: variationpositionprevious, variationsince: varationdays, providerproductpositionprevious: providerproductpositionprevious, providerproductsince: productdays})
       })
     }
     return records
@@ -170,19 +185,21 @@ class leaderDashBoard {
   }
 }
 
-// async function runDashboard () {
-//   let current = moment('2019-10-23')
-//   let endDate = '2019-10-24'
-//   let dashboard = new leaderDashBoard()
-//   dashboard.rollingDelete()
-//   while (current.isSameOrBefore(endDate)) {
-//   //  await dashboard.process({collectionDate: current.format('YYYY-MM-DD')})
-//     await dashboard.process({collectionDate: current.format('YYYY-MM-DD'), leaderboardSlugs: ['best-investment-purpose-20-lvr-20-flex', 'best-investment-purpose-20-lvr-30-flex']})
-//     current = current.add(1, 'day')
-//   }
-//   console.log('ran dashboard')
-//   return 0
-// }
+
+async function runDashboard () {
+   let current = moment('2019-10-23')
+   let endDate = '2019-10-24'
+   let dashboard = new leaderDashBoard()
+   dashboard.rollingDelete()
+   while (current.isSameOrBefore(endDate)) {
+   //  await dashboard.process({collectionDate: current.format('YYYY-MM-DD')})
+     await dashboard.process({collectionDate: current.format('YYYY-MM-DD'), leaderboardSlugs: ['best-investment-purpose-20-lvr-20-flex', 'best-investment-purpose-20-lvr-30-flex']})
+     current = current.add(1, 'day')
+   }
+   console.log('ran dashboard')
+   return 0
+}
+
 
 // runDashboard()
 

@@ -33,8 +33,6 @@ exports = module.exports = function (app) {
   app.post('/redirects', middleware.requireUser, middleware.itUser, routes.views.companyRedirects.redirects)
   app.get('/import-rates', middleware.requireUser, routes.views.importRates)
 	app.get('/generate-conversion-pixel', middleware.requireUser, routes.views.generateConversionPixel)
-  app.get('/click-report-export', middleware.requireUser, routes.views.clickReport.screen)
-  app.post('/click-report-download', middleware.requireUser, routes.views.clickReport.download)
   app.post('/salesforce-push/company', middleware.requireUser, routes.views.salesforcePush.pushCompanies)
   app.post('/salesforce-push/product', middleware.requireUser, routes.views.salesforcePush.pushProducts)
   app.get('/salesforce-push', middleware.requireUser, routes.views.salesforcePush.screen)
@@ -46,6 +44,8 @@ exports = module.exports = function (app) {
 	app.get('/import-pages', middleware.requireUser, routes.views.importPages.screen)
 	app.post('/import-page/uploads', middleware.requireUser, routes.views.importPages.uploadFile)
   app.get('/uuid-search', middleware.requireUser, routes.views.uuidSearch.screen)
+  app.get('/cloudflare', middleware.requireUser, routes.views.cloudflare.screen)
+  app.post('/cloudflare-flush-cache-tags', middleware.requireUser, routes.views.cloudflare.flushByCacheTag)
   app.post('/find-uuid', middleware.requireUser, routes.views.uuidSearch.findUuid)
 	app.post('/find-company-uuid', middleware.requireUser, middleware.itUser, routes.views.companyRedirects.getCompany)
   //downloads
@@ -68,11 +68,17 @@ exports = module.exports = function (app) {
 
   // Company
   app.get('/api/companies', keystone.middleware.api, routes.api.companies.list)
+  app.get('/api/companiesV2', keystone.middleware.api, routes.api.companiesV2.list)
 
   // Home Loan
   app.get('/api/homeloans', keystone.middleware.api, routes.api.homeloans.list)
   app.get('/api/homeloans/extra', keystone.middleware.api, routes.api.homeloans.listWIthExtraData)
   app.get('/api/homeloans/products', keystone.middleware.api, routes.api.homeloans.listProviderProducts)
+  app.get('/api/homeloanRateChange', keystone.middleware.api, routes.api.homeloanRateChange.list)
+
+  // Home Loan V2
+  app.get('/api/homeloansV2', keystone.middleware.api, routes.api.homeloansV2.list)
+  app.get('/api/homeloansV2percentiles', keystone.middleware.api, routes.api.homeloansPercentiles.value)
 
   // Personal Loan
   app.get('/api/personalloans', keystone.middleware.api, routes.api.personalloans.list)
@@ -81,16 +87,8 @@ exports = module.exports = function (app) {
   // Featured Product
   app.get('/api/featured-products', keystone.middleware.api, routes.api.featuredProducts.list)
 
-  app.get('/api/reporting', keystone.middleware.api, routes.api.reporting.json)
-  app.get('/api/reporting.json', keystone.middleware.api, routes.api.reporting.json)
-  app.get('/api/reporting.csv', keystone.middleware.api, routes.api.reporting.csv)
-
   // Sale Event Product
   app.get('/api/sale-event-products', keystone.middleware.api, routes.api.saleEventProducts.list)
-
-  app.get('/api/sale-event-leads', keystone.middleware.api, routes.api.leads.json)
-  app.get('/api/sale-event-leads.json', keystone.middleware.api, routes.api.leads.json)
-  app.get('/api/sale-event-leads.csv', keystone.middleware.api, routes.api.leads.csv)
 
   // Specials
   app.get('/api/specials/:vertical', keystone.middleware.api, routes.api.specials.list)
@@ -146,5 +144,10 @@ exports = module.exports = function (app) {
 	app.get('/api/blacklist-user', keystone.middleware.api, routes.api.blacklistUser.list)
 
 	//Coefficients
-	app.get('/api/coefficients', keystone.middleware.api, routes.api.coefficients.list)
+  app.get('/api/coefficients', keystone.middleware.api, routes.api.coefficients.list)
+  
+  // Partner Products
+  app.get('/api/partner-products', keystone.middleware.api, routes.api.partnerProducts.list)
+
+  app.get('/api/partners', keystone.middleware.api, routes.api.partner.list)
 }

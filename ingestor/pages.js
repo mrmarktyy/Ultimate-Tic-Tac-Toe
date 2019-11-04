@@ -5,15 +5,27 @@ const changeCase = require('change-case')
 const async = require('async')
 const uuid = require('node-uuid')
 var keystoneShell = require('../utils/keystoneShell')
+var { objectToQueryString } = require('../utils/common')
 const mongoosePromise = require('../utils/mongoosePromise')
 const Pages = keystoneShell.list('Pages')
 const verticals = [...require('../models/helpers/verticals'), {value: 'nonspecific', label: 'Non Specific'}]
 
+const getSearchPagesData = async (queryParams, page = 1, perPage = 1000) => {
+	const queryString = objectToQueryString(queryParams);
+	let pages = await fetchPages(`${process.env.RATECITY_PAGE_API}?page=${page}&per_page=${perPage}&${queryString}`)
+	totalCount = pages.meta.total_count;
+	await updateUltimatePages(pages.hits)
+	if((page*perPage) < totalCount){
+		await getSearchPagesData(queryParams, ++page);
+	}
+}
+
 module.exports = async function () {
 	let connection = await mongoosePromise.connect()
 	try {
-		const pages = await fetchPages(`${process.env.RATECITY_PAGE_API}?page=1&per_page=9000&showAll=true`)
-		await updateUltimatePages(pages.hits)
+		await getSearchPagesData({ showAll: true });
+		await getSearchPagesData({ generatedFromType: 'homeloan' });
+		await getSearchPagesData({ generatedFromType: 'homeloanpages' });
 	} catch (error) {
 		console.log('Error: ', error)
 	}

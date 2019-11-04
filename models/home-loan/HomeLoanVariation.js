@@ -53,12 +53,14 @@ HomeLoanVariation.add({
 	maxTotalLoanAmount: {type: Types.Number, initial: true},
 	minLVR: {type: Types.Number, initial: true},
 	maxLVR: {type: Types.Number, initial: true},
-	rate: {type: Types.Number, initial: true, required: true},
+  rate: {type: Types.Number, initial: true, required: true},
+  officalAdvertisedRate: {type: Types.Date, indent: true, default: null},
 	comparisonRate: {type: Types.Number, initial: true},
 	calculatedComparisonRate: {type: Types.Number, initial: true, noedit: true},
 	revertRate: {type: Types.Number, initial: true},
 	introductoryRate: {type: Types.Number, initial: true},
-	introductoryTerm: {type: Types.Number, initial: true},
+  officalIntroRate: {type: Types.Date, indent: true, default: null},
+  introductoryTerm: {type: Types.Number, initial: true},
 	revertVariation: {
 		type: Types.Relationship,
 		ref: 'HomeLoanVariation',
@@ -106,9 +108,9 @@ HomeLoanVariation.schema.pre('validate', async function (next) {
   if (this.maxLVR != null && this.maxLVR % 1 != 0) {
     next(Error('max LVR has to be an integer'))
   }
-  if (this.introductoryRate > this.rate) {
-    next(Error('Introductory Rate need to less or equal than Rate'))
-  }
+  // if (this.introductoryRate > this.rate) {
+  //   next(Error('Introductory Rate need to less or equal than Rate'))
+  // }
 	if (this.fixMonth <= 0) {
 		let product = await keystone.list('HomeLoan').model.findOne({_id: this.product}).lean().exec()
 		product.homeLoanType === 'FIXED' && next(Error('Fix Month should greater than 0 for fixed home loans'))

@@ -1,7 +1,7 @@
 require('dotenv').config()
 const logger = require('../utils/logger')
 
-const redshiftQuery = require('../utils/redshiftQuery')
+const newRedshiftQuery = require('../utils/newRedshiftQuery')
 const keystoneShell = require('../utils/keystoneShell')
 const mongoosePromise = require('../utils/mongoosePromise')
 const salesforceVerticals = require('../models/helpers/salesforceVerticals')
@@ -10,8 +10,10 @@ module.exports = async function () {
   let startDay = new Date()
   startDay.setDate(startDay.getDate() - 30)
   startDay = startDay.getFullYear() + '-' + (startDay.getMonth() + 1) + '-' + startDay.getDate()
-  let sqlCommand = 'select vertical, product_uuid AS uuid, count(1) AS clicks from apply_clicks where datetime >= $1 group by vertical, product_uuid'
-  let uuidsWithClicks = await redshiftQuery(sqlCommand, [startDay])
+  let sqlCommand = `
+    select vertical, product_uuid AS uuid, count(1) AS clicks from rc_apply_clicks where datetime >= $1 and vertical != 'nonspecific' group by vertical, product_uuid
+  `
+  let uuidsWithClicks = await newRedshiftQuery(sqlCommand, [startDay])
 
   await importMonthyClicks(uuidsWithClicks)
 }

@@ -28,6 +28,7 @@ BankAccount.add({
 	minimumDepositRequiredForFeeFree: { type: Types.Number },
 	minimumDepositRequiredForFeeFreeFrequency: { type: Types.Select, options: frequency },
 	minimumAgeRestrictions: { type: Types.Number },
+	isKidsOrStudentAccount: {type: Types.Boolean, indent: true, initial: false},
 	maximumAgeRestrictions: { type: Types.Number },
 	linkedAccountRequired: { type: Types.Select, options: availableOptions.all, default: availableOptions.unknown },
 	jointApplicationAvailable: { type: Types.Select, options: availableOptions.all, default: availableOptions.yes },

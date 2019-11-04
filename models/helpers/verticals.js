@@ -14,7 +14,8 @@ var verticals = [
 	{ value: 'bank-accounts', label: 'Bank Accounts' },
 	{ value: 'infographic', label: 'Infographic' },
 	{ value: 'investment-funds', label: 'Investment Funds' },
-	{ value: 'default', label: 'Default' },
+  { value: 'default', label: 'Default' },
+  { value: 'nonspecific', label: 'nonspecific' },
 ]
 
 Object.entries(genericVerticals).forEach(([key, value]) => {

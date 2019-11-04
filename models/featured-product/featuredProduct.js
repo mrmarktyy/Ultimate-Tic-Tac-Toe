@@ -59,4 +59,5 @@ FeaturedProduct.schema.post('save', async function () {
 })
 
 FeaturedProduct.defaultColumns = 'uuid, vertical, title, notes, sortOrder, dateStart, dateEnd'
+FeaturedProduct.defaultSort = '-dateStart, vertical, sortOrder'
 FeaturedProduct.register()

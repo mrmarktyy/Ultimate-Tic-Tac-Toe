@@ -1,6 +1,7 @@
 require('dotenv').config()
 const auroraQuery = require('../utils/auroraQuery')
 const newRedshiftQuery = require('../utils/newRedshiftQuery')
+const ratecityRedshiftQuery = require('../utils/ratecityRedshiftQuery')
 const moment = require('moment')
 const json2csv = require('json2csv')
 const awsUploadToS3 = require('../utils/awsUploadToS3')
@@ -50,6 +51,7 @@ module.exports = async function () {
       where updated_at >= \'${datehour}\'
     `
     await newRedshiftQuery(deleteHourRecords, [])
+    await ratecityRedshiftQuery(deleteHourRecords, [])
 
     let insert = `
       copy aurora_rc_leads
@@ -58,6 +60,18 @@ module.exports = async function () {
       CSV QUOTE '${String.fromCharCode(7)}' TRUNCATECOLUMNS EMPTYASNULL
     `
     await newRedshiftQuery(insert, [])
+
+    bucket = `redshift-2node`
+    s3file = `s3://${bucket}/${s3Extension}`
+    insert = `
+      copy aurora_rc_leads
+      from '${s3file}'
+      credentials 'aws_access_key_id=${process.env.S3_KEY};aws_secret_access_key=${process.env.S3_SECRET}'
+      CSV QUOTE '${String.fromCharCode(7)}' TRUNCATECOLUMNS EMPTYASNULL
+    `
+
+    await awsUploadToS3(s3Extension, csv, bucket)
+    await ratecityRedshiftQuery(insert, [])
 
     let deleteOldDupes = `
       delete from aurora_rc_leads
@@ -68,5 +82,6 @@ module.exports = async function () {
       )
     `
     await newRedshiftQuery(deleteOldDupes, [])
+    await ratecityRedshiftQuery(deleteOldDupes, [])
   }
 }

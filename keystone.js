@@ -70,13 +70,14 @@ keystone.set('email locals', {
 
 keystone.set('nav', {
   companies: ['Company', 'Branch', 'ATM', 'Leaderboard'],
-  homeLoans: ['CompanyHomeLoan', 'HomeLoanFamily', 'ProviderProductName', 'HomeLoan', 'HomeLoanVariation', 'HomeLoanSpecial', 'ExtraRepayment', 'OffsetAccount', 'RedrawFacility', 'Fee', 'Feature', 'Condition'],
+  homeLoans: ['CompanyHomeLoan', 'HomeLoanFamily', 'ProviderProductName', 'HomeLoan', 'HomeLoanVariation', 'HomeLoanSpecial', 'ExtraRepayment', 'OffsetAccount', 'RedrawFacility', 'Fee', 'Feature', 'Condition', 'HomeLoanRateChange'],
   creditCards: ['CompanyCreditCard', 'CreditCard', 'CreditCardSpecial', 'EarnRate', 'Redemption', 'PartnerConversion', 'Program', 'RedemptionType', 'RedemptionName', 'Perk', 'PerkType'],
   personalLoans: ['CompanyPersonalLoan', 'PersonalLoan', 'PersonalLoanSpecial', 'PersonalLoanVariation', 'PersonalLoanQualification', 'Knockout', 'BureauExpression', 'BureauAttribute'],
   savingsAccounts: ['CompanySavingsAccount', 'SavingsAccount', 'SavingsAccountSpecial', 'SavingsAccountTier'],
 	bankAccount: ['CompanyBankAccount', 'BankAccount', 'BankAccountSpecial'],
   sponsoredLinks: 'SponsoredLink',
   featuredProducts: 'FeaturedProduct',
+  partners: ['Partner', 'PartnerProduct'],
   saleEventProducts: ['SaleEventProduct', 'SaleEventProductField'],
   feeds: ['ProductFeedInclusion', 'ProductFeed', 'WidgetImage'],
   users: 'users',
