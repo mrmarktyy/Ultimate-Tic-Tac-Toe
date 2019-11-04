@@ -268,7 +268,7 @@ function loanAmountSeries () {
 async function insertIntoRedshift (startDate, endDate, rows) {
   if (rows.length > 0) {
     let filename = getFileName(startDate, endDate)
-    let table = 'home_loans_ratings_history_ian'
+    let table = 'home_loans_ratings_history'
     let head = headers(rows[0])
     let csv = json2csv({data: rows, fields: head, hasCSVColumnTitle: false})
     let filepath = `home-loans-ratings-history/${process.env.REDSHIFT_DATABASE}/${filename}.csv`
