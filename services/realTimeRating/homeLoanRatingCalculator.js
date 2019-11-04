@@ -304,8 +304,6 @@ async function rollingDelete (collectionDate, days = 180) {
   await redshiftQuery(command, [lastActiveDay])
 }
 
-processRedshiftHomeLoans({startDate: '2019-10-30', endDate: '2019-10-30'})
-
 module.exports = {
   processRedshiftHomeLoans,
   rollingDelete,
