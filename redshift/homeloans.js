@@ -200,10 +200,9 @@ async function prepareDataForRedshift (homeloans) {
 
   await insertIntoRedshift(homeLoanProducts, filename)
   await homeLoanRatingCalculator.processRedshiftHomeLoans({startDate: collectionDate})
-  await homeLoanRatingCalculator.rollingDelete(collectionDate)
+  //await homeLoanRatingCalculator.rollingDelete(collectionDate)
   let dashboard = new leaderDashBoard()
   await dashboard.process({collectionDate})
-  await homeLoanRatingCalculator.rollingDelete()
 }
 
 async function insertIntoRedshift (rows, filename) {
