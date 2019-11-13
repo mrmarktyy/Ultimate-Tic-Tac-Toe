@@ -298,7 +298,7 @@ function getFileName (startDate, endDate) {
   return filename
 }
 
-async function rollingDelete (collectionDate, days = 180) {
+async function rollingDelete (collectionDate, days = 183) {
   let lastActiveDay = moment(collectionDate).subtract(days, 'days').format('YYYY-MM-DD')
   let command = `delete from home_loans_ratings_history where collectionDate < $1`
   await redshiftQuery(command, [lastActiveDay])

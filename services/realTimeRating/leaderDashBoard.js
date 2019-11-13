@@ -22,7 +22,6 @@ class leaderDashBoard {
       leaderboardSlugs = [],
     } = leaderData
     this.collectionDate = collectionDate
-//    let leaderboardFilter = {flexibilityWeighting: 0.3}
     let leaderboardFilter = {}
     if (leaderboardSlugs.length) {
      Object.assign(leaderboardFilter, {slug: {$in: leaderboardSlugs}})
@@ -84,10 +83,11 @@ class leaderDashBoard {
       let flexibility = rating.flexibiltyrating * ( 1 - costWeighting)
       obj = {
         slug: this.currentLeaderboard.slug,
-        collectiondate: moment(rating.collectiondate).format('YYYY-MM-DD'), 
+        collectiondate: moment(rating.collectiondate).format('YYYY-MM-DD'),
         uuid: rating.uuid,
         variationuuid: rating.variationuuid,
         provideruuid: rating.providerproductuuid,
+        companyuuid: rating.companyuuid,
         userloanamount: rating.userloanamount,
         averagemonthlycost: parseFloat(averagemonthlycost),
         costrating: parseFloat(costrating),
@@ -102,19 +102,28 @@ class leaderDashBoard {
         providerproductposition: 0,
         providerproductpositionprevious: 0,
         providerproductsince: 0,
+        companyposition: 0,
+        companypositionprevious: 0,
+        companysince: 0,
       }
       records.push(obj)
     })
 
     let providerUUIDs = []
-    records = records.sort((a, b) => a.overallrating == b.overallrating ? 0 : +(b.overallrating > a.overallrating) || -1 )
+    let companyUUIDs = []
+    records = records.sort((a, b) => a.overallrating == b.overallrating ? 0 : +(b.overallrating > a.overallrating) || -1)
     records = records.map((record, index) => {
       let providerproductposition = 0
       if (!providerUUIDs.includes(record.provideruuid)) {
         providerUUIDs.push(record.provideruuid)
         providerproductposition = providerUUIDs.length
       }
-      return Object.assign(record, {variationposition: index + 1, providerproductposition: providerproductposition})
+      let companyposition = 0
+      if (!companyUUIDs.includes(record.companyuuid)) {
+        companyUUIDs.push(record.companyuuid)
+        companyposition = companyUUIDs.length
+      }
+      return Object.assign(record, {variationposition: index + 1, providerproductposition: providerproductposition, companyposition: companyposition})
     })
     return records
   }
@@ -128,39 +137,43 @@ class leaderDashBoard {
       order by providerproductposition desc
     `
     let previousDash = await redshiftQuery(sql)
+    let previousCompany = previousDash.filter((record) => record.companyposition > 0)
+    let previousProvider = previousDash.filter((record) => record.providerproductposition > 0)
     if (previousDash.length) {
       records = records.map((record) => {
-        let varationdays = 0
-        let variationpositionprevious = 0
-        let providerproductpositionprevious = 0
+        let variationsince = 0, variationpositionprevious = 0
         let previous = previousDash.find((prev) => {
-          return (prev.slug === record.slug && prev.variationuuid === record.variationuuid && prev.variationposition === record.variationposition)
+          return (prev.slug === record.slug && prev.variationuuid === record.variationuuid && prev.variationposition > 0)
         })
         if (previous) {
-          varationdays = previous.variationsince + 1
-          variationpositionprevious = previous.variationposition
-        } else {
-          previous = previousDash.find((prev) => {
-            return (prev.slug === record.slug && prev.variationuuid === record.variationuuid)
-          })
-          variationpositionprevious = previous ? previous.variationposition || 0 : 0
+          variationpositionprevious = previous.variationpositionprevious
+          variationsince = record.variationposition === previous.variationposition ? previous.variationsince + 1 : 0
         }
-        let productdays = 0
+        let providerproductsince = 0, providerproductpositionprevious = 0
         if (record.providerproductposition) {
-          previous = previousDash.find((prev) => {
-            return (prev.slug === record.slug && prev.uuid === record.uuid && prev.providerproductposition === record.providerproductposition)
-          })
+          previous = previousProvider.find((prev) => prev.slug === record.slug && prev.provideruuid === record.provideruuid)
           if (previous) {
-            productdays = previous.providerproductsince + 1
-            providerproductpositionprevious = previous.providerproductposition
-          } else {
-            previous = previousDash.find((prev) => {
-              return (prev.slug === record.slug && prev.uuid === record.uuid && prev.providerproductposition > 0)
-            })
-            providerproductpositionprevious = previous ? previous.providerproductposition || 0 : 0
+            providerproductpositionprevious = previous.providerproductpositionprevious
+            providerproductsince = record.providerproductposition === previous.providerproductposition ? previous.providerproductsince + 1 : 0
           }
         }
-        return Object.assign(record, {variationpositionprevious: variationpositionprevious, variationsince: varationdays, providerproductpositionprevious: providerproductpositionprevious, providerproductsince: productdays})
+        let companypositionprevious = 0, companysince = 0
+        if (record.companyposition) {
+          previous = previousCompany.find((prev) => prev.slug === record.slug && prev.companyuuid === record.companyuuid)
+          if (previous) {
+            companypositionprevious = previous.companyposition
+            companysince = record.companyposition === previous.companyposition ? previous.companysince + 1 : 0
+          }
+        }
+        return Object.assign(record,
+          {
+            variationpositionprevious: variationpositionprevious,
+            variationsince: variationsince,
+            providerproductpositionprevious: providerproductpositionprevious,
+            providerproductsince: providerproductsince,
+            companypositionprevious: companypositionprevious,
+            companysince: companysince,
+          })
       })
     }
     return records
@@ -171,29 +184,30 @@ class leaderDashBoard {
       let csv = json2csv({data: rows, fields: headers, hasCSVColumnTitle: false})
       await awsUploadToS3(`dashboard_ranking_history/${process.env.RATECITY_REDSHIFT_DATABASE}/${filename}`, csv, 'redshift-2node')
 
-      let command = `delete from dashboard_ranking_history where collectiondate = '${this.collectionDate}' and slug = '${this.currentLeaderboard.slug}'`
+      let command = `delete from ${table} where collectiondate = '${this.collectionDate}' and slug = '${this.currentLeaderboard.slug}'`
       await redshiftQuery(command)
       command = `copy ${table} from 's3://redshift-2node/dashboard_ranking_history/${process.env.RATECITY_REDSHIFT_DATABASE}/${filename}' credentials 'aws_access_key_id=${process.env.S3_KEY};aws_secret_access_key=${process.env.S3_SECRET}' NULL AS 'null' EMPTYASNULL CSV ACCEPTINVCHARS TRUNCATECOLUMNS COMPUPDATE OFF`
       await redshiftQuery(command)
     }
   }
 
-  async rollingDelete (days=180) {
+  async rollingDelete (days=183) {
     let enddate = moment(this.collectionDate).subtract(days, 'days').format('YYYY-MM-DD')
     let command = `delete from dashboard_ranking_history where collectiondate < '${enddate}'`
     await redshiftQuery(command)
   }
 }
 
-
 async function runDashboard () {
-   let current = moment('2019-10-23')
-   let endDate = '2019-10-24'
+   let current = moment('2019-05-15')
+ // current = moment('2019-11-04')
+   let endDate = '2019-11-12'
    let dashboard = new leaderDashBoard()
-   dashboard.rollingDelete()
+   // dashboard.rollingDelete()
    while (current.isSameOrBefore(endDate)) {
+     console.log(current.format('YYYY-MM-DD'))
    //  await dashboard.process({collectionDate: current.format('YYYY-MM-DD')})
-     await dashboard.process({collectionDate: current.format('YYYY-MM-DD'), leaderboardSlugs: ['best-investment-purpose-20-lvr-20-flex', 'best-investment-purpose-20-lvr-30-flex']})
+     await dashboard.process({collectionDate: current.format('YYYY-MM-DD'), leaderboardSlugs: ['best']})
      current = current.add(1, 'day')
    }
    console.log('ran dashboard')
