@@ -87,11 +87,13 @@ keystone.set('nav', {
   notifications: 'Notifications',
 	promotedProducts: ['PromotedProduct'],
 	superannuations: ['FundGroup', 'Superannuation'],
-	pages: ['Pages', 'Link', 'LongTailKeywords'],
+	pages: ['Link', 'LongTailKeywords'],
 	termDeposits: ['TermDepositCompany', 'TermDeposit', 'TermDepositTier', 'TermDepositSpecial'],
 	blacklistUsers: ['BlacklistUser'],
 	coefficients: ['Coefficient'],
 })
+
+keystone.list('Pages').set('hidden', true)
 
 keystone.set('cors allow origin', true)
 
