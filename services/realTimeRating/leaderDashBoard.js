@@ -153,16 +153,26 @@ class leaderDashBoard {
         if (record.providerproductposition) {
           previous = previousProvider.find((prev) => prev.slug === record.slug && prev.provideruuid === record.provideruuid)
           if (previous) {
-            providerproductpositionprevious = previous.providerproductpositionprevious
-            providerproductsince = record.providerproductposition === previous.providerproductposition ? previous.providerproductsince + 1 : 0
+            if (previous.providerproductposition !== record.providerproductposition) {
+              providerproductpositionprevious = previous.providerproductposition
+              providerproductsince = 0
+            } else {
+              providerproductpositionprevious = previous.providerproductpositionprevious
+              providerproductsince = previous.providerproductsince + 1
+            }
           }
         }
         let companypositionprevious = 0, companysince = 0
         if (record.companyposition) {
           previous = previousCompany.find((prev) => prev.slug === record.slug && prev.companyuuid === record.companyuuid)
           if (previous) {
-            companypositionprevious = previous.companyposition
-            companysince = record.companyposition === previous.companyposition ? previous.companysince + 1 : 0
+            if (previous.companyposition !== record.companyposition) {
+              companypositionprevious = previous.companyposition
+              companysince = 0
+            } else {
+              companypositionprevious = previous.companypositionprevious
+              companysince = previous.companysince + 1
+            }
           }
         }
         return Object.assign(record,
@@ -201,13 +211,13 @@ class leaderDashBoard {
 async function runDashboard () {
    let current = moment('2019-05-15')
  // current = moment('2019-11-04')
-   let endDate = '2019-11-12'
+   let endDate = '2019-11-13'
    let dashboard = new leaderDashBoard()
    // dashboard.rollingDelete()
    while (current.isSameOrBefore(endDate)) {
      console.log(current.format('YYYY-MM-DD'))
    //  await dashboard.process({collectionDate: current.format('YYYY-MM-DD')})
-     await dashboard.process({collectionDate: current.format('YYYY-MM-DD'), leaderboardSlugs: ['best']})
+     await dashboard.process({collectionDate: current.format('YYYY-MM-DD'), leaderboardSlugs: ['best-rate-type-fixed']})
      current = current.add(1, 'day')
    }
    console.log('ran dashboard')
@@ -215,6 +225,6 @@ async function runDashboard () {
 }
 
 
-// runDashboard()
+//runDashboard()
 
 module.exports = leaderDashBoard
