@@ -21,6 +21,8 @@ var termDepositsToRedshift = require('../resqueJobs/loadTermDepositsToRedshift')
 var monetisedEventsToRedshift = require('../resqueJobs/loadMonetisedEventToRedshift')
 var ingestLongtailux = require('../resqueJobs/ingestLongtailux')
 var ingestPages = require('../resqueJobs/ingestPages')
+var activePromotedProducts = require('../resqueJobs/activePromotedProducts')
+var activeFeaturedProducts = require('../resqueJobs/activeFeaturedProducts')
 
 var blazePages = require('../resqueJobs/blazePages')
 
@@ -51,6 +53,8 @@ const jobs = {
   'savingsAccountsToRedshift': savingsAccountsToRedshift,
   'specialsToRedshift': specialsToRedshift,
   'termDepositsToRedshift': termDepositsToRedshift,
+  'activePromotedProducts': activePromotedProducts,
+  'activeFeaturedProducts': activeFeaturedProducts,
 }
 
 let scheduler = new Resque.Scheduler({connection: connectionDetails})
