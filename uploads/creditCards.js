@@ -131,7 +131,9 @@ async function populateCreditCards () {
       obj.minimumRepaymentPercent = item.minimumRepaymentPercent
       obj.minimumCreditLimit = item.minimumCreditLimit
       obj.maximumCreditLimit = item.maximumCreditLimit
-      obj.numberFreeSupplementary = item.numberFreeSupplementary
+			obj.numberFreeSupplementary = item.numberFreeSupplementary
+			obj.instalmentPlanConditions = item.instalmentPlanConditions
+			obj.instalmentPlanAvailable = item.instalmentPlanAvailable || 'UNKNOWN'
       obj.applePayAvailable = item.applePayAvailable || 'UNKNOWN'
       obj.googlePayAvailable = item.googlePayAvailable || 'UNKNOWN'
       obj.samsungPayAvailable = item.samsungPayAvailable || 'UNKNOWN'

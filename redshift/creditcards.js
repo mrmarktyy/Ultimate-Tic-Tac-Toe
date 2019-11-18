@@ -24,7 +24,7 @@ const CREDIT_CARD_HEADER = [
   'maximumBalanceTransferPercentage', 'balanceTransferConditions',
   'maximumBalanceTransferAmount', 'isBalanceTransferFromPersonalLoanAllowed',
   'ecpc', 'interestFreeDays', 'minimumRepaymentDollars', 'minimumRepaymentPercent',
-  'minimumCreditLimit', 'maximumCreditLimit', 'numberFreeSupplementary',
+  'minimumCreditLimit', 'maximumCreditLimit', 'numberFreeSupplementary', 'instalmentPlanConditions', 'instalmentPlanAvailable',
   'applePayAvailable', 'googlePayAvailable', 'samsungPayAvailable',
   'contactlessAvailable', 'otherBenefits', 'otherRestrictions', 'adminNotes',
   'annualFeeIntro', 'annualFeeIntroTerm', 'annualFeeStandard',
@@ -128,7 +128,9 @@ async function prepDataAndPushToRedshift (date, creditCards) {
     product.minimumRepaymentPercent = card.minimumRepaymentPercent
     product.minimumCreditLimit = card.minimumCreditLimit
     product.maximumCreditLimit = card.maximumCreditLimit
-    product.numberFreeSupplementary = card.numberFreeSupplementary
+		product.numberFreeSupplementary = card.numberFreeSupplementary
+		product.instalmentPlanConditions = card.instalmentPlanConditions
+		product.instalmentPlanAvailable = card.instalmentPlanAvailable
     product.applePayAvailable = card.applePayAvailable
     product.googlePayAvailable = card.googlePayAvailable
     product.samsungPayAvailable = card.samsungPayAvailable
