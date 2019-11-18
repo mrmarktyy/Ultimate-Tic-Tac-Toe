@@ -5,6 +5,7 @@ var productCommonAttributes = require('../common/ProductCommonAttributes')
 var { imageStorage } = require('../helpers/fileStorage')
 var changeLogService = require('../../services/changeLogService')
 var verifiedService = require('../../services/verifiedService')
+var discontinuedService = require('../../services/discontinuedService')
 var verifiedCommonAttribute = require('../common/verifiedCommonAttribute')
 
 var utils = keystone.utils
@@ -159,7 +160,7 @@ CreditCard.schema.pre('validate', function (next) {
 	next()
 })
 
-CreditCard.schema.pre('save', function (next) {
+CreditCard.schema.pre('save', async function (next) {
 	if (this.removeRewardProgram) {
     this.rewardProgram = null
   }
@@ -177,6 +178,8 @@ CreditCard.schema.pre('save', function (next) {
 	this.isLowRate = this.purchaseRateStandard <= 14.0 || this.name.toLowerCase().includes('low rate')
 	this.isLowFee = this.annualFeeStandard <= 50 || this.name.toLowerCase().includes('low fee')
 	this.isReward = this.rewardProgram ? this.rewardProgram !== null : false
+
+	await discontinuedService(this, { urlPrefix: '/credit-cards' })
 	next()
 })
 

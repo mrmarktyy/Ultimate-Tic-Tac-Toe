@@ -4,7 +4,20 @@ var Types = keystone.Field.Types
 var { imageStorage } = require('../helpers/fileStorage')
 var changeLogService = require('../../services/changeLogService')
 var verifiedService = require('../../services/verifiedService')
+var discontinuedService = require('../../services/discontinuedService')
 var verifiedCommonAttribute = require('../common/verifiedCommonAttribute')
+
+const VerticalsModel = {
+	'credit-cards': 'CreditCard',
+	'home-loans': 'HomeLoanVariation',
+	'bank-accounts': 'BankAccount',
+	'personal-loans': 'PersonalLoan',
+	'car-loans': 'PersonalLoan',
+	'savings-accounts': 'SavingsAccount',
+	'superannuation': 'Superannuation',
+	'pension-funds': 'Superannuation',
+	'term-deposits': 'TermDeposit',
+}
 
 var utils = keystone.utils
 
@@ -76,8 +89,39 @@ Company.schema.pre('save', async function (next) {
   }
   if (utils.slug(this.slug.toLowerCase()) !== this.slug) {
     this.slug = utils.slug(this.slug.toLowerCase())
-  }
+	}
 
+	const company = await Company.model.findOne({uuid: this.uuid}).lean().exec()
+  if (company && company.isDiscontinued != this.isDiscontinued) {
+		const urlsToBeUpdated = []
+		urlsToBeUpdated.push(`/companies/${company.slug}`)
+		for(let verticalSlug in VerticalsModel) {
+			const companyUrl = `/${verticalSlug}/${company.slug}`
+			urlsToBeUpdated.push(companyUrl)
+			const verticalModel = VerticalsModel[verticalSlug]
+			const products = await keystone.list(verticalModel).model.find({company: company._id}).populate('fundgroup').lean().exec()
+			products.forEach((product) => {
+				let productUrl = `${companyUrl}/${product.slug}`
+				if(['superannuation', 'pension-funds'].includes(verticalSlug)) {
+					const productCompany = product.fundgroup ? product.fundgroup : company
+					productUrl = `/${verticalSlug}/${productCompany.slug}/${product.slug}`
+				}
+				if((verticalSlug === 'personal-loans' && product.isPersonalLoan !== 'YES') || (verticalSlug === 'car-loans' && product.isCarLoan !== 'YES')) {
+					productUrl = ''
+				}
+				if(productUrl) {
+					if (this.isDiscontinued) {
+						urlsToBeUpdated.push(productUrl)
+					} else {
+						if (!product.isDiscontinued) {
+							urlsToBeUpdated.push(productUrl)
+						}
+					}
+				}
+			})
+		}
+		await discontinuedService(this, { urls: urlsToBeUpdated, isDiscontinued: this.isDiscontinued })
+  }
 	await changeLogService(this)
 	next()
 })

@@ -4,6 +4,7 @@ const _ = require('lodash')
 
 const productCommonAttributes = require('../common/ProductCommonAttributes')
 const changeLogService = require('../../services/changeLogService')
+var discontinuedService = require('../../services/discontinuedService')
 const fields = require('./constants').fields
 const Types = keystone.Field.Types
 const utils = keystone.utils
@@ -51,6 +52,18 @@ Superannuation.schema.pre('save', async function (next) {
   }
 	const fundGroup = await keystone.list('FundGroup').model.findOne({_id: this.fundgroup}).exec()
 	this.company = fundGroup.company || this.company
+	let superannuation = await Superannuation.model.findOne({uuid: this.uuid}).populate('fundgroup company').lean().exec()
+	if (superannuation && superannuation.isDiscontinued != this.isDiscontinued) {
+		const urlsToBeUpdated = []
+		const company = superannuation.fundgroup ? superannuation.fundgroup : superannuation.company
+		if(superannuation.superannuation) {
+			urlsToBeUpdated.push(`/superannuation/${company.slug}/${superannuation.slug}`)
+		}
+		if(superannuation.pension) {
+			urlsToBeUpdated.push(`/pension-funds/${company.slug}/${superannuation.slug}`)
+		}
+		urlsToBeUpdated.length && await discontinuedService(this, { urls: urlsToBeUpdated, isDiscontinued: this.isDiscontinued })
+	}
 	await changeLogService(this)
 	next()
 })
