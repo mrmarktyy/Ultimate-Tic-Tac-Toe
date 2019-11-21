@@ -5,6 +5,7 @@ var availableOptions = require('../attributes/availableOptions')
 var productCommonAttributes = require('../common/ProductCommonAttributes')
 var changeLogService = require('../../services/changeLogService')
 var verifiedService = require('../../services/verifiedService')
+var discontinuedService = require('../../services/discontinuedService')
 var verifiedCommonAttribute = require('../common/verifiedCommonAttribute')
 var utils = keystone.utils
 var Types = keystone.Field.Types
@@ -83,6 +84,7 @@ SavingsAccount.schema.pre('save', async function (next) {
     this.slug = utils.slug(this.slug.toLowerCase())
   }
 
+  await discontinuedService(this, { urlPrefix: '/savings-accounts' })
   await changeLogService(this)
   next()
 })

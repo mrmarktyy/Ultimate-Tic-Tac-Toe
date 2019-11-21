@@ -2,6 +2,7 @@ var keystone = require('keystone')
 var uuid = require('node-uuid')
 var productCommonAttributes = require('../common/ProductCommonAttributes')
 var availableOptions = require('../attributes/availableOptions')
+var discontinuedService = require('../../services/discontinuedService')
 var changeLogService = require('../../services/changeLogService')
 var utils = keystone.utils
 var Types = keystone.Field.Types
@@ -57,8 +58,8 @@ TermDeposit.schema.pre('save', async function (next) {
   }
   if (utils.slug(this.slug.toLowerCase()) !== this.slug) {
     this.slug = utils.slug(this.slug.toLowerCase())
-  }
-
+	}
+	await discontinuedService(this, { urlPrefix: '/term-deposits' })
   await changeLogService(this)
   next()
 })

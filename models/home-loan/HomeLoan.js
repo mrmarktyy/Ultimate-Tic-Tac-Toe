@@ -5,6 +5,7 @@ var availableOptions = require('../attributes/availableOptions')
 var productCommonAttributes = require('../common/ProductCommonAttributes')
 var changeLogService = require('../../services/changeLogService')
 var verifiedService = require('../../services/verifiedService')
+var discontinuedService = require('../../services/discontinuedService')
 var verifiedCommonAttribute = require('../common/verifiedCommonAttribute')
 
 var Types = keystone.Field.Types
@@ -92,6 +93,14 @@ HomeLoan.schema.pre('save', async function (next) {
   }
   let product = await keystone.list('HomeLoan').model.findOne({uuid: this.uuid}).lean().exec()
   if (product && product.isDiscontinued != this.isDiscontinued) {
+    const urlsToBeUpated = []
+    const variations = await keystone.list('HomeLoanVariation').model.find({product: this._id}).populate('company').lean().exec()
+    if(variations && variations.length) {
+      for(let variation of variations) {
+        urlsToBeUpated.push(`/home-loans/${variation.company.slug}/${variation.slug}`)
+      }
+    }
+    urlsToBeUpated.length && await discontinuedService(this, {urls: urlsToBeUpated, isDiscontinued: this.isDiscontinued})
     await keystone.list('HomeLoanVariation').model.update({product: this._id}, {$set: {isDiscontinued: this.isDiscontinued}}, {multi: true})
   }
 

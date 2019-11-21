@@ -6,6 +6,7 @@ var productCommonAttributes = require('../common/ProductAttributes')
 var personalLoanConstant = require('../constants/PersonalLoanConstant')
 var changeLogService = require('../../services/changeLogService')
 var verifiedService = require('../../services/verifiedService')
+var discontinuedService = require('../../services/discontinuedService')
 var verifiedCommonAttribute = require('../common/verifiedCommonAttribute')
 
 var utils = keystone.utils
@@ -209,6 +210,22 @@ PersonalLoan.schema.pre('save', async function (next) {
     this.slug = utils.slug(this.slug.toLowerCase())
   }
 
+  let product = await PersonalLoan.model.findOne({uuid: this.uuid}).lean().exec()
+  if (product && product.isDiscontinued != this.isDiscontinued) {
+    const urlsToBeUpdated = []
+    const variations = await keystone.list('PersonalLoanVariation').model.find({product: this._id}).populate('company').lean().exec()
+    if (variations && variations.length) {
+      for(let variation of variations) {
+        if (product.isCarLoan == availableOptions.yes) {
+          urlsToBeUpdated.push(`/car-loans/${variation.company.slug}/${product.slug}`)
+        }
+        if (product.isPersonalLoan == availableOptions.yes) {
+          urlsToBeUpdated.push(`/personal-loans/${variation.company.slug}/${product.slug}`)
+        }
+      }
+    }
+    urlsToBeUpdated.length && await discontinuedService(this, { urls: urlsToBeUpdated, isDiscontinued: this.isDiscontinued })
+  }
   await changeLogService(this)
   next()
 })

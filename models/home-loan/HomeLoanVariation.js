@@ -6,6 +6,7 @@ var productCommonAttributes = require('../common/ProductAttributes')
 var ComparisonRateCalculator = require('../../services/ComparisonRateCalculator')
 var changeLogService = require('../../services/changeLogService')
 var verifiedService = require('../../services/verifiedService')
+var discontinuedService = require('../../services/discontinuedService')
 var verifiedCommonAttribute = require('../common/verifiedCommonAttribute')
 var utils = keystone.utils
 
@@ -183,7 +184,7 @@ HomeLoanVariation.schema.pre('save', async function (next) {
     loan.introTermInMonth = this.introductoryTerm
   }
   this.calculatedComparisonRate = ComparisonRateCalculator.calculateHomeLoanComparisonRate(loan)
-
+  await discontinuedService(this, { urlPrefix: '/home-loans' })
   next()
 })
 
