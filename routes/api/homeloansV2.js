@@ -49,7 +49,7 @@ class HomeLoanList {
             conditions: conditions[product_id] || [],
             extraRepayments: extraRepayments[product_id] || [],
             companyVertical: companyVerticals[company_id] || [],
-          }
+          },
         ))
       })
       return records
@@ -65,7 +65,7 @@ class HomeLoanList {
       { updatedBy: 0, createdBy: 0, verified: 0, verifiedBy: 0, verifiedAt: 0, updatedAt: 0, createdAt: 0, __v: 0 })
     .populate({path: 'providerProductName', select: '-_id -updatedAt -createdAt -updatedBy -createdBy -__v -company'})
     .populate({
-      path: 'product', select: '-updatedAt -createdAt -createdBy -updatedBy -__v -verified -verifiedBy -verifiedAt -neo4jId -uuid -isDiscontinued -slug -name -company -displayName -promotedOrder'}
+      path: 'product', select: '-updatedAt -createdAt -createdBy -updatedBy -__v -verified -verifiedBy -verifiedAt -neo4jId -isDiscontinued -slug -name -company -displayName -promotedOrder'}
     )
     .populate({ path: 'company', select: '_id name uuid logo favicon classificationType userHasOffers slug' })
     .populate({ path: 'revertVariation' })
@@ -106,7 +106,7 @@ class HomeLoanList {
   flattenNested (records, fields = {}) {
     let obj = {}
     return records.map((record) => {
-      obj = {}
+      obj = { product_uuid: record.product.uuid }
       Object.keys(fields).forEach((field) => {
         Object.keys(record[field]).forEach((key) =>{
           if (key === '_id') {
@@ -117,7 +117,6 @@ class HomeLoanList {
         })
         delete record[field]
       })
-
       return _.merge({}, obj, record)
     })
   }
