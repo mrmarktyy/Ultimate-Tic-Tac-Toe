@@ -98,27 +98,6 @@ Company.schema.pre('save', async function (next) {
 		for(let verticalSlug in VerticalsModel) {
 			const companyUrl = `/${verticalSlug}/${company.slug}`
 			urlsToBeUpdated.push(companyUrl)
-			const verticalModel = VerticalsModel[verticalSlug]
-			const products = await keystone.list(verticalModel).model.find({company: company._id}).populate('fundgroup').lean().exec()
-			products.forEach((product) => {
-				let productUrl = `${companyUrl}/${product.slug}`
-				if(['superannuation', 'pension-funds'].includes(verticalSlug)) {
-					const productCompany = product.fundgroup ? product.fundgroup : company
-					productUrl = `/${verticalSlug}/${productCompany.slug}/${product.slug}`
-				}
-				if((verticalSlug === 'personal-loans' && product.isPersonalLoan !== 'YES') || (verticalSlug === 'car-loans' && product.isCarLoan !== 'YES')) {
-					productUrl = ''
-				}
-				if(productUrl) {
-					if (this.isDiscontinued) {
-						urlsToBeUpdated.push(productUrl)
-					} else {
-						if (!product.isDiscontinued) {
-							urlsToBeUpdated.push(productUrl)
-						}
-					}
-				}
-			})
 		}
 		await discontinuedService(this, { urls: urlsToBeUpdated, isDiscontinued: this.isDiscontinued })
   }
