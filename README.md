@@ -4,7 +4,7 @@
 
 ## Prerequisites
 
-* NodeJS == 7.2.0 (install [nvm](https://github.com/creationix/nvmhttps://github.com/creationix/nvm) and run `nvm install 7.2.0` )
+* NodeJS == 10.16.3 (install [nvm](https://github.com/creationix/nvmhttps://github.com/creationix/nvm) and run `nvm install 10.16.3` )
 * MongoDB >= 3.2.0  `brew install mongodb`
 
 
