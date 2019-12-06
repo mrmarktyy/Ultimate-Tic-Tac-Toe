@@ -59,6 +59,8 @@ CreditCard.add({
 	minimumCreditLimit: { type: Types.Number, min: 0 },
 	maximumCreditLimit: { type: Types.Number, min: 0 },
 	numberFreeSupplementary: { type: Types.Number, min: 0, label: 'Nmbr Free Sppl' },
+	instalmentPlanConditions: { type: Types.Text },
+	instalmentPlanAvailable: { type: Types.Select, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown },
 	applePayAvailable: { type: Types.Select, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown },
 	googlePayAvailable: { type: Types.Select, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown },
 	samsungPayAvailable: { type: Types.Select, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown },
