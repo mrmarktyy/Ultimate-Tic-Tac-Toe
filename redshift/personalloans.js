@@ -13,16 +13,18 @@ const monetizedCollection = require('../routes/api/monetizedCollection')
 var PersonalLoan = keystoneShell.list('PersonalLoan')
 var PersonalLoanVariation = keystoneShell.list('PersonalLoanVariation')
 var PersonalLoanQualification = keystoneShell.list('PersonalLoanQualification')
+var CompanyPersonalLoan = keystoneShell.list('CompanyPersonalLoan')
 
 module.exports = async function () {
   let connection = await mongoosePromise.connect()
   try {
     const personalLoans = await PersonalLoan.model.find({}).populate('company').lean().exec()
+    const companyPersonalLoan = await companyPersonalLoanObject()
     const personalLoanVariations = await PersonalLoanVariation.model.find({}).populate('product').lean().exec()
     const qualifications = await PersonalLoanQualification.model.find().populate('knockouts').lean().exec()
     const date = moment()
 
-    await prepDataAndPushToRedshift(date, personalLoans, personalLoanVariations, qualifications)
+    await prepDataAndPushToRedshift(date, personalLoans, personalLoanVariations, qualifications, companyPersonalLoan)
 
     connection.close()
   } catch (error) {
@@ -32,9 +34,17 @@ module.exports = async function () {
   }
 }
 
-async function prepDataAndPushToRedshift (date, personalLoans, personalLoanVariations, qualifications) {
-  const collectionDate = moment(date).format('YYYY-MM-DD')
+async function companyPersonalLoanObject () {
+  let obj = {}
+  let companypls = await CompanyPersonalLoan.model.find({}).populate('company').lean().exec()
+  companypls.forEach((companypl) => {
+    obj[companypl.company.uuid] = companypl
+  })
+  return obj
+}
 
+async function prepDataAndPushToRedshift (date, personalLoans, personalLoanVariations, qualifications, companyPersonalLoan) {
+  const collectionDate = moment(date).format('YYYY-MM-DD')
   const monetizeCarLoans = await monetizedCollection('Car Loans')
   const monetizePersonalLoans = await monetizedCollection('Personal Loans')
   const monetizedList = _.merge({}, monetizeCarLoans, monetizePersonalLoans)
@@ -55,6 +65,14 @@ async function prepDataAndPushToRedshift (date, personalLoans, personalLoanVaria
     isPersonalLoan: 'UNKNOWN',
     isLineOfCredit: 'UNKNOWN',
     isFullyDrawnAdvance: 'UNKNOWN',
+    peer2Peer: 'UNKNOWN',
+    applyInBranch: 'UNKNOWN',
+    applyOnline: 'UNKNOWN',
+    applyByMobileLender: 'UNKNOWN',
+    applyByPhone: 'UNKNOWN',
+    applyByBroker: 'UNKNOWN',
+    availableTo457VisaHolders: 'UNKNOWN',
+    approvalTime: null,
     repaymentType: '',
     repaymentFreq: '',
     isExtraRepaymentsAllowed: 'UNKNOWN',
@@ -137,6 +155,7 @@ async function prepDataAndPushToRedshift (date, personalLoans, personalLoanVaria
 
   personalLoans.forEach((loan) => {
     let product = Object.assign({}, defaultPersonalLoan)
+    let companypl = companyPersonalLoan[loan.company.uuid]
     product.collectionDate = collectionDate
     product.productId = loan._id
     product.uuid = loan.uuid
@@ -148,6 +167,16 @@ async function prepDataAndPushToRedshift (date, personalLoans, personalLoanVaria
     product.isPersonalLoan = loan.isPersonalLoan
     product.isLineOfCredit = loan.isLineOfCredit
     product.isFullyDrawnAdvance = loan.isFullyDrawnAdvance
+    if (companypl) {
+      product.peer2Peer = companypl.peer2Peer ? companypl.peer2Peer : product.peer2Peer
+      product.applyInBranch = companypl.applyInBranch
+      product.applyOnline = companypl.applyOnline
+      product.applyByMobileLender = companypl.applyByMobileLender
+      product.applyByPhone = companypl.applyByPhone
+      product.applyByBroker = companypl.applyByBroker
+      product.availableTo457VisaHolders = companypl.availableTo457VisaHolders
+      product.approvalTime = companypl.approvalTime
+    }
     product.repaymentType = loan.repaymentType
     product.isExtraRepaymentsAllowed = loan.isExtraRepaymentsAllowed
     product.hasRedrawFacility = loan.hasRedrawFacility
@@ -263,7 +292,10 @@ async function prepDataAndPushToRedshift (date, personalLoans, personalLoanVaria
 
   const headers = [
     'collectionDate', 'productId', 'uuid', 'description', 'companyCode', 'companyName', 'companyId', 'isCarLoan',
-    'isPersonalLoan', 'isLineOfCredit', 'isFullyDrawnAdvance', 'repaymentType', 'repaymentFreq', 'isExtraRepaymentsAllowed',
+    'isPersonalLoan', 'isLineOfCredit', 'isFullyDrawnAdvance', 
+    'peer2Peer', 'applyInBranch', 'applyOnline', 'applyByMobileLender', 'applyByPhone',
+    'applyByBroker', 'availableTo457VisaHolders', 'approvalTime',
+    'repaymentType', 'repaymentFreq', 'isExtraRepaymentsAllowed',
     'hasRedrawFacility', 'securedType', 'instantApproval', 'timeToFunding',
     'applicationFeesDollar', 'applicationFeesPercent', 'ongoingFees',
     'ongoingFeesFrequency', 'docReleaseFees', 'isSecuredByVehicle', 'isSecuredByProperty', 'isSecuredByDeposit',
@@ -323,8 +355,8 @@ async function prepDataAndPushToRedshift (date, personalLoans, personalLoanVaria
     'filename',
   ]
 
-  await insertIntoRedshift(personalLoanProducts, headers, filename, 'personal_loans_history')
-  await insertIntoRedshift(personalLoanProductVariations, variationHeaders, filenameVar, 'personal_loans_variations_history')
+ await insertIntoRedshift(personalLoanProducts, headers, filename, 'personal_loans_history')
+ await insertIntoRedshift(personalLoanProductVariations, variationHeaders, filenameVar, 'personal_loans_variations_history')
 }
 
 async function insertIntoRedshift (rows, headers, filename, table) {
