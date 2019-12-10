@@ -45,7 +45,7 @@ Company.add({
 	otherNames: { type: Types.TextArray },
 	classificationType: {
 		type: Types.MultiSelect,
-		options: 'Bank, Mutual, Major Bank, Finance Company, Peer-to-Peer, Online Only, Super, International, Regional',
+		options: 'Bank, Mutual, Major Bank, Finance Company, Peer-to-Peer, Online Only, Super, International, Regional, Neo Bank',
 	},
 	isDiscontinued: { type: Types.Boolean, indent: true, default: false },
 	abnOrAcn: { type: Types.Number },
