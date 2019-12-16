@@ -34,7 +34,7 @@ class leaderDashBoard {
         let dashboardRankings = []
         this.currentLeaderboard = leaderboards[i]
         this.homeLoanRatings = await this.getHomeLoanRatings()
-        dashboardRankings = this.leaderRank(this.currentLeaderboard.ultimateFilterCriteria.includes(`homeloantype = 'FIXED'`))
+        dashboardRankings = this.leaderRank(this.currentLeaderboard.ultimateFilterCriteria.includes(`hasinterestonly=true`))
         dashboardRankings = await this.addPreviousPosition(dashboardRankings)
         if (dashboardRankings.length) {
           let filename = `dashboard_${this.collectionDate}_${this.currentLeaderboard.slug}.csv`
@@ -70,12 +70,12 @@ class leaderDashBoard {
     this.homeLoanRatings.forEach((rating) => {
       let obj = {}
       let flexibilityWeighting = this.currentLeaderboard.flexibilityWeighting || .3
-      if (interestOnly) {
-        averagemonthlycost  = rating.ioaveragemonthlycost
-        costrating =  rating.iocostrating
-      } else {
+      if (rating.hasprincipalandinterest && !interestOnly) {
         averagemonthlycost  = rating.defaultaveragemonthlycost
         costrating =  rating.defaultcostrating
+      } else {
+        averagemonthlycost  = rating.ioaveragemonthlycost
+        costrating =  rating.iocostrating
       }
       overallRating = parseFloat((costrating * (1 - flexibilityWeighting) + rating.flexibiltyrating * flexibilityWeighting).toFixed(2))
       costWeighting = 1 - flexibilityWeighting
@@ -211,13 +211,13 @@ class leaderDashBoard {
 async function runDashboard () {
    let current = moment('2019-05-15')
  // current = moment('2019-11-04')
-   let endDate = '2019-11-13'
+   let endDate = '2019-12-15'
    let dashboard = new leaderDashBoard()
    // dashboard.rollingDelete()
    while (current.isSameOrBefore(endDate)) {
      console.log(current.format('YYYY-MM-DD'))
    //  await dashboard.process({collectionDate: current.format('YYYY-MM-DD')})
-     await dashboard.process({collectionDate: current.format('YYYY-MM-DD'), leaderboardSlugs: ['best-rate-type-fixed']})
+     await dashboard.process({collectionDate: current.format('YYYY-MM-DD'), leaderboardSlugs: ['best-3-year-investor-fixed-pi', 'best-5-year-investor-fixed-pi']})
      current = current.add(1, 'day')
    }
    console.log('ran dashboard')
@@ -225,6 +225,6 @@ async function runDashboard () {
 }
 
 
-//runDashboard()
+// runDashboard()
 
 module.exports = leaderDashBoard
