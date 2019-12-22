@@ -148,6 +148,8 @@ exports = module.exports = function (app) {
   
   // Partner Products
   app.get('/api/partner-products', keystone.middleware.api, routes.api.partnerProducts.list)
-
   app.get('/api/partners', keystone.middleware.api, routes.api.partner.list)
+
+  //product tallies
+  app.get('/api/product-tallies', keystone.middleware.api, routes.api.productTallies.list)
 }
