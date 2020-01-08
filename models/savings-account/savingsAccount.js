@@ -26,6 +26,7 @@ SavingsAccount.add({
     index: true,
     noedit: true,
   },
+  interestCalculationMethod: { type: Types.Select, required: false, options: 'Stepped, Whole Balance' },
   legacyCode: { type: Types.Text },
   isSpecial: { type: Types.Select, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown },
   isRCSpecial: { type: Types.Select, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown },
@@ -98,7 +99,7 @@ SavingsAccount.schema.post('save', async function () {
 	await verifiedService(this)
 })
 
-SavingsAccount.defaultColumns = 'name, company, isMonetized isDiscontinued'
+SavingsAccount.defaultColumns = 'name, company, isMonetized, interestCalculationMethod, isDiscontinued'
 SavingsAccount.searchFields = 'name, legacyCode'
 SavingsAccount.defaultSort = 'isDiscontinued'
 SavingsAccount.drilldown = 'company'
