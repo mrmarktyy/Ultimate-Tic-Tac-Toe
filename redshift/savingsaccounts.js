@@ -46,6 +46,7 @@ async function prepDataAndPushToRedshift (date, savingsAccounts, savingsAccountT
     product.name = account.name
     product.slug = account.slug
     product.companyname = account.company.name
+    product.interestcalculationmethod = account.interestCalculationMethod
     product.othernames = account.otherNames.toString()
     product.displayname = account.displayName ? account.displayName : null
     product.gotositeurl = monetized[account._id] ? monetized[account._id].applyUrl : null
@@ -108,7 +109,7 @@ async function prepDataAndPushToRedshift (date, savingsAccounts, savingsAccountT
   })
 
   const headers = [ 'collectiondate', 'savingsaccountid', 'uuid', 'name', 'slug', 'companyname',
-    'othernames', 'displayname', 'gotositeurl', 'gotositeenabled', 'paymenttype',
+    'interestcalculationmethod', 'othernames', 'displayname', 'gotositeurl', 'gotositeenabled', 'paymenttype',
     'promotedorder', 'isspecial', 'isrcspecial', 'offerExpires', 'ecpc',
     'otherbenefits', 'otherrestrictions', 'minimumagerestrictions',
     'maximumagerestrictions', 'minimumopeningdeposit', 'linkedaccountrequired',
