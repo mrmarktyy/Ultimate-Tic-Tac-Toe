@@ -112,7 +112,7 @@ async function getSuperannuationObjects (superannuations) {
 			superannuation.pro_12,
 		], (pro) => pro && pro !== '-')
 		product.membership = parseInt(superannuation.membership || 0)
-		product.fundSize = parseInt(superannuation.total_asset || 0)
+		product.fundSize = parseInt(+superannuation.total_asset || 0)
 		product.yearStarted = parseInt(superannuation.startdate || 0)
 		product.targetMarket = superannuation.target_market
 		product.publicOffer = superannuation.public_offer === 'Yes'
