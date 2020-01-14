@@ -1,4 +1,5 @@
 var keystone = require('keystone')
+var uuid = require('node-uuid')
 var Types = keystone.Field.Types
 var availableOptions = require('../attributes/availableOptions')
 var PersonalLoan = keystone.list('PersonalLoan')
@@ -39,7 +40,8 @@ PersonalLoanVariation.add({
 		options: availableOptions.all,
 		emptyOption: false,
 		default: availableOptions.unknown,
-	},
+  },
+  uuid: { type: Types.Text, index: true, unique: true, noedit: true },
 	minLoanAmount: { type: Types.Number, required: true, initial: true, min: 0 },
 	maxLoanAmount: { type: Types.Number, required: true, initial: true, min: 0 },
 	minLoanTerm: { type: Types.Number, required: true, initial: true, min: 0 },
@@ -124,6 +126,9 @@ PersonalLoanVariation.schema.pre('validate', function (next) {
 })
 
 PersonalLoanVariation.schema.pre('save', async function (next) {
+  if (!this.uuid) {
+    this.uuid = uuid.v4()
+  }
 	let personalLoans = await PersonalLoan.model.find({ _id: this.product }).exec()
 	personalLoans.forEach((personalLoan) => {
 		let variationUpfrountFee
