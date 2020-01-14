@@ -97,6 +97,8 @@ exports = module.exports = function (app) {
   //Brokers
   app.get('/api/brokers', keystone.middleware.api, routes.api.brokers.list)
 
+  app.get('/api/redirects', keystone.middleware.api, routes.api.redirects.list)
+
   // Credit Cards
   app.get('/api/credit-cards', keystone.middleware.api, routes.api.creditCards.list)
 
