@@ -27,6 +27,7 @@ async function collectionSearch (uuid) {
   verticals['Company'] = { collection: 'Company' }
   verticals['Partner'] = { collection: 'Partner' }
   verticals['PartnerProduct'] = { collection: 'PartnerProduct' }
+  verticals['PersonalLoanVariation'] = { collection: 'PersonalLoanVariation' }
   let data = {}
   let verticalInfo  = {flashmessage: 'no record found'}
   for (let vertical in verticals) {

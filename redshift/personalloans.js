@@ -205,6 +205,7 @@ async function prepDataAndPushToRedshift (date, personalLoans, personalLoanVaria
     product.isWeddingAllowed = loan.isWeddingAllowed
     product.allPurposesAllowed = loan.allPurposesAllowed
     product.otherPurposes = loan.otherPurposes
+    product.encumbranceCheckFees = loan.encumbranceCheckFees
     product.repaymentFreq = loan.repaymentFrequency
     product.extraRepaymentDollarLimits = loan.extraRepaymentDollarLimits
     product.extraRepaymentDollarLimitsPeriod = loan.extraRepaymentDollarLimitsPeriod
@@ -257,6 +258,7 @@ async function prepDataAndPushToRedshift (date, personalLoans, personalLoanVaria
       variation.id = cVariation._id.toString()
       variation.productId = product.productId
       variation.uuid = product.uuid
+      variation.variationuuid = cVariation.uuid
       variation.description = product.description
       variation.minLoanAmount = cVariation.minLoanAmount
       variation.maxLoanAmount = cVariation.maxLoanAmount
@@ -325,6 +327,7 @@ async function prepDataAndPushToRedshift (date, personalLoans, personalLoanVaria
     'id',
     'productId',
     'uuid',
+    'variationuuid',
     'description',
     'minLoanAmount',
     'maxLoanAmount',
