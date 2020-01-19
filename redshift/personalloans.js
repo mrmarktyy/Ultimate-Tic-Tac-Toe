@@ -114,7 +114,7 @@ async function prepDataAndPushToRedshift (date, personalLoans, personalLoanVaria
     isWeddingAllowed: 'UNKNOWN',
     allPurposesAllowed: 'UNKNOWN',
     otherPurposes: '',
-    encumbranceCheckFees: 0.0,
+    encumberanceCheckFees: 0.0,
     redrawActivationFee: 0.0,
     minRedrawAmount: 0.0,
     hasEarlyExitPenalty: 'UNKNOWN',
@@ -205,7 +205,7 @@ async function prepDataAndPushToRedshift (date, personalLoans, personalLoanVaria
     product.isWeddingAllowed = loan.isWeddingAllowed
     product.allPurposesAllowed = loan.allPurposesAllowed
     product.otherPurposes = loan.otherPurposes
-    product.encumbranceCheckFees = loan.encumbranceCheckFees
+    product.encumbranceCheckFees = loan.encumberanceCheckFees
     product.repaymentFreq = loan.repaymentFrequency
     product.extraRepaymentDollarLimits = loan.extraRepaymentDollarLimits
     product.extraRepaymentDollarLimitsPeriod = loan.extraRepaymentDollarLimitsPeriod
