@@ -13,7 +13,7 @@ module.exports = async function () {
       let record = variations[i]
       await PersonalLoanVariation.model.findOneAndUpdate(
         { _id: record._id },
-        { $set: { uuid: uuid.v4() }},
+        { $set: { uuid: uuid.v4() } },
         { upsert: false },
       ).exec()
     }
