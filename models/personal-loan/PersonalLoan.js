@@ -35,6 +35,7 @@ PersonalLoan.add({
   },
   isCarLoan: { type: Types.Select, initial: true, required: true, options: availableOptions.yesNo, emptyOption: false },
   isPersonalLoan: { type: Types.Select, initial: true, required: true, options: availableOptions.yesNo, emptyOption: false },
+  isGreenLoan: { type: Types.Select, initial: true, required: true, options: availableOptions.yesNo, emptyOption: false },
   isLineOfCredit: { type: Types.Select, initial: true, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown },
   repaymentType: { type: Types.Select, initial: true, required: true, options: ['FIXED', 'VARIABLE'], emptyOption: false },
   isExtraRepaymentsAllowed: { type: Types.Select, initial: true, required: true, options: availableOptions.all, emptyOption: false, default: availableOptions.unknown },
