@@ -20,9 +20,10 @@ class leaderDashBoard {
     let {
       collectionDate = moment().format('YYYY-MM-DD'),
       leaderboardSlugs = [],
+      vertical = 'Home Loans',
     } = leaderData
     this.collectionDate = collectionDate
-    let leaderboardFilter = {}
+    let leaderboardFilter = {vertical: vertical}
     if (leaderboardSlugs.length) {
      Object.assign(leaderboardFilter, {slug: {$in: leaderboardSlugs}})
     }
