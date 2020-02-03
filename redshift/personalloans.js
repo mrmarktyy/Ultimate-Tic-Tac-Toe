@@ -9,6 +9,8 @@ const moment = require('moment')
 const awsUploadToS3 = require('../utils/awsUploadToS3')
 const redshiftQuery = require('../utils/ratecityRedshiftQuery')
 const monetizedCollection = require('../routes/api/monetizedCollection')
+var processRedshiftPersonalLoans = require('../services/realTimeRating/personalLoanRatingCalculator')
+var leaderBoardPersonalLoan = require('../services/realTimeRating/leaderBoardPersonalLoans')
 
 var PersonalLoan = keystoneShell.list('PersonalLoan')
 var PersonalLoanVariation = keystoneShell.list('PersonalLoanVariation')
@@ -360,6 +362,11 @@ async function prepDataAndPushToRedshift (date, personalLoans, personalLoanVaria
 
  await insertIntoRedshift(personalLoanProducts, headers, filename, 'personal_loans_history')
  await insertIntoRedshift(personalLoanProductVariations, variationHeaders, filenameVar, 'personal_loans_variations_history')
+ await processRedshiftPersonalLoans('Personal Loans', {startDate: collectionDate})
+ await processRedshiftPersonalLoans('Car Loans', {startDate: collectionDate})
+ let dashboard = new leaderBoardPersonalLoan()
+ await dashboard.process({collectionDate: collectionDate, vertical: 'Personal Loans'})
+ await dashboard.process({collectionDate: collectionDate, vertical: 'Car Loans'})
 }
 
 async function insertIntoRedshift (rows, headers, filename, table) {
