@@ -26,7 +26,7 @@ const TERM_DEPOSIT_HEADER= [
 ]
 
 const TIER_HEADER = [
-  'collectionDate', 'id', 'termDepositUuid', 'name', 'minimumDeposit',
+  'collectionDate', 'id', 'termDepositUuid', 'variationUuid', 'name', 'minimumDeposit',
   'maximumDeposit', 'interestRate', 'term', 'interestPaymentFrequencyTerm',
   'interestCalculationFrequency', 'filename'
 ]
@@ -103,6 +103,7 @@ async function prepDataAndPushToRedshift (date, termDeposits, termDepositTiers) 
       variation.collectionDate = collectionDate
       variation.id = tier._id.toString()
       variation.termDepositUuid = tier.product.uuid
+			variation.variationUuid = tier.uuid
       variation.name = tier.name
       variation.minimumDeposit = tier.minimumDeposit
       variation.maximumDeposit = tier.maximumDeposit
