@@ -1,4 +1,5 @@
 var keystone = require('keystone')
+var uuid = require('node-uuid')
 var Types = keystone.Field.Types
 var changeLogService = require('../../services/changeLogService')
 var verifiedService = require('../../services/verifiedService')
@@ -22,6 +23,7 @@ var TermDepositTier = new keystone.List('TermDepositTier', {track: true}).add({
 		noedit: true,
 		filters: { company: ':company' },
 	},
+	uuid: { type: Types.Text, unique: true, noedit: true },
 	name: { type: Types.Text, required: true, initial: true },
 	minimumDeposit: { type: Types.Number, min: 0, initial: true },
 	maximumDeposit: { type: Types.Number, min: 0 },
@@ -40,6 +42,9 @@ TermDeposit.schema.post('remove', (next) => {
 })
 
 TermDepositTier.schema.pre('save', async function (next) {
+	if (!this.uuid) {
+		this.uuid = uuid.v4()
+	}
   await changeLogService(this)
   next()
 })
