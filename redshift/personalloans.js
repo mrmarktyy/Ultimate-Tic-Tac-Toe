@@ -66,6 +66,7 @@ async function prepDataAndPushToRedshift (date, personalLoans, personalLoanVaria
     isCarLoan: 'UNKNOWN',
     isPersonalLoan: 'UNKNOWN',
     isLineOfCredit: 'UNKNOWN',
+    isGreenLoan: 'NO',
     isFullyDrawnAdvance: 'UNKNOWN',
     peer2Peer: 'UNKNOWN',
     applyInBranch: 'UNKNOWN',
@@ -167,6 +168,7 @@ async function prepDataAndPushToRedshift (date, personalLoans, personalLoanVaria
     product.companyId = loan.company.uuid
     product.isCarLoan = loan.isCarLoan
     product.isPersonalLoan = loan.isPersonalLoan
+    product.isGreenLoan = loan.isGreenLoan
     product.isLineOfCredit = loan.isLineOfCredit
     product.isFullyDrawnAdvance = loan.isFullyDrawnAdvance
     if (companypl) {
@@ -296,7 +298,7 @@ async function prepDataAndPushToRedshift (date, personalLoans, personalLoanVaria
 
   const headers = [
     'collectionDate', 'productId', 'uuid', 'description', 'companyCode', 'companyName', 'companyId', 'isCarLoan',
-    'isPersonalLoan', 'isLineOfCredit', 'isFullyDrawnAdvance', 
+    'isPersonalLoan', 'isGreenLoan', 'isLineOfCredit', 'isFullyDrawnAdvance', 
     'peer2Peer', 'applyInBranch', 'applyOnline', 'applyByMobileLender', 'applyByPhone',
     'applyByBroker', 'availableTo457VisaHolders', 'approvalTime',
     'repaymentType', 'repaymentFreq', 'isExtraRepaymentsAllowed',
