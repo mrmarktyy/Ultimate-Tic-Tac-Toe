@@ -73,7 +73,7 @@ class leaderBoardPersonalLoan {
       order by r.overallrating desc, r.variationuuid asc
     `
     let ratings = await redshiftQuery(sql)
- //   console.log(sql)
+  // console.log(sql)
     // console.log(ratings.length)
     return ratings
   }

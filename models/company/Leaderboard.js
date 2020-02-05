@@ -19,7 +19,7 @@ Leaderboard.add({
 	slug: { type: Types.Text, required: true, index: true, unique: true, initial: true },
 	displayName: { type: Types.Text, required: true, initial: true },
 	displayOrder: { type: Types.Number, required: true, initial: true },
-	ultimateFilterCriteria: { type: Types.Textarea, required: true, initial: true },
+	ultimateFilterCriteria: { type: Types.Textarea, height: 300, required: true, initial: true },
 	flexibilityWeighting: { type: Types.Number, required: true, initial: true, default: 0.3, dependsOn: {vertical: 'Home Loans'} },
 	description: { type: Types.Text, initial: true },
 	searchCriteria: { type: Types.Text, initial: true },
