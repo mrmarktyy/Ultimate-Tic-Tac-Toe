@@ -54,7 +54,7 @@ BankAccount.add({
 	foreignTransactionFeePercent: { type: Types.Number },
 	counterDepositFee: { type: Types.Number },
 	counterWithdrawalFee: { type: Types.Number },
-	freeCounterTransactionCount: { type: Types.Number },
+	hasFreeCounterTransaction: { type: Types.Select, options: availableOptions.all, default: availableOptions.yes },
 	atmWithdrawalFee: { type: Types.Number },
 	hasOtherBankATMWithdrawalFee: { type: Types.Select, options: availableOptions.all, default: availableOptions.unkown },
 	hasOtherBankAtmFeeWaiver: { type: Types.Select, options: availableOptions.all, default: availableOptions.unkown },
