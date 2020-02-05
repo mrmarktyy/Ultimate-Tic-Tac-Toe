@@ -11,7 +11,6 @@ const MULTIPLIER = 5.32
 exports.list = async function (req, res) {
   let allCompanies = []
 	let companies = await Company.model.find({ $or: [ { isDiscontinued: false }, { isDiscontinued: {$exists: false} } ] }).lean().exec()
-
   let hlvariationStats = await modelStats('HomeLoanVariation')
   let personalStats = await modelStats('PersonalLoan', { isPersonalLoan: 'YES' })
   let carStats = await modelStats('PersonalLoan', { isCarLoan: 'YES' })
@@ -45,6 +44,7 @@ exports.list = async function (req, res) {
       response[`carloans_hasRepaymentWidget`] = plCompany['hasRepaymentWidget'] ? plCompany['hasRepaymentWidget'] : null
       response[`carloans_big4ComparisonProductUuid`] = (plCompany['big4ComparisonProduct'] || null) && plCompany['big4ComparisonProduct'].uuid
     }
+
     let { count: plCount = 0, populatityScore: plPopulatityScore = 0 } = personalStats[companyId] || {}
     response['personalloans_count'] = plCount
     response['personalloans_popularityScore'] = +(plPopulatityScore).toFixed(2)
@@ -106,7 +106,7 @@ async function modelStats (modelName, extraFilter = null) {
     match,
     { $group: { _id: '$company', count: { $sum: 1 }, clicks: {$sum: '$monthlyClicks'} } },
     { $project: { _id: 0, company_id: '$_id', count: 1, clicks: 1, populatityScore: {$multiply: ['$clicks', MULTIPLIER]} } },
-  ])
+  ]).cursor({}).exec().toArray()
   data.forEach((datum) => {
     obj[datum['company_id']] = datum
   })

@@ -8,6 +8,7 @@ const realtimeSwiftAPI = require('../../utils/realtimeSwiftAPI')
 const RTRFilters = {
     'Personal Loans': [
       {loanAmount: 20000, months: 36},
+      {loanAmount: 10000, months: 36},
     ],
     'Car Loans': [
       {loanAmount: 20000, months: 36},
@@ -178,6 +179,6 @@ async function runRTR () {
   return(0)
 }
 
-// runRTR()
+//runRTR()
 
 module.exports = processRedshiftPersonalLoans
