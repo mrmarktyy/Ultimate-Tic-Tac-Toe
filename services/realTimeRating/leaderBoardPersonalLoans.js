@@ -69,6 +69,7 @@ class leaderBoardPersonalLoan {
       where h.collectiondate = '${this.collectionDate}'
       ${verticalfilter}
       and ${this.currentLeaderboard.ultimateFilterCriteria}
+      and h.description not like '%(Marketplace)%'
       and h.isdiscontinued = false
       order by r.overallrating desc, r.variationuuid asc
     `
@@ -209,7 +210,7 @@ class leaderBoardPersonalLoan {
 
 async function runDashboard () {
   let current = moment('2019-06-01')
-//  current = moment().subtract(1, 'day')
+  current = moment().startOf('day').subtract(1, 'day')
   let endDate = moment().subtract(1, 'day').format('YYYY-MM-DD')
   let dashboard = new leaderBoardPersonalLoan()
   while (current.isSameOrBefore(endDate)) {
