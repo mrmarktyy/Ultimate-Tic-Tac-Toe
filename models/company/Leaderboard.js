@@ -24,7 +24,8 @@ Leaderboard.add({
 	description: { type: Types.Text, initial: true },
 	searchCriteria: { type: Types.Text, initial: true },
   filterAttributes: { type: Types.Text, initial: true },
-  isDiscontinued: { type: Types.Boolean, indent: true, default: false },
+	isDiscontinued: { type: Types.Boolean, indent: true, default: false },
+	awardBadgeURL: { type: Types.Url },
 })
 
 Leaderboard.schema.pre('save', async function (next) {
