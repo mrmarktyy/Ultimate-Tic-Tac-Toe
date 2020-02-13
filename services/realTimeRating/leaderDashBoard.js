@@ -23,7 +23,7 @@ class leaderDashBoard {
       vertical = 'Home Loans',
     } = leaderData
     this.collectionDate = collectionDate
-    let leaderboardFilter = {vertical: vertical}
+    let leaderboardFilter = {vertical: vertical, isDiscontinued: false}
     if (leaderboardSlugs.length) {
      Object.assign(leaderboardFilter, {slug: {$in: leaderboardSlugs}})
     }
