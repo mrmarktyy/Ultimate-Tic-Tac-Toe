@@ -2,14 +2,13 @@ require('dotenv').config()
 var fetch = require('node-fetch')
 const logger = require('./logger')
 
-module.exports = async function (vertical, loanAmount, months, products) {
+module.exports = async function (vertical, options, products) {
   try {
     let verticalSuffix = vertical.replace(/\s+/g, '-').toLowerCase()
     let url = `${process.env.RTR_URL}/rest/rtr/${verticalSuffix}`
     let body = {
-      products: products,
-      borrowAmount: loanAmount,
-      loanTerm: months,
+      products,
+			...options,
     }
 
     let rtr = await fetchRealTimeRatings(url, body)

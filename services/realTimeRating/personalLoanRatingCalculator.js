@@ -35,7 +35,10 @@ async function processRedshiftPersonalLoans (vertical, dateRange = {}) {
         let filters = RTRFilters[vertical][i]
         products = await pullProducts(vertical, currentDateString, filters)
         products = transformRTRProducts(products)
-        let rtrProducts = await realtimeSwiftAPI(vertical, filters.loanAmount, filters.months, products)
+        let rtrProducts = await realtimeSwiftAPI(vertical, {
+          borrowAmount: filters.loanAmount,
+					loanTerm: filters.months,
+				}, products)
         rtrProducts = makeLeaderboardCompliant(vertical, currentDateString, filters.loanAmount, filters.months, rtrProducts)
         realTimeRatings.push(...rtrProducts)
       }
@@ -77,7 +80,7 @@ async function pullProducts (vertical, collectionDate, filters) {
   let verticalClause = vertical === 'Personal Loans' ? `and pl.ispersonalloan = 'YES'` : `and pl.iscarloan = 'YES'`
 
   let command = `
-    select pl.*, v.*, 
+    select pl.*, v.*,
     v.applicationfeesdollar as applicationfeesdollar,
     v.applicationfeespercent as varapplicationfeespercent
     from personal_loans_history pl
