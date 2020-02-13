@@ -1,4 +1,4 @@
-// node ./services/realTimeRating/leaderBoardPersonalLoans.js
+// node ./services/realTimeRating/LeaderBoardPersonalLoans.js
 
 const redshiftQuery = require('../../utils/ratecityRedshiftQuery')
 const awsUploadToS3 = require('../../utils/awsUploadToS3')
@@ -25,7 +25,7 @@ class leaderBoardPersonalLoan {
     } = leaderData
     this.collectionDate = collectionDate
     this.vertical = vertical
-    let leaderboardFilter = {vertical: vertical}
+    let leaderboardFilter = {vertical: vertical, isDiscontinued: false}
     if (leaderboardSlugs.length) {
      Object.assign(leaderboardFilter, {slug: {$in: leaderboardSlugs}})
     }
@@ -210,15 +210,13 @@ class leaderBoardPersonalLoan {
 
 async function runDashboard () {
   let current = moment('2019-06-01')
-  current = moment().startOf('day').subtract(1, 'day')
+  //current = moment().startOf('day').subtract(1, 'day')
   let endDate = moment().subtract(1, 'day').format('YYYY-MM-DD')
   let dashboard = new leaderBoardPersonalLoan()
   while (current.isSameOrBefore(endDate)) {
-   //console.log(current.format('YYYY-MM-DD'))
-    console.log(endDate)
     await dashboard.process({collectionDate: current.format('YYYY-MM-DD'), vertical: 'Personal Loans'})
     await dashboard.process({collectionDate: current.format('YYYY-MM-DD'), vertical: 'Car Loans'})
-    //await dashboard.process({collectionDate: current.format('YYYY-MM-DD'), leaderboardSlugs: ['best-3-year-investor-fixed-pi', 'best-5-year-investor-fixed-pi']})
+    //await dashboard.process({collectionDate: current.format('YYYY-MM-DD'), vertical: 'Car Loans', leaderboardSlugs: ['best-broker-car-loans']})
     current.add(1, 'day')
   }
   console.log('ran dashboard')

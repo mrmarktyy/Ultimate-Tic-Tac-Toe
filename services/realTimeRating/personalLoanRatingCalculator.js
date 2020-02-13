@@ -166,7 +166,7 @@ function getFileName (vertical, startDate, endDate) {
 
 async function runRTR () {
   let current = moment('2019-06-01')
-  // current = moment('2020-02-05')
+ // current = moment('2020-02-06')
   let endDate = moment().subtract(1, 'day').format('YYYY-MM-DD')
   while (current.isSameOrBefore(endDate)) {
     let enddt = current.clone().endOf('month')
@@ -180,6 +180,6 @@ async function runRTR () {
   return(0)
 }
 
-// runRTR()
+//runRTR()
 
 module.exports = processRedshiftPersonalLoans
