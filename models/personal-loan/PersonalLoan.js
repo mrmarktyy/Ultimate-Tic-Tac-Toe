@@ -219,9 +219,11 @@ PersonalLoan.schema.pre('save', async function (next) {
       for(let variation of variations) {
         if (product.isCarLoan == availableOptions.yes) {
           urlsToBeUpdated.push(`/car-loans/${variation.company.slug}/${product.slug}`)
+          urlsToBeUpdated.push(`/car-loans/${variation.company.slug}/${product.slug}/payments`)
         }
         if (product.isPersonalLoan == availableOptions.yes) {
           urlsToBeUpdated.push(`/personal-loans/${variation.company.slug}/${product.slug}`)
+          urlsToBeUpdated.push(`/personal-loans/${variation.company.slug}/${product.slug}/payments`)
         }
       }
     }
