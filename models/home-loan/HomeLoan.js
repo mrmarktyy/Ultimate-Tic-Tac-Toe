@@ -98,6 +98,7 @@ HomeLoan.schema.pre('save', async function (next) {
     if(variations && variations.length) {
       for(let variation of variations) {
         urlsToBeUpated.push(`/home-loans/${variation.company.slug}/${variation.slug}`)
+        urlsToBeUpated.push(`/home-loans/${variation.company.slug}/${variation.slug}/payments`)
       }
     }
     urlsToBeUpated.length && await discontinuedService(this, {urls: urlsToBeUpated, isDiscontinued: this.isDiscontinued})

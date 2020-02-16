@@ -1,13 +1,16 @@
 var mongoose = require('mongoose')
 const fetch = require('node-fetch')
 module.exports = async function (model, options={}) {
-	let { urls = [], isDiscontinued, urlPrefix } = options
-	if(!urls.length) {
+	let { urls = [], isDiscontinued, urlPrefix, isPaymentEnabled } = options
+	if (!urls.length) {
 		let collectionName = model.constructor.modelName
 		let Model = mongoose.model(collectionName)
 		const product = await Model.findOne({uuid: model.uuid}).populate('company').lean().exec()
-		if(product && product.isDiscontinued != model.isDiscontinued) {
+		if (product && product.isDiscontinued != model.isDiscontinued) {
 			urls.push(`${urlPrefix}/${product.company.slug}/${product.slug}`)
+			if (isPaymentEnabled) {
+				urls.push(`${urlPrefix}/${product.company.slug}/${product.slug}/payments`)
+			}
 			isDiscontinued = model.isDiscontinued
 		}
 	}

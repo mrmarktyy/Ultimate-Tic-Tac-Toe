@@ -184,7 +184,7 @@ HomeLoanVariation.schema.pre('save', async function (next) {
     loan.introTermInMonth = this.introductoryTerm
   }
   this.calculatedComparisonRate = ComparisonRateCalculator.calculateHomeLoanComparisonRate(loan)
-  await discontinuedService(this, { urlPrefix: '/home-loans' })
+  await discontinuedService(this, { urlPrefix: '/home-loans', isPaymentEnabled: true })
   next()
 })
 
