@@ -103,6 +103,9 @@ PersonalLoan.add({
   personalisedFeeMinimum: { type: Types.Number },
   personalisedFeeMaximum: { type: Types.Number },
   personalisedFeeName: { type: Types.Text },
+  minimumCarAge: { type: Types.Number },
+	maximumCarAge: { type: Types.Number },
+	carLoanDisplayName: {type: Types.Text},
 })
 
 PersonalLoan.relationship({ path: 'personalLoanVariations', ref: 'PersonalLoanVariation', refPath: 'product' })

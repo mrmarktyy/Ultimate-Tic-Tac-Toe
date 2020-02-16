@@ -99,6 +99,7 @@ CreditCard.add({
 	minimumAge: { type: Types.Number, min: 0 },
 	minimumIncome: { type: Types.Number, min: 0 },
 	minimumCreditRating: { type: Types.Text },
+	minimumCreditScore: { type: Types.Number },
   eligibilityConditions: { type: Types.Text },
   residency: {
 		type: Types.MultiSelect,
