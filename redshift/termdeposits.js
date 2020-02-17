@@ -7,6 +7,7 @@ const json2csv = require('json2csv')
 const moment = require('moment')
 const awsUploadToS3 = require('../utils/awsUploadToS3')
 const redshiftQuery = require('../utils/ratecityRedshiftQuery')
+const termDepositsRatingCalculator = require('../services/realTimeRating/termDepositsRatingCalculator')
 
 var TermDeposit = keystoneShell.list('TermDeposit')
 var TermDepositTier = keystoneShell.list('TermDepositTier')
@@ -120,6 +121,7 @@ async function prepDataAndPushToRedshift (date, termDeposits, termDepositTiers) 
 
   await insertIntoRedshift(products, TERM_DEPOSIT_HEADER, filename, 'term_deposits_history')
   await insertIntoRedshift(variations, TIER_HEADER, tierFilename, 'term_deposits_tiers_history')
+	await termDepositsRatingCalculator({startDate: collectionDate})
 }
 
 async function insertIntoRedshift (rows, headers, filename, table) {
