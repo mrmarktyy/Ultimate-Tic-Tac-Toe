@@ -7,6 +7,7 @@ const json2csv = require('json2csv')
 const moment = require('moment')
 const awsUploadToS3 = require('../utils/awsUploadToS3')
 const redshiftQuery = require('../utils/ratecityRedshiftQuery')
+var savingsAccountRatingCalculator = require('../services/realTimeRating/savingsAccountRatingCalculator')
 
 var SavingsAccount = keystoneShell.list('SavingsAccount')
 var SavingsAccountTier = keystoneShell.list('SavingsAccountTier')
@@ -46,6 +47,7 @@ async function prepDataAndPushToRedshift (date, savingsAccounts, savingsAccountT
     product.name = account.name
     product.slug = account.slug
     product.companyname = account.company.name
+		product.companyuuid = account.company.uuid
     product.interestcalculationmethod = account.interestCalculationMethod
     product.othernames = account.otherNames.toString()
     product.displayname = account.displayName ? account.displayName : null
@@ -108,7 +110,7 @@ async function prepDataAndPushToRedshift (date, savingsAccounts, savingsAccountT
     })
   })
 
-  const headers = [ 'collectiondate', 'savingsaccountid', 'uuid', 'name', 'slug', 'companyname',
+  const headers = [ 'collectiondate', 'savingsaccountid', 'uuid', 'name', 'slug', 'companyname', 'companyuuid',
     'interestcalculationmethod', 'othernames', 'displayname', 'gotositeurl', 'gotositeenabled', 'paymenttype',
     'promotedorder', 'isspecial', 'isrcspecial', 'offerExpires', 'ecpc',
     'otherbenefits', 'otherrestrictions', 'minimumagerestrictions',
@@ -130,6 +132,7 @@ async function prepDataAndPushToRedshift (date, savingsAccounts, savingsAccountT
 
   await insertIntoRedshift(products, headers, filename, 'savings_accounts_history')
   await insertIntoRedshift(variations, tierHeaders, filenameTier, 'savings_accounts_tiers_history')
+	await savingsAccountRatingCalculator('Savings Accounts', {startDate: collectionDate})
 }
 
 async function insertIntoRedshift (rows, headers, filename, table) {
