@@ -3,6 +3,7 @@ var uuid = require('node-uuid')
 var Types = keystone.Field.Types
 var changeLogService = require('../../services/changeLogService')
 var verifiedService = require('../../services/verifiedService')
+var verbosePageService = require('../../services/verbosePageService')
 var verticals = ['Home Loans', 'Credit Cards', 'Savings Accounts',
                  'Transaction Accounts', 'Personal Loans', 'Car Loans',
                  'Term Deposits', 'Bank Accounts',
@@ -37,7 +38,12 @@ Leaderboard.schema.pre('save', async function (next) {
 })
 
 Leaderboard.schema.post('save', async function () {
+	verbosePageService.upsertPage(this)
 	await verifiedService(this)
+})
+
+Leaderboard.schema.post('remove', async function () {
+	verbosePageService.upsertPage(this, true)
 })
 
 Leaderboard.defaultSort = 'isDiscontinued, vertical, internalName'
