@@ -7,7 +7,7 @@ const json2csv = require('json2csv')
 const moment = require('moment')
 const awsUploadToS3 = require('../utils/awsUploadToS3')
 const redshiftQuery = require('../utils/ratecityRedshiftQuery')
-var savingsAccountRatingCalculator = require('../services/realTimeRating/savingsAccountRatingCalculator')
+const savingsAccountRatingCalculator = require('../services/realTimeRating/savingsAccountRatingCalculator')
 
 var SavingsAccount = keystoneShell.list('SavingsAccount')
 var SavingsAccountTier = keystoneShell.list('SavingsAccountTier')
