@@ -4,6 +4,7 @@ const recommendedMultiplier = require('../../utils/recommendedMultiplier').multi
 var monetizedCollection = require('./monetizedCollection')
 var logger = require('../../utils/logger')
 const HomeLoanVariation = keystone.list('HomeLoanVariation')
+const PartnerGotoSite = require('../../services/PartnerGotoSite.js')
 
 class HomeLoanList {
   constructor () {
@@ -32,9 +33,10 @@ class HomeLoanList {
         })
       })
 
+      const partnerGotoSite = await new PartnerGotoSite('home-loans')
       let records = []
       variations.forEach((variation) => {
-        variation = this.spawnVariation(variation, monetizedVariations, companyVerticals)
+        variation = this.spawnVariation(variation, monetizedVariations, companyVerticals, partnerGotoSite)
         let product_id = variation.product_id.toString()
         let company_id = variation.company_id.toString()
 
@@ -121,7 +123,7 @@ class HomeLoanList {
     })
   }
 
-  spawnVariation (variation, monetizedVariations, companyVerticals) {
+  spawnVariation (variation, monetizedVariations, companyVerticals, partnerGotoSite) {
     if (variation.company_logo) {
       if (variation.company_logo) {
         variation.company_logo = variation.company_logo.url.replace('http://res.cloudinary.com/ratecity/image/upload', '//production-ultimate-assets.ratecity.com.au/ratecity/image/upload')
@@ -138,6 +140,7 @@ class HomeLoanList {
     delete variation.company_userHasOffers
     variation.gotoSiteUrl = null
     variation.gotoSiteEnabled = false
+    variation.gotoSiteEnabledPartners = partnerGotoSite.findPartners(variation.uuid)
     variation.recommendScore = (variation.monthlyClicks ? variation.monthlyClicks * recommendedMultiplier : 0)
     delete variation.monthlyClicks
 
