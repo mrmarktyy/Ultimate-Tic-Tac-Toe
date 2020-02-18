@@ -14,14 +14,16 @@ var CompanyService = require('../../services/CompanyService')
 var logger = require('../../utils/logger')
 const recommendedMultiplier = require('../../utils/recommendedMultiplier').multiplier
 var monetizedCollection = require('./monetizedCollection')
+const PartnerGotoSite = require('../../services/PartnerGotoSite.js')
 
 function removeUneededFields (obj) {
   return _.omit(obj, ['product', '_id', 'company', 'big4ComparisonProduct', 'createdAt', 'createdBy', 'updatedBy', 'updatedAt'])
 }
 
-function spawnVariation (variation, monetizedVariations) {
+function spawnVariation (variation, monetizedVariations, partnerGotoSite) {
   variation.gotoSiteUrl = null
   variation.gotoSiteEnabled = false
+  variation.gotoSiteEnabledPartners = partnerGotoSite.findPartners(variation.uuid)
   variation.recommendScore = (variation.monthlyClicks ? variation.monthlyClicks * recommendedMultiplier : 0)
   delete variation.monthlyClicks
   variation.promotedOrder = 100
@@ -96,7 +98,7 @@ async function getHomeLoansObjects (homeLoans) {
   let variations = await getHomeLoanModel(HomeLoanVariation.model, 'product', 'revertVariation providerProductName', isDiscontinuedFilter)
 
   let response = {}
-
+  const partnerGotoSite = await new PartnerGotoSite('home-loans')
   homeLoans.forEach((homeLoan) => {
     if (variations[homeLoan._id]) {
       let company = CompanyService.fixLogoUrl(homeLoan.company)
@@ -110,7 +112,7 @@ async function getHomeLoansObjects (homeLoans) {
         {},
         homeLoan,
         {
-          variations: (variations[homeLoan._id] || []).map((v) => spawnVariation(v, monetizedVariations)),
+          variations: (variations[homeLoan._id] || []).map((v) => spawnVariation(v, monetizedVariations, partnerGotoSite)),
           offsetAccounts: (offsetAccounts[homeLoan._id] || []).map(removeUneededFields),
           redrawfacilities: (redrawFacilities[homeLoan._id] || []).map(removeUneededFields),
           fees: (fees[homeLoan._id] || []).map(spawnFee),

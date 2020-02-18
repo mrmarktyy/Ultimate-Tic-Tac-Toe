@@ -1,6 +1,7 @@
 var keystone = require('keystone')
 const _ = require('lodash')
 var CompanyService = require('../../services/CompanyService')
+const PartnerGotoSite = require('../../services/PartnerGotoSite.js')
 
 const CreditCard = keystone.list('CreditCard')
 const Redemption = keystone.list('Redemption')
@@ -79,6 +80,7 @@ exports.list = async function (req, res) {
       return perk.name
     })
 
+  const partnerGotoSite = await new PartnerGotoSite('credit-cards')
   let cards = []
   creditcards.forEach((card) => {
     let company = CompanyService.fixLogoUrl(card.company)
@@ -91,6 +93,7 @@ exports.list = async function (req, res) {
     let monetize = monetizedList[card._id]
     card.gotoSiteUrl = monetize ? monetize.applyUrl : null
     card.gotoSiteEnabled = monetize ? monetize.enabled : false
+    card.gotoSiteEnabledPartners = partnerGotoSite.findPartners(card.uuid)
     card.paymentType = monetize ? monetize.paymentType : null
     card.cardArt = card.cardArt ? fixCardArtUrl(card.cardArt.url) : null
 

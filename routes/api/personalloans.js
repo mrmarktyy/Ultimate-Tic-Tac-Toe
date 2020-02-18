@@ -11,6 +11,7 @@ var logger = require('../../utils/logger')
 var monetizedCollection = require('./monetizedCollection')
 var removeUneededFields = require('../../utils/removeUneededFields')
 const recommendedMultiplier = require('../../utils/recommendedMultiplier').multiplier
+const PartnerGotoSite = require('../../services/PartnerGotoSite.js')
 
 exports.list = async function (req, res) {
 	let personalLoans = await PersonalLoan.model.find({ isDiscontinued: false }).populate('company').lean().exec()
@@ -30,7 +31,8 @@ async function getPersonalLoanObjects (loans) {
 	const qualifications = await PersonalLoanQualification.model.find().populate('company product').populate({path: 'knockouts', populate: {path: 'qualifications', populate: {path: 'bureauAttribute'}}}).lean().exec()
 
 	const monetizedList = _.merge({}, monetizeCarLoans, monetizePersonalLoans)
-
+  const partnerGotoSitePersonal = await new PartnerGotoSite('personal-loans')
+  const partnerGotoSiteCar = await new PartnerGotoSite('car-loans')
 	let result = loans.map((loan) => {
 		// variations
 		loan.variations = variations
@@ -54,7 +56,10 @@ async function getPersonalLoanObjects (loans) {
 		let monetize = monetizedList[loan._id]
 
 		loan.gotoSiteUrl = monetize ? monetize.applyUrl : null
-		loan.gotoSiteEnabled = monetize ? monetize.enabled : false
+    loan.gotoSiteEnabled = monetize ? monetize.enabled : false
+    loan.gotoSiteEnabledPartnersPersonal = partnerGotoSitePersonal.findPartners(loan.uuid)
+    loan.gotoSiteEnabledPartnersCar = partnerGotoSiteCar.findPartners(loan.uuid)
+
 		loan.paymentType = monetize ? monetize.paymentType : null
 
 		// enrich data
