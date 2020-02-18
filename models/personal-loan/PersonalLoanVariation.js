@@ -47,8 +47,11 @@ PersonalLoanVariation.add({
 	minLoanTerm: { type: Types.Number, required: true, initial: true, min: 0 },
 	maxLoanTerm: { type: Types.Number, required: true, initial: true, min: 0 },
 	minRate: { type: Types.Number, required: true, initial: true, min: 3 },
+	officialMinRate: {type: Types.Date, indent: true, default: null},
 	maxRate: { type: Types.Number, required: true, initial: true },
+	officialMaxRate: {type: Types.Date, indent: true, default: null},
 	introRate: { type: Types.Number, min: 0 },
+	officialIntroRate: {type: Types.Date, indent: true, default: null},
 	introTerm: { type: Types.Number, min: 0 },
 	comparisonRatePersonal: { type: Types.Number, noedit: true, hidden: true },
 	comparisonRatePersonalManual: { type: Types.Number, hidden: true },
@@ -87,6 +90,7 @@ PersonalLoanVariation.add({
 	riskAssuranceFee: { type: Types.Number, hidden: true },
 	generateRange: { type: Types.Number, label: 'Generate Range %', hidden: true },
 	rangeMinFee: { type: Types.Number, hidden: true },
+	otherOfficialChange: {type: Types.Date, indent: true, default: null},
 })
 
 PersonalLoanVariation.add(verifiedCommonAttribute)
