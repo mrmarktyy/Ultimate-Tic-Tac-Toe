@@ -8,10 +8,10 @@ class PartnerGotoSite {
   constructor (vertical) {
    this.partnerproducts = {}
    this.vertical = vertical
-   return (async () => {
-      this.value = await this.populatePartners(this.vertical)
-      return this
-   })()
+  //  return (async () => {
+  //     this.value = await this.populatePartners(this.vertical)
+  //     return this
+  //  })()
   }
 
   async populatePartners (verticals) {
