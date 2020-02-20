@@ -16,11 +16,10 @@ exports.list = async function (req, res) {
 }
 
 async function getPensionObjects (pensions) {
-  const monetizePensions = await monetizedCollection('Pension')
+	const monetizePensions = await monetizedCollection('Pension')
 	const today = new Date()
 
   const partnerGotoSite = await new PartnerGotoSite('pension-funds')
-  await partnerGotoSite.populatePartners()
 	return pensions.map((pension) => {
 		const product = {}
 		const monetize = monetizePensions[pension._id] || {}

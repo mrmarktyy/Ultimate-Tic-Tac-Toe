@@ -19,8 +19,7 @@ async function getSuperannuationObjects (superannuations) {
 	const monetizeSuperannuations = await monetizedCollection('Superannuation')
 	const today = new Date()
 
-  const partnerGotoSite = new PartnerGotoSite('superannuation')
-  await partnerGotoSite.populatePartners()
+  const partnerGotoSite = await new PartnerGotoSite('superannuation')
 	return superannuations.map((superannuation) => {
 		const product = {}
 		const monetize = monetizeSuperannuations[superannuation._id] || {}
