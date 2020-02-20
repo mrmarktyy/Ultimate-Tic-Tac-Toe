@@ -31,10 +31,8 @@ async function getPersonalLoanObjects (loans) {
 	const qualifications = await PersonalLoanQualification.model.find().populate('company product').populate({path: 'knockouts', populate: {path: 'qualifications', populate: {path: 'bureauAttribute'}}}).lean().exec()
 
 	const monetizedList = _.merge({}, monetizeCarLoans, monetizePersonalLoans)
-  const partnerGotoSitePersonal = new PartnerGotoSite('personal-loans')
-  await partnerGotoSitePersonal.populatePartners()
-  const partnerGotoSiteCar = new PartnerGotoSite('car-loans')
-  await partnerGotoSiteCar.populatePartners()
+  const partnerGotoSitePersonal = await new PartnerGotoSite('personal-loans')
+  const partnerGotoSiteCar = await new PartnerGotoSite('car-loans')
 	let result = loans.map((loan) => {
 		// variations
 		loan.variations = variations

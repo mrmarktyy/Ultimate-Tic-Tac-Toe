@@ -80,8 +80,7 @@ exports.list = async function (req, res) {
       return perk.name
     })
 
-  const partnerGotoSite = new PartnerGotoSite('credit-cards')
-  await partnerGotoSite.populatePartners()
+  const partnerGotoSite = await new PartnerGotoSite('credit-cards')
   let cards = []
   creditcards.forEach((card) => {
     let company = CompanyService.fixLogoUrl(card.company)

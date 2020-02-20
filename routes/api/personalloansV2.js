@@ -34,10 +34,8 @@ async function addVariations () {
     .populate({path: 'company', select: '-createdAt -createdBy -updatedBy -updatedAt -__v -_id'})
     .lean().exec()
 
-  const partnerGotoSitePersonal = new PartnerGotoSite('personal-loans')
-  await partnerGotoSitePersonal.populatePartners()
-  const partnerGotoSiteCar = new PartnerGotoSite('car-loans')
-  await partnerGotoSiteCar.populatePartners()
+  const partnerGotoSitePersonal = await new PartnerGotoSite('personal-loans')
+  const partnerGotoSiteCar = await new PartnerGotoSite('car-loans')
   variations = variations
   .filter((variation) => {
     return (variation.product && variation.product.isDiscontinued === false)
@@ -89,6 +87,7 @@ async function addVariations () {
   })
 
   variations = flattenNested(variations, {product: 'product_', company: 'company_', companyVertical: 'companyVertical_'})
+  console.log(variations)
   return variations
 }
 
