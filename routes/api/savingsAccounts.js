@@ -21,7 +21,8 @@ async function getSavingAccounts (accounts) {
 	const companySavingsAccounts = await CompanySavingsAccount.model.find().populate('big4ComparisonProduct').lean().exec()
 	const monetizedList = await monetizedCollection('Savings Accounts')
 
-  const partnerGotoSite = await new PartnerGotoSite('savings-accounts')
+  const partnerGotoSite = new PartnerGotoSite('savings-accounts')
+  await partnerGotoSite.populatePartners()
 	let result = accounts.map((account, index) => {
 		let company = Object.assign({}, CompanyService.fixLogoUrl(account.company))
 		account.variations = variations
