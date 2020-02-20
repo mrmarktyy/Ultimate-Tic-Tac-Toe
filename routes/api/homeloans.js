@@ -98,7 +98,8 @@ async function getHomeLoansObjects (homeLoans) {
   let variations = await getHomeLoanModel(HomeLoanVariation.model, 'product', 'revertVariation providerProductName', isDiscontinuedFilter)
 
   let response = {}
-  const partnerGotoSite = await new PartnerGotoSite('home-loans')
+  const partnerGotoSite = new PartnerGotoSite('home-loans')
+  await partnerGotoSite.populatePartners()
   homeLoans.forEach((homeLoan) => {
     if (variations[homeLoan._id]) {
       let company = CompanyService.fixLogoUrl(homeLoan.company)

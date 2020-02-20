@@ -33,7 +33,8 @@ class HomeLoanList {
         })
       })
 
-      const partnerGotoSite = await new PartnerGotoSite('home-loans')
+      const partnerGotoSite = new PartnerGotoSite('home-loans')
+      await partnerGotoSite.populatePartners()
       let records = []
       variations.forEach((variation) => {
         variation = this.spawnVariation(variation, monetizedVariations, companyVerticals, partnerGotoSite)
