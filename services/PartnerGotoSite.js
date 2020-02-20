@@ -6,21 +6,14 @@ const PartnerProduct = keystoneShell.list('PartnerProduct')
 
 class PartnerGotoSite {
   constructor (vertical) {
-   this.partnerproducts = {}
-   this.vertical = vertical
-  //  return (async () => {
-  //     this.value = await this.populatePartners(this.vertical)
-  //     return this
-  //  })()
+    this.partnerproducts = {}
+    this.vertical = vertical
   }
 
-  async populatePartners (verticals) {
-    if (typeof verticals === 'string') {
-      verticals = [verticals]
-    }
+  async populatePartners () {
     let connection = await mongoosePromise.connect()
     try {
-      let products = await PartnerProduct.model.find({isPhantomProduct: false, isBlacklisted: false, vertical: {$in: verticals}, isDiscontinued: false}).populate('partners').lean().exec()
+      let products = await PartnerProduct.model.find({isPhantomProduct: false, isBlacklisted: false, vertical: this.vertical, isDiscontinued: false}).populate('partners').lean().exec()
       connection.close()
       products.forEach((product) => {
         this.partnerproducts[product.parentUuid] = product.partners.map((partner) => { return partner.name})
@@ -37,11 +30,11 @@ class PartnerGotoSite {
 }
 
 async function run() {
-  let xx = await new PartnerGotoSite(['car-loans'])
-  let partners = await xx.findPartners('a6a51106-8ca6-41e1-a842-4df8b46f6424')
+  let xx = new PartnerGotoSite('credit-cards')
+  let partners = (await xx.findPartners('2381aa63-3895-4747-b711-f554aa5c870e'))
   console.log(partners)
   return(0)
 }
 
-// run()
+//run()
 module.exports = PartnerGotoSite

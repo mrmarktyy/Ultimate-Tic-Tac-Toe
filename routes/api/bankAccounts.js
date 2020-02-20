@@ -18,7 +18,8 @@ exports.list = async function (req, res) {
 async function getBankAccounts (accounts) {
 	const companyBankAccount = await CompanyBankAccount.model.find().lean().exec()
 	const monetizedList = await monetizedCollection('Bank Accounts')
-  const partnerGotoSite = await new PartnerGotoSite('bank-accounts')
+  const partnerGotoSite = new PartnerGotoSite('bank-accounts')
+  await partnerGotoSite.populatePartners()
 	let result = accounts.map((account) => {
 		const companyVertical = companyBankAccount.find((companyAccount) => (
 			String(companyAccount.company) === String(account.company._id)
