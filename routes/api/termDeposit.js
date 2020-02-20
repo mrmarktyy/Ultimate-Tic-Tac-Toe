@@ -19,8 +19,7 @@ async function customizeTermDeposit (termDeposits) {
 	const variations = await TermDepositTier.model.find().populate('product').lean().exec()
 	const termDepositsCompanies = await TermDepositCompany.model.find().populate('big4ComparisonProduct').lean().exec()
 	const monetizedList = await monetizedCollection('Term Deposits')
-  const partnerGotoSite = new PartnerGotoSite('term-deposits')
-  await partnerGotoSite.populatePartners()
+  const partnerGotoSite = await PartnerGotoSite('term-deposits')
 	let result = termDeposits.map((termDeposit) => {
 		let company = Object.assign({}, CompanyService.fixLogoUrl(termDeposit.company))
 		termDeposit.variations = variations
@@ -51,7 +50,7 @@ async function customizeTermDeposit (termDeposits) {
 		let monetize = monetizedList[termDeposit._id]
 		termDeposit.gotoSiteUrl = monetize ? monetize.applyUrl : null
     termDeposit.gotoSiteEnabled = monetize ? monetize.enabled : false
-    termDeposit.gotoSiteEnabledPartners = partnerGotoSite.findPartners(termDeposit.uuid)
+    termDeposit.gotoSiteEnabledPartners = partnerGotoSite[termDeposit.uuid] || []
 		termDeposit.paymentType = monetize ? monetize.paymentType : null
 
 		termDeposit.company.hasRepaymentWidget = companyVertical ? companyVertical.hasRepaymentWidget : false

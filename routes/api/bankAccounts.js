@@ -1,7 +1,7 @@
 const keystone = require('keystone')
 const removeUneededFields = require('../../utils/removeUneededFields')
 const setPromotedOrder = require('../../utils/helperFunctions').setPromotedOrder
-const PartnerGotoSite = require('../../services/PartnerGotoSite.js')
+const PartnerGotoSite = require('../../services/PartnerGotoSite')
 
 const BankAccount = keystone.list('BankAccount')
 const CompanyBankAccount = keystone.list('CompanyBankAccount')
@@ -17,9 +17,8 @@ exports.list = async function (req, res) {
 
 async function getBankAccounts (accounts) {
 	const companyBankAccount = await CompanyBankAccount.model.find().lean().exec()
-	const monetizedList = await monetizedCollection('Bank Accounts')
-  const partnerGotoSite = new PartnerGotoSite('bank-accounts')
-  await partnerGotoSite.populatePartners()
+  const monetizedList = await monetizedCollection('Bank Accounts')
+  const partnerGotoSite = await PartnerGotoSite('bank-accounts')
 	let result = accounts.map((account) => {
 		const companyVertical = companyBankAccount.find((companyAccount) => (
 			String(companyAccount.company) === String(account.company._id)
@@ -29,10 +28,10 @@ async function getBankAccounts (accounts) {
 		CompanyService.fixLogoUrl(account.company)
 		account.company = removeUneededFields(account.company)
 		// monetize data
-		const monetize = monetizedList[account._id]
+    const monetize = monetizedList[account._id]
 		account.gotoSiteUrl = monetize ? monetize.applyUrl : null
     account.gotoSiteEnabled = monetize ? monetize.enabled : false
-    account.gotoSiteEnabledPartners = partnerGotoSite.findPartners(account.uuid)
+    account.gotoSiteEnabledPartners = partnerGotoSite[account.uuid] || []
 		account.paymentType = monetize ? monetize.paymentType : null
 		setPromotedOrder(account)
     account.popularityScore = (account.monthlyClicks ? account.monthlyClicks * recommendedMultiplier : 0)

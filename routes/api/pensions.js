@@ -7,7 +7,7 @@ const monetizedCollection = require('./monetizedCollection')
 const CompanyService = require('../../services/CompanyService')
 const { getYears, ratings, segments, purposes, options } = require('../../models/superannuation/constants')
 const recommendedMultiplier = require('../../utils/recommendedMultiplier').multiplier
-const PartnerGotoSite = require('../../services/PartnerGotoSite.js')
+const PartnerGotoSite = require('../../services/PartnerGotoSite')
 
 exports.list = async function (req, res) {
   const pensions = await Superannuation.model.find({ pension: true, isDiscontinued: false, company: {$exists: true} }).populate({path: 'fundgroup', populate: {path: 'company'}}).lean().exec()
@@ -19,8 +19,7 @@ async function getPensionObjects (pensions) {
   const monetizePensions = await monetizedCollection('Pension')
 	const today = new Date()
 
-  const partnerGotoSite = new PartnerGotoSite('pension-funds')
-  await partnerGotoSite.populatePartners()
+  const partnerGotoSite = await PartnerGotoSite('pension-funds')
 	return pensions.map((pension) => {
 		const product = {}
 		const monetize = monetizePensions[pension._id] || {}
@@ -45,7 +44,7 @@ async function getPensionObjects (pensions) {
 		product.paymentType = Object.keys(monetize).length ? monetize.paymentType : null
 		product.gotoSiteUrl = Object.keys(monetize).length ? monetize.applyUrl : null
     product.gotoSiteEnabled = Object.keys(monetize).length ? monetize.enabled : null
-    product.gotoSiteEnabledPartners = partnerGotoSite.findPartners(pension.uuid)
+    product.gotoSiteEnabledPartners = partnerGotoSite[pension.uuid] || []
 		product.newFund =  pension.startdate ? (today.getFullYear() - parseInt(pension.startdate) <= 5) : false
 		product.performance = {}
 		product.performanceAvg = {}

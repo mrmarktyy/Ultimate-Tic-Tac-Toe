@@ -4,7 +4,7 @@ const recommendedMultiplier = require('../../utils/recommendedMultiplier').multi
 var monetizedCollection = require('./monetizedCollection')
 var logger = require('../../utils/logger')
 const HomeLoanVariation = keystone.list('HomeLoanVariation')
-const PartnerGotoSite = require('../../services/PartnerGotoSite.js')
+const PartnerGotoSite = require('../../services/PartnerGotoSite')
 
 class HomeLoanList {
   constructor () {
@@ -33,8 +33,7 @@ class HomeLoanList {
         })
       })
 
-      const partnerGotoSite = new PartnerGotoSite('home-loans')
-      await partnerGotoSite.populatePartners()
+      const partnerGotoSite = await PartnerGotoSite('home-loans')
       let records = []
       variations.forEach((variation) => {
         variation = this.spawnVariation(variation, monetizedVariations, companyVerticals, partnerGotoSite)
@@ -141,7 +140,7 @@ class HomeLoanList {
     delete variation.company_userHasOffers
     variation.gotoSiteUrl = null
     variation.gotoSiteEnabled = false
-    variation.gotoSiteEnabledPartners = partnerGotoSite.findPartners(variation.uuid)
+    variation.gotoSiteEnabledPartners = partnerGotoSite[variation.uuid] || []
     variation.recommendScore = (variation.monthlyClicks ? variation.monthlyClicks * recommendedMultiplier : 0)
     delete variation.monthlyClicks
 

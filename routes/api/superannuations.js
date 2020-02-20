@@ -7,7 +7,7 @@ const monetizedCollection = require('./monetizedCollection')
 const CompanyService = require('../../services/CompanyService')
 const { getYears, ratings, segments, purposes, options } = require('../../models/superannuation/constants')
 const recommendedMultiplier = require('../../utils/recommendedMultiplier').multiplier
-const PartnerGotoSite = require('../../services/PartnerGotoSite.js')
+const PartnerGotoSite = require('../../services/PartnerGotoSite')
 
 exports.list = async function (req, res) {
   const superannuations = await Superannuation.model.find({ superannuation: true, isDiscontinued: false, company: {$exists: true} }).populate({path: 'fundgroup', populate: {path: 'company'}}).lean().exec()
@@ -19,8 +19,7 @@ async function getSuperannuationObjects (superannuations) {
 	const monetizeSuperannuations = await monetizedCollection('Superannuation')
 	const today = new Date()
 
-  const partnerGotoSite = new PartnerGotoSite('superannuation')
-  await partnerGotoSite.populatePartners()
+  const partnerGotoSite = await PartnerGotoSite('superannuation')
 	return superannuations.map((superannuation) => {
 		const product = {}
 		const monetize = monetizeSuperannuations[superannuation._id] || {}
@@ -45,7 +44,7 @@ async function getSuperannuationObjects (superannuations) {
 		product.paymentType = Object.keys(monetize).length ? monetize.paymentType : null
 		product.gotoSiteUrl = Object.keys(monetize).length ? monetize.applyUrl : null
     product.gotoSiteEnabled = Object.keys(monetize).length ? monetize.enabled : null
-    product.gotoSiteEnabledPartners = partnerGotoSite.findPartners(superannuation.uuid)
+    product.gotoSiteEnabledPartners = partnerGotoSite[superannuation.uuid] || []
 		product.newFund =  superannuation.startdate ? (today.getFullYear() - parseInt(superannuation.startdate) <= 5) : false
 		product.performance = {}
 		product.performanceAvg = {}
