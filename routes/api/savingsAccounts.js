@@ -8,7 +8,7 @@ var CompanySavingsAccount = keystone.list('CompanySavingsAccount')
 var monetizedCollection = require('./monetizedCollection')
 const CompanyService = require('../../services/CompanyService')
 const recommendedMultiplier = require('../../utils/recommendedMultiplier').multiplier
-const PartnerGotoSite = require('../../services/PartnerGotoSite.js')
+const PartnerGotoSite = require('../../services/PartnerGotoSite')
 
 exports.list = async function (req, res) {
   let savingsAccounts = await SavingsAccount.model.find({ isDiscontinued: false }).populate('company').lean().exec()
@@ -21,8 +21,7 @@ async function getSavingAccounts (accounts) {
 	const companySavingsAccounts = await CompanySavingsAccount.model.find().populate('big4ComparisonProduct').lean().exec()
 	const monetizedList = await monetizedCollection('Savings Accounts')
 
-  const partnerGotoSite = new PartnerGotoSite('savings-accounts')
-  await partnerGotoSite.populatePartners()
+  const partnerGotoSite = await PartnerGotoSite('savings-accounts')
 	let result = accounts.map((account, index) => {
 		let company = Object.assign({}, CompanyService.fixLogoUrl(account.company))
 		account.variations = variations
@@ -51,7 +50,7 @@ async function getSavingAccounts (accounts) {
 		let monetize = monetizedList[account._id]
 		account.gotoSiteUrl = monetize ? monetize.applyUrl : null
     account.gotoSiteEnabled = monetize ? monetize.enabled : false
-    account.gotoSiteEnabledPartners = partnerGotoSite.findPartners(account.uuid)
+    account.gotoSiteEnabledPartners = partnerGotoSite[account.uuid] || []
 		account.paymentType = monetize ? monetize.paymentType : null
 
 		account.company.hasRepaymentWidget = companyVertical ? companyVertical.hasRepaymentWidget : false

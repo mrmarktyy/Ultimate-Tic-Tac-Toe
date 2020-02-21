@@ -14,7 +14,7 @@ var CompanyService = require('../../services/CompanyService')
 var logger = require('../../utils/logger')
 const recommendedMultiplier = require('../../utils/recommendedMultiplier').multiplier
 var monetizedCollection = require('./monetizedCollection')
-const PartnerGotoSite = require('../../services/PartnerGotoSite.js')
+const PartnerGotoSite = require('../../services/PartnerGotoSite')
 
 function removeUneededFields (obj) {
   return _.omit(obj, ['product', '_id', 'company', 'big4ComparisonProduct', 'createdAt', 'createdBy', 'updatedBy', 'updatedAt'])
@@ -23,7 +23,7 @@ function removeUneededFields (obj) {
 function spawnVariation (variation, monetizedVariations, partnerGotoSite) {
   variation.gotoSiteUrl = null
   variation.gotoSiteEnabled = false
-  variation.gotoSiteEnabledPartners = partnerGotoSite.findPartners(variation.uuid)
+  variation.gotoSiteEnabledPartners = partnerGotoSite[variation.uuid] || []
   variation.recommendScore = (variation.monthlyClicks ? variation.monthlyClicks * recommendedMultiplier : 0)
   delete variation.monthlyClicks
   variation.promotedOrder = 100
@@ -98,8 +98,7 @@ async function getHomeLoansObjects (homeLoans) {
   let variations = await getHomeLoanModel(HomeLoanVariation.model, 'product', 'revertVariation providerProductName', isDiscontinuedFilter)
 
   let response = {}
-  const partnerGotoSite = new PartnerGotoSite('home-loans')
-  await partnerGotoSite.populatePartners()
+  const partnerGotoSite = await PartnerGotoSite('home-loans')
   homeLoans.forEach((homeLoan) => {
     if (variations[homeLoan._id]) {
       let company = CompanyService.fixLogoUrl(homeLoan.company)

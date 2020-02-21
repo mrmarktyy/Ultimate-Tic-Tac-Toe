@@ -10,7 +10,7 @@ var logger = require('../../utils/logger')
 var monetizedCollection = require('./monetizedCollection')
 var removeUneededFields = require('../../utils/removeUneededFields')
 const recommendedMultiplier = require('../../utils/recommendedMultiplier').multiplier
-const PartnerGotoSite = require('../../services/PartnerGotoSite.js')
+const PartnerGotoSite = require('../../services/PartnerGotoSite')
 
 exports.list = async function (req, res) {
 	let result = await addVariations()
@@ -34,10 +34,8 @@ async function addVariations () {
     .populate({path: 'company', select: '-createdAt -createdBy -updatedBy -updatedAt -__v -_id'})
     .lean().exec()
 
-  const partnerGotoSitePersonal = new PartnerGotoSite('personal-loans')
-  await partnerGotoSitePersonal.populatePartners()
-  const partnerGotoSiteCar = new PartnerGotoSite('car-loans')
-  await partnerGotoSiteCar.populatePartners()
+  const partnerGotoSitePersonal = await PartnerGotoSite('personal-loans')
+  const partnerGotoSiteCar = await PartnerGotoSite('car-loans')
   variations = variations
   .filter((variation) => {
     return (variation.product && variation.product.isDiscontinued === false)
@@ -50,8 +48,8 @@ async function addVariations () {
 
 		variation.product.gotoSiteUrl = monetize ? monetize.applyUrl : null
     variation.product.gotoSiteEnabled = monetize ? monetize.enabled : false
-    variation.product.gotoSiteEnabledPartnersPersonal = partnerGotoSitePersonal.findPartners(variation.product.uuid)
-    variation.product.gotoSiteEnabledPartnersCar = partnerGotoSiteCar.findPartners(variation.product.uuid)
+    variation.product.gotoSiteEnabledPartnersPersonal = partnerGotoSitePersonal[variation.product.uuid] || []
+    variation.product.gotoSiteEnabledPartnersCar = partnerGotoSiteCar[variation.product.uuid] || []
 		variation.product.paymentType = monetize ? monetize.paymentType : null
 
     variation.product.repaymentType = changeCase.titleCase(variation.product.repaymentType)
