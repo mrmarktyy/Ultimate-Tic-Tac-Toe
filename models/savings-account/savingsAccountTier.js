@@ -1,6 +1,7 @@
 var availableOptions = require('../attributes/availableOptions')
 
 var keystone = require('keystone')
+var uuid = require('node-uuid')
 var Types = keystone.Field.Types
 var changeLogService = require('../../services/changeLogService')
 var verifiedService = require('../../services/verifiedService')
@@ -29,6 +30,7 @@ SavingsAccountTier.add({
     noedit: true,
     filters: { company: ':company' },
   },
+  uuid: { type: Types.Text, unique: true, noedit: true },
   name: { type: Types.Text, required: true, initial: true },
   repVariation: {
     type: Types.Select,
@@ -58,6 +60,9 @@ SavingsAccount.schema.post('remove', function (next) {
 })
 
 SavingsAccountTier.schema.pre('save', async function (next) {
+  if (!this.uuid) {
+    this.uuid = uuid.v4()
+  }
   await changeLogService(this)
   next()
 })
