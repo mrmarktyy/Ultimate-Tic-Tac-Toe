@@ -1,37 +1,30 @@
 language: node_js
-dist: trusty
 sudo: required
+services:
+  - docker
 node_js:
-- 8.9.4
-before_install:
-- cp .env.example .env
-before_script:
-- sleep 1
+  - 10.16.3
+
+env:
+  global:
+    - SHA=$(git rev-parse --short HEAD)
+
 cache:
   directories:
-  - node_modules
+    - node_modules
+
 jobs:
   include:
-  - stage: Test
-    script: npm test
-  - stage: Deploy to Staging
-    if: type IN (push)
-    script: skip
-    deploy:
-    - provider: script
-      skip_cleanup: true
+    - stage: Test
       script:
-      - cd $TRAVIS_BUILD_DIR && mkdir -p /tmp/ultimate && tar -zcf /tmp/ultimate/ultimate-$TRAVIS_TAG.tar.gz .
-      on:
-        tags: true
-    - provider: s3
-      access_key_id: AKIAI2G6TBD7YHYBRNRQ
-      secret_access_key:
-        secure: eysU+GH5zRBQd5MB0lDWpUEk0q1PgEc4OISU3uU1YM7nDWTLEBUHEzMjFcuiXwwFgYa4FIs/ZZhwZzll+30Myz7tByRJh+qA4qd3JgtGGzvnfX9ag6STePvy/OBVuPuR5WnX7+pznQxetsihbHorU2nm9rGPBaq8IaWC5jnPMIsBhV64C3hVsbVQZ2ouhuNF3awiYk+ntVrI4WEAjy1OGGrSEvvYBHDG+6H1/1I980m05DAtoRHgCHX0YZELXXohNoPC0m+6fQ9EApgUlv+NrOJW6mhw5KqDISQbzDY0wPdZSVXI7Gxd7Aauie+CWSumGgnLBasmzWPZ39672mZ4EJMdtk+kt+asfmPh8gYqPRU2smeHMKHErGYp6wkQPLMkUNC5gixbh1jL7M82a3y/lDYAtURinQHQQtvhcq/eNGuwWbns6lSTZVwAGNGLZEMMIpy0u0LDI1KJdXQkAyR1gqsFSbzENTx/mNv4ezaobZ9F1ApMFT1EN7Sk3HQCr5lxYV0ijAioVduLBDvT3U5B0x/xLXQGBWi9T9zwZJq+R0I0ewA7pvGj6z/trNAbbBm/EknE22TisWJDPKWY6XWcVLEtNHNV987m+clS6uUdA7TARTZ70bLjGAqt96H0Se9pUTFchCesHRdd/sV8p43Wl6QLs9mqRSdIQDAxKIJ8H+M=
-      bucket: production-ultimate-assets
-      skip_cleanup: true
-      region: ap-southeast-2
-      local-dir: /tmp/ultimate
-      upload-dir: deploy
-      on:
-        tags: true
+        - echo nothing
+    - stage: Deploy
+      if: type = push AND branch IN (master, production)
+      install: true
+      script: skip
+      deploy:
+        provider: script
+        script: bash ./deploy.sh
+        on:
+          all_branches: true
+          condition: $TRAVIS_BRANCH =~ ^production|master$
