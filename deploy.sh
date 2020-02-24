@@ -65,13 +65,11 @@ then
   STAGE=staging
   KUBE_CERTIFICATE=$KUBE_CLUSTER_CERTIFICATE_STAGING
   KUBE_CONFIG=kube.staging.config
-  DOCKER_ENV=staging
   SLACK_USERNAME=k8s-staging
 else
   STAGE=prod
   KUBE_CERTIFICATE=$KUBE_CLUSTER_CERTIFICATE_PROD
   KUBE_CONFIG=kube.prod.config
-  DOCKER_ENV=production
   SLACK_USERNAME=k8s-prod
 fi
 
