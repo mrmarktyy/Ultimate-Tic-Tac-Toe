@@ -103,7 +103,7 @@ sudo mv ./aws-iam-authenticator /usr/local/bin
 # login to ECR
 eval $(aws ecr get-login --no-include-email --region ap-southeast-2)
 # build images
-docker build --build-arg DOCKER_ENV=$DOCKER_ENV -t 845778257277.dkr.ecr.ap-southeast-2.amazonaws.com/$STAGE/ultimate:latest -t 845778257277.dkr.ecr.ap-southeast-2.amazonaws.com/$STAGE/ultimate:$SHA -f ./Dockerfile ./
+docker build -t 845778257277.dkr.ecr.ap-southeast-2.amazonaws.com/$STAGE/ultimate:latest -t 845778257277.dkr.ecr.ap-southeast-2.amazonaws.com/$STAGE/ultimate:$SHA -f ./Dockerfile ./
 
 if [ "$?" != "0" ]
 then
