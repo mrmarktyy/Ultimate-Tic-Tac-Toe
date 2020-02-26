@@ -47,14 +47,14 @@ create table savings_accounts_tiers_history_new
 	filename varchar(256) encode zstd
 );
 
-grant all on savings_accounts_tiers_history_new to public;
+grant all on savings_accounts_tiers_history_new to ratecity_data;
 
 insert into savings_accounts_tiers_history_new
 (
- select collectiondate, tierid, productuuid, uuid, null, name, repvaraition, minimumamount, maximumamount, maximumrate, baserate, bonusrate, bonusratecondition, introductoryrate, introductoryrateterm, minimummonthlydeposit, isdiscontinued, filename  from savings_accounts_tiers_history
+ select collectiondate, tierid, productuuid, null, name, repvaraition, minimumamount, maximumamount, maximumrate, baserate, bonusrate, bonusratecondition, introductoryrate, introductoryrateterm, minimummonthlydeposit, isdiscontinued, filename  from savings_accounts_tiers_history
 );
 
-// run this script
+// run this script and resqueue script
 update savings_accounts_tiers_history_new set uuid = d.uuid
 from (select tierid, uuid from savings_accounts_tiers_history_new s where uuid is not Null group by 1,2) d
 where savings_accounts_tiers_history_new.uuid is Null and d.tierid = savings_accounts_tiers_history_new.tierid
