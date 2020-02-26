@@ -8,6 +8,7 @@ const moment = require('moment')
 const awsUploadToS3 = require('../utils/awsUploadToS3')
 const redshiftQuery = require('../utils/ratecityRedshiftQuery')
 const savingsAccountRatingCalculator = require('../services/realTimeRating/savingsAccountRatingCalculator')
+// const leaderBoardSavingsAccounts = require('../services/realTimeRating/leaderBoardSavingsAccounts')
 
 var SavingsAccount = keystoneShell.list('SavingsAccount')
 var SavingsAccountTier = keystoneShell.list('SavingsAccountTier')
@@ -93,6 +94,7 @@ async function prepDataAndPushToRedshift (date, savingsAccounts, savingsAccountT
       tier.collectiondate = collectionDate
       tier.tierid = variation._id
       tier.productuuid = account.uuid
+			tier.uuid = variation.uuid
       tier.name = variation.name
       tier.repvaraition = variation.repVariation
       tier.minimumamount = variation.minimumAmount
@@ -124,7 +126,7 @@ async function prepDataAndPushToRedshift (date, savingsAccounts, savingsAccountT
     'filename',
   ]
 
-  const tierHeaders = ['collectiondate', 'tierid', 'productuuid', 'name',
+  const tierHeaders = ['collectiondate', 'tierid', 'productuuid', 'uuid', 'name',
     'repvaraition', 'minimumamount', 'maximumamount', 'maximumrate', 'baserate',
     'bonusrate', 'bonusratecondition', 'introductoryrate', 'introductoryrateterm',
     'minimummonthlydeposit', 'isdiscontinued', 'filename',
@@ -133,6 +135,8 @@ async function prepDataAndPushToRedshift (date, savingsAccounts, savingsAccountT
   await insertIntoRedshift(products, headers, filename, 'savings_accounts_history')
   await insertIntoRedshift(variations, tierHeaders, filenameTier, 'savings_accounts_tiers_history')
 	await savingsAccountRatingCalculator('Savings Accounts', {startDate: collectionDate})
+	// let dashboard = new leaderBoardSavingsAccounts()
+	// await dashboard.process({collectionDate: collectionDate})
 }
 
 async function insertIntoRedshift (rows, headers, filename, table) {

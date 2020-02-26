@@ -114,12 +114,12 @@ function makeLeaderboardCompliant (collectionDate, deposit, term, products) {
   return products.map((product) => {
     return {
       collectiondate: collectionDate,
-			deposit: deposit,
-			term: term,
+      deposit: deposit,
+      term: term,
       uuid: product.uuid,
       variationuuid: product.variationuuid,
       companyuuid: product.companyuuid,
-			avgmonthlyinterest: product.avgMonthlyInterest,
+      avgmonthlyinterest: product.avgMonthlyInterest,
       costrating: product.costRating,
       flexibilityscore: product.flexScore,
       flexibilityrating: product.flexRating,
@@ -140,7 +140,7 @@ function getFileName (startDate, endDate) {
 
 async function runRTR () {
   let current = moment('2019-06-01')
-	// let current = moment('2020-02-16')
+  // let current = moment('2020-02-16')
   let endDate = moment().subtract(1, 'day').format('YYYY-MM-DD')
   while (current.isSameOrBefore(endDate)) {
     let enddt = current.clone().endOf('month')
