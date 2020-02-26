@@ -1,6 +1,7 @@
 const keystone = require('keystone')
 const Types = keystone.Field.Types
 const specialCommonAttributes = require('../common/SpecialCommonAttributes')
+var availableOptions = require('../attributes/availableOptions')
 
 const BankAccountSpecials = new keystone.List('BankAccountSpecial', {
 	track: true,
@@ -22,6 +23,11 @@ BankAccountSpecials.add({
 		initial: true,
 		index: true,
 		filters: { company: ':company' },
+	},
+	isOngoingSpecial: {
+		type: Types.Select,
+		options: availableOptions.all,
+		default: availableOptions.unknown,
 	},
 })
 
