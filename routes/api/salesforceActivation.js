@@ -36,8 +36,9 @@ exports.monetize = async function (req, res) {
         let ProductModel = mongoose.model(collection)
         await ProductModel.findOneAndUpdate({uuid: uuid}, {isMonetized: changeRequest.RC_Active}, {new: true})
       } else {
-        partnerProduct = await PartnerProduct.model.findOne({ uuid: uuid }).lean()
+        partnerProduct = await PartnerProduct.model.findOne({ uuid: uuid, vertical: ultimateVertical }).lean()
         if (partnerProduct) {
+          await PartnerProduct.model.findOneAndUpdate({uuid: uuid}, {isMonetized: changeRequest.RC_Active, vertical: ultimateVertical}, {new: true})
           product = await productModel.model.findOne({ uuid: partnerProduct.parentUuid }).populate('company').lean()
         }
       }

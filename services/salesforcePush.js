@@ -87,7 +87,7 @@ async function addPartnerProducts (vertical, products) {
           company: { uuid: product.company.uuid },
           name: pp.name,
           isDiscontinued: product.isDiscontinued ? pp.isDiscontinued : false,
-          goToSite: product.goToSite,
+          goToSite: pp.isMonetized,
           applyUrl: pp.gotoSiteUrl,
         })
       }
