@@ -5,7 +5,7 @@ const PartnerProduct = keystone.list('PartnerProduct')
 
 module.exports = async function (vertical) {
   var obj = {}
-  await PartnerProduct.model.find({isPhantomProduct: false, isBlacklisted: false, vertical: vertical, isDiscontinued: false}).populate('partners')
+  await PartnerProduct.model.find({isPhantomProduct: false, isBlacklisted: false, vertical: vertical, isDiscontinued: false, isMonetized: true}).populate('partners')
   .lean()
   .exec((err, products) => {
     if (err) {
