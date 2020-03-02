@@ -150,6 +150,7 @@ then
   post_to_slack '[{"color": "#439FE0", "pretext": "*SWITCHING OVER TO* `'"$SHA"'`", "text": "_'"`TZ=Australia/Sydney date +%T`"'_ Starting switch over", "mrkdwn_in": ["text", "pretext"]}]'
 
   kubectl -n ratecity patch svc ultimate -p "{\"spec\":{\"selector\": {\"version\": \"${SHA}\"}}}"
+	kubectl -n ratecity patch svc ultimate-resque -p "{\"spec\":{\"selector\": {\"version\": \"${SHA}\"}}}"
 
   if [ "$?" != "0" ]
   then
@@ -165,6 +166,7 @@ fi
 if [ "$TRAVIS_BRANCH" = "production" ]
 then
   kubectl -n ratecity patch svc ultimate-uat -p "{\"spec\":{\"selector\": {\"version\": \"${SHA}\"}}}"
+	kubectl -n ratecity patch svc ultimate-resque -p "{\"spec\":{\"selector\": {\"version\": \"${SHA}\"}}}"
 
   post_to_slack '[{
     "color": "good",
