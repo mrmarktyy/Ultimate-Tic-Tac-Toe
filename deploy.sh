@@ -32,11 +32,12 @@ function rollout_status () {
 }
 
 function delete_old_deployments () {
+	app=$1
   post_to_slack '[{"color": "good", "pretext": "*DELETE OLD DEPLOYMENTS*", "mrkdwn_in": ["pretext"]}]'
 
-  for DEPLOYMENT in $(kubectl -n ratecity get deployments -l app=ultimate -o jsonpath='{range .items[*]}{@.metadata.name}{"\n"}{end}')
+  for DEPLOYMENT in $(kubectl -n ratecity get deployments -l app=$app -o jsonpath='{range .items[*]}{@.metadata.name}{"\n"}{end}')
   do
-    if [ "$DEPLOYMENT" != "ultimate-$SHA" ]
+    if [ "$DEPLOYMENT" != "$app-$SHA" ]
     then
       DEPLOYMENTS_TO_DELETE="$DEPLOYMENTS_TO_DELETE $DEPLOYMENT"
     fi
@@ -158,7 +159,8 @@ then
     exit -1
   else
     rollout_status
-    delete_old_deployments
+    delete_old_deployments ultimate
+		delete_old_deployments ultimate-resque
   fi
 fi
 
