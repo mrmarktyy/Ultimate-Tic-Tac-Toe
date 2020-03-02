@@ -132,7 +132,7 @@ post_to_slack '[{"color": "good", "text": "_'"`TZ=Australia/Sydney date +%T`"'_ 
 # Get the deployments file
 curl -o deployment.yaml "https://$GITHUB_ACCESS_TOKEN@raw.githubusercontent.com/ratecity/rc-devops/master/k8s/ultimate/deployment.yaml"
 
-curl -o deployment.yaml "https://$GITHUB_ACCESS_TOKEN@raw.githubusercontent.com/ratecity/rc-devops/master/k8s/ultimate/deployment-resque.yaml"
+curl -o deployment-resque.yaml "https://$GITHUB_ACCESS_TOKEN@raw.githubusercontent.com/ratecity/rc-devops/master/k8s/ultimate/deployment-resque.yaml"
 
 # update the variables
 sed -i "s/VERSION/$SHA/g" deployment.yaml || exit -1
