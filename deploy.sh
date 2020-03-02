@@ -102,8 +102,11 @@ sudo mv ./aws-iam-authenticator /usr/local/bin
 
 # login to ECR
 eval $(aws ecr get-login --no-include-email --region ap-southeast-2)
+
 # build images
 docker build -t 845778257277.dkr.ecr.ap-southeast-2.amazonaws.com/$STAGE/ultimate:latest -t 845778257277.dkr.ecr.ap-southeast-2.amazonaws.com/$STAGE/ultimate:$SHA -f ./Dockerfile ./
+
+docker build -t 845778257277.dkr.ecr.ap-southeast-2.amazonaws.com/$STAGE/ultimate-resque:latest -t 845778257277.dkr.ecr.ap-southeast-2.amazonaws.com/$STAGE/ultimate-resque:$SHA -f ./Dockerfile ./
 
 if [ "$?" != "0" ]
 then
@@ -121,18 +124,25 @@ post_to_slack '[{"color": "#439FE0", "pretext": "*ULTIMATE IMAGES*", "text": "_'
 # push images
 docker push 845778257277.dkr.ecr.ap-southeast-2.amazonaws.com/$STAGE/ultimate:latest || exit 1
 docker push 845778257277.dkr.ecr.ap-southeast-2.amazonaws.com/$STAGE/ultimate:$SHA || exit 1
+docker push 845778257277.dkr.ecr.ap-southeast-2.amazonaws.com/$STAGE/ultimate-resque:latest || exit 1
+docker push 845778257277.dkr.ecr.ap-southeast-2.amazonaws.com/$STAGE/ultimate-resque:$SHA || exit 1
 
 post_to_slack '[{"color": "good", "text": "_'"`TZ=Australia/Sydney date +%T`"'_ push finished", "mrkdwn_in": ["text"]}]'
 
-# Get the deployment file
+# Get the deployments file
 curl -o deployment.yaml "https://$GITHUB_ACCESS_TOKEN@raw.githubusercontent.com/ratecity/rc-devops/master/k8s/ultimate/deployment.yaml"
+
+curl -o deployment.yaml "https://$GITHUB_ACCESS_TOKEN@raw.githubusercontent.com/ratecity/rc-devops/master/k8s/ultimate/deployment-resque.yaml"
 
 # update the variables
 sed -i "s/VERSION/$SHA/g" deployment.yaml || exit -1
 sed -i "s/\/STAGE/\/$STAGE/g" deployment.yaml || exit -1
+sed -i "s/VERSION/$SHA/g" deployment-resque.yaml || exit -1
+sed -i "s/\/STAGE/\/$STAGE/g" deployment-resque.yaml || exit -1
 
 # apply new changes
 kubectl apply -f deployment.yaml || exit 1
+kubectl apply -f deployment-resque.yaml || exit 1
 
 # Staging specific tasks
 if [ "$TRAVIS_BRANCH" = "master" ]
