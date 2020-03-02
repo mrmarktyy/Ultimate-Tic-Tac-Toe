@@ -33,6 +33,7 @@ function rollout_status () {
 
 function delete_old_deployments () {
 	app=$1
+	echo $app
   post_to_slack '[{"color": "good", "pretext": "*DELETE OLD DEPLOYMENTS*", "mrkdwn_in": ["pretext"]}]'
 
   for DEPLOYMENT in $(kubectl -n ratecity get deployments -l app=$app -o jsonpath='{range .items[*]}{@.metadata.name}{"\n"}{end}')
@@ -159,8 +160,8 @@ then
     exit -1
   else
     rollout_status
-    delete_old_deployments ultimate
-		delete_old_deployments ultimate-resque
+    delete_old_deployments "ultimate"
+		delete_old_deployments "ultimate-resque"
   fi
 fi
 
