@@ -10,9 +10,12 @@ const queue = resqueUtil.queue
 const stagingEnv = new RegExp('staging')
 
 async function startResque () {
-  await worker.connect()
-  await worker.workerCleanup()
-  await worker.start()
+	try {
+		await worker.connect()
+		await worker.start()
+	} catch (error) {
+		logger.error(error)
+	}
 
     // START A SCHEDULER //
   await scheduler.connect()
