@@ -106,7 +106,7 @@ eval $(aws ecr get-login --no-include-email --region ap-southeast-2)
 # build images
 docker build -t 845778257277.dkr.ecr.ap-southeast-2.amazonaws.com/$STAGE/ultimate:latest -t 845778257277.dkr.ecr.ap-southeast-2.amazonaws.com/$STAGE/ultimate:$SHA -f ./Dockerfile ./
 
-docker build -t 845778257277.dkr.ecr.ap-southeast-2.amazonaws.com/$STAGE/ultimate-resque:latest -t 845778257277.dkr.ecr.ap-southeast-2.amazonaws.com/$STAGE/ultimate-resque:$SHA -f ./Dockerfile ./
+docker build -t 845778257277.dkr.ecr.ap-southeast-2.amazonaws.com/$STAGE/ultimate-resque:latest -t 845778257277.dkr.ecr.ap-southeast-2.amazonaws.com/$STAGE/ultimate-resque:$SHA -f ./Dockerfile.resque ./
 
 if [ "$?" != "0" ]
 then
