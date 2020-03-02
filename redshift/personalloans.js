@@ -272,8 +272,8 @@ async function prepDataAndPushToRedshift (date, personalLoans, personalLoanVaria
       variation.maxRate = cVariation.maxRate
       variation.introRate = cVariation.introRate
       variation.introTerm = cVariation.introTerm
-      variation.comparisonRatePersonal = cVariation.comparisonRatePersonal
-      variation.comparisonRateCar = cVariation.comparisonRateCar
+      variation.comparisonRatePersonal = cVariation.comparisonRatePersonalManual || cVariation.comparisonRatePersonal
+      variation.comparisonRateCar = cVariation.comparisonRateCarManual || cVariation.comparisonRateCar
       variation.applicationFeesPercent = cVariation.applicationFeesPercent
       variation.applicationFeesDollar = cVariation.applicationFeesDollar
       variation.hasHomeOwnersDiscount = cVariation.hasHomeOwnersDiscount
@@ -298,7 +298,7 @@ async function prepDataAndPushToRedshift (date, personalLoans, personalLoanVaria
 
   const headers = [
     'collectionDate', 'productId', 'uuid', 'description', 'companyCode', 'companyName', 'companyId', 'isCarLoan',
-    'isPersonalLoan', 'isGreenLoan', 'isLineOfCredit', 'isFullyDrawnAdvance', 
+    'isPersonalLoan', 'isGreenLoan', 'isLineOfCredit', 'isFullyDrawnAdvance',
     'peer2Peer', 'applyInBranch', 'applyOnline', 'applyByMobileLender', 'applyByPhone',
     'applyByBroker', 'availableTo457VisaHolders', 'approvalTime',
     'repaymentType', 'repaymentFreq', 'isExtraRepaymentsAllowed',
