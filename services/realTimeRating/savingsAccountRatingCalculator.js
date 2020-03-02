@@ -11,8 +11,8 @@ const RTRFilters = [
 	{initialDeposit: 10000, period: 24, monthlyDeposit: 600}, // Best savings account for regular savers
 	{initialDeposit: 10000, period: 12, monthlyDeposit: 0}, // Best standard savings account (unconditional)
   {initialDeposit: 10000, period: 24, monthlyDeposit: 0}, // Best standard savings account (unconditional)
-  {initialDeposit: 0, period: 144, monthlyDeposit: 43.33},
-  {initialDeposit: 50000, period: 12, monthyDeposit: 0},
+  {initialDeposit: 0, period: 144, monthlyDeposit: 50}, // Best kids savings account
+  {initialDeposit: 50000, period: 12, monthyDeposit: 0}, // Best pensioner saivings account
 ]
 
 async function processRedshift (vertical, dateRange = {}) {
