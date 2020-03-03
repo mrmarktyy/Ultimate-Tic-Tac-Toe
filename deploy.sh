@@ -34,19 +34,17 @@ function rollout_status () {
 function delete_old_deployments () {
 	app=$1
 	DEPLOYMENTS_TO_DELETE=''
-	echo $app
+
   post_to_slack '[{"color": "good", "pretext": "*DELETE OLD DEPLOYMENTS*", "mrkdwn_in": ["pretext"]}]'
 
   for DEPLOYMENT in $(kubectl -n ratecity get deployments -l app=$app -o jsonpath='{range .items[*]}{@.metadata.name}{"\n"}{end}')
   do
-		echo $DEPLOYMENT
     if [ "$DEPLOYMENT" != "$app-$SHA" ]
     then
       DEPLOYMENTS_TO_DELETE="$DEPLOYMENTS_TO_DELETE $DEPLOYMENT"
     fi
   done
 
-	echo $DEPLOYMENTS_TO_DELETE
   for DEPLOYMENT in $DEPLOYMENTS_TO_DELETE
   do
     post_to_slack '[{"color": "warning", "text": "Deleting deployment '"$DEPLOYMENT"'", "mrkdwn_in": ["text"]}]'
@@ -173,6 +171,7 @@ if [ "$TRAVIS_BRANCH" = "production" ]
 then
   kubectl -n ratecity patch svc ultimate-uat -p "{\"spec\":{\"selector\": {\"version\": \"${SHA}\"}}}"
 	kubectl -n ratecity patch svc ultimate-resque -p "{\"spec\":{\"selector\": {\"version\": \"${SHA}\"}}}"
+	delete_old_deployments "ultimate-resque"
 
   post_to_slack '[{
     "color": "good",
