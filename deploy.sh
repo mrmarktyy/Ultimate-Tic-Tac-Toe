@@ -38,12 +38,14 @@ function delete_old_deployments () {
 
   for DEPLOYMENT in $(kubectl -n ratecity get deployments -l app=$app -o jsonpath='{range .items[*]}{@.metadata.name}{"\n"}{end}')
   do
+		echo $DEPLOYMENT
     if [ "$DEPLOYMENT" != "$app-$SHA" ]
     then
       DEPLOYMENTS_TO_DELETE="$DEPLOYMENTS_TO_DELETE $DEPLOYMENT"
     fi
   done
 
+	echo $DEPLOYMENTS_TO_DELETE
   for DEPLOYMENT in $DEPLOYMENTS_TO_DELETE
   do
     post_to_slack '[{"color": "warning", "text": "Deleting deployment '"$DEPLOYMENT"'", "mrkdwn_in": ["text"]}]'
