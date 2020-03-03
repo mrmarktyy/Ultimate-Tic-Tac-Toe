@@ -35,7 +35,7 @@ PartnerProduct.add({
   parentUuid: { type: Types.Text, required: true, initial: true },
   uuid: { type: Types.Text, noedit: true },
   vertical: { type: Types.Select, options: verticals, noedit: true },
-  isMonetized: { type: Types.Boolean, required: true, indent: true, default: false, noedit: true, label: 'isMonetized --Only useful for non phantom non backlist products' },
+  isMonetized: { type: Types.Boolean, indent: true, default: false, noedit: true, label: 'isMonetized --Only useful for non phantom non backlist products' },
   gotoSiteUrl: { type: Types.Url, required: true, initial: true },
   isPhantomProduct: { type: Types.Boolean, indent: true, default: true },
   isBlacklisted: { type: Types.Boolean, indent: true, default: false },
