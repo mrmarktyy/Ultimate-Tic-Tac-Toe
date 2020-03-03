@@ -8,7 +8,7 @@ const moment = require('moment')
 const awsUploadToS3 = require('../utils/awsUploadToS3')
 const redshiftQuery = require('../utils/ratecityRedshiftQuery')
 const savingsAccountRatingCalculator = require('../services/realTimeRating/savingsAccountRatingCalculator')
-// const leaderBoardSavingsAccounts = require('../services/realTimeRating/leaderBoardSavingsAccounts')
+const leaderBoardSavingsAccounts = require('../services/realTimeRating/leaderBoardSavingsAccounts')
 
 var SavingsAccount = keystoneShell.list('SavingsAccount')
 var SavingsAccountTier = keystoneShell.list('SavingsAccountTier')
@@ -135,8 +135,8 @@ async function prepDataAndPushToRedshift (date, savingsAccounts, savingsAccountT
   await insertIntoRedshift(products, headers, filename, 'savings_accounts_history')
   await insertIntoRedshift(variations, tierHeaders, filenameTier, 'savings_accounts_tiers_history')
 	await savingsAccountRatingCalculator('Savings Accounts', {startDate: collectionDate})
-	// let dashboard = new leaderBoardSavingsAccounts()
-	// await dashboard.process({collectionDate: collectionDate})
+	let dashboard = new leaderBoardSavingsAccounts()
+	await dashboard.process({collectionDate: collectionDate})
 }
 
 async function insertIntoRedshift (rows, headers, filename, table) {
