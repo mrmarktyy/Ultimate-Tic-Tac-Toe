@@ -19,7 +19,6 @@ var specialsToRedshift = require('../resqueJobs/loadSpecialsToRedshift')
 var bankAccountsToRedshift = require('../resqueJobs/loadBankAccountsToRedshift')
 var termDepositsToRedshift = require('../resqueJobs/loadTermDepositsToRedshift')
 var monetisedEventsToRedshift = require('../resqueJobs/loadMonetisedEventToRedshift')
-var ingestLongtailux = require('../resqueJobs/ingestLongtailux')
 var ingestPages = require('../resqueJobs/ingestPages')
 var activePromotedProducts = require('../resqueJobs/activePromotedProducts')
 var activeFeaturedProducts = require('../resqueJobs/activeFeaturedProducts')
@@ -43,7 +42,6 @@ const jobs = {
   'emailDataReport': emailDataReport,
   'homeLoansToRedshift': homeLoansToRedshift,
   'ingestPages': ingestPages,
-  'ingestLongtailux': ingestLongtailux,
   'monthlyClickCount': monthlyClickCount,
   'monetisedEventsToRedshift': monetisedEventsToRedshift,
   'paymentMonetizationTypes': paymentMonetizationTypes,

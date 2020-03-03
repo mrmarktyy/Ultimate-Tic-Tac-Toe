@@ -97,11 +97,6 @@ async function startResque () {
       await queue.enqueue('ultimate', 'blazePages')
     }
   })
-  schedule.scheduleJob('10 2 * * *', async () => {
-    if (scheduler.master) {
-      await queue.enqueue('ultimate', 'ingestLongtailux')
-    }
-  })
   schedule.scheduleJob('20 2 * * *', async () => {
     if (scheduler.master) {
       await queue.enqueue('ultimate', 'ingestPages')
