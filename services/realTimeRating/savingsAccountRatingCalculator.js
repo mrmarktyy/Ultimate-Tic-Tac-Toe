@@ -89,6 +89,7 @@ async function pullProducts (collectionDate, filters) {
 		if (!prod) {
 			prod = {
 				uuid: d.uuid,
+        productUuid: d.productuuid,
 				name: d.name,
 				slug: d.slug,
 				companyName: d.companyname,
@@ -134,7 +135,7 @@ function makeLeaderboardCompliant (collectionDate, initialDeposit, monthlyDeposi
 			initialdeposit: initialDeposit,
 			monthlydeposit: monthlyDeposit,
 			monthlyPeriod: period,
-      uuid: product.uuid,
+      uuid: product.productUuid,
       companyuuid: product.companyUuid,
 			totalinterestearned: product.totalInterestEarned,
 			withinlimit: product.withinLimit,
