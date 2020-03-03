@@ -1,5 +1,5 @@
 // node ./services/realTimeRating/leaderBoardSavingsAccounts.js
-
+require('dotenv').config()
 const redshiftQuery = require('../../utils/ratecityRedshiftQuery')
 const awsUploadToS3 = require('../../utils/awsUploadToS3')
 const json2csv = require('json2csv')
