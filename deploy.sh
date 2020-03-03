@@ -33,6 +33,7 @@ function rollout_status () {
 
 function delete_old_deployments () {
 	app=$1
+	DEPLOYMENTS_TO_DELETE=''
 	echo $app
   post_to_slack '[{"color": "good", "pretext": "*DELETE OLD DEPLOYMENTS*", "mrkdwn_in": ["pretext"]}]'
 
