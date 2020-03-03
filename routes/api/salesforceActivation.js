@@ -1,5 +1,6 @@
 var keystone = require('keystone')
 var salesforceVerticals = require('../../models/helpers/salesforceVerticals')
+var Verticals = require('../../models/helpers/verticals')
 var mongoose = require('mongoose')
 var Monetize = keystone.list('Monetize').model
 var PartnerProduct = keystone.list('PartnerProduct')
@@ -36,9 +37,10 @@ exports.monetize = async function (req, res) {
         let ProductModel = mongoose.model(collection)
         await ProductModel.findOneAndUpdate({uuid: uuid}, {isMonetized: changeRequest.RC_Active}, {new: true})
       } else {
-        partnerProduct = await PartnerProduct.model.findOne({ uuid: uuid, vertical: ultimateVertical }).lean()
+        let partnerVertical = (Verticals.find((vertical) => vertical.label === changeRequest.RC_Product_Type)|| {}).value
+        partnerProduct = await PartnerProduct.model.findOne({ uuid: uuid, vertical: partnerVertical }).lean()
         if (partnerProduct) {
-          await PartnerProduct.model.findOneAndUpdate({uuid: uuid}, {isMonetized: changeRequest.RC_Active, vertical: ultimateVertical}, {new: true})
+          await PartnerProduct.model.findOneAndUpdate({uuid: uuid}, {isMonetized: changeRequest.RC_Active, vertical: partnerVertical}, {new: true})
           product = await productModel.model.findOne({ uuid: partnerProduct.parentUuid }).populate('company').lean()
         }
       }
