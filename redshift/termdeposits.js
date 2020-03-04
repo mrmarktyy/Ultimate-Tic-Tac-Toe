@@ -8,7 +8,7 @@ const moment = require('moment')
 const awsUploadToS3 = require('../utils/awsUploadToS3')
 const redshiftQuery = require('../utils/ratecityRedshiftQuery')
 const termDepositsRatingCalculator = require('../services/realTimeRating/termDepositsRatingCalculator')
-// const leaderBoardTermDeposits = require('../services/realTimeRating/leaderBoardTermDeposits')
+const leaderBoardTermDeposits = require('../services/realTimeRating/leaderBoardTermDeposits')
 
 var TermDeposit = keystoneShell.list('TermDeposit')
 var TermDepositTier = keystoneShell.list('TermDepositTier')
@@ -123,8 +123,8 @@ async function prepDataAndPushToRedshift (date, termDeposits, termDepositTiers) 
   await insertIntoRedshift(products, TERM_DEPOSIT_HEADER, filename, 'term_deposits_history')
   await insertIntoRedshift(variations, TIER_HEADER, tierFilename, 'term_deposits_tiers_history')
 	await termDepositsRatingCalculator({startDate: collectionDate})
-	// let dashboard = new leaderBoardTermDeposits()
-	// await dashboard.process({collectionDate: collectionDate})
+	let dashboard = new leaderBoardTermDeposits()
+	await dashboard.process({collectionDate: collectionDate})
 }
 
 async function insertIntoRedshift (rows, headers, filename, table) {

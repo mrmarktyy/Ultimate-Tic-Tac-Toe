@@ -204,8 +204,8 @@ class leaderBoardSavingsAccounts {
 }
 
 async function runDashboard () {
-  // let current = moment('2019-06-01')
-  let current = moment('2020-02-19')
+  let current = moment('2019-06-01')
+  // let current = moment('2020-02-19')
   //current = moment().startOf('day').subtract(1, 'day')
   let endDate = moment().subtract(1, 'day').format('YYYY-MM-DD')
   let dashboard = new leaderBoardSavingsAccounts()

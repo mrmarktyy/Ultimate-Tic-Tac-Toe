@@ -8,6 +8,10 @@ const realtimeSwiftAPI = require('../../utils/realtimeSwiftAPI')
 const RTRFilters = [
 	{deposit: 50000, term: 12}, // Best term deposit: under 12 months
 	{deposit: 250000, term: 12}, // Best term deposit: under 12 months
+  {deposit: 50000, term: 36}, // Best term deposit: 3 years
+  {deposit: 250000, term: 36}, // Best term deposit: 3 years
+  {deposit: 50000, term: 60}, // Best term deposit: 5 years
+  {deposit: 250000, term: 60}, // Best term deposit: 5 years
 ]
 
 async function processRedshift (dateRange = {}) {
