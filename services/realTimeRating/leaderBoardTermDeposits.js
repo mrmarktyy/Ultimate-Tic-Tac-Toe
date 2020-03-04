@@ -1,4 +1,5 @@
 // node ./services/realTimeRating/leaderBoardTermDeposits.js
+require('dotenv').config()
 
 const redshiftQuery = require('../../utils/ratecityRedshiftQuery')
 const awsUploadToS3 = require('../../utils/awsUploadToS3')
@@ -203,8 +204,8 @@ class leaderBoardTermDeposits {
 }
 
 async function runDashboard () {
-  // let current = moment('2019-06-01')
-  let current = moment('2020-02-21')
+  let current = moment('2019-06-01')
+  // let current = moment('2020-02-21')
   //current = moment().startOf('day').subtract(1, 'day')
   let endDate = moment().subtract(1, 'day').format('YYYY-MM-DD')
   let dashboard = new leaderBoardTermDeposits()
