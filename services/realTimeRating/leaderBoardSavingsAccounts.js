@@ -61,6 +61,7 @@ class leaderBoardSavingsAccounts {
       inner join savings_accounts_ratings_history r
         on r.collectiondate = h.collectiondate
         and r.uuid = v.productuuid
+        and r.tieruuid = v.uuid
         and r.collectiondate = '${this.collectionDate}'
       where h.collectiondate = '${this.collectionDate}'
       and ${this.currentLeaderboard.ultimateFilterCriteria}
@@ -96,6 +97,7 @@ class leaderBoardSavingsAccounts {
         companyposition: 0,
         companypositionprevious: 0,
         companysince: 0,
+        tieruuid: rating.tieruuid,
       }
       records.push(obj)
     })
@@ -205,7 +207,7 @@ class leaderBoardSavingsAccounts {
 
 async function runDashboard () {
   let current = moment('2019-06-01')
-  // let current = moment('2020-02-19')
+  // let current = moment('2020-03-02')
   //current = moment().startOf('day').subtract(1, 'day')
   let endDate = moment().subtract(1, 'day').format('YYYY-MM-DD')
   let dashboard = new leaderBoardSavingsAccounts()

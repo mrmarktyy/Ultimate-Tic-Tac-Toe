@@ -30,9 +30,9 @@ async function processRedshift (vertical, dateRange = {}) {
     let currentDate = moment(startDate)
     while (currentDate.isSameOrBefore(endDate)) {
       let currentDateString = currentDate.format('YYYY-MM-DD')
+      products = await pullProducts(currentDateString)
 			for (let i = 0; RTRFilters.length > i; i++) {
 				const filters = RTRFilters[i]
-				products = await pullProducts(currentDateString, filters)
 				let rtrProducts = await realtimeSwiftAPI(vertical, RTRFilters, products)
 				rtrProducts = makeLeaderboardCompliant(currentDateString, filters.initialDeposit, filters.monthlyDeposit, filters.period,  rtrProducts)
 				realTimeRatings.push(...rtrProducts)
@@ -70,7 +70,7 @@ function headers (record) {
   return Object.keys(record)
 }
 
-async function pullProducts (collectionDate, filters) {
+async function pullProducts (collectionDate) {
   const command = `
     select sa.*, v.*
     from savings_accounts_history sa
@@ -79,17 +79,14 @@ async function pullProducts (collectionDate, filters) {
      and v.collectiondate = '${collectionDate}'
     where v.isdiscontinued = false
     and sa.collectiondate = '${collectionDate}'
-		and v.maximumamount >= ${filters.initialDeposit}
-    and v.minimumamount <= ${filters.initialDeposit}
   `
   const data = await redshiftQuery(command, [])
 	const products = []
 	_.forEach(data, d => {
-		let prod = _.find(products, {uuid: d.uuid})
+		let prod = _.find(products, {uuid: d.productuuid})
 		if (!prod) {
 			prod = {
-				uuid: d.uuid,
-        productUuid: d.productuuid,
+        uuid: d.productuuid,
 				name: d.name,
 				slug: d.slug,
 				companyName: d.companyname,
@@ -123,28 +120,37 @@ async function pullProducts (collectionDate, filters) {
 			interestAccrued: d.interestaccrued,
 			maximumAmount: d.maximumamount,
 			minimumAmount: d.minimumamount,
+      uuid: d.uuid,
 		})
 	})
 	return products
 }
 
 function makeLeaderboardCompliant (collectionDate, initialDeposit, monthlyDeposit, period, products) {
-  return products.map((product) => {
-    return {
-      collectiondate: collectionDate,
-			initialdeposit: initialDeposit,
-			monthlydeposit: monthlyDeposit,
-			monthlyPeriod: period,
-      uuid: product.productUuid,
-      companyuuid: product.companyUuid,
-			totalinterestearned: product.totalInterestEarned,
-			withinlimit: product.withinLimit,
-      costrating: product.costRating,
-      flexibilityscore: product.flexScore,
-      flexibilityrating: product.flexRating,
-      overallrating: product.overallRating,
+  const prods = []
+  _.forEach(products, product => {
+    const tier = _.find(product.variations, o => {
+      return o.minimumAmount <= initialDeposit && o.maximumAmount >= initialDeposit
+    })
+    if (tier) {
+      prods.push({
+        collectiondate: collectionDate,
+        initialdeposit: initialDeposit,
+        monthlydeposit: monthlyDeposit,
+        monthlyPeriod: period,
+        uuid: product.uuid,
+        companyuuid: product.companyUuid,
+        totalinterestearned: product.totalInterestEarned,
+        withinlimit: product.withinLimit,
+        costrating: product.costRating,
+        flexibilityscore: product.flexScore,
+        flexibilityrating: product.flexRating,
+        overallrating: product.overallRating,
+        tieruuid: tier.uuid,
+      })
     }
   })
+  return prods
 }
 
 function getFileName (startDate, endDate) {
@@ -159,7 +165,7 @@ function getFileName (startDate, endDate) {
 
 async function runRTR () {
   let current = moment('2019-06-01')
-	// let current = moment('2020-02-16')
+	// let current = moment('2020-03-02')
   let endDate = moment().subtract(1, 'day').format('YYYY-MM-DD')
   while (current.isSameOrBefore(endDate)) {
     let enddt = current.clone().endOf('month')
