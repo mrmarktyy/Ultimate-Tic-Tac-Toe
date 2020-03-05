@@ -23,7 +23,10 @@ module.exports = async function (model, options={}) {
 		fetch(`${host}/api/update-page-status`, {
 			method: 'put',
 			body: JSON.stringify(body),
-			headers: {'Content-Type': 'application/json'},
+			headers: {
+				'Content-Type': 'application/json',
+				'api-key': process.env.CONTENT_API_KEY,
+			},
 		})
 		.then(res => res.json())
 		.then(json => {
