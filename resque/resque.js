@@ -3,11 +3,12 @@ require('dotenv').config()
 const schedule = require('node-schedule')
 const logger = require('../utils/logger')
 const resqueUtil = require('./util')
+const validators = require('../utils/validators')
 
 const scheduler = resqueUtil.scheduler
 const worker = resqueUtil.worker
 const queue = resqueUtil.queue
-const stagingEnv = new RegExp('staging')
+const emailDataReport = validators.parseBool(process.env.EMAIL_REPORT)
 
 async function startResque () {
 	try {
@@ -42,7 +43,7 @@ async function startResque () {
     }
   })
   schedule.scheduleJob('50 5 * * 1-5', async () => {
-    if (scheduler.master && !stagingEnv.exec(process.env.BLAZE)) {
+    if (scheduler.master && emailDataReport) {
       await queue.enqueue('ultimate', 'emailDataReport')
     }
   })
