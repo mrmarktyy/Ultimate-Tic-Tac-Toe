@@ -8,6 +8,9 @@ const moment = require('moment')
 const awsUploadToS3 = require('../utils/awsUploadToS3')
 const redshiftQuery = require('../utils/ratecityRedshiftQuery')
 
+// const bankAccountRatingCalculator = require('../services/realTimeRating/bankAccountRatingCalculator')
+// const leaderBoardBankAccounts = require('../services/realTimeRating/leaderBoardBankAccounts')
+
 var BankAccount = keystoneShell.list('BankAccount')
 const monetizedCollection = require('../routes/api/monetizedCollection')
 
@@ -120,6 +123,10 @@ async function prepDataAndPushToRedshift (date, bankAccounts) {
   })
 
   await insertIntoRedshift(products, BANKACCOUNT_HEADER, filename, 'bank_accounts_history')
+
+  // await bankAccountRatingCalculator({startDate: collectionDate})
+  // let dashboard = new leaderBoardBankAccounts()
+  // await dashboard.process({collectionDate: collectionDate})
 }
 
 async function insertIntoRedshift (rows, headers, filename, table) {

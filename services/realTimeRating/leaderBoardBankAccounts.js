@@ -1,0 +1,223 @@
+// node ./services/realTimeRating/leaderBoardBankAccounts.js
+require('dotenv').config()
+
+const redshiftQuery = require('../../utils/ratecityRedshiftQuery')
+const awsUploadToS3 = require('../../utils/awsUploadToS3')
+const json2csv = require('json2csv')
+const keystoneShell = require('../../utils/keystoneShell')
+const mongoosePromise = require('../../utils/mongoosePromise')
+const Leaderboard = keystoneShell.list('Leaderboard')
+const moment = require('moment')
+const tableName = 'bank_accounts_leaderboard_history'
+
+class leaderBoardBankAccounts {
+  constructor () {
+    this.collectionDate = '2018-01-01' //placeholding value
+    this.Ratings = []
+    // this.currentLeaderboard = ''
+  }
+
+  async process (leaderData) {
+    let {
+      collectionDate = moment().format('YYYY-MM-DD'),
+      leaderboardSlugs = [],
+    } = leaderData
+    const vertical = 'Bank Accounts' // this value should match with ultimate leaderboard vertical
+    this.collectionDate = collectionDate
+    // let leaderboardFilter = {vertical: vertical, isDiscontinued: false}
+    // let leaderboardFilter = {isDiscontinued: false}
+    // if (leaderboardSlugs.length) {
+    //  Object.assign(leaderboardFilter, {slug: {$in: leaderboardSlugs}})
+    // }
+    console.log(`bank-accounts for ${collectionDate}`)
+
+    // let connection = await mongoosePromise.connect()
+    try {
+      // let leaderboards = await Leaderboard.model.find(leaderboardFilter).lean().exec()
+      // for (let i=0; leaderboards.length > i; i++) {
+        let leaderboardRankings = []
+        // this.currentLeaderboard = leaderboards[i]
+        this.Ratings = await this.getRatings()
+        leaderboardRankings = this.leaderRank()
+        leaderboardRankings = await this.addPreviousPosition(leaderboardRankings)
+
+        if (leaderboardRankings.length) {
+          // let filename = `bank-accounts_${this.collectionDate}_${this.currentLeaderboard.slug}.csv`
+          let filename = `bank-accounts_${this.collectionDate}.csv`
+          await this.insertIntoRedshift(leaderboardRankings, Object.keys(leaderboardRankings[0]), filename, tableName)
+        }
+      // }
+      // connection.close()
+    } catch(error) {
+      // connection.close()
+      return error
+    }
+  }
+  async getRatings () {
+    let sql = `
+    select r.*
+      from bank_accounts_history as h
+      inner join bank_accounts_ratings_history r
+        on r.collectiondate = h.collectiondate
+        and r.uuid = h.uuid
+        and r.collectiondate = '${this.collectionDate}'
+      where h.collectiondate = '${this.collectionDate}'
+      
+      and h.isdiscontinued = false
+      order by r.rtrscore desc, r.uuid asc
+    `
+    return redshiftQuery(sql)
+  }
+
+  leaderRank () {
+    let records = []
+    this.Ratings.forEach((rating) => {
+      let obj = {
+        slug: null, //this.currentLeaderboard.slug,
+        collectiondate: moment(rating.collectiondate).format('YYYY-MM-DD'),
+        uuid: rating.uuid,
+        // variationuuid: rating.variationuuid,
+        companyuuid: rating.companyuuid,
+        // deposit: rating.deposit,
+
+        // avgmonthlyinterest: parseFloat(rating.avgmonthlyinterest),
+        // costrating: parseFloat(rating.costrating),
+        // flexibilityscore: Math.round(parseFloat(rating.flexibilityscore)),
+        // flexibilityrating: parseFloat(rating.flexibilityrating),
+        // overallrating: Math.round(rating.overallrating * 100) / 100,
+        rtrscore: parseFloat(rating.rtrscore),
+        // variationposition: rating.variationposition,
+        // variationpositionprevious: 0,
+        // variationsince: 0,
+        productposition: 0,
+        productpositionprevious: 0,
+        productsince: 0,
+        companyposition: 0,
+        companypositionprevious: 0,
+        companysince: 0,
+      }
+      records.push(obj)
+    })
+    let providerUUIDs = []
+    let companyUUIDs = []
+    records = records.map((record) => {
+      let UUIDposition = 0
+      if (!providerUUIDs.includes(record.uuid)) {
+        providerUUIDs.push(record.uuid)
+        UUIDposition = providerUUIDs.length
+      }
+      let companyposition = 0
+      if (!companyUUIDs.includes(record.companyuuid)) {
+        companyUUIDs.push(record.companyuuid)
+        companyposition = companyUUIDs.length
+      }
+      return Object.assign(record, {productposition: UUIDposition, companyposition: companyposition})
+    })
+    return records
+  }
+
+  async addPreviousPosition (records) {
+    let previousDate = moment(this.collectionDate).subtract(1, 'day').format('YYYY-MM-DD')
+    let sql = `
+      select * from ${tableName}
+      where collectionDate = '${previousDate}'
+      order by productposition desc
+    `
+
+    let previousDash = await redshiftQuery(sql)
+    let previousCompany = previousDash.filter((record) => record.companyposition > 0)
+    let previousProvider = previousDash.filter((record) => record.productposition > 0)
+    if (previousDash.length) {
+      records = records.map((record) => {
+        // let variationsince = 0, variationpositionprevious = 0
+        let previous = previousDash.find((prev) => {
+          return (prev.slug === record.slug &&
+              prev.uuid === record.uuid &&
+              prev.initialdeposit === record.initialdeposit &&
+              prev.monthlydeposit === record.monthlydeposit &&
+              prev.monthlyperiod === record.monthlyperiod
+              // && prev.variationposition > 0
+          )
+        })
+        // if (previous) {
+        //   variationpositionprevious = previous.variationpositionprevious
+        //   variationsince = parseInt(record.variationposition) === previous.variationposition ? previous.variationsince + 1 : 0
+        // }
+        let productsince = 0, productpositionprevious = 0
+        if (record.productposition) {
+          previous = previousProvider.find((prev) => prev.slug === record.slug && prev.uuid === record.uuid)
+          if (previous) {
+            if (previous.productposition !== parseInt(record.productposition)) {
+              productpositionprevious = previous.productposition
+              productsince = 0
+            } else {
+              productpositionprevious = previous.productpositionprevious
+              productsince = previous.productsince + 1
+            }
+          }
+        }
+        let companypositionprevious = 0, companysince = 0
+        if (record.companyposition) {
+          previous = previousCompany.find((prev) => prev.slug === record.slug && prev.companyuuid === record.companyuuid)
+          if (previous) {
+            if (previous.companyposition !== parseInt(record.companyposition)) {
+              companypositionprevious = previous.companyposition
+              companysince = 0
+            } else {
+              companypositionprevious = previous.companypositionprevious
+              companysince = previous.companysince + 1
+            }
+          }
+        }
+
+        return Object.assign(record,
+          {
+            // variationpositionprevious: variationpositionprevious,
+            // variationsince: variationsince,
+            productpositionprevious: productpositionprevious,
+            productsince: productsince,
+            companypositionprevious: companypositionprevious,
+            companysince: companysince,
+          })
+      })
+    }
+    return records
+  }
+
+  async insertIntoRedshift (rows, headers, filename, table) {
+    if (rows.length > 0) {
+      let csv = json2csv({data: rows, fields: headers, hasCSVColumnTitle: false})
+      await awsUploadToS3(`${table}/${process.env.RATECITY_REDSHIFT_DATABASE}/${filename}`, csv, 'redshift-2node')
+
+      // let command = `delete from ${table} where collectiondate = '${this.collectionDate}' and slug = '${this.currentLeaderboard.slug}'`
+      let command = `delete from ${table} where collectiondate = '${this.collectionDate}'`
+      await redshiftQuery(command)
+      command = `copy ${table} from 's3://redshift-2node/${table}/${process.env.RATECITY_REDSHIFT_DATABASE}/${filename}' credentials 'aws_access_key_id=${process.env.S3_KEY};aws_secret_access_key=${process.env.S3_SECRET}' NULL AS 'null' EMPTYASNULL CSV ACCEPTINVCHARS TRUNCATECOLUMNS COMPUPDATE OFF`
+      await redshiftQuery(command)
+    }
+  }
+
+  async rollingDelete (days=183) {
+    let enddate = moment(this.collectionDate).subtract(days, 'days').format('YYYY-MM-DD')
+    let command = `delete from ${tableName} where collectiondate < '${enddate}'`
+    await redshiftQuery(command)
+  }
+}
+
+async function runDashboard () {
+  // let current = moment('2019-06-01')
+  let current = moment('2020-03-08')
+  //current = moment().startOf('day').subtract(1, 'day')
+  let endDate = moment().subtract(1, 'day').format('YYYY-MM-DD')
+  let dashboard = new leaderBoardBankAccounts()
+  while (current.isSameOrBefore(endDate)) {
+    await dashboard.process({collectionDate: current.format('YYYY-MM-DD')})
+    current.add(1, 'day')
+  }
+  console.log('ran dashboard')
+  return 0
+}
+
+// runDashboard()
+
+module.exports = leaderBoardBankAccounts
