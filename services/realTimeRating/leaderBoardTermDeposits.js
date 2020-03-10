@@ -134,6 +134,7 @@ class leaderBoardTermDeposits {
         let variationsince = 0, variationpositionprevious = 0
         let previous = previousDash.find((prev) => {
           return (prev.slug === record.slug &&
+              prev.variationuuid === record.variationuuid &&
               prev.initialdeposit === record.initialdeposit &&
               prev.monthlydeposit === record.monthlydeposit &&
               prev.monthlyperiod === record.monthlyperiod &&
