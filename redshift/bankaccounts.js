@@ -1,5 +1,6 @@
 require('dotenv').config()
 
+const _ = require('lodash')
 var keystoneShell = require('../utils/keystoneShell')
 var mongoosePromise = require('../utils/mongoosePromise')
 var logger = require('../utils/logger')
@@ -12,6 +13,7 @@ const redshiftQuery = require('../utils/ratecityRedshiftQuery')
 // const leaderBoardBankAccounts = require('../services/realTimeRating/leaderBoardBankAccounts')
 
 var BankAccount = keystoneShell.list('BankAccount')
+var BankAccountSpecial = keystoneShell.list('BankAccountSpecial')
 const monetizedCollection = require('../routes/api/monetizedCollection')
 
 const BANKACCOUNT_HEADER = [
@@ -33,12 +35,18 @@ const BANKACCOUNT_HEADER = [
   'minimuminterestrate', 'maximuminterestrate', 'interestratedescription',
   'smartpaysupport', 'debitcardtypes', 'uniquefeatures', 'additionalbenefits',
   'restrictions', 'isdiscontinued', 'filename',
+  'hasnpp', 'hasfreeinternationalaccounttransfer', 'holdforeigncurrency', 'numberofbranches', 'isongoingspecial',
 ]
 
 module.exports = async function () {
   let connection = await mongoosePromise.connect()
   try {
     const bankAccounts = await BankAccount.model.find({$or: [ { isDiscontinued: false }, { isDiscontinued: {$exists: false} } ]}).populate('company').lean().exec()
+    const specials = await BankAccountSpecial.model.find().populate('product').lean().exec()
+    _.forEach(_.filter(specials, { isOngoingSpecial: 'YES' }), sp =>{
+      const ba = _.find(bankAccounts, { uuid: sp.product.uuid })
+      ba.isOngoingSpecial = sp.isOngoingSpecial
+    })
     const date = moment()
     await prepDataAndPushToRedshift(date, bankAccounts)
 
@@ -119,6 +127,11 @@ async function prepDataAndPushToRedshift (date, bankAccounts) {
     product.restrictions = account.restrictions
     product.isdiscontinued = account.isDiscontinued ? account.isDiscontinued : false
     product.filename = filename
+    product.hasnpp = account.hasNPP
+    product.hasfreeinternationalaccounttransfer = account.hasFreeInternationalAccountTransfer
+    product.holdforeigncurrency = account.holdForeignCurrency
+    product.numberofbranches = account.numberOfBranches
+    product.isongoingspecial = account.isOngoingSpecial
     products.push(product)
   })
 
