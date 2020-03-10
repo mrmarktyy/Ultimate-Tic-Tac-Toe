@@ -24,11 +24,8 @@ Program.schema.pre('validate', function (next) {
   if (this.isReward === false && this.isPartner === false) {
     next(Error('Both is reward and is partner cannot be false'))
   }
-  if (this.shortName.length > 25) {
+  if (this.shortName && this.shortName.length > 25) {
     next(Error('Short name has a max of 25 characters'))
-  }
-  if (this.isPartner && !this.shortName) {
-    next(Error('Short name is required for programs make isPartner'))
   }
   next()
 })
