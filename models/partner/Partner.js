@@ -2,6 +2,7 @@ var keystone = require('keystone')
 var uuid = require('node-uuid')
 var Types = keystone.Field.Types
 var changeLogService = require('../../services/changeLogService')
+var { imageStorage } = require('../helpers/fileStorage')
 
 var Partner = new keystone.List('Partner', {
   track: true,
@@ -13,6 +14,10 @@ Partner.add({
   uuid: { type: Types.Text, noedit: true },
   utmSource: { type: Types.Text, required: true, initial: true },
   apiKey: { type: Types.Text, initial: true },
+  logo: imageStorage('partnerLogo'),
+  backgroundImage: imageStorage('partnerBackgroundImage'),
+  gotoSiteButtonColor: { type: Types.Color },
+  welcomeMessage: { type: Types.Text },
 })
 
 Partner.relationship({ path: 'ChangeLogs', ref: 'ChangeLog', refPath: 'model', many: true })
