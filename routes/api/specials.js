@@ -64,6 +64,7 @@ exports.list = async function (req, res) {
       specialObj.bonusFFPointsPer100kLoan = item.bonusFFPointsPer100kLoan || null
       specialObj.FFRedemptionProgram = item.FFRedemptionProgram ? item.FFRedemptionProgram.name : null
       specialObj.pointsRequired = getPoints(item, redemption)
+      specialObj.isOngoingSpecial = item.isOngoingSpecial
       return specialObj
     })
   }
