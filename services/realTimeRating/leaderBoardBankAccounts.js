@@ -24,32 +24,30 @@ class leaderBoardBankAccounts {
     } = leaderData
     const vertical = 'Bank Accounts' // this value should match with ultimate leaderboard vertical
     this.collectionDate = collectionDate
-    // let leaderboardFilter = {vertical: vertical, isDiscontinued: false}
-    // let leaderboardFilter = {isDiscontinued: false}
-    // if (leaderboardSlugs.length) {
-    //  Object.assign(leaderboardFilter, {slug: {$in: leaderboardSlugs}})
-    // }
+    let leaderboardFilter = {vertical: vertical, isDiscontinued: false}
+    if (leaderboardSlugs.length) {
+     Object.assign(leaderboardFilter, {slug: {$in: leaderboardSlugs}})
+    }
     console.log(`bank-accounts for ${collectionDate}`)
 
-    // let connection = await mongoosePromise.connect()
+    let connection = await mongoosePromise.connect()
     try {
-      // let leaderboards = await Leaderboard.model.find(leaderboardFilter).lean().exec()
-      // for (let i=0; leaderboards.length > i; i++) {
+      let leaderboards = await Leaderboard.model.find(leaderboardFilter).lean().exec()
+      for (let i=0; leaderboards.length > i; i++) {
         let leaderboardRankings = []
-        // this.currentLeaderboard = leaderboards[i]
+        this.currentLeaderboard = leaderboards[i]
         this.Ratings = await this.getRatings()
         leaderboardRankings = this.leaderRank()
         leaderboardRankings = await this.addPreviousPosition(leaderboardRankings)
 
         if (leaderboardRankings.length) {
-          // let filename = `bank-accounts_${this.collectionDate}_${this.currentLeaderboard.slug}.csv`
-          let filename = `bank-accounts_${this.collectionDate}.csv`
+          let filename = `bank-accounts_${this.collectionDate}_${this.currentLeaderboard.slug}.csv`
           await this.insertIntoRedshift(leaderboardRankings, Object.keys(leaderboardRankings[0]), filename, tableName)
         }
-      // }
-      // connection.close()
+      }
+      connection.close()
     } catch(error) {
-      // connection.close()
+      connection.close()
       return error
     }
   }
@@ -62,7 +60,7 @@ class leaderBoardBankAccounts {
         and r.uuid = h.uuid
         and r.collectiondate = '${this.collectionDate}'
       where h.collectiondate = '${this.collectionDate}'
-      
+      ${this.currentLeaderboard.ultimateFilterCriteria}
       and h.isdiscontinued = false
       order by r.rtrscore desc, r.uuid asc
     `
@@ -73,7 +71,7 @@ class leaderBoardBankAccounts {
     let records = []
     this.Ratings.forEach((rating) => {
       let obj = {
-        slug: null, //this.currentLeaderboard.slug,
+        slug: this.currentLeaderboard.slug,
         collectiondate: moment(rating.collectiondate).format('YYYY-MM-DD'),
         uuid: rating.uuid,
         // variationuuid: rating.variationuuid,
@@ -121,6 +119,7 @@ class leaderBoardBankAccounts {
     let sql = `
       select * from ${tableName}
       where collectionDate = '${previousDate}'
+      and slug = '${this.currentLeaderboard.slug}'
       order by productposition desc
     `
 
@@ -189,8 +188,7 @@ class leaderBoardBankAccounts {
       let csv = json2csv({data: rows, fields: headers, hasCSVColumnTitle: false})
       await awsUploadToS3(`${table}/${process.env.RATECITY_REDSHIFT_DATABASE}/${filename}`, csv, 'redshift-2node')
 
-      // let command = `delete from ${table} where collectiondate = '${this.collectionDate}' and slug = '${this.currentLeaderboard.slug}'`
-      let command = `delete from ${table} where collectiondate = '${this.collectionDate}'`
+      let command = `delete from ${table} where collectiondate = '${this.collectionDate}' and slug = '${this.currentLeaderboard.slug}'`
       await redshiftQuery(command)
       command = `copy ${table} from 's3://redshift-2node/${table}/${process.env.RATECITY_REDSHIFT_DATABASE}/${filename}' credentials 'aws_access_key_id=${process.env.S3_KEY};aws_secret_access_key=${process.env.S3_SECRET}' NULL AS 'null' EMPTYASNULL CSV ACCEPTINVCHARS TRUNCATECOLUMNS COMPUPDATE OFF`
       await redshiftQuery(command)
