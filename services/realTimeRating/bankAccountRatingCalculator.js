@@ -96,6 +96,7 @@ function makeLeaderboardCompliant (collectionDate, products) {
       uuid: product.uuid,
       companyuuid: product.companyuuid,
       rtrscore: product.rtrScore,
+      overallrating: product.overallRating,
     }
   })
 }
