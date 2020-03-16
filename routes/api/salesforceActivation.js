@@ -37,7 +37,7 @@ exports.monetize = async function (req, res) {
         let ProductModel = mongoose.model(collection)
         await ProductModel.findOneAndUpdate({uuid: uuid}, {isMonetized: changeRequest.RC_Active}, {new: true})
       } else {
-        let partnerVertical = (Verticals.find((vertical) => vertical.label === changeRequest.RC_Product_Type)|| {}).value
+        let partnerVertical = (Verticals.find((vertical) => vertical.label === changeRequest.RC_Product_Type || vertical.salesforce === changeRequest.RC_Product_Type)|| {}).value
         partnerProduct = await PartnerProduct.model.findOne({ uuid: uuid, vertical: partnerVertical }).lean()
         if (partnerProduct) {
           await PartnerProduct.model.findOneAndUpdate({uuid: uuid}, {isMonetized: changeRequest.RC_Active, vertical: partnerVertical}, {new: true})

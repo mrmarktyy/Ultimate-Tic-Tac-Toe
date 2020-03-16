@@ -3,7 +3,7 @@ const genericVerticals = require('./genericVerticals')
 var verticals = [
   { value: 'home-loans', label: 'Home Loans' },
   { value: 'credit-cards', label: 'Credit Cards' },
-  { value: 'savings-accounts', label: 'Savings Accounts' },
+  { value: 'savings-accounts', label: 'Savings Accounts', salesforce: 'Savings A/C' },
   { value: 'transaction-accounts', label: 'Transaction Accounts' },
   { value: 'personal-loans', label: 'Personal Loans' },
   { value: 'car-loans', label: 'Car Loans' },
