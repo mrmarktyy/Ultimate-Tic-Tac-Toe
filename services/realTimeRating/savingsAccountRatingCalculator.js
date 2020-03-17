@@ -33,7 +33,7 @@ async function processRedshift (vertical, dateRange = {}) {
       products = await pullProducts(currentDateString)
 			for (let i = 0; RTRFilters.length > i; i++) {
 				const filters = RTRFilters[i]
-				let rtrProducts = await realtimeSwiftAPI(vertical, RTRFilters, products)
+				let rtrProducts = await realtimeSwiftAPI(vertical, filters, products)
 				rtrProducts = makeLeaderboardCompliant(currentDateString, filters.initialDeposit, filters.monthlyDeposit, filters.period,  rtrProducts)
 				realTimeRatings.push(...rtrProducts)
 			}
