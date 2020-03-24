@@ -36,7 +36,7 @@ const BANKACCOUNT_HEADER = [
   'smartpaysupport', 'debitcardtypes', 'uniquefeatures', 'additionalbenefits',
   'restrictions', 'isdiscontinued', 'filename',
   'hasnpp', 'hasfreeinternationalaccounttransfer', 'holdforeigncurrency', 'numberofbranches', 'isongoingspecial',
-  'valueOfSpecial',
+  'valueofspecial',
 ]
 
 module.exports = async function () {
