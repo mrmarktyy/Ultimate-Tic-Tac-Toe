@@ -36,6 +36,7 @@ const BANKACCOUNT_HEADER = [
   'smartpaysupport', 'debitcardtypes', 'uniquefeatures', 'additionalbenefits',
   'restrictions', 'isdiscontinued', 'filename',
   'hasnpp', 'hasfreeinternationalaccounttransfer', 'holdforeigncurrency', 'numberofbranches', 'isongoingspecial',
+  'valueOfSpecial',
 ]
 
 module.exports = async function () {
@@ -47,6 +48,15 @@ module.exports = async function () {
       const ba = _.find(bankAccounts, { uuid: sp.product.uuid })
       ba.isOngoingSpecial = sp.isOngoingSpecial
     })
+
+    _.forEach(_.filter(specials, s => { return s.valueOfSpecial>0 }), sp =>{
+      const ba = _.find(bankAccounts, { uuid: sp.product.uuid })
+      if (!ba.valueOfSpecial){
+        ba.valueOfSpecial = 0
+      }
+      ba.valueOfSpecial += sp.valueOfSpecial
+    })
+
     const date = moment()
     await prepDataAndPushToRedshift(date, bankAccounts)
 
@@ -132,6 +142,7 @@ async function prepDataAndPushToRedshift (date, bankAccounts) {
     product.holdforeigncurrency = account.holdForeignCurrency
     product.numberofbranches = account.numberOfBranches
     product.isongoingspecial = account.isOngoingSpecial
+    product.valueofspecial = account.valueOfSpecial
     products.push(product)
   })
 

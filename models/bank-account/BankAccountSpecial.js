@@ -29,6 +29,7 @@ BankAccountSpecials.add({
 		options: availableOptions.all,
 		default: availableOptions.unknown,
 	},
+	valueOfSpecial: {type: Types.Number},
 })
 
 BankAccountSpecials.schema.pre('validate', function (next) {

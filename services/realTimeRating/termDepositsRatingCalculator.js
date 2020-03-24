@@ -143,7 +143,7 @@ function getFileName (startDate, endDate) {
 }
 
 async function runRTR () {
-  let current = moment('2019-06-01')
+  let current = moment('2019-12-01')
   // let current = moment('2020-02-16')
   let endDate = moment().subtract(1, 'day').format('YYYY-MM-DD')
   while (current.isSameOrBefore(endDate)) {
