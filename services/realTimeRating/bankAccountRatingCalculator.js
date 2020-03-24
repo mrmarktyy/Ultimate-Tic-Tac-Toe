@@ -80,11 +80,12 @@ function transformRTRProducts (products) {
 			companyuuid: product.companyuuid,
 			companyname: product.companyname,
 
-      accountKeepingFee: product.accountkeepingfee || parseFloat(product.accountkeepingfee),
-      minimumDepositRequiredForFeeFree: product.minimumdepositrequiredforfeefree || parseFloat(product.minimumdepositrequiredforfeefree),
-      foreignTransactionFeeDollars: product.foreigntransactionfeedollars || parseFloat(product.foreigntransactionfeedollars),
-      foreignTransactionFeePercent: product.foreigntransactionfeepercent || parseFloat(product.foreigntransactionfeepercent),
-      internetTransactionFee: product.internettransactionfee || parseFloat(product.internettransactionfee),
+      accountKeepingFee: parseFloat(product.accountkeepingfee || 0),
+      minimumDepositRequiredForFeeFree: parseFloat(product.minimumdepositrequiredforfeefree || 0),
+      foreignTransactionFeeDollars: parseFloat(product.foreigntransactionfeedollars || 0),
+      foreignTransactionFeePercent: parseFloat(product.foreigntransactionfeepercent || 0),
+      internetTransactionFee: parseFloat(product.internettransactionfee || 0),
+      valueOfSpecial: parseFloat(product.valueofspecial || 0),
     }
   })
 }
