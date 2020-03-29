@@ -72,6 +72,7 @@ exports = module.exports = function (app) {
 
   // Home Loan
   app.get('/api/homeloans', keystone.middleware.api, routes.api.homeloans.list)
+  app.get('/api/homeloans/discontinued', keystone.middleware.api, routes.api.homeloans.discontinuedList)
   app.get('/api/homeloans/extra', keystone.middleware.api, routes.api.homeloans.listWIthExtraData)
   app.get('/api/homeloans/products', keystone.middleware.api, routes.api.homeloans.listProviderProducts)
   app.get('/api/homeloanRateChange', keystone.middleware.api, routes.api.homeloanRateChange.list)
@@ -82,6 +83,7 @@ exports = module.exports = function (app) {
 
   // Personal Loan
   app.get('/api/personalloans', keystone.middleware.api, routes.api.personalloans.list)
+  app.get('/api/personalloans/discontinued', keystone.middleware.api, routes.api.personalloans.discontinuedList)
   app.get('/api/personalloans/:id', keystone.middleware.api, routes.api.personalloans.one)
   app.get('/api/personalloansV2', keystone.middleware.api, routes.api.personalloansV2.list)
 
@@ -102,15 +104,18 @@ exports = module.exports = function (app) {
 
   // Credit Cards
   app.get('/api/credit-cards', keystone.middleware.api, routes.api.creditCards.list)
+  app.get('/api/credit-cards/discontinued', keystone.middleware.api, routes.api.creditCards.discontinuedList)
 
 	//GenericProducts
 	app.get('/api/generic-products', keystone.middleware.api, routes.api.genericProducts.list)
 
   // Savings Account
   app.get('/api/savings-accounts', keystone.middleware.api, routes.api.savingsAccounts.list)
+  app.get('/api/savings-accounts/discontinued', keystone.middleware.api, routes.api.savingsAccounts.discontinuedList)
 
 	// Bank Accounts
 	app.get('/api/bank-accounts', keystone.middleware.api, routes.api.bankAccounts.list)
+	app.get('/api/bank-accounts/discontinued', keystone.middleware.api, routes.api.bankAccounts.discontinuedList)
 
 	// Sponsored Link
 	app.get('/api/sponsored-link', keystone.middleware.api, routes.api.sponsoredLinks.list)
@@ -123,6 +128,7 @@ exports = module.exports = function (app) {
 
 	// Superannuation
 	app.get('/api/superannuations', keystone.middleware.api, routes.api.superannuations.list)
+	app.get('/api/superannuations/discontinued', keystone.middleware.api, routes.api.superannuations.discontinuedList)
 
 	// Pages
 	app.get('/api/pages', keystone.middleware.api, routes.api.pages.list)
@@ -132,9 +138,11 @@ exports = module.exports = function (app) {
 
   // Pension
   app.get('/api/pensions', keystone.middleware.api, routes.api.pensions.list)
+  app.get('/api/pensions/discontinued', keystone.middleware.api, routes.api.pensions.discontinuedList)
 
 	// Term Deposit
 	app.get('/api/term-deposits', keystone.middleware.api, routes.api.termDeposit.list)
+	app.get('/api/term-deposits/discontinued', keystone.middleware.api, routes.api.termDeposit.discontinuedList)
 
 	// APIs
   app.get('/api/externalApis', keystone.middleware.api, routes.api.externalApis.list)
@@ -148,7 +156,7 @@ exports = module.exports = function (app) {
 
 	//Coefficients
   app.get('/api/coefficients', keystone.middleware.api, routes.api.coefficients.list)
-  
+
   // Partner Products
   app.get('/api/partner-products', keystone.middleware.api, routes.api.partnerProducts.list)
   app.get('/api/partners', keystone.middleware.api, routes.api.partner.list)

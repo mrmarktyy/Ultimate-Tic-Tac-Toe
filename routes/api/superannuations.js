@@ -15,6 +15,12 @@ exports.list = async function (req, res) {
   res.jsonp(result)
 }
 
+exports.discontinuedList = async function (req, res) {
+  const superannuations = await Superannuation.model.find({ superannuation: true, isDiscontinued: true, company: {$exists: true} }).populate({path: 'fundgroup', populate: {path: 'company'}}).lean().exec()
+  const result = await getSuperannuationObjects(superannuations)
+  res.jsonp(result)
+}
+
 async function getSuperannuationObjects (superannuations) {
 	const monetizeSuperannuations = await monetizedCollection('Superannuation')
 	const today = new Date()

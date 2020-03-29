@@ -15,6 +15,12 @@ exports.list = async function (req, res) {
   res.jsonp(result)
 }
 
+exports.discontinuedList = async function (req, res) {
+  const bankAccounts = await BankAccount.model.find({ isDiscontinued: true }).populate('company').lean().exec()
+  const result = await getBankAccounts(bankAccounts)
+  res.jsonp(result)
+}
+
 async function getBankAccounts (accounts) {
 	const companyBankAccount = await CompanyBankAccount.model.find().lean().exec()
   const monetizedList = await monetizedCollection('Bank Accounts')
