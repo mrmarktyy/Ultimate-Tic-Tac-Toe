@@ -15,6 +15,12 @@ exports.list = async function (req, res) {
   res.jsonp(result)
 }
 
+exports.discontinuedList = async function (req, res) {
+  let termDeposits = await TermDeposit.model.find({ isDiscontinued: true }).populate('company').lean().exec()
+  let result = await customizeTermDeposit(termDeposits)
+  res.jsonp(result)
+}
+
 async function customizeTermDeposit (termDeposits) {
 	const variations = await TermDepositTier.model.find().populate('product').lean().exec()
 	const termDepositsCompanies = await TermDepositCompany.model.find().populate('big4ComparisonProduct').lean().exec()

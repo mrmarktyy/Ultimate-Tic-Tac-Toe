@@ -19,6 +19,12 @@ exports.list = async function (req, res) {
 	res.jsonp(result)
 }
 
+exports.discontinuedList = async function (req, res) {
+	let personalLoans = await PersonalLoan.model.find({ isDiscontinued: true }).populate('company').lean().exec()
+	let result = await getPersonalLoanObjects(personalLoans)
+	res.jsonp(result)
+}
+
 async function getPersonalLoanObjects (loans) {
 	const variations = await PersonalLoanVariation.model.find().populate('product').lean().exec()
 	const companyVerticalData = await CompanyPersonalLoan.model.find().populate('company big4ComparisonProduct').lean().exec()

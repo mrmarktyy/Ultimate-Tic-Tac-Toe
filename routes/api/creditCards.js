@@ -146,6 +146,16 @@ exports.list = async function (req, res) {
   res.jsonp(cards)
 }
 
+exports.discontinuedList = async function (req, res) {
+  const creditcards = await CreditCard.model
+  .find({ isDiscontinued: true })
+  .populate('company rewardProgram')
+  .lean()
+  .exec()
+
+  res.jsonp(creditcards)
+}
+
 function estimatedForeignAtmCost (card) {
   let estimate = 0
   if (['Visa', 'Visa & AMEX'].includes(card.cardType)){

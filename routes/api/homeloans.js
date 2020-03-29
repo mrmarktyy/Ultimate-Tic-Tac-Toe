@@ -73,6 +73,31 @@ exports.list = async function (req, res) {
   res.jsonp(results)
 }
 
+exports.discontinuedList = async function (req, res) {
+  let homeLoans = await HomeLoan.model.find({ isDiscontinued: true }).populate('company homeLoanFamily').lean().exec()
+  let variations = await getHomeLoanModel(HomeLoanVariation.model, 'product', 'revertVariation providerProductName', { isDiscontinued: true })
+  let monetizedVariations = await monetizedCollection('Home Loans')
+  const partnerGotoSite = await PartnerGotoSite('home-loans')
+  let response = {}
+  homeLoans.forEach((homeLoan) => {
+    if (variations[homeLoan._id]) {
+      response[homeLoan._id] = Object.assign(
+        {},
+        homeLoan,
+        {
+          variations: (variations[homeLoan._id] || []).map((v) => spawnVariation(v, monetizedVariations, partnerGotoSite)),
+        }
+      )
+    }
+  })
+
+  let result = []
+  for (let key in response) {
+    result.push(response[key])
+  }
+  res.jsonp(result)
+}
+
 exports.listWIthExtraData = async function (req, res) {
   let homeLoans = await HomeLoan.model.find({}).populate('company homeLoanFamily').lean().exec()
   let result = await getHomeLoansObjects(homeLoans)
