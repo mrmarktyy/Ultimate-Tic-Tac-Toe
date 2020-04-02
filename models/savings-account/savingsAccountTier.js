@@ -55,6 +55,13 @@ SavingsAccountTier.relationship({ path: 'ChangeLogs', ref: 'ChangeLog', refPath:
 
 SavingsAccountTier.schema.index({ company: 1, product: 1, name: 1 }, { unique: true })
 
+SavingsAccountTier.schema.pre('validate', async function (next) {
+  if (this.introductoryRateTerm && !Number.isInteger(this.introductoryRateTerm)) {
+    next(Error('IntroductoryRateTerm has to be an integer'))
+  }
+  next()
+})
+
 SavingsAccount.schema.post('remove', function (next) {
   SavingsAccountTier.model.remove({ product: Object(next._id) }).exec()
 })
