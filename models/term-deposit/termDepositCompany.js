@@ -17,7 +17,8 @@ TermDepositCompany.add({
     noedit: true,
   },
 	removeBig4ComparisonProduct: {type: Types.Boolean, indent: true, default: false, initial: true},
-	hasRepaymentWidget: {type: Types.Boolean, indent: true, default: false, initial: true},
+  hasRepaymentWidget: {type: Types.Boolean, indent: true, default: false, initial: true},
+  hasAwardBadge: {type: Types.Boolean, indent: true, default: false},
   boostScore: { type: Types.Number },
   tier: { type: Types.Select, options: [
     {value: 'null', label: 'None'},

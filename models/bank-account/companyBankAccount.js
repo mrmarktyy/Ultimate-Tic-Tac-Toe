@@ -21,6 +21,7 @@ CompanyBankAccount.add({
 	branches: { type: Types.Text },
   productReview: { type: Types.Url },
   boostScore: { type: Types.Number },
+  hasAwardBadge: {type: Types.Boolean, indent: true, default: false},
   tier: { type: Types.Select, options: [
     {value: 'null', label: 'None'},
     {value: '1', label: '1'},

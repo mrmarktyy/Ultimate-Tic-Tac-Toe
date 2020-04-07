@@ -33,6 +33,7 @@ FundGroup.add({
 	groupCode: { type: Types.Text, unique: true },
 	phoneNumber: { type: Types.Text },
 	website: { type: Types.Text },
+	hasAwardBadge: {type: Types.Boolean, indent: true, default: false},
 	logo: imageStorage('fundGroupLogo'),
 })
 

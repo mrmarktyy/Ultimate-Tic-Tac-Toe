@@ -30,6 +30,7 @@ CompanyHomeLoan.add({
 	},
 	removeBig4ComparisonProduct: {type: Types.Boolean, indent: true, default: false},
 	hasRepaymentWidget: {type: Types.Boolean, indent: true, default: false},
+	hasAwardBadge: {type: Types.Boolean, indent: true, default: false},
 	howToApplyBlurb: {type: Types.Code, height: 250, language: 'html'},
 	eligibilityBlurb: {type: Types.Code, height: 150, language: 'html'},
   productReview: { type: Types.Url },

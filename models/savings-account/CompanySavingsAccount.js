@@ -29,6 +29,7 @@ CompanySavingsAccount.add({
   },
   removeBig4ComparisonProduct: {type: Types.Boolean, indent: true, default: false},
   hasRepaymentWidget: {type: Types.Boolean, indent: true, default: false},
+  hasAwardBadge: {type: Types.Boolean, indent: true, default: false},
   blurb: { type: Types.Code, height: 250, language: 'html' },
   productReview: { type: Types.Url },
   boostScore: { type: Types.Number },
